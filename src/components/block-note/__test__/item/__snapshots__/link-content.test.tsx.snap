@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FormattedLink > renders link with nested text content and applies correct styles 1`] = `
+<DocumentFragment>
+  <a
+    class="break-words"
+    href="https://studio.xiyue.space"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    文
+    <span
+      class="font-bold italic underline line-through text-red-600"
+    >
+      字
+    </span>
+  </a>
+</DocumentFragment>
+`;

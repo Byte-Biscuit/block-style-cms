@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FormattedText > renders text and applies style classes from styles object 1`] = `
+<DocumentFragment>
+  <span
+    class="font-bold italic underline text-red-600 bg-sky-100"
+  >
+    试文
+  </span>
+</DocumentFragment>
+`;

@@ -1,0 +1,413 @@
+{
+    "admin": {
+        "dashboard": {
+            "title": "管理仪表板",
+            "quickActions": "快速操作",
+            "enterButton": "进入",
+            "actions": {
+                "writeArticle": {
+                    "title": "写文章",
+                    "description": "创建一篇新的文章"
+                },
+                "articleManagement": {
+                    "title": "文章管理",
+                    "description": "查看和管理所有文章"
+                },
+                "backToFrontend": {
+                    "title": "返回前台",
+                    "description": "查看前台页面"
+                }
+            },
+            "articleSummary": {
+                "title": "文章总数",
+                "publishedDraft": "已发布: {published} | 草稿: {draft}"
+            },
+            "storageUsage": {
+                "title": "存储使用"
+            },
+            "systemLoad": {
+                "title": "系统负载监控",
+                "cpu": {
+                    "title": "CPU 负载",
+                    "overallUsage": "整体 CPU 使用率",
+                    "userSystem": "用户态: {user}% | 系统态: {system}%"
+                },
+                "memory": {
+                    "systemMemory": "系统内存",
+                    "nodeProcess": "Node.js 进程",
+                    "memoryUsage": "内存使用率"
+                },
+                "processDetails": {
+                    "title": "进程内存详情：",
+                    "rss": "常驻内存: {value}",
+                    "external": "外部内存: {value}"
+                },
+                "status": {
+                    "lastUpdated": "最后更新: {time}"
+                }
+            }
+        },
+        "footer": {
+            "copyright": "© 2025 - 至今 Block Style CMS。保留所有权利。",
+            "version": "版本: v{version}",
+            "poweredBy": "基于 Next.js 构建"
+        },
+        "article": {
+            "meta": {
+                "title": "创建新的内容文章 — AI 辅助 • SEO 优化 • Block 编辑",
+                "description": "创建新的文章页面：支持 AI 辅助创作、SEO 优化、可视化 Block 内容编辑与多语言。适用于博客、知识库与内容平台的高效写作流程。"
+            },
+            "new": {
+                "title": "新建文章",
+                "success": {
+                    "created": "文章创建成功！"
+                },
+                "error": {
+                    "title": "文章创建发生错误",
+                    "createFailed": "创建文章失败"
+                }
+            },
+            "list": {
+                "title": "文章管理",
+                "actions": {
+                    "newArticle": "新建文章",
+                    "search": "搜索文章",
+                    "clearSearch": "清空搜索",
+                    "clearTagFilter": "清空标签过滤",
+                    "view": "查看文章",
+                    "edit": "编辑文章",
+                    "delete": "删除文章"
+                },
+                "search": {
+                    "placeholder": "输入关键词搜索...",
+                    "tagPlaceholder": "输入标签名..."
+                },
+                "filters": {
+                    "language": "语言",
+                    "status": "状态",
+                    "tagFilter": "标签过滤",
+                    "all": "全部",
+                    "published": "已发布",
+                    "draft": "草稿"
+                },
+                "table": {
+                    "title": "标题",
+                    "tags": "标签",
+                    "status": "状态",
+                    "updateTime": "更新时间",
+                    "actions": "操作",
+                    "noData": "暂无文章"
+                },
+                "pagination": {
+                    "total": "共 {total} 条记录",
+                    "page": "第 {current} / {total} 页",
+                    "totalWithPage": "共 {total} 条记录，第 {current} / {totalPages} 页"
+                },
+                "status": {
+                    "published": "已发布",
+                    "draft": "草稿"
+                },
+                "delete": {
+                    "title": "确认删除",
+                    "content": "确定要删除这篇文章吗？此操作不可恢复。",
+                    "confirm": "确认删除",
+                    "cancel": "取消"
+                },
+                "messages": {
+                    "fetchError": "获取文章列表失败",
+                    "deleteSuccess": "文章删除成功",
+                    "deleteError": "删除文章失败"
+                }
+            },
+            "edit": {
+                "title": "编辑文章",
+                "actions": {
+                    "update": "更新文章",
+                    "backToList": "返回文章列表"
+                },
+                "messages": {
+                    "fetchError": "获取文章失败",
+                    "fetchDataError": "获取文章数据失败",
+                    "notFound": "未找到对应的文章内容",
+                    "updateError": "更新文章失败",
+                    "updateSuccess": "文章更新成功！"
+                },
+                "errors": {
+                    "title": "发生错误"
+                }
+            }
+        },
+
+        "article_form": {
+            "sections": {
+                "basic": "基本信息",
+                "content": "文章内容 *",
+                "summary": "文章简介 *",
+                "keywords": "关键词",
+                "tags": "标签",
+                "publish": "发布设置"
+            },
+            "labels": {
+                "language": "语言",
+                "title": "文章标题",
+                "slug": "Slug (URL 路径)",
+                "summary": "文章简介",
+                "addKeyword": "添加关键词",
+                "addTag": "添加标签",
+                "publishNow": "立即发布"
+            },
+            "placeholders": {
+                "title": "请输入文章标题",
+                "summary": "请输入文章简介",
+                "keyword": "输入关键词后按回车或点击添加",
+                "tag": "输入标签后按回车或点击添加"
+            },
+            "helper": {
+                "slugEditingDisabled": "编辑模式下不可修改 Slug，以保持链接稳定性",
+                "slugUse": "将用作文章的 URL 路径",
+                "noKeywords": "暂无关键词，请手动添加或使用 AI 生成",
+                "noTags": "暂无标签，请手动添加",
+                "publish": {
+                    "published": "文章将立即对外公开",
+                    "draft": "文章将保存为草稿"
+                }
+            },
+            "buttons": {
+                "generateSlug": "AI 生成 Slug",
+                "generating": "生成中...",
+                "generateSummary": "AI 生成简介",
+                "generateKeywords": "AI 生成关键词",
+                "add": "添加",
+                "submitCreate": "创建文章",
+                "creating": "创建中...",
+                "cancel": "取消"
+            },
+            "messages": {
+                "submitError": "提交表单时出错：",
+                "keywordsCommaNote": "将中文逗号替换为英文逗号"
+            }
+        },
+
+        "cover_image_selector": {
+            "title": "封面图片",
+            "input": {
+                "label": "图片URL",
+                "placeholder": "输入图片URL或点击右侧按钮选择图片"
+            },
+            "buttons": {
+                "select": "选择图片",
+                "uploading": "上传中",
+                "uploadLocal": "上传本地图片",
+                "fromPexels": "从Pexels选择",
+                "viewLarge": "查看大图",
+                "openNewWindow": "新窗口打开",
+                "remove": "移除图片",
+                "delete": "删除",
+                "cancel": "取消"
+            },
+            "notes": {
+                "supportedTypes": "支持 JPG、PNG、WebP、GIF,SVG 格式",
+                "preview": "图片预览",
+                "imageUrlLabel": "图片地址"
+            },
+            "messages": {
+                "uploadSuccess": "图片上传成功！",
+                "uploadFailed": "上传失败，服务器返回异常",
+                "unsupportedType": "不支持的文件类型。请选择 JPEG、PNG、WebP 或 GIF 格式的图片。",
+                "fileTooLarge": "文件大小不能超过 5MB",
+                "removeSuccess": "图片引用已移除",
+                "removeFailed": "删除失败，请稍后重试",
+                "loadFailed": "图片加载失败",
+                "loadSuccess": "图片加载成功",
+                "removeConfirm": "确定要移除这张图片吗？"
+            }
+        },
+
+        "pexels_image_picker": {
+            "title": "选择Pexels图片",
+            "search": {
+                "label": "搜索图片关键词",
+                "placeholder": "例如: nature, business, technology...",
+                "button": "搜索",
+                "searching": "搜索中..."
+            },
+            "states": {
+                "noResults": "没有找到相关图片",
+                "noResultsHint": "请尝试其他关键词搜索",
+                "welcome": "搜索 Pexels 免费图片",
+                "welcomeHint": "输入关键词开始搜索高质量的免费图片"
+            },
+            "actions": {
+                "cancel": "取消",
+                "confirm": "确认选择"
+            },
+            "errors": {
+                "searchFailed": "搜索图片失败",
+                "loadImagesFailed": "加载图片失败"
+            }
+        },
+
+        "block_note_editor": {
+            "fullscreen": {
+                "browser": "浏览器全屏",
+                "monitor": "显示器全屏"
+            },
+            "errors": {
+                "enableFullscreen": "启用全屏时出错",
+                "exitFullscreen": "退出全屏时出错"
+            }
+        },
+
+        "validation": {
+            "article": {
+                "id": {
+                    "format": "文章ID必须是有效的UUID格式"
+                },
+                "slug": {
+                    "min": "URL标识至少需要{min}个字符",
+                    "max": "URL标识不能超过{max}个字符",
+                    "format": "URL标识只能包含小写字母、数字和连字符"
+                },
+                "locale": {
+                    "invalid": "语言区域必须是以下之一：{codes}"
+                },
+                "tag": {
+                    "min": "标签至少需要{min}个字符",
+                    "max": "标签不能超过{max}个字符"
+                },
+                "keyword": {
+                    "min": "关键词至少需要{min}个字符",
+                    "max": "关键词不能超过{max}个字符"
+                },
+                "title": {
+                    "min": "标题至少需要{min}个字符",
+                    "max": "标题不能超过{max}个字符"
+                },
+                "tags": {
+                    "min": "至少需要{min}个标签",
+                    "max": "标签数量不能超过{max}个"
+                },
+                "keywords": {
+                    "min": "至少需要{min}个关键词",
+                    "max": "关键词数量不能超过{max}个"
+                },
+                "summary": {
+                    "min": "摘要至少需要{min}个字符",
+                    "max": "摘要不能超过{max}个字符"
+                },
+                "content": {
+                    "required": "文章内容不能为空"
+                },
+                "image": {
+                    "url": "封面图片必须是有效的URL"
+                },
+                "createdAt": {
+                    "format": "创建时间格式不正确"
+                },
+                "updatedAt": {
+                    "format": "更新时间格式不正确"
+                }
+            }
+        }
+    },
+    "web": {
+        "title": "博采众生",
+        "subtitle": "创意在此汇聚，灵感由此启航",
+        "description": "博采众生是一个开放的平台，融合IT技术、人工智能、教育与音乐。我们尊重创意，包容多元，分享知识，激发更多创新灵感。",
+        "language": "语言",
+        "theme": {
+            "title": "主题",
+            "system": "跟随系统",
+            "light": "浅色",
+            "dark": "深色"
+        },
+        "channel": {
+            "title": "频道",
+            "tags": "标签",
+            "ai": "AI",
+            "instant": "即时",
+            "education": "教育",
+            "about": "关于"
+        },
+        "home": {
+            "title": "最新文章",
+            "more": "更多文章",
+            "emptyTitle": "未找到文章",
+            "emptyDescription": "当前语言暂无可用文章。"
+        },
+        "article": {
+            "summary": "摘要",
+            "copy": "复制",
+            "copied": "已复制!"
+        },
+        "auth": {
+            "title": "认证错误",
+            "heading": "认证失败",
+            "description": "处理您的请求时发生问题。请重试，或在问题持续时联系应用负责人。",
+            "button": "返回重新登录",
+            "errorCodeLabel": "错误代码",
+            "messages": {
+                "invalid_code": "授权码无效或已过期。",
+                "access_denied": "用户拒绝了授权请求。",
+                "invalid_request": "请求参数不正确或缺失。",
+                "server_error": "服务器内部错误，请稍后重试。",
+                "temporarily_unavailable": "认证服务暂时不可用，请稍候再试。",
+                "unknown": "发生未知的认证错误。"
+            },
+            "logout": {
+                "label": "登出",
+                "title": "您已成功登出",
+                "subtitle": "您的会话已结束。您可以返回首页或重新登录。",
+                "button": {
+                    "goHome": "返回首页",
+                    "signin": "重新登录"
+                }
+            },
+            "login": {
+                "title": "管理员后台",
+                "subtitle": "请登录以访问管理功能",
+                "signWith": "使用 {provider} 登录",
+                "error": {
+                    "title": "登录失败",
+                    "with": "{provider} 登录失败，请稍后重试"
+                }
+            }
+        },
+        "mermaid": {
+            "button": {
+                "close": "关闭"
+            },
+            "loading": {
+                "renderingMermaid": "正在渲染 Mermaid 图表..."
+            },
+            "error": {
+                "noCode": "没有提供 Mermaid 代码",
+                "renderFailed": "渲染失败",
+                "mermaidRender": "Mermaid 渲染错误",
+                "mermaidRenderWithDetail": "Mermaid 渲染错误: {error}"
+            }
+        },
+        "footer": {
+            "buildWith": "使用",
+            "and": "和",
+            "present": "现在"
+        }
+    },
+    "errors": {
+        "language": "语言",
+        "articleNotFound": "文章未找到",
+        "pageNotFound": "页面未找到",
+        "articleNotExists": "您访问的文章不存在或已被移动。",
+        "pageNotExists": "您访问的页面不存在或已被移动。",
+        "articleNotInLanguage": "文章「{slug}」暂无:{language}版本",
+        "availableLanguages": "其他语言版本：",
+        "goHome": "返回首页",
+        "browseArticles": "浏览文章",
+        "backToArticles": "返回文章列表",
+        "errorArticleIdentifier": "请求的文章标识：",
+        "tryOtherOptions": "您可以尝试以下选项：",
+        "backToHome": "返回首页",
+        "viewAllArticles": "查看所有文章",
+        "contactSupport": "如果您认为这是一个错误，请联系:{email}。"
+    }
+}

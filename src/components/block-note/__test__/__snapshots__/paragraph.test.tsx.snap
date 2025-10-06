@@ -1,0 +1,132 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Paragraph > renders complex paragraph with mixed text, styled text, and link content 1`] = `
+<DocumentFragment>
+  <p>
+    When using Snapshots with async concurrent tests, 
+    <span
+      class="font-mono bg-gray-100 px-1 rounded"
+    >
+      expect
+    </span>
+     from the local 
+    <a
+      class="break-words"
+      href="https://vitest.dev/guide/test-context"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span
+        class="font-bold underline"
+      >
+        Test Context
+      </span>
+    </a>
+     must be used to ensure the right test is detected.
+  </p>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders empty paragraph without content 1`] = `
+<DocumentFragment>
+  <p />
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with all text styles 1`] = `
+<DocumentFragment>
+  <p>
+    <span
+      class="font-bold"
+    >
+      This is bold, 
+    </span>
+    <span
+      class="italic"
+    >
+      this is italic, 
+    </span>
+    <span
+      class="underline"
+    >
+      this is underlined, 
+    </span>
+    <span
+      class="line-through"
+    >
+      this is strikethrough, 
+    </span>
+    <span
+      class="font-mono bg-gray-100 px-1 rounded"
+    >
+      and this is code
+    </span>
+  </p>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with different background and text colors 1`] = `
+<DocumentFragment>
+  <p
+    class="bg-yellow-100 text-red-600"
+  >
+    Colored paragraph text
+  </p>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with different text alignments 1`] = `
+<DocumentFragment>
+  <p
+    class="text-right"
+  >
+    Right aligned text
+  </p>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with multiple links 1`] = `
+<DocumentFragment>
+  <p>
+    Check out 
+    <a
+      class="break-words"
+      href="https://vitest.dev"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      Vitest
+    </a>
+     and 
+    <a
+      class="break-words"
+      href="https://react.dev"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <span
+        class="font-bold"
+      >
+        React
+      </span>
+    </a>
+     documentation.
+  </p>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph without props (minimal data) 1`] = `
+<DocumentFragment>
+  <p>
+    Minimal paragraph without props
+  </p>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders simple paragraph with plain text 1`] = `
+<DocumentFragment>
+  <p>
+    This is a simple paragraph with plain text.
+  </p>
+</DocumentFragment>
+`;

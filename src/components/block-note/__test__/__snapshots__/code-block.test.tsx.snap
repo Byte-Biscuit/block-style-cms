@@ -1,0 +1,124 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CodeBlock > renders code block with custom language 1`] = `
+<DocumentFragment>
+  <figure
+    aria-label="Code sample in python"
+    class="relative my-4 w-full"
+    data-language="python"
+  >
+    <div
+      class="absolute top-2 right-2 z-10 flex items-center gap-2"
+    >
+      <span
+        aria-hidden="true"
+        class="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+      >
+        PYTHON
+      </span>
+      <button
+        aria-label="Copy python code"
+        class="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+        type="button"
+      >
+        Copy
+      </button>
+    </div>
+    <pre
+      class="syntax-highlighter"
+      data-language="python"
+      data-show-line-numbers="true"
+      data-testid="syntax-highlighter"
+    >
+      <code>
+        def hello():
+    print("Hello World!")
+      </code>
+    </pre>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`CodeBlock > renders code block with typescript language 1`] = `
+<DocumentFragment>
+  <figure
+    aria-label="Code sample in ts"
+    class="relative my-4 w-full"
+    data-language="ts"
+  >
+    <div
+      class="absolute top-2 right-2 z-10 flex items-center gap-2"
+    >
+      <span
+        aria-hidden="true"
+        class="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+      >
+        TS
+      </span>
+      <button
+        aria-label="Copy ts code"
+        class="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+        type="button"
+      >
+        Copy
+      </button>
+    </div>
+    <pre
+      class="syntax-highlighter"
+      data-language="ts"
+      data-show-line-numbers="true"
+      data-testid="syntax-highlighter"
+    >
+      <code>
+        interface User {
+  id: number;
+  name: string;
+}
+      </code>
+    </pre>
+  </figure>
+</DocumentFragment>
+`;
+
+exports[`CodeBlock > renders code block with vitest test code (from data sample) 1`] = `
+<DocumentFragment>
+  <figure
+    aria-label="Code sample in "
+    class="relative my-4 w-full"
+    data-language=""
+  >
+    <div
+      class="absolute top-2 right-2 z-10 flex items-center gap-2"
+    >
+      <button
+        aria-label="Copy  code"
+        class="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+        type="button"
+      >
+        Copy
+      </button>
+    </div>
+    <pre
+      class="syntax-highlighter"
+      data-language=""
+      data-show-line-numbers="true"
+      data-testid="syntax-highlighter"
+    >
+      <code>
+        import { expect, test } from 'vitest'
+
+test('snapshot', () =&gt; {
+  // in Jest and Vitest
+  expect(new Error('error')).toMatchInlineSnapshot(\`[Error: error]\`)
+
+  // Jest snapshots \`Error.message\` for \`Error\` instance
+  // Vitest prints the same value as toMatchInlineSnapshot
+  expect(() =&gt; {
+    throw new Error('error')
+  }).toThrowErrorMatchingInlineSnapshot(\`[Error: error]\`) 
+})
+      </code>
+    </pre>
+  </figure>
+</DocumentFragment>
+`;

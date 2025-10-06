@@ -1,0 +1,422 @@
+{
+    "admin": {
+        "dashboard": {
+            "title": "Management Dashboard",
+            "quickActions": "Quick Actions",
+            "enterButton": "Enter",
+            "actions": {
+                "writeArticle": {
+                    "title": "Write Article",
+                    "description": "Create a new article"
+                },
+                "articleManagement": {
+                    "title": "Article Management",
+                    "description": "View and manage all articles"
+                },
+                "backToFrontend": {
+                    "title": "Back to Frontend",
+                    "description": "View the frontend article page"
+                }
+            },
+            "articleSummary": {
+                "title": "Total Articles",
+                "publishedDraft": "Published: {published} | Draft: {draft}"
+            },
+            "storageUsage": {
+                "title": "Storage Usage"
+            },
+            "systemLoad": {
+                "title": "System Load Monitor",
+                "cpu": {
+                    "title": "CPU Load",
+                    "overallUsage": "Overall CPU Usage",
+                    "userSystem": "User: {user}% | System: {system}%"
+                },
+                "memory": {
+                    "systemMemory": "System Memory",
+                    "nodeProcess": "Node.js Process",
+                    "memoryUsage": "Memory Usage"
+                },
+                "processDetails": {
+                    "title": "Process Memory Details:",
+                    "rss": "RSS: {value}",
+                    "external": "External: {value}"
+                },
+                "status": {
+                    "lastUpdated": "Last updated: {time}"
+                }
+            }
+        },
+        "footer": {
+            "copyright": "© 2025 - PRESENT Block Style CMS. All rights reserved.",
+            "version": "Version: v{version}",
+            "poweredBy": "Powered by Next.js"
+        },
+        "article": {
+            "meta": {
+                "title": "Create New Content Article — AI-assisted • SEO Optimized • Block Editing",
+                "description": "Create new articles with AI-assisted writing, SEO optimization, visual Block content editing and multilingual support. Ideal for blogs, knowledge bases and content platforms for efficient authoring workflows."
+            },
+            "new": {
+                "title": "Create Article",
+                "success": {
+                    "created": "Article created successfully."
+                },
+                "error": {
+                    "title": "Error creating article",
+                    "createFailed": "Failed to create article"
+                }
+            },
+            "list": {
+                "title": "Article Management",
+                "actions": {
+                    "newArticle": "New Article",
+                    "search": "Search articles",
+                    "clearSearch": "Clear search",
+                    "clearTagFilter": "Clear tag filter",
+                    "view": "View article",
+                    "edit": "Edit article",
+                    "delete": "Delete article"
+                },
+                "search": {
+                    "placeholder": "Enter keywords to search...",
+                    "tagPlaceholder": "Enter tag name..."
+                },
+                "filters": {
+                    "language": "Language",
+                    "status": "Status",
+                    "tagFilter": "Tag Filter",
+                    "all": "All",
+                    "published": "Published",
+                    "draft": "Draft"
+                },
+                "table": {
+                    "title": "Title",
+                    "tags": "Tags",
+                    "status": "Status",
+                    "updateTime": "Updated",
+                    "actions": "Actions",
+                    "noData": "No articles found"
+                },
+                "pagination": {
+                    "total": "{total} records total",
+                    "page": "Page {current} / {total}",
+                    "totalWithPage": "{total} records total, page {current} / {totalPages}"
+                },
+                "status": {
+                    "published": "Published",
+                    "draft": "Draft"
+                },
+                "delete": {
+                    "title": "Confirm Delete",
+                    "content": "Are you sure you want to delete this article? This action cannot be undone.",
+                    "confirm": "Confirm Delete",
+                    "cancel": "Cancel"
+                },
+                "messages": {
+                    "fetchError": "Failed to fetch article list",
+                    "deleteSuccess": "Article deleted successfully",
+                    "deleteError": "Failed to delete article"
+                }
+            },
+            "edit": {
+                "title": "Edit Article",
+                "actions": {
+                    "update": "Update Article",
+                    "backToList": "Back to Article List"
+                },
+                "messages": {
+                    "fetchError": "Failed to fetch article",
+                    "fetchDataError": "Failed to fetch article data",
+                    "notFound": "Article content not found",
+                    "updateError": "Failed to update article",
+                    "updateSuccess": "Article updated successfully!"
+                },
+                "errors": {
+                    "title": "An Error Occurred"
+                }
+            }
+        },
+
+        "article_form": {
+            "sections": {
+                "basic": "Basic Information",
+                "content": "Article Content *",
+                "summary": "Summary *",
+                "keywords": "Keywords",
+                "tags": "Tags",
+                "publish": "Publish Settings"
+            },
+            "labels": {
+                "language": "Language",
+                "title": "Article Title",
+                "slug": "Slug (URL path)",
+                "summary": "Summary",
+                "addKeyword": "Add keyword",
+                "addTag": "Add tag",
+                "publishNow": "Publish now"
+            },
+            "placeholders": {
+                "title": "Enter article title",
+                "summary": "Enter article summary",
+                "keyword": "Type a keyword and press Enter or click Add",
+                "tag": "Type a tag and press Enter or click Add"
+            },
+            "helper": {
+                "slugEditingDisabled": "Slug cannot be changed in edit mode to keep the link stable",
+                "slugUse": "Will be used as the article's URL path",
+                "noKeywords": "No keywords yet — add manually or generate with AI",
+                "noTags": "No tags yet — add manually",
+                "publish": {
+                    "published": "The article will be publicly available immediately",
+                    "draft": "The article will be saved as a draft"
+                }
+            },
+            "buttons": {
+                "generateSlug": "AI generate slug",
+                "generating": "Generating...",
+                "generateSummary": "AI generate summary",
+                "generateKeywords": "AI generate keywords",
+                "add": "Add",
+                "submitCreate": "Create article",
+                "creating": "Creating...",
+                "cancel": "Cancel"
+            },
+            "messages": {
+                "submitError": "Error submitting form:",
+                "keywordsCommaNote": "Convert Chinese commas to English commas"
+            }
+        },
+
+        "cover_image_selector": {
+            "title": "Select Article Cover Image",
+            "input": {
+                "label": "Image URL",
+                "placeholder": "Enter image URL or click the button to choose"
+            },
+            "buttons": {
+                "select": "Select Image",
+                "uploading": "Uploading",
+                "uploadLocal": "Upload Local Image",
+                "fromPexels": "Choose from Pexels",
+                "viewLarge": "View Large",
+                "openNewWindow": "Open in New Window",
+                "remove": "Remove Image",
+                "delete": "Delete",
+                "cancel": "Cancel"
+            },
+            "notes": {
+                "supportedTypes": "Supports JPG, PNG, WebP, GIF, SVG",
+                "preview": "Image Preview",
+                "imageUrlLabel": "Image URL"
+            },
+            "messages": {
+                "uploadSuccess": "Image uploaded successfully!",
+                "uploadFailed": "Upload failed: server returned an error",
+                "unsupportedType": "Unsupported file type. Please select JPEG, PNG, WebP or GIF.",
+                "fileTooLarge": "File size must not exceed 5MB",
+                "removeSuccess": "Image reference removed",
+                "removeFailed": "Delete failed, please try again later",
+                "loadFailed": "Image failed to load",
+                "loadSuccess": "Image loaded successfully",
+                "removeConfirm": "Are you sure you want to remove this image?"
+            }
+        },
+
+        "pexels_image_picker": {
+            "title": "Select Pexels Image",
+            "search": {
+                "label": "Search image keywords",
+                "placeholder": "e.g.: nature, business, technology...",
+                "button": "Search",
+                "searching": "Searching..."
+            },
+            "states": {
+                "noResults": "No related images found",
+                "noResultsHint": "Please try other keywords",
+                "welcome": "Search Pexels Free Images",
+                "welcomeHint": "Enter keywords to search for high-quality free images"
+            },
+            "actions": {
+                "cancel": "Cancel",
+                "confirm": "Confirm Selection"
+            },
+            "errors": {
+                "searchFailed": "Failed to search images",
+                "loadImagesFailed": "Failed to load images"
+            }
+        },
+
+        "block_note_editor": {
+            "fullscreen": {
+                "browser": "Browser Fullscreen",
+                "monitor": "Monitor Fullscreen"
+            },
+            "errors": {
+                "enableFullscreen": "Error attempting to enable fullscreen",
+                "exitFullscreen": "Error attempting to exit fullscreen"
+            }
+        },
+        "validation": {
+            "article": {
+                "id": {
+                    "format": "Article ID must be a valid UUID"
+                },
+                "slug": {
+                    "min": "URL slug must be at least {min} characters",
+                    "max": "URL slug must not exceed {max} characters",
+                    "format": "URL slug can only contain lowercase letters, numbers, and hyphens"
+                },
+                "locale": {
+                    "invalid": "Locale must be one of: {codes}"
+                },
+                "tag": {
+                    "min": "Tag must be at least {min} character",
+                    "max": "Tag must not exceed {max} characters"
+                },
+                "keyword": {
+                    "min": "Keyword must be at least {min} characters",
+                    "max": "Keyword must not exceed {max} characters"
+                },
+                "title": {
+                    "min": "Title must be at least {min} character",
+                    "max": "Title must not exceed {max} characters"
+                },
+                "tags": {
+                    "min": "At least {min} tag is required",
+                    "max": "Tags must not exceed {max}"
+                },
+                "keywords": {
+                    "min": "At least {min} keyword is required",
+                    "max": "Keywords must not exceed {max}"
+                },
+                "summary": {
+                    "min": "Summary must be at least {min} characters",
+                    "max": "Summary must not exceed {max} characters"
+                },
+                "content": {
+                    "required": "Article content is required"
+                },
+                "image": {
+                    "url": "Cover image must be a valid URL"
+                },
+                "createdAt": {
+                    "format": "Created date format is invalid"
+                },
+                "updatedAt": {
+                    "format": "Updated date format is invalid"
+                }
+            }
+        }
+    },
+    "web": {
+        "title": "PluralitySpace",
+        "subtitle": "Inspiring Creativity, Connecting Minds",
+        "description": "PluralitySpace is an open platform that brings together technology, AI, education, and music. We respect creativity, embrace diversity, and share knowledge to inspire innovation.",
+        "language": "Language",
+        "theme": {
+            "title": "Theme",
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark"
+        },
+        "channel": {
+            "title": "Channel",
+            "tags": "Tags",
+            "ai": "AI",
+            "instant": "Instant",
+            "education": "Education",
+            "about": "About"
+        },
+        "home": {
+            "title": "Latest Articles",
+            "more": "More Articles",
+            "emptyTitle": "No Articles Found",
+            "emptyDescription": "No articles available in the current language."
+        },
+        "article": {
+            "summary": "Summary",
+            "copy": "Copy",
+            "copied": "Copied!"
+        },
+        "auth": {
+            "title": "Authentication Error",
+            "heading": "Authentication Failed",
+            "description": "We were unable to complete your request. Please try again or contact the application owner if the problem persists.",
+            "button": "Return to Sign-In",
+            "errorCodeLabel": "Error Code",
+            "messages": {
+                "invalid_code": "The authorization code is invalid or has expired.",
+                "access_denied": "The user denied the request.",
+                "invalid_request": "The request was invalid or missing required parameters.",
+                "server_error": "An internal server error occurred. Please try again later.",
+                "temporarily_unavailable": "Authentication service is temporarily unavailable. Please try again shortly.",
+                "unknown": "An unknown authentication error occurred."
+            },
+            "logout": {
+                "label": "Logout",
+                "title": "You have been signed out",
+                "subtitle": "Your session has been ended. You can return to the homepage or sign in again.",
+                "button": {
+                    "goHome": "Go to Home",
+                    "signin": "Sign in"
+                }
+            },
+            "login": {
+                "title": "Admin Portal",
+                "subtitle": "Please sign in to access management features",
+                "signWith": "Sign in with {provider}",
+                "error": {
+                    "title": "Sign In Failed",
+                    "with": "{provider} sign in failed, please try again later"
+                }
+            }
+        },
+        "mermaid": {
+            "button": {
+                "close": "Close"
+            },
+            "loading": {
+                "renderingMermaid": "Rendering Mermaid diagram..."
+            },
+            "error": {
+                "noCode": "No Mermaid code provided",
+                "renderFailed": "Rendering failed",
+                "mermaidRender": "Mermaid rendering error",
+                "mermaidRenderWithDetail": "Mermaid rendering error: {error}"
+            }
+        },
+        "footer": {
+            "buildWith": "Built with ",
+            "and": "and",
+            "present": "PRESENT"
+        },
+
+        "search": {
+            "placeholder": "Search articles, tutorials, and more...",
+            "title": "Search Articles",
+            "noResults": "No results found",
+            "noResultsHint": "Try different keywords or browse our categories",
+            "searchBlog": "Search our blog",
+            "findContent": "Find articles, tutorials, and insights",
+            "resultsFound": "results found"
+        }
+    },
+    "errors": {
+        "language": "Language",
+        "articleNotFound": "Article Not Found",
+        "pageNotFound": "Page Not Found",
+        "articleNotExists": "The article you're looking for doesn't exist or has been moved.",
+        "pageNotExists": "The page you're looking for doesn't exist or has been moved.",
+        "articleNotInLanguage": "The article \"{slug}\" is not available in {language}",
+        "availableLanguages": "Available in other languages:",
+        "goHome": "Go to Home",
+        "browseArticles": "Browse Articles",
+        "backToArticles": "Back to articles",
+        "errorArticleIdentifier": "Requested article identifier:",
+        "tryOtherOptions": "You can try the following options:",
+        "backToHome": "Back to Home",
+        "viewAllArticles": "View All Articles",
+        "contactSupport": "If you believe this is an error, please contact support:{email}."
+    }
+}

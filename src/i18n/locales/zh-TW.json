@@ -1,0 +1,413 @@
+{
+    "admin": {
+        "dashboard": {
+            "title": "管理儀表板",
+            "quickActions": "快速操作",
+            "enterButton": "進入",
+            "actions": {
+                "writeArticle": {
+                    "title": "撰寫文章",
+                    "description": "建立一篇新的文章"
+                },
+                "articleManagement": {
+                    "title": "文章管理",
+                    "description": "檢視和管理所有文章"
+                },
+                "backToFrontend": {
+                    "title": "返回前台",
+                    "description": "檢視前台頁面"
+                }
+            },
+            "articleSummary": {
+                "title": "文章總數",
+                "publishedDraft": "已發布: {published} | 草稿: {draft}"
+            },
+            "storageUsage": {
+                "title": "儲存使用"
+            },
+            "systemLoad": {
+                "title": "系統負載監控",
+                "cpu": {
+                    "title": "CPU 負載",
+                    "overallUsage": "整體 CPU 使用率",
+                    "userSystem": "使用者態: {user}% | 系統態: {system}%"
+                },
+                "memory": {
+                    "systemMemory": "系統記憶體",
+                    "nodeProcess": "Node.js 處理程序",
+                    "memoryUsage": "記憶體使用率"
+                },
+                "processDetails": {
+                    "title": "處理程序記憶體詳情：",
+                    "rss": "常駐記憶體: {value}",
+                    "external": "外部記憶體: {value}"
+                },
+                "status": {
+                    "lastUpdated": "最後更新: {time}"
+                }
+            }
+        },
+        "footer": {
+            "copyright": "© 2025 - 至今 Block Style CMS。保留所有權利。",
+            "version": "版本: v{version}",
+            "poweredBy": "基於 Next.js 構建"
+        },
+        "article": {
+            "meta": {
+                "title": "建立新的內容文章 — AI 協助 • SEO 優化 • Block 編輯",
+                "description": "建立新文章頁面：支援 AI 輔助創作、SEO 優化、可視化 Block 內容編輯與多語系。適用於部落格、知識庫與內容平台的高效寫作流程。"
+            },
+            "new": {
+                "title": "新建文章",
+                "success": {
+                    "created": "文章建立成功。"
+                },
+                "error": {
+                    "title": "建立文章時發生錯誤",
+                    "createFailed": "建立文章失敗"
+                }
+            },
+            "list": {
+                "title": "文章管理",
+                "actions": {
+                    "newArticle": "新建文章",
+                    "search": "搜尋文章",
+                    "clearSearch": "清空搜尋",
+                    "clearTagFilter": "清空標籤篩選",
+                    "view": "查看文章",
+                    "edit": "編輯文章",
+                    "delete": "刪除文章"
+                },
+                "search": {
+                    "placeholder": "輸入關鍵字搜尋...",
+                    "tagPlaceholder": "輸入標籤名稱..."
+                },
+                "filters": {
+                    "language": "語言",
+                    "status": "狀態",
+                    "tagFilter": "標籤篩選",
+                    "all": "全部",
+                    "published": "已發布",
+                    "draft": "草稿"
+                },
+                "table": {
+                    "title": "標題",
+                    "tags": "標籤",
+                    "status": "狀態",
+                    "updateTime": "更新時間",
+                    "actions": "操作",
+                    "noData": "暫無文章"
+                },
+                "pagination": {
+                    "total": "共 {total} 筆記錄",
+                    "page": "第 {current} / {total} 頁",
+                    "totalWithPage": "共 {total} 筆記錄，第 {current}} / {totalPages} 頁"
+                },
+                "status": {
+                    "published": "已發布",
+                    "draft": "草稿"
+                },
+                "delete": {
+                    "title": "確認刪除",
+                    "content": "確定要刪除這篇文章嗎？此操作無法復原。",
+                    "confirm": "確認刪除",
+                    "cancel": "取消"
+                },
+                "messages": {
+                    "fetchError": "取得文章列表失敗",
+                    "deleteSuccess": "文章刪除成功",
+                    "deleteError": "刪除文章失敗"
+                }
+            },
+            "edit": {
+                "title": "編輯文章",
+                "actions": {
+                    "update": "更新文章",
+                    "backToList": "返回文章列表"
+                },
+                "messages": {
+                    "fetchError": "取得文章失敗",
+                    "fetchDataError": "取得文章資料失敗",
+                    "notFound": "未找到對應的文章內容",
+                    "updateError": "更新文章失敗",
+                    "updateSuccess": "文章更新成功！"
+                },
+                "errors": {
+                    "title": "發生錯誤"
+                }
+            }
+        },
+
+        "article_form": {
+            "sections": {
+                "basic": "基本資訊",
+                "content": "文章內容 *",
+                "summary": "文章簡介 *",
+                "keywords": "關鍵字",
+                "tags": "標籤",
+                "publish": "發布設定"
+            },
+            "labels": {
+                "language": "語言",
+                "title": "文章標題",
+                "slug": "Slug (URL 路徑)",
+                "summary": "文章簡介",
+                "addKeyword": "新增關鍵字",
+                "addTag": "新增標籤",
+                "publishNow": "立即發布"
+            },
+            "placeholders": {
+                "title": "請輸入文章標題",
+                "summary": "請輸入文章簡介",
+                "keyword": "輸入關鍵字後按 Enter 或點擊新增",
+                "tag": "輸入標籤後按 Enter 或點擊新增"
+            },
+            "helper": {
+                "slugEditingDisabled": "編輯模式下不可修改 Slug，以保持連結穩定性",
+                "slugUse": "將用作文章的 URL 路徑",
+                "noKeywords": "尚無關鍵字，請手動新增或使用 AI 生成",
+                "noTags": "尚無標籤，請手動新增",
+                "publish": {
+                    "published": "文章將立即對外公開",
+                    "draft": "文章將儲存為草稿"
+                }
+            },
+            "buttons": {
+                "generateSlug": "AI 生成 Slug",
+                "generating": "生成中...",
+                "generateSummary": "AI 生成簡介",
+                "generateKeywords": "AI 生成關鍵字",
+                "add": "新增",
+                "submitCreate": "建立文章",
+                "creating": "建立中...",
+                "cancel": "取消"
+            },
+            "messages": {
+                "submitError": "提交表單時發生錯誤：",
+                "keywordsCommaNote": "將中文逗號替換為英文逗號"
+            }
+        },
+
+        "cover_image_selector": {
+            "title": "封面圖片",
+            "input": {
+                "label": "圖片URL",
+                "placeholder": "輸入圖片URL或點擊右側按鈕選擇圖片"
+            },
+            "buttons": {
+                "select": "選擇圖片",
+                "uploading": "上傳中",
+                "uploadLocal": "上傳本地圖片",
+                "fromPexels": "從Pexels選擇",
+                "viewLarge": "查看大圖",
+                "openNewWindow": "新窗口打開",
+                "remove": "移除圖片",
+                "delete": "刪除",
+                "cancel": "取消"
+            },
+            "notes": {
+                "supportedTypes": "支援 JPG、PNG、WebP、GIF、SVG 格式",
+                "preview": "圖片預覽",
+                "imageUrlLabel": "圖片地址"
+            },
+            "messages": {
+                "uploadSuccess": "圖片上傳成功！",
+                "uploadFailed": "上傳失敗：伺服器返回錯誤",
+                "unsupportedType": "不支援的檔案類型。請選擇 JPEG、PNG、WebP 或 GIF。",
+                "fileTooLarge": "檔案大小不得超過 5MB",
+                "removeSuccess": "圖片引用已移除",
+                "removeFailed": "刪除失敗，請稍後再試",
+                "loadFailed": "圖片載入失敗",
+                "loadSuccess": "圖片載入成功",
+                "removeConfirm": "確定要移除這張圖片嗎？"
+            }
+        },
+
+        "pexels_image_picker": {
+            "title": "選擇Pexels圖片",
+            "search": {
+                "label": "搜尋圖片關鍵字",
+                "placeholder": "例如: nature, business, technology...",
+                "button": "搜尋",
+                "searching": "搜尋中..."
+            },
+            "states": {
+                "noResults": "沒有找到相關圖片",
+                "noResultsHint": "請嘗試其他關鍵字搜尋",
+                "welcome": "搜尋 Pexels 免費圖片",
+                "welcomeHint": "輸入關鍵字開始搜尋高品質的免費圖片"
+            },
+            "actions": {
+                "cancel": "取消",
+                "confirm": "確認選擇"
+            },
+            "errors": {
+                "searchFailed": "搜尋圖片失敗",
+                "loadImagesFailed": "載入圖片失敗"
+            }
+        },
+
+        "block_note_editor": {
+            "fullscreen": {
+                "browser": "瀏覽器全螢幕",
+                "monitor": "螢幕全螢幕"
+            },
+            "errors": {
+                "enableFullscreen": "啟用全螢幕時出錯",
+                "exitFullscreen": "退出全螢幕時出錯"
+            }
+        },
+
+        "validation": {
+            "article": {
+                "id": {
+                    "format": "文章ID必須是有效的UUID格式"
+                },
+                "slug": {
+                    "min": "URL標識至少需要{min}個字符",
+                    "max": "URL標識不能超過{max}個字符",
+                    "format": "URL標識只能包含小寫字母、數字和連字符"
+                },
+                "locale": {
+                    "invalid": "語言區域必須是以下之一：{codes}"
+                },
+                "tag": {
+                    "min": "標籤至少需要{min}個字符",
+                    "max": "標籤不能超過{max}個字符"
+                },
+                "keyword": {
+                    "min": "關鍵詞至少需要{min}個字符",
+                    "max": "關鍵詞不能超過{max}個字符"
+                },
+                "title": {
+                    "min": "標題至少需要{min}個字符",
+                    "max": "標題不能超過{max}個字符"
+                },
+                "tags": {
+                    "min": "至少需要{min}個標籤",
+                    "max": "標籤數量不能超過{max}個"
+                },
+                "keywords": {
+                    "min": "至少需要{min}個關鍵詞",
+                    "max": "關鍵詞數量不能超過{max}個"
+                },
+                "summary": {
+                    "min": "摘要至少需要{min}個字符",
+                    "max": "摘要不能超過{max}個字符"
+                },
+                "content": {
+                    "required": "文章內容不能為空"
+                },
+                "image": {
+                    "url": "封面圖片必須是有效的URL"
+                },
+                "createdAt": {
+                    "format": "創建時間格式不正確"
+                },
+                "updatedAt": {
+                    "format": "更新時間格式不正確"
+                }
+            }
+        }
+    },
+    "web": {
+        "title": "博採眾生",
+        "subtitle": "創意在此匯聚，靈感由此啟航",
+        "description": "博採眾生是一個開放的平台，融合IT技術、人工智能、教育與音樂。我們尊重創意，包容多元，分享知識，激發更多創新靈感。",
+        "language": "語言",
+        "theme": {
+            "title": "主題",
+            "system": "跟隨系統",
+            "light": "淺色",
+            "dark": "深色"
+        },
+        "channel": {
+            "title": "頻道",
+            "tags": "標籤",
+            "ai": "AI",
+            "instant": "即時",
+            "education": "教育",
+            "about": "關於"
+        },
+        "home": {
+            "title": "最新文章",
+            "more": "更多文章",
+            "emptyTitle": "未找到文章",
+            "emptyDescription": "當前語言暫無可用文章。"
+        },
+        "article": {
+            "summary": "摘要",
+            "copy": "複製",
+            "copied": "已複製!"
+        },
+        "auth": {
+            "title": "驗證錯誤",
+            "heading": "認證失敗",
+            "description": "處理您的請求時發生問題。請重試，或在問題持續時聯絡應用擁有者。",
+            "button": "返回重新登入",
+            "errorCodeLabel": "錯誤代碼",
+            "messages": {
+                "invalid_code": "授權碼無效或已過期。",
+                "access_denied": "使用者拒絕了授權請求。",
+                "invalid_request": "請求參數不正確或遺失。",
+                "server_error": "伺服器內部發生錯誤，請稍後再試。",
+                "temporarily_unavailable": "驗證服務暫時無法使用，請稍候再試。",
+                "unknown": "發生未知的驗證錯誤。"
+            },
+            "logout": {
+                "label": "登出",
+                "title": "您已成功登出",
+                "subtitle": "您的工作階段已結束。您可以返回首頁或重新登入。",
+                "button": {
+                    "goHome": "返回首頁",
+                    "signin": "重新登入"
+                }
+            },
+            "login": {
+                "title": "管理員後台",
+                "subtitle": "請登入以存取管理功能",
+                "signWith": "使用 {provider} 登入",
+                "error": {
+                    "title": "登入失敗",
+                    "with": "{provider} 登入失敗，請稍後重試"
+                }
+            }
+        },
+        "mermaid": {
+            "button": {
+                "close": "關閉"
+            },
+            "loading": {
+                "renderingMermaid": "正在渲染 Mermaid 圖表..."
+            },
+            "error": {
+                "noCode": "沒有提供 Mermaid 程式碼",
+                "renderFailed": "渲染失敗",
+                "mermaidRender": "Mermaid 渲染錯誤",
+                "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}"
+            }
+        },
+        "footer": {
+            "buildWith": "使用",
+            "and": "與",
+            "present": "目前"
+        }
+    },
+    "errors": {
+        "language": "語言",
+        "articleNotFound": "文章未找到",
+        "pageNotFound": "頁面未找到",
+        "articleNotExists": "您訪問的文章不存在或已被移動。",
+        "pageNotExists": "您訪問的頁面不存在或已被移動。",
+        "articleNotInLanguage": "文章「{slug}」暫無\"{language}\"版本",
+        "availableLanguages": "其他語言版本：",
+        "goHome": "返回首頁",
+        "browseArticles": "瀏覽文章",
+        "backToArticles": "返回文章列表",
+        "errorArticleIdentifier": "請求的文章標識：",
+        "tryOtherOptions": "您可以嘗試以下選項：",
+        "backToHome": "返回首頁",
+        "viewAllArticles": "查看所有文章",
+        "contactSupport": "如有問題，請聯繫:{email}。"
+    }
+}

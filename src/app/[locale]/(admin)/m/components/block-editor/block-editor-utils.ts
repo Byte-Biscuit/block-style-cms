@@ -14,13 +14,12 @@ export const getBlockNoteSelfDictionary = async (locale: string): Promise<Dictio
     // normalize some locale identifiers
     const key = raw === "zh-cn" ? "zh" : raw === "zh-tw" ? "zhTW" : raw;
 
-
     const loaders: Record<string, () => Promise<unknown>> = {
         enUS: () => import("@/blockn/locales/en"),
         zh: () => import("@/blockn/locales/zh"),
         zhTW: () => import("@/blockn/locales/zh-tw"),
     };
-    const loader = loaders[key] ?? loaders.en;
+    const loader = loaders[key] ?? loaders.enUS;
     const promise = loader()
         .then((mod: unknown) => {
             // module may export default or named export (e.g. en, zh)

@@ -24,6 +24,8 @@ export async function generateMetadata({
     const articles = await articleService.getArticlesBySlug(slug);
     const article = articles?.find((a) => a.locale === locale);
 
+    const base = process.env.NEXT_PUBLIC_BASE_URL;
+
     if (!article) {
         return {
             title: t("errors.articleNotFound"),
@@ -31,9 +33,16 @@ export async function generateMetadata({
         };
     }
 
+    const languages: Record<string, string> = {};
+    articles?.forEach((article) => {
+        languages[article.locale] =
+            `${base}/${article.locale}/articles/${article.slug}`;
+    });
+
     return {
         title: article.title,
         description: article.summary,
+        alternates: { languages: { ...languages } },
     };
 }
 

@@ -34,6 +34,10 @@ export default function ArticleItem({
         gradientVariants.length;
     const gradientClass = gradientVariants[gradientIndex];
     const locale = language;
+    const filteredTags = tags
+        .map((tag) => tag.trim())
+        .filter((tag) => !(tag.startsWith("_") || tag.endsWith("_")))
+        .map((tag) => tag.toUpperCase());
     const imageUrl =
         ImageService.optimizeImageFromUrl(image || null, {
             width: aspect_w_val,
@@ -66,7 +70,7 @@ export default function ArticleItem({
 
                 <div className="flex min-w-0 flex-1 flex-col px-6 py-2">
                     <div className="mb-2 flex flex-wrap gap-3">
-                        {tags.slice(0, 3).map((tag) => (
+                        {filteredTags.slice(0, 3).map((tag) => (
                             <span
                                 key={tag}
                                 className="text-xs font-semibold tracking-wide text-orange-500 uppercase hover:text-orange-600"
@@ -75,9 +79,9 @@ export default function ArticleItem({
                                 {tag}
                             </span>
                         ))}
-                        {tags.length > 3 && (
+                        {filteredTags.length > 3 && (
                             <span className="text-xs font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400">
-                                +{tags.length - 3} more
+                                +{filteredTags.length - 3} more
                             </span>
                         )}
                     </div>

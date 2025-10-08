@@ -53,7 +53,7 @@ export default function ArticleItem({
                 className={`flex ${aspect_h} overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-gray-900 dark:shadow-gray-800/10`}
             >
                 <div
-                    className={`relative aspect-video ${aspect_w} flex-shrink-0 bg-gradient-to-br ${gradientClass}`}
+                    className={`relative hidden aspect-video sm:block ${aspect_w} flex-shrink-0 bg-gradient-to-br ${gradientClass}`}
                 >
                     {imageUrl && (
                         <div className="absolute inset-0 opacity-40">
@@ -63,6 +63,7 @@ export default function ArticleItem({
                                 fill
                                 className="object-cover"
                                 sizes="256px"
+                                loading="lazy"
                             />
                         </div>
                     )}

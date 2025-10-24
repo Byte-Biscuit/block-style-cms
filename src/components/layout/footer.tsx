@@ -1,6 +1,7 @@
 import Link from "@/components/link";
 import { getTranslations } from "next-intl/server";
 import { VERSION } from "@/config";
+import UmamiAnalytics from "@/components/umami-analytics";
 const footerLinkTwCls =
     "text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300";
 const Footer = async () => {
@@ -61,6 +62,7 @@ const Footer = async () => {
                 </Link>
             </div>
             <div>v{VERSION}</div>
+            <UmamiAnalytics />
         </footer>
     );
 };

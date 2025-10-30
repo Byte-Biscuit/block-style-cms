@@ -391,6 +391,15 @@
             "buildWith": "使用",
             "and": "與",
             "present": "目前"
+        },
+
+        "search": {
+            "placeholder": "搜尋文章、教學等內容...",
+            "title": "搜尋文章",
+            "noResults": "未找到結果",
+            "noResultsHint": "嘗試使用不同的關鍵字或瀏覽我們的分類",
+            "findContent": "尋找文章、教學和見解",
+            "resultsFound": "個結果"
         }
     },
     "errors": {

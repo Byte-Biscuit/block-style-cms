@@ -14,7 +14,6 @@ export const formatDateI18n = (
     options?: Intl.DateTimeFormatOptions
 ): string => {
     const dateObj = typeof date === "string" ? new Date(date) : date;
-    debugger;
     if (isNaN(dateObj.getTime())) {
         return '';
     }

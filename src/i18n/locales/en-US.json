@@ -397,7 +397,6 @@
             "title": "Search Articles",
             "noResults": "No results found",
             "noResultsHint": "Try different keywords or browse our categories",
-            "searchBlog": "Search our blog",
             "findContent": "Find articles, tutorials, and insights",
             "resultsFound": "results found"
         }

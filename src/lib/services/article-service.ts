@@ -3,6 +3,7 @@ import path from 'path';
 import { Article, ArticleMetadata } from '@/types/article';
 import { ARTICLE_DIR, META_DIR } from '@/config';
 import { lruCacheService } from "@/lib/services/lru-cache-service";
+import { algoliaSearchService } from "@/lib/services/algolia-search-service";
 
 class ArticleService {
     private metadataCache: Record<string, ArticleMetadata[]> | null = null;
@@ -30,6 +31,7 @@ class ArticleService {
         const articleFile = this.getArticleFile(article.id);
         await fs.writeFile(articleFile, JSON.stringify(article, null, 2));
         await this.updateMetadata(article);
+        await algoliaSearchService.saveArticle(article);
     }
 
     /**
@@ -51,6 +53,7 @@ class ArticleService {
             };
             await fs.writeFile(articleFile, JSON.stringify(updatedArticle, null, 2));
             await this.updateMetadata(updatedArticle);
+            await algoliaSearchService.updateArticle(updatedArticle);
         } catch (error) {
             console.error(`Error updating article ${article.id}:`, error);
             throw new Error(`Failed to update article: ${error instanceof Error ? error.message : String(error)}`);
@@ -76,6 +79,7 @@ class ArticleService {
                 await fs.writeFile(this.getMetadataFile(), JSON.stringify(metadataMap, null, 2));
                 this.metadataCache = metadataMap;
             }
+            await algoliaSearchService.deleteArticle(id);
         } catch (error) {
             console.error(`Error deleting article ${id}:`, error);
             throw new Error(`Failed to delete article: ${error instanceof Error ? error.message : String(error)}`);

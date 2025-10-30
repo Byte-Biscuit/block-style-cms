@@ -390,7 +390,16 @@
         "footer": {
             "buildWith": "使用",
             "and": "和",
-            "present": "现在"
+            "present": "至今"
+        },
+
+        "search": {
+            "placeholder": "搜索文章、教程等内容...",
+            "title": "搜索文章",
+            "noResults": "未找到结果",
+            "noResultsHint": "尝试使用不同的关键词或浏览我们的分类",
+            "findContent": "查找文章、教程和见解",
+            "resultsFound": "个结果"
         }
     },
     "errors": {

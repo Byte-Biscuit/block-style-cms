@@ -11,9 +11,10 @@ import {
 } from "react-instantsearch";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "@/components/link";
 import type { Hit as AlgoliaHit } from "instantsearch.js";
+import I18NLocaleTime from "@/components/i18n-time";
 
 // Algolia article hit type
 interface ArticleHit {
@@ -23,8 +24,7 @@ interface ArticleHit {
     summary: string;
     tags: string[];
     locale: string;
-    image?: string;
-    createdAt: number;
+    updatedAt: Date;
 }
 
 interface AlgoliaSearchDialogProps {
@@ -39,8 +39,8 @@ const searchClient = algoliasearch(appId, apiKey);
 
 // Article hit component
 function ArticleHitComponent({ hit }: { hit: AlgoliaHit<ArticleHit> }) {
-    const formattedDate = new Date(hit.createdAt).toLocaleDateString();
-
+    //const formattedDate = hit.updatedAt;
+    const locale = useLocale();
     return (
         <Link
             href={`/${hit.locale}/articles/${hit.slug}`}
@@ -55,19 +55,28 @@ function ArticleHitComponent({ hit }: { hit: AlgoliaHit<ArticleHit> }) {
                         <Highlight attribute="summary" hit={hit} />
                     </p>
                     <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
-                        <span>{formattedDate}</span>
+                        <I18NLocaleTime date={hit.updatedAt} locale={locale} />
                         {hit.tags && hit.tags.length > 0 && (
                             <>
                                 <span>•</span>
                                 <div className="flex flex-wrap gap-1">
-                                    {hit.tags.slice(0, 3).map((tag) => (
-                                        <span
-                                            key={tag}
-                                            className="rounded bg-gray-100 px-2 py-0.5 dark:bg-gray-800"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
+                                    {hit.tags
+                                        .filter(
+                                            (tag) =>
+                                                !(
+                                                    tag.endsWith("_") &&
+                                                    tag.startsWith("_")
+                                                )
+                                        )
+                                        .slice(0, 3)
+                                        .map((tag) => (
+                                            <span
+                                                key={tag}
+                                                className="rounded bg-gray-100 px-2 py-0.5 dark:bg-gray-800"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
                                 </div>
                             </>
                         )}

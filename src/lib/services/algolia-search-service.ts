@@ -20,18 +20,15 @@ interface BlockNoteContent {
 /**
  * Algolia index object interface
  */
-interface AlgoliaArticle extends Record<string, unknown> {
+export interface AlgoliaArticle extends Record<string, unknown> {
     objectID: string;
     slug: string;
     title: string;
     summary: string;
     tags: string[];
-    keywords: string[];
     locale: string;
-    image?: string;
     content: string;
-    createdAt: number;
-    updatedAt: number;
+    updatedAt?: Date;
 }
 
 /**
@@ -218,18 +215,15 @@ class AlgoliaSearchService {
      */
     private articleToAlgoliaObject(article: Article): AlgoliaArticle {
         const markdownContent = this.convertBlocksToMarkdown(article.content as BlockNoteBlock[]);
-
         return {
             objectID: article.id!,
             slug: article.slug,
             title: article.title,
             summary: article.summary,
             tags: article.tags,
-            keywords: article.keywords,
             locale: article.locale,
             content: markdownContent,
-            createdAt: article.createdAt ? new Date(article.createdAt).getTime() : Date.now(),
-            updatedAt: article.updatedAt ? new Date(article.updatedAt).getTime() : Date.now(),
+            updatedAt: article.updatedAt,
         };
     }
 
@@ -255,8 +249,23 @@ class AlgoliaSearchService {
             });
             console.log(`Article ${article.id} saved to Algolia successfully`);
         } catch (error) {
-            console.error(`Failed to save article ${article.id} to Algolia:`, error);
-            throw error;
+            if (error instanceof Error && error.message.includes('Record is too big')) {
+                console.log("Handling oversized record by truncating content");
+                const algoliaObject = this.articleToAlgoliaObject(article);
+                algoliaObject.content = "";
+                this.client!.saveObject({
+                    indexName: this.indexName,
+                    body: algoliaObject,
+                }).then(() => {
+                    console.log(`Article ${article.id} with truncated content saved to Algolia successfully`);
+                }).catch(err => {
+                    console.error(`Failed to save truncated article ${article.id} to Algolia:`, err);
+                    throw err;
+                });
+            } else {
+                console.error(`Failed to save article ${article.id} to Algolia:`, error);
+                throw error;
+            }
         }
     }
 
@@ -275,13 +284,7 @@ class AlgoliaSearchService {
                 console.log(`Article ${article.id} unpublished, removed from Algolia`);
                 return;
             }
-
-            // Otherwise update article
-            const algoliaObject = this.articleToAlgoliaObject(article);
-            await this.client!.saveObject({
-                indexName: this.indexName,
-                body: algoliaObject,
-            });
+            this.saveArticle(article);
             console.log(`Article ${article.id} updated in Algolia successfully`);
         } catch (error) {
             console.error(`Failed to update article ${article.id} in Algolia:`, error);
@@ -378,3 +381,23 @@ class AlgoliaSearchService {
 }
 
 export const algoliaSearchService = new AlgoliaSearchService();
+
+/**
+ * Failed to update article a61f2cc8-ded2-4913-8b59-2fdbf6e763ef in Algolia: Error [ApiError]: Record is too big size=11226/10000 bytes. Please have a look at https://www.algolia.com/doc/guides/sending-and-managing-data/prepare-your-data/in-depth/index-and-records-size-and-usage-limitations/#record-size-limits
+    at async AlgoliaSearchService.updateArticle (src\lib\services\algolia-search-service.ts:278:13)
+    at async ArticleService.updateArticle (src\lib\services\article-service.ts:56:13)
+    at async eval (src\app\api\m\articles\route.ts:122:9)
+    at async eval (src\lib\with-timing.ts:6:21)
+  276 |             // Otherwise update article
+  277 |             const algoliaObject = this.articleToAlgoliaObject(article);
+> 278 |             await this.client!.saveObject({
+      |             ^
+  279 |                 indexName: this.indexName,
+  280 |                 body: algoliaObject,
+  281 |             }); {
+  stackTrace: [Array],
+  status: 400
+}
+Error updating article a61f2cc8-ded2-4913-8b59-2fdbf6e763ef: Error [ApiError]: Record is too big size=11226/10000 bytes. Please have a look at https://www.algolia.com/doc/guides/sending-and-managing-data/prepare-your-data/in-depth/index-and-records-size-and-usage-limitations/#record-size-limits
+ * 
+ */

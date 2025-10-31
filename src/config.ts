@@ -64,7 +64,7 @@ export {
 };
 
 //Version
-export const VERSION = '0.0.4';
+export const VERSION = '0.0.6';
 
 // ================================
 // Common Configuration - Available for both server and client

@@ -1,4 +1,8 @@
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next';
+
+// Every 24 hours
+export const revalidate = 86400;
+export const dynamic = 'force-static';
 
 export default function robots(): MetadataRoute.Robots {
     return {

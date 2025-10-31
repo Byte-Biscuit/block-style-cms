@@ -5,6 +5,9 @@
 
 import path from 'path';
 
+//Version
+export const VERSION = '0.0.8';
+
 // Check if running in server environment
 const isServer = typeof window === 'undefined';
 
@@ -62,9 +65,6 @@ export {
     AUDIO_DIR,
     FILE_DIR,
 };
-
-//Version
-export const VERSION = '0.0.6';
 
 // ================================
 // Common Configuration - Available for both server and client

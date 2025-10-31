@@ -5,8 +5,10 @@ import { articleService } from '@/lib/services/article-service';
  * Dynamic sitemap generation with ISR
  * Revalidates every hour
  */
-export const revalidate = 3600; // Revalidate every 1 hour
-export const dynamic = 'force-static'; // Pre-render at build time
+// Revalidate every 1 hour
+export const revalidate = 3600;
+// Pre-render at build time
+export const dynamic = 'force-static';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://studio.xiyue.space';

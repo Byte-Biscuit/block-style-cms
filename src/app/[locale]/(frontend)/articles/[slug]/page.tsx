@@ -17,6 +17,20 @@ type Props = {
     params: Promise<{ slug: string; locale: string }>;
 };
 
+export const revalidate = 3600;
+export const dynamic = "force-static";
+
+export async function generateStaticParams() {
+    const metadataMap = await articleService.getMetadataMap();
+    const articles = Object.values(metadataMap).flat();
+    const publishedArticles = articles.filter((a) => a.published);
+
+    return publishedArticles.map((article) => ({
+        locale: article.locale,
+        slug: article.slug,
+    }));
+}
+
 export async function generateMetadata({
     params,
 }: {

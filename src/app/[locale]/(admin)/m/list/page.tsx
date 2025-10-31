@@ -90,7 +90,7 @@ export default function PostListPage() {
                 params.append("published", publishedFilter);
             if (debouncedTagFilter) params.append("tag", debouncedTagFilter);
             params.append("pageIndex", pageIndex.toString());
-            params.append("pageSize", "3");
+            params.append("pageSize", "20");
             const response = await fetch(
                 `${ADMIN_API_PREFIX}/articles?${params.toString()}`
             );

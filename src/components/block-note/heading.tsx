@@ -2,13 +2,25 @@ import React from "react";
 import { twColorMap, type BlockData } from "./meta";
 import Content from "./item/content";
 import { getDefaultHeadingClasses } from "@/lib/tw-utils";
+import { generateHeadingId } from "@/lib/toc-utils";
 
 interface HeadingProps {
     data: BlockData & { props: { level: number } };
     className?: string;
+    index?: number;
 }
 
-export const Heading: React.FC<HeadingProps> = ({ data, className = "" }) => {
+/**
+ * Extract plain text for toc generation
+ * @param content
+ * @returns
+ */
+
+export const Heading: React.FC<HeadingProps> = ({
+    data,
+    className = "",
+    index = 0,
+}) => {
     const { props, content } = data;
 
     if (!props) return null;
@@ -38,9 +50,11 @@ export const Heading: React.FC<HeadingProps> = ({ data, className = "" }) => {
         .join(" ");
     return React.createElement(
         HeadingTag,
-        { className: tagClasses },
+        {
+            className: tagClasses,
+            id: generateHeadingId(props.level, index),
+        },
         <Content items={content} />
     );
 };
-
 export default Heading;

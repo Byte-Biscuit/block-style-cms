@@ -24,6 +24,8 @@ export const groupListItems = (blocks: BlockData[]): React.ReactNode[] => {
     const result: React.ReactNode[] = [];
     let currentBulletGroup: BlockData[] = [];
     let currentNumberedGroup: BlockData[] = [];
+    // Start from 2 to avoid conflict with article title and summary
+    let headingIndex = 2;
 
     const flushBulletGroup = () => {
         if (currentBulletGroup.length > 0) {
@@ -71,9 +73,33 @@ export const groupListItems = (blocks: BlockData[]): React.ReactNode[] => {
             currentNumberedGroup.push(block);
         } else {
             flushAllGroups();
-            result.push(
-                <UniversalBlockRenderer key={block.id} block={block} />
-            );
+            /**
+             * ⚠️ SPECIAL CASE: Heading blocks
+             *
+             * Why not use UniversalBlockRenderer for headings?
+             * - Headings require a sequential index for unique ID generation
+             * - The index is used to create anchor links for TOC navigation
+             * - UniversalBlockRenderer doesn't maintain state across blocks
+             *
+             * Solution:
+             * - Render Heading component directly with headingIndex prop
+             * - Increment headingIndex after each heading
+             * - This ensures: heading-0-title, heading-1-intro, heading-2-conclusion, etc.
+             */
+            if (block.type === "heading") {
+                result.push(
+                    <Heading
+                        key={block.id}
+                        data={block as BlockData & { props: { level: number } }}
+                        index={headingIndex++} // Pass and increment counter
+                    />
+                );
+            } else {
+                // All other block types use the unified renderer
+                result.push(
+                    <UniversalBlockRenderer key={block.id} block={block} />
+                );
+            }
         }
     });
 
@@ -88,15 +114,6 @@ export const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     className = "",
 }) => {
     const blockType = block.type;
-    // heading
-    if (blockType === "heading") {
-        return (
-            <Heading
-                data={block as BlockData & { props: { level: number } }}
-                className={className || undefined}
-            />
-        );
-    }
     // paragraph
     if (blockType === "paragraph") {
         return <Paragraph data={block} className="mb-4 leading-relaxed" />;

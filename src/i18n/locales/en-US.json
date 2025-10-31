@@ -399,6 +399,11 @@
             "noResultsHint": "Try different keywords or browse our categories",
             "findContent": "Find articles, tutorials, and insights",
             "resultsFound": "results found"
+        },
+        "toc": {
+            "title": "Table of Contents",
+            "hide": "Hide Table of Contents",
+            "show": "Show Table of Contents"
         }
     },
     "errors": {

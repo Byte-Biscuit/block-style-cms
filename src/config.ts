@@ -1,15 +1,15 @@
 /**
- * 应用程序配置管理
- * 统一管理所有环境变量和配置项
+ * Application Configuration Management
+ * Centralized management of all environment variables and configuration items
  */
 
 import path from 'path';
 
-// 判断是否在服务端环境
+// Check if running in server environment
 const isServer = typeof window === 'undefined';
 
 // ================================
-// 服务端专用配置
+// Server-side Only Configuration
 // ================================
 let META_DIR: string;
 let ARTICLE_DIR: string;
@@ -22,12 +22,12 @@ let FILE_DIR: string;
 const APPLICATION_DATA_PATH = process.env.APPLICATION_DATA_PATH;
 if (isServer) {
     if (!APPLICATION_DATA_PATH) {
-        console.error('❌ 缺少必需的环境变量: APPLICATION_DATA_PATH');
-        console.error('请在 .env.local 文件中设置: APPLICATION_DATA_PATH=your_data_path');
+        console.error('❌ Missing required environment variable: APPLICATION_DATA_PATH');
+        console.error('Please set in .env.local file: APPLICATION_DATA_PATH=your_data_path');
         process.exit(1);
     }
 
-    // 服务端文件系统路径配置
+    // Server-side file system path configuration
     META_DIR = path.join(APPLICATION_DATA_PATH, 'meta');
 
     ARTICLE_DIR = path.join(APPLICATION_DATA_PATH, 'articles');
@@ -41,7 +41,7 @@ if (isServer) {
 
     FILE_DIR = path.join(APPLICATION_DATA_PATH, 'files');
 } else {
-    // 客户端环境下的默认值（不会被使用，但避免编译错误）
+    // Default values for client environment (not used, but avoids compilation errors)
     ARTICLE_DIR = '';
     META_DIR = '';
     IMAGE_DIR = '';
@@ -51,7 +51,7 @@ if (isServer) {
     FILE_DIR = '';
 }
 
-// 导出服务端配置
+// Export server-side configuration
 export {
     APPLICATION_DATA_PATH,
     ARTICLE_DIR,
@@ -64,16 +64,16 @@ export {
 };
 
 //Version
-export const VERSION = '0.0.1';
+export const VERSION = '0.0.4';
 
 // ================================
-// 通用配置 - 服务端和客户端都可以使用
+// Common Configuration - Available for both server and client
 // ================================
 export const ADMIN_PAGE_PREFIX = "/m";
 export const ADMIN_API_PREFIX = "/api/m";
 
 // ================================
-// 客户端可用的环境变量 (NEXT_PUBLIC_)
+// Client-accessible Environment Variables (NEXT_PUBLIC_)
 // ================================
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
 export const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000/images';
@@ -82,7 +82,7 @@ export const AUDIO_BASE_URL = process.env.NEXT_PUBLIC_AUDIO_BASE_URL || 'http://
 export const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL || 'http://localhost:3000/files';
 
 // ================================
-// 文件类型和大小限制配置
+// File Type and Size Limit Configuration
 // ================================
 export const ALLOWED_IMAGE_MIME_TYPES = [
     'image/jpeg',
@@ -118,13 +118,13 @@ export const ALLOWED_AUDIO_MIME_TYPES = [
     'audio/webm'
 ] as const;
 
-// 文件大小限制
+// File size limits
 export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 export const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 export const MAX_AUDIO_SIZE = 50 * 1024 * 1024; // 50MB
 
 /**
- * 常用文件扩展名常量
+ * Common file extension constants
  */
 export const FILE_EXTENSIONS = {
     IMAGES: new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico']),
@@ -134,7 +134,7 @@ export const FILE_EXTENSIONS = {
 } as const;
 
 // ================================
-// 类型定义
+// Type Definitions
 // ================================
 export type AllowedImageMimeType = typeof ALLOWED_IMAGE_MIME_TYPES[number];
 export type AllowedVideoMimeType = typeof ALLOWED_VIDEO_MIME_TYPES[number];

@@ -400,6 +400,11 @@
             "noResultsHint": "嘗試使用不同的關鍵字或瀏覽我們的分類",
             "findContent": "尋找文章、教學和見解",
             "resultsFound": "個結果"
+        },
+        "toc": {
+            "title": "目錄",
+            "hide": "隱藏目錄",
+            "show": "顯示目錄"
         }
     },
     "errors": {

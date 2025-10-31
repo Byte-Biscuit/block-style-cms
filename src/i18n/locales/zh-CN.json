@@ -400,6 +400,11 @@
             "noResultsHint": "尝试使用不同的关键词或浏览我们的分类",
             "findContent": "查找文章、教程和见解",
             "resultsFound": "个结果"
+        },
+        "toc": {
+            "title": "目录",
+            "hide": "隐藏目录",
+            "show": "显示目录"
         }
     },
     "errors": {

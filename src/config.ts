@@ -6,7 +6,7 @@
 import path from 'path';
 
 //Version
-export const VERSION = '0.0.8';
+export const VERSION = '0.0.9';
 
 // Check if running in server environment
 const isServer = typeof window === 'undefined';

@@ -54,14 +54,14 @@ export default function TableOfContentsMobile({
             <button
                 onClick={() => setIsOpen(true)}
                 aria-label={t("toc.show")}
-                className="fixed right-2 bottom-[35vh] z-40 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600/80 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl active:scale-95 lg:hidden dark:bg-blue-500"
+                className="fixed right-2 bottom-[35vh] z-40 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600/80 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl active:scale-95 2xl:hidden dark:bg-blue-500"
             >
                 <MenuIcon className="h-6 w-6" />
             </button>
             {/* Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity lg:hidden"
+                    className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity 2xl:hidden"
                     onClick={() => setIsOpen(false)}
                     aria-hidden="true"
                 />
@@ -71,7 +71,7 @@ export default function TableOfContentsMobile({
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
-                className={`fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] transform bg-white shadow-2xl transition-all duration-300 ease-out lg:hidden dark:bg-gray-900 ${
+                className={`fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] transform bg-white shadow-2xl transition-all duration-300 ease-out 2xl:hidden dark:bg-gray-900 ${
                     isOpen
                         ? "translate-x-0 opacity-100"
                         : "pointer-events-none translate-x-full opacity-0"

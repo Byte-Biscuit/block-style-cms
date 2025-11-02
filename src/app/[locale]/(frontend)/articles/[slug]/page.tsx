@@ -161,7 +161,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                 </section>
             </article>
             {toc.length > 0 && (
-                <aside className="fixed top-24 right-8 hidden max-h-[calc(100vh-200px)] w-64 overflow-y-auto lg:block">
+                <aside className="fixed top-24 right-8 hidden max-h-[calc(100vh-200px)] w-64 overflow-y-auto 2xl:block">
                     <TableOfContents articleTitle={article.title} items={toc} />
                 </aside>
             )}

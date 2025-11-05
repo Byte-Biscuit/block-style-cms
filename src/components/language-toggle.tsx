@@ -95,7 +95,7 @@ export function LanguageToggle() {
                 }}
                 slotProps={{
                     paper: {
-                        sx: { py: 0 },
+                        sx: { py: 0, bgcolor: "transparent" },
                     },
                     list: {
                         sx: { py: 0 },

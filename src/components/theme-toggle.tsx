@@ -73,7 +73,7 @@ export function ThemeToggle() {
                 }}
                 slotProps={{
                     paper: {
-                        sx: { py: 0 },
+                        sx: { py: 0, bgcolor: "transparent" },
                     },
                     list: {
                         sx: { py: 0 },
@@ -86,6 +86,9 @@ export function ThemeToggle() {
                             key={`theme-${thm}`}
                             onClick={() => handleThemeChange(thm)}
                             className="group hover:bg-primary-600 hover:text-white dark:bg-gray-800 dark:text-white"
+                            sx={{
+                                bgcolor: "transparent",
+                            }}
                         >
                             <ListItemIcon className="group-hover:text-white dark:text-white">
                                 {(() => {

@@ -2,12 +2,19 @@
 import React from "react";
 import { IconButton, Tooltip, Menu, MenuItem } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "@/components/link";
-import { channels, type Channel } from "@/channels";
+import { Channel } from "@/lib/services/channel-service";
 
-export default function SmallScreenNavButton() {
+interface SmallScreenNavButtonProps {
+    channels: Channel[];
+}
+
+export default function SmallScreenNavButton({
+    channels,
+}: SmallScreenNavButtonProps) {
     const t = useTranslations("web");
+    const locale = useLocale();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -16,6 +23,14 @@ export default function SmallScreenNavButton() {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const getChannelHref = (channel: Channel): string => {
+        if (channel.type === "page") {
+            return channel.href!;
+        }
+        // type === 'tag' - use channel route
+        return `/${locale}/channel/${channel.id}`;
     };
 
     return (
@@ -55,10 +70,10 @@ export default function SmallScreenNavButton() {
                     return (
                         <Link
                             key={`nav-${channel.id}`}
-                            href={channel.href}
+                            href={getChannelHref(channel)}
                             className="hover:bg-primary-600 block min-w-3xs hover:text-white dark:bg-gray-800 dark:text-white"
                         >
-                            <MenuItem key={`nav-${channel.id}`}>
+                            <MenuItem onClick={handleClose}>
                                 {t(`channel.${channel.labelKey}`)}
                             </MenuItem>
                         </Link>

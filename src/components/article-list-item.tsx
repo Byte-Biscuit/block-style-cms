@@ -3,6 +3,7 @@ import Link from "@/components/link";
 import { ArticleMetadata } from "@/types/article";
 import I18NLocaleTime from "@/components/i18n-time";
 import { ImageService } from "@/lib/services/image-service";
+import { tagService } from "@/lib/services/tag-service";
 
 const gradientVariants = [
     "from-orange-200 via-orange-300 to-rose-300",
@@ -34,9 +35,10 @@ export default function ArticleItem({
         gradientVariants.length;
     const gradientClass = gradientVariants[gradientIndex];
     const locale = language;
+    // Filter out channel tags (format: _channel_) and convert to uppercase
     const filteredTags = tags
         .map((tag) => tag.trim())
-        .filter((tag) => !(tag.startsWith("_") || tag.endsWith("_")))
+        .filter((tag) => !tagService.isChannelTag(tag))
         .map((tag) => tag.toUpperCase());
     const imageUrl =
         ImageService.optimizeImageFromUrl(image || null, {

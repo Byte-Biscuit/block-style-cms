@@ -6,16 +6,14 @@ import SmallScreenNavButton from "@/components/layout/small-screen-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { container } from "@/lib/classes";
 import { LanguageToggle } from "@/components/language-toggle";
-import { channels, Channel } from "@/channels";
-//import Logo from "@/app/assets/logo.svg";
+import ChannelNav from "@/components/layout/channel-nav";
+import { channelService } from "@/lib/services/channel-service";
 import Image from "next/image";
-
-const navItemLinkTwCls =
-    "hover:text-primary-500 dark:hover:text-primary-400 font-medium text-gray-900 dark:text-gray-100";
 
 const Header = async () => {
     const t = await getTranslations("web");
     const locale = await getLocale();
+    const channels = await channelService.getChannels();
 
     return (
         <header className={`${container.header}`}>
@@ -25,10 +23,6 @@ const Header = async () => {
                     aria-label={t("title")}
                     className="flex items-center gap-2"
                 >
-                    {/*             <Logo
-                        className="h-8 w-auto"
-                        style={{ alignSelf: "center" }}
-                    /> */}
                     <Image
                         src="/logo.png"
                         alt={t("title")}
@@ -41,26 +35,14 @@ const Header = async () => {
                         {t("title")}
                     </span>
                 </Link>
-                <div className="ml-4 hidden items-center gap-x-6 leading-5 sm:flex">
-                    {channels.map((channel: Channel) => {
-                        return (
-                            <Link
-                                key={`nav-${channel.id}`}
-                                className={navItemLinkTwCls}
-                                href={channel.href}
-                            >
-                                {t(`channel.${channel.labelKey}`)}
-                            </Link>
-                        );
-                    })}
-                </div>
+                <ChannelNav maxVisibleItems={5} />
             </nav>
             <div className="flex items-center space-x-1 sm:space-x-2">
                 <SearchIconButton />
                 <GitHubIconButton />
                 <ThemeToggle />
                 <LanguageToggle />
-                <SmallScreenNavButton />
+                <SmallScreenNavButton channels={channels} />
             </div>
         </header>
     );

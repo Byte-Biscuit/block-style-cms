@@ -326,7 +326,9 @@
             "ai": "AI",
             "instant": "Instant",
             "education": "Education",
-            "about": "About"
+            "about": "About",
+            "noArticles": "No articles found in this channel",
+            "backToHome": "← Back to home"
         },
         "home": {
             "title": "Latest Articles",
@@ -404,6 +406,13 @@
             "title": "Table of Contents",
             "hide": "Hide Table of Contents",
             "show": "Show Table of Contents"
+        },
+        "tags": {
+            "title": "Tags",
+            "noTags": "No tags found",
+            "backToAllTags": "Back to all tags",
+            "articleCount": "{count, plural, =1 {# article} other {# articles}}",
+            "noArticles": "No articles found with this tag"
         }
     },
     "errors": {

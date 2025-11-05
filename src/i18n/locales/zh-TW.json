@@ -327,7 +327,9 @@
             "ai": "AI",
             "instant": "即時",
             "education": "教育",
-            "about": "關於"
+            "about": "關於",
+            "noArticles": "該頻道暫無文章",
+            "backToHome": "← 返回首頁"
         },
         "home": {
             "title": "最新文章",
@@ -405,6 +407,13 @@
             "title": "目錄",
             "hide": "隱藏目錄",
             "show": "顯示目錄"
+        },
+        "tags": {
+            "title": "標籤",
+            "noTags": "暫無標籤",
+            "backToAllTags": "返回所有標籤",
+            "articleCount": "{count} 篇文章",
+            "noArticles": "該標籤下暫無文章"
         }
     },
     "errors": {

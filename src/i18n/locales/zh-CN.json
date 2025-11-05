@@ -327,7 +327,9 @@
             "ai": "AI",
             "instant": "即时",
             "education": "教育",
-            "about": "关于"
+            "about": "关于",
+            "noArticles": "该频道暂无文章",
+            "backToHome": "← 返回首页"
         },
         "home": {
             "title": "最新文章",
@@ -405,6 +407,13 @@
             "title": "目录",
             "hide": "隐藏目录",
             "show": "显示目录"
+        },
+        "tags": {
+            "title": "标签",
+            "noTags": "暂无标签",
+            "backToAllTags": "返回所有标签",
+            "articleCount": "{count} 篇文章",
+            "noArticles": "该标签下暂无文章"
         }
     },
     "errors": {

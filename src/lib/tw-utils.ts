@@ -2,13 +2,15 @@ import { BasicTextStyle, textStyleTwMap } from "@/components/block-note/meta";
 
 // Unify title style function
 export const getDefaultHeadingClasses = (level: number): string => {
+    const baseClasses = "font-extrabold text-gray-900 dark:text-gray-100";
+
     const headingClasses = {
-        1: "text-3xl leading-9 sm:text-4xl sm:leading-10 md:text-5xl md:leading-14 font-extrabold tracking-tight",
-        2: "text-2xl leading-8 sm:text-3xl sm:leading-9 md:text-4xl md:leading-10 font-bold tracking-tight",
-        3: "text-xl leading-7 sm:text-2xl sm:leading-8 md:text-3xl md:leading-9 font-bold tracking-tight",
-        4: "text-lg leading-6 sm:text-xl sm:leading-7 md:text-2xl md:leading-8 font-semibold tracking-tight",
-        5: "text-base leading-6 sm:text-lg sm:leading-6 md:text-xl md:leading-7 font-semibold tracking-tight",
-        6: "text-base leading-6 font-medium tracking-tight",
+        1: `${baseClasses} text-3xl leading-normal sm:text-4xl sm:leading-normal md:text-5xl md:leading-normal`,
+        2: `${baseClasses.replace('extrabold', 'bold')} text-2xl leading-normal sm:text-3xl sm:leading-normal md:text-4xl md:leading-normal`,
+        3: `${baseClasses.replace('extrabold', 'bold')} text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal`,
+        4: `${baseClasses.replace('extrabold', 'semibold')} text-lg leading-relaxed sm:text-xl sm:leading-relaxed md:text-2xl md:leading-relaxed`,
+        5: `${baseClasses.replace('extrabold', 'semibold')} text-base leading-relaxed sm:text-lg sm:leading-relaxed md:text-xl md:leading-relaxed`,
+        6: `${baseClasses.replace('extrabold', 'medium')} text-base leading-relaxed`,
     };
 
     return (

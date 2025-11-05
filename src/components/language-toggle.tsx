@@ -110,7 +110,7 @@ export function LanguageToggle() {
                             key={langInfo.code}
                             onClick={() => handleLanguageChange(langInfo.code)}
                             className={
-                                "group hover:bg-primary-600 px-4 py-2 text-gray-900 hover:text-white dark:bg-gray-800 dark:text-white"
+                                "group hover:bg-primary-600 bg-white px-4 py-2 text-gray-900 hover:text-white dark:bg-gray-800 dark:text-white"
                             }
                         >
                             <ListItemIcon

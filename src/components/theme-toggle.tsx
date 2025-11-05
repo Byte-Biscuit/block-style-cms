@@ -85,10 +85,7 @@ export function ThemeToggle() {
                         <MenuItem
                             key={`theme-${thm}`}
                             onClick={() => handleThemeChange(thm)}
-                            className="group hover:bg-primary-600 hover:text-white dark:bg-gray-800 dark:text-white"
-                            sx={{
-                                bgcolor: "transparent",
-                            }}
+                            className="group hover:bg-primary-600 bg-white hover:text-white dark:bg-gray-800 dark:text-white"
                         >
                             <ListItemIcon className="group-hover:text-white dark:text-white">
                                 {(() => {

@@ -14,7 +14,6 @@ vi.mock('@/config', () => ({
 // Import after mocking
 const { tagService } = await import("../tag-service");
 const { lruCacheService } = await import("../lru-cache-service");
-import type { Locale } from "@/i18n/config";
 
 describe("TagService - getTagsWithArticles", () => {
 

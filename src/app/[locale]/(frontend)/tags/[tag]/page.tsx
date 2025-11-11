@@ -82,9 +82,9 @@ export default async function TagDetailPage({
 export async function generateStaticParams({
     params,
 }: {
-    params: Promise<{ locale: string }>;
+    params: { locale: string };
 }) {
-    const { locale } = await params;
+    const { locale } = params;
     const tagMap = await tagService.getTagsWithArticles(locale as Locale, true);
     const tags = Array.from(tagMap.keys());
 

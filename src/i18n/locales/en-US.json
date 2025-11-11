@@ -327,6 +327,7 @@
             "instant": "Instant",
             "education": "Education",
             "about": "About",
+            "articleCount": "{count, plural, =1 {# article} other {# articles}}",
             "noArticles": "No articles found in this channel",
             "backToHome": "← Back to home"
         },

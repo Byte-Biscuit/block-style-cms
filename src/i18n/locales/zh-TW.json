@@ -328,6 +328,7 @@
             "instant": "即時",
             "education": "教育",
             "about": "關於",
+            "articleCount": "{count} 篇文章",
             "noArticles": "該頻道暫無文章",
             "backToHome": "← 返回首頁"
         },

@@ -23,7 +23,6 @@ import {
     Psychology as PsychologyIcon,
     Summarize as SummarizeIcon,
     Key as KeyIcon,
-    LocalOffer as LocalOfferIcon,
     RocketLaunch as RocketLaunchIcon,
     LibraryBooks as LibraryBooksIcon,
 } from "@mui/icons-material";
@@ -60,6 +59,11 @@ const BlockNoteEditor = dynamic(
 
 const CoverImageSelector = dynamic(
     () => import("@/admin/m/components/cover-image-selector"),
+    { ssr: false }
+);
+
+const ArticleFormTags = dynamic(
+    () => import("@/admin/m/components/article-form-tags"),
     { ssr: false }
 );
 
@@ -103,7 +107,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     });
 
     const [keywordInput, setKeywordInput] = useState("");
-    const [tagInput, setTagInput] = useState("");
 
     const [blockNoteDictionary, setBlockNoteDictionary] =
         useState<Dictionary | null>(null);
@@ -173,20 +176,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         handleChange(
             "keywords",
             formData.keywords.filter((k) => k !== kw)
-        );
-    };
-
-    const addTag = () => {
-        const tag = tagInput.trim();
-        if (tag && !formData.tags.includes(tag)) {
-            handleChange("tags", [...formData.tags, tag]);
-            setTagInput("");
-        }
-    };
-    const removeTag = (tag: string) => {
-        handleChange(
-            "tags",
-            formData.tags.filter((t) => t !== tag)
         );
     };
 
@@ -694,79 +683,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 </Box>
             </Card>
             {/* Tags */}
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 600,
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <LocalOfferIcon /> {t("sections.tags")}
-                </Typography>
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 1.5,
-                        mb: 2,
-                        flexDirection: { xs: "column", sm: "row" },
-                    }}
-                >
-                    <TextField
-                        label={t("labels.addTag")}
-                        value={tagInput}
-                        onChange={(e) => setTagInput(e.target.value)}
-                        onKeyDown={(e) =>
-                            e.key === "Enter" && (e.preventDefault(), addTag())
-                        }
-                        size="small"
-                        sx={{ flex: 1 }}
-                        placeholder={t("placeholders.tag")}
-                    />
-                    <Button
-                        variant="outlined"
-                        onClick={addTag}
-                        startIcon={<AddIcon />}
-                        disabled={!tagInput.trim()}
-                        sx={{ borderRadius: 2, minWidth: 100 }}
-                    >
-                        {t("buttons.add")}
-                    </Button>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 1,
-                        minHeight: 40,
-                    }}
-                >
-                    {formData.tags.length > 0 ? (
-                        formData.tags.map((tag) => (
-                            <Chip
-                                key={tag}
-                                label={tag}
-                                onDelete={() => removeTag(tag)}
-                                color="warning"
-                                variant="filled"
-                                sx={{ borderRadius: 2 }}
-                            />
-                        ))
-                    ) : (
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ py: 1 }}
-                        >
-                            {t("helper.noTags")}
-                        </Typography>
-                    )}
-                </Box>
-            </Card>
+            <ArticleFormTags
+                tags={formData.tags}
+                locale={formData.locale || locale}
+                onTagsChange={(newTags) => handleChange("tags", newTags)}
+            />
             {/* Publish settings and submit */}
             <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
                 <Typography

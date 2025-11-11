@@ -328,6 +328,7 @@
             "instant": "即时",
             "education": "教育",
             "about": "关于",
+            "articleCount": "{count} 篇文章",
             "noArticles": "该频道暂无文章",
             "backToHome": "← 返回首页"
         },

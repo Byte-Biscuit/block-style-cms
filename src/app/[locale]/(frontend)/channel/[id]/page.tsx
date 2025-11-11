@@ -46,8 +46,8 @@ export default async function ChannelDetailPage({
                         {t(`channel.${channel.labelKey}`)}
                     </h1>
                     <span className="text-2xl text-gray-500 dark:text-gray-400">
-                        ({articles.length}{" "}
-                        {articles.length === 1 ? "article" : "articles"})
+                        ({t("channel.articleCount", { count: articles.length })}
+                        )
                     </span>
                 </div>
             </div>

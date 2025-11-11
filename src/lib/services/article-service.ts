@@ -7,6 +7,7 @@ import { algoliaSearchService } from "@/lib/services/algolia-search-service";
 
 class ArticleService {
     private metadataCache: Record<string, ArticleMetadata[]> | null = null;
+    private CACHE_KEY_PREFIX_ARTICLE_SLUG: string = 'article_slug';
 
     getArticleFile(id: string): string {
         return path.join(ARTICLE_DIR, `${id}.json`);
@@ -54,6 +55,7 @@ class ArticleService {
             await fs.writeFile(articleFile, JSON.stringify(updatedArticle, null, 2));
             await this.updateMetadata(updatedArticle);
             await algoliaSearchService.updateArticle(updatedArticle);
+            lruCacheService.delete(`${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${article.slug}`);
         } catch (error) {
             console.error(`Error updating article ${article.id}:`, error);
             throw new Error(`Failed to update article: ${error instanceof Error ? error.message : String(error)}`);
@@ -80,6 +82,7 @@ class ArticleService {
                 this.metadataCache = metadataMap;
             }
             await algoliaSearchService.deleteArticle(id);
+            lruCacheService.delete(`${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${slug}`);
         } catch (error) {
             console.error(`Error deleting article ${id}:`, error);
             throw new Error(`Failed to delete article: ${error instanceof Error ? error.message : String(error)}`);
@@ -228,7 +231,7 @@ class ArticleService {
      * Get articles by slug
      */
     async getArticlesBySlug(slug: string): Promise<ArticleMetadata[] | null> {
-        const cacheKey = `articles_slug_${slug}`;
+        const cacheKey = `${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${slug}`;
         if (lruCacheService.get(cacheKey)) {
             console.log('Cache hit for', cacheKey);
             return lruCacheService.get(cacheKey) as ArticleMetadata[];

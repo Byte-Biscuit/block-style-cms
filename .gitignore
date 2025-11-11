@@ -45,3 +45,4 @@ data
 sonar-project.properties
 ecosystem.config.js
 deploy.json
+/.github/instructions

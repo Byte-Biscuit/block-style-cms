@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import createMiddleware from 'next-intl/middleware';
-import { i18nConfig } from '@/i18n/config'
+import { routing } from "@/i18n/routing";
 import { getSessionCookie } from "better-auth/cookies";
 import { X_PATH_HEADER_KEY, BETTER_AUTH_SIGN_IN } from '@/constants';
 
-const nextIntlMiddleware = createMiddleware({
-    locales: i18nConfig.locales,
-    defaultLocale: i18nConfig.defaultLocale,
-    localeDetection: true
-});
+const nextIntlMiddleware = createMiddleware(routing);
 
 export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname
@@ -34,7 +30,7 @@ export function middleware(request: NextRequest) {
         response.headers.set(X_PATH_HEADER_KEY, pathname);
         return response;
     }
-    NextResponse.next()
+    return NextResponse.next();
 }
 
 export const config = {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { articleService } from "@/lib/services/article-service";
 import { groupListItems } from "@/components/block-note/universal-block-renderer";
@@ -18,7 +18,9 @@ type Props = {
 };
 
 export const revalidate = 3600;
-export const dynamic = "force-static";
+//export const dynamic = "force-static";
+
+import { headers } from "next/headers";
 
 export async function generateStaticParams() {
     const metadataMap = await articleService.getMetadataMap();
@@ -37,6 +39,11 @@ export async function generateMetadata({
     params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
     const { slug, locale } = await params;
+
+    const h = await headers();
+    console.log("headers X-NEXT-INTL-LOCALE =", h.get("X-NEXT-INTL-LOCALE"));
+
+    setRequestLocale(locale);
     const t = await getTranslations();
     const articles = await articleService.getArticlesBySlug(slug);
     const article = articles?.find((a) => a.locale === locale);
@@ -65,6 +72,7 @@ export async function generateMetadata({
 
 export default async function ArticleDetailPage({ params }: Props) {
     const { slug, locale } = await params;
+    setRequestLocale(locale);
     const t = await getTranslations();
     const articles = await articleService.getArticlesBySlug(slug);
     // If no articles found with the slug

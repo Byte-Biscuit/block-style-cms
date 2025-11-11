@@ -56,25 +56,6 @@ export const getLanguageDisplayName = (
     }
 };
 
-export const getLocale = (locale: string) => {
-    if (!Object.keys(localeMap).includes(locale)) {
-        return defaultLocale;
-    }
-    return locale as Locale;
-}
-
-// react-i18next-router
-const i18nConfig: {
-    locales: string[];
-    defaultLocale: string;
-    prefixDefault: boolean;
-} = {
-    locales: [...locales],
-    defaultLocale,
-    prefixDefault: false,
-};
-
-export { i18nConfig };
 // export types
 export type Locale = typeof locales[number];
 // export type Translations = Awaited<ReturnType<typeof getTranslations>>;

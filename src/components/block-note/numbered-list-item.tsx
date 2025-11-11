@@ -21,15 +21,10 @@ export const NumberedListItem: React.FC<{
         className,
     ].filter(Boolean);
 
-    if (tagClasses.length === 0)
-        return (
-            <li>
-                <Content items={content} />
-            </li>
-        );
+    const start = typeof props?.start === "number" ? props.start : 1;
 
     return (
-        <li className={tagClasses.join(" ")}>
+        <li value={start} className={tagClasses.join(" ")}>
             <Content items={content} />
         </li>
     );

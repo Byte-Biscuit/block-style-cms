@@ -1,5 +1,15 @@
 export async function register() {
     if (process.env.NEXT_RUNTIME === 'nodejs') {
+        // 捕获未处理的错误
+        process.on('unhandledRejection', (reason, promise) => {
+            console.error('🔴 Unhandled Rejection at:', promise);
+            console.error('🔴 Reason:', reason);
+        });
+
+        process.on('uncaughtException', (error) => {
+            console.error('🔴 Uncaught Exception:', error);
+        });
+
         // 动态导入 fs 模块，只在服务端环境中使用
         const fs = await import('fs/promises');
         const { ARTICLE_DIR,
@@ -17,6 +27,6 @@ export async function register() {
         await fs.mkdir(VIDEO_THUMBNAIL_DIR, { recursive: true });
         await fs.mkdir(AUDIO_DIR, { recursive: true });
         await fs.mkdir(FILE_DIR, { recursive: true });
-        console.log('Directories initialized');
+        console.log('✅ Directories initialized');
     }
 }

@@ -76,6 +76,7 @@ export default async function ChannelDetailPage({
     );
 }
 
+/** 
 // Generate static params for all tag-type channels at build time
 export async function generateStaticParams() {
     const channels = await channelService.getChannels();
@@ -87,3 +88,4 @@ export async function generateStaticParams() {
         id: channel.id,
     }));
 }
+*/

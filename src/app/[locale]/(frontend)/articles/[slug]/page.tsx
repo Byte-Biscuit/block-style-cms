@@ -20,8 +20,6 @@ type Props = {
 export const revalidate = 3600;
 //export const dynamic = "force-static";
 
-import { headers } from "next/headers";
-
 export async function generateStaticParams() {
     const metadataMap = await articleService.getMetadataMap();
     const articles = Object.values(metadataMap).flat();
@@ -39,10 +37,6 @@ export async function generateMetadata({
     params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
     const { slug, locale } = await params;
-
-    const h = await headers();
-    console.log("headers X-NEXT-INTL-LOCALE =", h.get("X-NEXT-INTL-LOCALE"));
-
     setRequestLocale(locale);
     const t = await getTranslations();
     const articles = await articleService.getArticlesBySlug(slug);

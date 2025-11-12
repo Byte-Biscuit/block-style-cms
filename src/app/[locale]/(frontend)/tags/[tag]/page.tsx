@@ -78,6 +78,7 @@ export default async function TagDetailPage({
     );
 }
 
+/**
 // Generate static params for all tags at build time
 export async function generateStaticParams({
     params,
@@ -89,6 +90,8 @@ export async function generateStaticParams({
     const tags = Array.from(tagMap.keys());
 
     return tags.map((tag) => ({
+        locale,
         tag: encodeURIComponent(tag),
     }));
 }
+ */

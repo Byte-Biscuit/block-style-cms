@@ -24,7 +24,7 @@ export default async function ChannelNav({
 
     const getChannelHref = (channel: Channel): string => {
         if (channel.type === "page") {
-            return channel.href!;
+            return `/${locale}${channel.href!}`;
         }
         // type === 'tag'
         return `/${locale}/channel/${channel.id}`;

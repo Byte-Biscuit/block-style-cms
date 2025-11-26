@@ -18,7 +18,8 @@ export async function register() {
             VIDEO_DIR,
             VIDEO_THUMBNAIL_DIR,
             AUDIO_DIR,
-            FILE_DIR } = await import('@/config');
+            FILE_DIR,
+            COMMENT_DIR } = await import('@/config');
 
         await fs.mkdir(ARTICLE_DIR, { recursive: true });
         await fs.mkdir(META_DIR, { recursive: true });
@@ -27,6 +28,7 @@ export async function register() {
         await fs.mkdir(VIDEO_THUMBNAIL_DIR, { recursive: true });
         await fs.mkdir(AUDIO_DIR, { recursive: true });
         await fs.mkdir(FILE_DIR, { recursive: true });
+        await fs.mkdir(COMMENT_DIR, { recursive: true });
         console.log('✅ Directories initialized');
     }
 }

@@ -21,6 +21,7 @@ let VIDEO_DIR: string;
 let VIDEO_THUMBNAIL_DIR: string;
 let AUDIO_DIR: string;
 let FILE_DIR: string;
+let COMMENT_DIR: string;
 
 const APPLICATION_DATA_PATH = process.env.APPLICATION_DATA_PATH;
 if (isServer) {
@@ -43,6 +44,8 @@ if (isServer) {
     AUDIO_DIR = path.join(APPLICATION_DATA_PATH, 'audios');
 
     FILE_DIR = path.join(APPLICATION_DATA_PATH, 'files');
+
+    COMMENT_DIR = path.join(APPLICATION_DATA_PATH, 'comments');
 } else {
     // Default values for client environment (not used, but avoids compilation errors)
     ARTICLE_DIR = '';
@@ -52,6 +55,7 @@ if (isServer) {
     VIDEO_THUMBNAIL_DIR = '';
     AUDIO_DIR = '';
     FILE_DIR = '';
+    COMMENT_DIR = '';
 }
 
 // Export server-side configuration
@@ -64,6 +68,7 @@ export {
     VIDEO_THUMBNAIL_DIR,
     AUDIO_DIR,
     FILE_DIR,
+    COMMENT_DIR,
 };
 
 // ================================
@@ -144,6 +149,29 @@ export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
 // Better Auth allowed emails
 export const BETTER_AUTH_ALLOWED_EMAILS = (process.env.BETTER_AUTH_ALLOWED_EMAILS || "").split(",").map(email => email.trim().toLowerCase()).filter(email => email.length > 0);
 
+// ================================
+// Comment System Configuration
+// ================================
+export const COMMENT_CONFIG = {
+    /** Comment feature enabled */
+    enabled: true,
+    /** Maximum total comments limit */
+    maxTotalComments: 1000,
+    /** Content constraints */
+    limits: {
+        /** Minimum content length */
+        contentMinLength: 10,
+        /** Maximum content length */
+        contentMaxLength: 1000,
+        /** Maximum allowed links in comment */
+        maxLinksAllowed: 2,
+    },
+    /** Moderation settings */
+    moderation: {
+        /** Require manual approval before publishing */
+        requireApproval: true,
+    },
+} as const;
 
 
 

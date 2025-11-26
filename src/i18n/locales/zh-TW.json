@@ -308,6 +308,59 @@
                     "format": "更新時間格式不正確"
                 }
             }
+        },
+        "comment": {
+            "title": "評論管理",
+            "actions": {
+                "refresh": "刷新",
+                "approve": "審核通過",
+                "reject": "拒絕",
+                "delete": "刪除"
+            },
+            "filters": {
+                "search": "搜尋評論",
+                "searchPlaceholder": "搜尋內容、作者、信箱或文章標題",
+                "status": "狀態篩選",
+                "all": "全部",
+                "pending": "待審核",
+                "approved": "已通過",
+                "rejected": "已拒絕"
+            },
+            "table": {
+                "author": "作者",
+                "content": "評論內容",
+                "article": "文章",
+                "status": "狀態",
+                "time": "時間",
+                "actions": "操作",
+                "noData": "暫無評論",
+                "noResults": "沒有符合條件的評論",
+                "website": "網站",
+                "reply": "回覆"
+            },
+            "status": {
+                "approved": "已通過",
+                "pending": "待審核",
+                "rejected": "已拒絕"
+            },
+            "messages": {
+                "fetchError": "獲取評論失敗",
+                "approveSuccess": "評論已審核通過",
+                "approveError": "審核通過失敗",
+                "rejectSuccess": "評論已拒絕並刪除",
+                "rejectError": "拒絕評論失敗"
+            },
+            "delete": {
+                "title": "確認刪除評論",
+                "content": "確定要刪除此評論嗎？此操作無法撤銷。",
+                "author": "作者：{name}",
+                "cancel": "取消",
+                "confirm": "確認刪除"
+            },
+            "pagination": {
+                "total": "共 {total} 條評論",
+                "totalWithPage": "共 {total} 條評論，第 {current} / {totalPages} 頁"
+            }
         }
     },
     "web": {
@@ -415,6 +468,67 @@
             "backToAllTags": "返回所有標籤",
             "articleCount": "{count} 篇文章",
             "noArticles": "該標籤下暫無文章"
+        },
+        "comment": {
+            "title": "評論",
+            "reply": "回覆",
+            "noComments": "暫無評論，來沙發吧！",
+            "form": {
+                "title": "發表評論",
+                "replyTitle": "回覆評論",
+                "replyingTo": "回覆",
+                "name": "暱稱",
+                "email": "郵箱（不會公開顯示，用於顯示 Gravatar 頭像）",
+                "website": "網站（可選）",
+                "content": "評論內容",
+                "submit": "提交評論",
+                "submitting": "提交中...",
+                "cancel": "取消",
+                "success": "評論提交成功！審核通過後將顯示。",
+                "errors": {
+                    "nameRequired": "請輸入暱稱",
+                    "nameTooLong": "暱稱不能超過50個字元",
+                    "emailRequired": "請輸入郵箱",
+                    "emailInvalid": "郵箱格式不正確",
+                    "websiteInvalid": "網站地址格式不正確",
+                    "contentRequired": "請輸入評論內容",
+                    "contentTooShort": "評論內容至少需要10個字元",
+                    "contentTooLong": "評論內容不能超過1000個字元"
+                }
+            },
+            "validation": {
+                "author": {
+                    "name": {
+                        "required": "暱稱不能為空",
+                        "max": "暱稱不能超過{max}個字元"
+                    },
+                    "email": {
+                        "format": "郵箱格式不正確",
+                        "max": "郵箱不能超過{max}個字元"
+                    },
+                    "website": {
+                        "format": "網站URL格式不正確",
+                        "max": "網站URL不能超過{max}個字元"
+                    }
+                },
+                "articleId": {
+                    "format": "文章ID格式不正確"
+                },
+                "articleTitle": {
+                    "required": "文章標題不能為空",
+                    "max": "文章標題不能超過{max}個字元"
+                },
+                "content": {
+                    "min": "評論內容至少需要{min}個字元",
+                    "max": "評論內容不能超過{max}個字元"
+                },
+                "replyToId": {
+                    "format": "回覆評論ID格式不正確"
+                },
+                "commentId": {
+                    "format": "評論ID格式不正確"
+                }
+            }
         }
     },
     "errors": {

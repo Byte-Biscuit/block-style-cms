@@ -307,6 +307,59 @@
                     "format": "Updated date format is invalid"
                 }
             }
+        },
+        "comment": {
+            "title": "Comment Management",
+            "actions": {
+                "refresh": "Refresh",
+                "approve": "Approve",
+                "reject": "Reject",
+                "delete": "Delete"
+            },
+            "filters": {
+                "search": "Search Comments",
+                "searchPlaceholder": "Search content, author, email or article title",
+                "status": "Status Filter",
+                "all": "All",
+                "pending": "Pending",
+                "approved": "Approved",
+                "rejected": "Rejected"
+            },
+            "table": {
+                "author": "Author",
+                "content": "Content",
+                "article": "Article",
+                "status": "Status",
+                "time": "Time",
+                "actions": "Actions",
+                "noData": "No comments",
+                "noResults": "No matching comments",
+                "website": "Website",
+                "reply": "Reply"
+            },
+            "status": {
+                "approved": "Approved",
+                "pending": "Pending",
+                "rejected": "Rejected"
+            },
+            "messages": {
+                "fetchError": "Failed to fetch comments",
+                "approveSuccess": "Comment approved",
+                "approveError": "Failed to approve comment",
+                "rejectSuccess": "Comment rejected and deleted",
+                "rejectError": "Failed to reject comment"
+            },
+            "delete": {
+                "title": "Confirm Delete Comment",
+                "content": "Are you sure you want to delete this comment? This action cannot be undone.",
+                "author": "Author: {name}",
+                "cancel": "Cancel",
+                "confirm": "Confirm Delete"
+            },
+            "pagination": {
+                "total": "Total {total} comments",
+                "totalWithPage": "Total {total} comments, Page {current} / {totalPages}"
+            }
         }
     },
     "web": {
@@ -414,6 +467,67 @@
             "backToAllTags": "Back to all tags",
             "articleCount": "{count, plural, =1 {# article} other {# articles}}",
             "noArticles": "No articles found with this tag"
+        },
+        "comment": {
+            "title": "Comments",
+            "reply": "Reply",
+            "noComments": "No comments yet. Be the first to comment!",
+            "form": {
+                "title": "Leave a Comment",
+                "replyTitle": "Reply to Comment",
+                "replyingTo": "Replying to",
+                "name": "Name",
+                "email": "Email (Will not be publicly displayed. Used for Gravatar.)",
+                "website": "Website (optional)",
+                "content": "Comment",
+                "submit": "Submit Comment",
+                "submitting": "Submitting...",
+                "cancel": "Cancel",
+                "success": "Comment submitted successfully! It will appear after approval.",
+                "errors": {
+                    "nameRequired": "Please enter your name",
+                    "nameTooLong": "Name must not exceed 50 characters",
+                    "emailRequired": "Please enter your email",
+                    "emailInvalid": "Invalid email format",
+                    "websiteInvalid": "Invalid website URL",
+                    "contentRequired": "Please enter your comment",
+                    "contentTooShort": "Comment must be at least 10 characters",
+                    "contentTooLong": "Comment must not exceed 1000 characters"
+                }
+            },
+            "validation": {
+                "author": {
+                    "name": {
+                        "required": "Name is required",
+                        "max": "Name must not exceed {max} characters"
+                    },
+                    "email": {
+                        "format": "Invalid email format",
+                        "max": "Email must not exceed {max} characters"
+                    },
+                    "website": {
+                        "format": "Invalid website URL",
+                        "max": "Website URL must not exceed {max} characters"
+                    }
+                },
+                "articleId": {
+                    "format": "Invalid article ID format"
+                },
+                "articleTitle": {
+                    "required": "Article title is required",
+                    "max": "Article title must not exceed {max} characters"
+                },
+                "content": {
+                    "min": "Content must be at least {min} characters",
+                    "max": "Content must not exceed {max} characters"
+                },
+                "replyToId": {
+                    "format": "Invalid reply ID format"
+                },
+                "commentId": {
+                    "format": "Invalid comment ID format"
+                }
+            }
         }
     },
     "errors": {

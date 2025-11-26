@@ -6,7 +6,7 @@
 import path from 'path';
 
 //Version
-export const VERSION = '0.0.9';
+export const VERSION = process.env.BLOCK_STYLE_CMS_VERSION;
 
 // Check if running in server environment
 const isServer = typeof window === 'undefined';

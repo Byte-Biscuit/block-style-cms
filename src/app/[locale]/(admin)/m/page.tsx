@@ -61,10 +61,10 @@ export default async function AdminDashboard() {
         },
         {
             title: "评论管理",
-            description: "管理用户评论和互动 (功能扩展中)",
+            description: "管理用户评论和互动",
             icon: <CommentIcon sx={{ fontSize: 40 }} />,
             color: "warning",
-            href: "#",
+            href: "/m/comment",
         },
         {
             title: "媒体库",

@@ -12,6 +12,7 @@ import I18NLocaleTime from "@/components/i18n-time";
 import TableOfContents from "@/components/toc/table-of-contents";
 import TableOfContentsMobile from "@/components/toc/table-of-contents-mobile";
 import { extractToc } from "@/lib/toc-utils";
+import CommentSection from "@/components/comment/comment-section";
 
 type Props = {
     params: Promise<{ slug: string; locale: string }>;
@@ -161,6 +162,12 @@ export default async function ArticleDetailPage({ params }: Props) {
                         </section>
                     )}
                 </section>
+
+                {/* Comment Section */}
+                <CommentSection
+                    articleId={article.id!}
+                    articleTitle={article.title}
+                />
             </article>
             {toc.length > 0 && (
                 <aside className="fixed top-24 right-8 hidden max-h-[calc(100vh-200px)] w-64 overflow-y-auto 2xl:block">

@@ -308,6 +308,59 @@
                     "format": "更新时间格式不正确"
                 }
             }
+        },
+        "comment": {
+            "title": "评论管理",
+            "actions": {
+                "refresh": "刷新",
+                "approve": "审核通过",
+                "reject": "拒绝",
+                "delete": "删除"
+            },
+            "filters": {
+                "search": "搜索评论",
+                "searchPlaceholder": "搜索内容、作者、邮箱或文章标题",
+                "status": "状态筛选",
+                "all": "全部",
+                "pending": "待审核",
+                "approved": "已通过",
+                "rejected": "已拒绝"
+            },
+            "table": {
+                "author": "作者",
+                "content": "评论内容",
+                "article": "文章",
+                "status": "状态",
+                "time": "时间",
+                "actions": "操作",
+                "noData": "暂无评论",
+                "noResults": "没有符合条件的评论",
+                "website": "网站",
+                "reply": "回复"
+            },
+            "status": {
+                "approved": "已通过",
+                "pending": "待审核",
+                "rejected": "已拒绝"
+            },
+            "messages": {
+                "fetchError": "获取评论失败",
+                "approveSuccess": "评论已审核通过",
+                "approveError": "审核通过失败",
+                "rejectSuccess": "评论已拒绝并删除",
+                "rejectError": "拒绝评论失败"
+            },
+            "delete": {
+                "title": "确认删除评论",
+                "content": "确定要删除此评论吗？此操作无法撤销。",
+                "author": "作者：{name}",
+                "cancel": "取消",
+                "confirm": "确认删除"
+            },
+            "pagination": {
+                "total": "共 {total} 条评论",
+                "totalWithPage": "共 {total} 条评论，第 {current} / {totalPages} 页"
+            }
         }
     },
     "web": {
@@ -415,6 +468,67 @@
             "backToAllTags": "返回所有标签",
             "articleCount": "{count} 篇文章",
             "noArticles": "该标签下暂无文章"
+        },
+        "comment": {
+            "title": "评论",
+            "reply": "回复",
+            "noComments": "暂无评论，来沙发吧！",
+            "form": {
+                "title": "发表评论",
+                "replyTitle": "回复评论",
+                "replyingTo": "回复",
+                "name": "昵称",
+                "email": "邮箱（不会公开显示，用于显示 Gravatar 头像）",
+                "website": "网站（可选）",
+                "content": "评论内容",
+                "submit": "提交评论",
+                "submitting": "提交中...",
+                "cancel": "取消",
+                "success": "评论提交成功！审核通过后将显示。",
+                "errors": {
+                    "nameRequired": "请输入昵称",
+                    "nameTooLong": "昵称不能超过50个字符",
+                    "emailRequired": "请输入邮箱",
+                    "emailInvalid": "邮箱格式不正确",
+                    "websiteInvalid": "网站地址格式不正确",
+                    "contentRequired": "请输入评论内容",
+                    "contentTooShort": "评论内容至少需要10个字符",
+                    "contentTooLong": "评论内容不能超过1000个字符"
+                }
+            },
+            "validation": {
+                "author": {
+                    "name": {
+                        "required": "昵称不能为空",
+                        "max": "昵称不能超过{max}个字符"
+                    },
+                    "email": {
+                        "format": "邮箱格式不正确",
+                        "max": "邮箱不能超过{max}个字符"
+                    },
+                    "website": {
+                        "format": "网站URL格式不正确",
+                        "max": "网站URL不能超过{max}个字符"
+                    }
+                },
+                "articleId": {
+                    "format": "文章ID格式不正确"
+                },
+                "articleTitle": {
+                    "required": "文章标题不能为空",
+                    "max": "文章标题不能超过{max}个字符"
+                },
+                "content": {
+                    "min": "评论内容至少需要{min}个字符",
+                    "max": "评论内容不能超过{max}个字符"
+                },
+                "replyToId": {
+                    "format": "回复评论ID格式不正确"
+                },
+                "commentId": {
+                    "format": "评论ID格式不正确"
+                }
+            }
         }
     },
     "errors": {

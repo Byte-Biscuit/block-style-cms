@@ -34,17 +34,6 @@
                     "description": "查看前台頁面"
                 }
             },
-            "stats": {
-                "commentCount": {
-                    "title": "評論數量",
-                    "description": "用戶互動數據"
-                },
-                "visitTrend": {
-                    "title": "訪問趨勢",
-                    "value": "+15%",
-                    "description": "相比上週增長"
-                }
-            },
             "articleSummary": {
                 "title": "文章總數",
                 "publishedDraft": "已發布: {published} | 草稿: {draft}"
@@ -52,6 +41,11 @@
             "commentSummary": {
                 "title": "評論總數",
                 "statusBreakdown": "待審核: {pending} | 已通過: {approved} | 已拒絕: {rejected}"
+            },
+            "suggestionSummary": {
+                "title": "建議總數",
+                "totalSuggestions": "用戶建議與反饋",
+                "viewAllLink": "點擊查看所有建議"
             },
             "storageUsage": {
                 "title": "儲存使用"

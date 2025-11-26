@@ -34,17 +34,6 @@
                     "description": "查看前台页面"
                 }
             },
-            "stats": {
-                "commentCount": {
-                    "title": "评论数量",
-                    "description": "用户互动数据"
-                },
-                "visitTrend": {
-                    "title": "访问趋势",
-                    "value": "+15%",
-                    "description": "相比上周增长"
-                }
-            },
             "articleSummary": {
                 "title": "文章总数",
                 "publishedDraft": "已发布: {published} | 草稿: {draft}"
@@ -52,6 +41,11 @@
             "commentSummary": {
                 "title": "评论总数",
                 "statusBreakdown": "待审核: {pending} | 已通过: {approved} | 已拒绝: {rejected}"
+            },
+            "suggestionSummary": {
+                "title": "建议总数",
+                "totalSuggestions": "用户建议与反馈",
+                "viewAllLink": "点击查看所有建议"
             },
             "storageUsage": {
                 "title": "存储使用"

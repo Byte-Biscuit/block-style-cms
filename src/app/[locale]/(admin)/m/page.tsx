@@ -25,19 +25,11 @@ import Link from "@/components/link";
 import StorageUsageCard from "./components/dashboard-cards/storage-usage-card";
 import ArticleSummaryCard from "./components/dashboard-cards/article-summary-card";
 import CommentSummaryCard from "./components/dashboard-cards/comment-summary-card";
+import SuggestionSummaryCard from "./components/dashboard-cards/suggestion-summary-card";
 import SystemLoadCard from "./components/dashboard-cards/system-load-card";
 
 export default async function AdminDashboard() {
     const t = await getTranslations("admin.dashboard");
-    const statCards = [
-        {
-            title: t("stats.visitTrend.title"),
-            value: t("stats.visitTrend.value"),
-            icon: <TrendingUpIcon sx={{ fontSize: 30 }} />,
-            color: "success.main",
-            description: t("stats.visitTrend.description"),
-        },
-    ];
 
     const quickActions = [
         {
@@ -125,48 +117,7 @@ export default async function AdminDashboard() {
                 <StorageUsageCard />
                 <ArticleSummaryCard />
                 <CommentSummaryCard />
-                {statCards.map((stat, index) => (
-                    <Box
-                        key={index}
-                        sx={{ flex: "1 1 300px", minWidth: "250px" }}
-                    >
-                        <Card elevation={2} sx={{ height: "100%" }}>
-                            <CardContent>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        mb: 2,
-                                    }}
-                                >
-                                    <Box sx={{ color: stat.color, mr: 2 }}>
-                                        {stat.icon}
-                                    </Box>
-                                    <Box>
-                                        <Typography
-                                            variant="h4"
-                                            component="div"
-                                        >
-                                            {stat.value}
-                                        </Typography>
-                                        <Typography
-                                            color="text.secondary"
-                                            variant="body2"
-                                        >
-                                            {stat.title}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    {stat.description}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Box>
-                ))}
+                <SuggestionSummaryCard />
             </Box>
 
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4 }}>

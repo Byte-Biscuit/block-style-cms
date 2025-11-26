@@ -34,17 +34,6 @@
                     "description": "View the frontend page"
                 }
             },
-            "stats": {
-                "commentCount": {
-                    "title": "Comments",
-                    "description": "User interaction data"
-                },
-                "visitTrend": {
-                    "title": "Visit Trend",
-                    "value": "+15%",
-                    "description": "Compared to last week"
-                }
-            },
             "articleSummary": {
                 "title": "Total Articles",
                 "publishedDraft": "Published: {published} | Drafts: {draft}"
@@ -52,6 +41,11 @@
             "commentSummary": {
                 "title": "Total Comments",
                 "statusBreakdown": "Pending: {pending} | Approved: {approved} | Rejected: {rejected}"
+            },
+            "suggestionSummary": {
+                "title": "Total Suggestions",
+                "totalSuggestions": "User Suggestions & Feedback",
+                "viewAllLink": "Click to view all suggestions"
             },
             "storageUsage": {
                 "title": "Storage Usage"

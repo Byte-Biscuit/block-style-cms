@@ -405,7 +405,7 @@
             "tags": "Tags",
             "ai": "AI",
             "instant": "Instant",
-            "education": "Education",
+            "education": "Learning",
             "about": "About",
             "articleCount": "{count, plural, =1 {# article} other {# articles}}",
             "noArticles": "No articles found in this channel",

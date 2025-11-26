@@ -1,12 +1,8 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from 'next-intl/plugin';
 import createBundleAnalyzer from "@next/bundle-analyzer";
-import pkg from './package.json';
 
 let nextConfig: NextConfig = {
-    env: {
-        BLOCK_STYLE_CMS_VERSION: pkg.version,
-    },
     //output: 'standalone',
     // BlockNoter's React Strict Mode causes issues with certain 3rd party libs
     reactStrictMode: false,

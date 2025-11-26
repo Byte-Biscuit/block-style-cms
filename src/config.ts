@@ -4,9 +4,10 @@
  */
 
 import path from 'path';
+import pkg from "../package.json"
 
 //Version
-export const VERSION = process.env.BLOCK_STYLE_CMS_VERSION;
+export const VERSION = pkg.version;
 
 // Check if running in server environment
 const isServer = typeof window === 'undefined';

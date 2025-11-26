@@ -199,6 +199,25 @@ class CommentService {
             throw new Error(`Too many links (maximum ${maxLinksAllowed} allowed)`);
         }
     }
+
+    /**
+     * Get comment statistics
+     */
+    async getCommentCount(): Promise<{
+        total: number;
+        pending: number;
+        approved: number;
+        rejected: number;
+    }> {
+        const comments = await this.getAllComments();
+        
+        return {
+            total: comments.length,
+            pending: comments.filter(c => c.status === 'pending').length,
+            approved: comments.filter(c => c.status === 'approved').length,
+            rejected: comments.filter(c => c.status === 'rejected').length,
+        };
+    }
 }
 
 // Export singleton instance

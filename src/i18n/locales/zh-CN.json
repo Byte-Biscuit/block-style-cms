@@ -13,14 +13,41 @@
                     "title": "文章管理",
                     "description": "查看和管理所有文章"
                 },
+                "commentManagement": {
+                    "title": "评论管理",
+                    "description": "管理用户评论和互动"
+                },
+                "mediaLibrary": {
+                    "title": "媒体库",
+                    "description": "管理图片、视频等媒体文件 (功能扩展中)"
+                },
+                "systemSettings": {
+                    "title": "系统设置",
+                    "description": "博客配置和个性化设置"
+                },
                 "backToFrontend": {
                     "title": "返回前台",
                     "description": "查看前台页面"
                 }
             },
+            "stats": {
+                "commentCount": {
+                    "title": "评论数量",
+                    "description": "用户互动数据"
+                },
+                "visitTrend": {
+                    "title": "访问趋势",
+                    "value": "+15%",
+                    "description": "相比上周增长"
+                }
+            },
             "articleSummary": {
                 "title": "文章总数",
                 "publishedDraft": "已发布: {published} | 草稿: {draft}"
+            },
+            "commentSummary": {
+                "title": "评论总数",
+                "statusBreakdown": "待审核: {pending} | 已通过: {approved} | 已拒绝: {rejected}"
             },
             "storageUsage": {
                 "title": "存储使用"

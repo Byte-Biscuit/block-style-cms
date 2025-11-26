@@ -23,24 +23,18 @@ import { getTranslations } from "next-intl/server";
 import Link from "@/components/link";
 import StorageUsageCard from "./components/dashboard-cards/storage-usage-card";
 import ArticleSummaryCard from "./components/dashboard-cards/article-summary-card";
+import CommentSummaryCard from "./components/dashboard-cards/comment-summary-card";
 import SystemLoadCard from "./components/dashboard-cards/system-load-card";
 
 export default async function AdminDashboard() {
     const t = await getTranslations("admin.dashboard");
     const statCards = [
         {
-            title: "评论数量",
-            value: 0,
-            icon: <CommentIcon sx={{ fontSize: 30 }} />,
-            color: "secondary.main",
-            description: "用户互动数据",
-        },
-        {
-            title: "访问趋势",
-            value: "+15%",
+            title: t("stats.visitTrend.title"),
+            value: t("stats.visitTrend.value"),
             icon: <TrendingUpIcon sx={{ fontSize: 30 }} />,
             color: "success.main",
-            description: "相比上周增长",
+            description: t("stats.visitTrend.description"),
         },
     ];
 
@@ -60,8 +54,8 @@ export default async function AdminDashboard() {
             href: "/m/list",
         },
         {
-            title: "评论管理",
-            description: "管理用户评论和互动",
+            title: t("actions.commentManagement.title"),
+            description: t("actions.commentManagement.description"),
             icon: <CommentIcon sx={{ fontSize: 40 }} />,
             color: "warning",
             href: "/m/comment",
@@ -122,6 +116,7 @@ export default async function AdminDashboard() {
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 4 }}>
                 <StorageUsageCard />
                 <ArticleSummaryCard />
+                <CommentSummaryCard />
                 {statCards.map((stat, index) => (
                     <Box
                         key={index}

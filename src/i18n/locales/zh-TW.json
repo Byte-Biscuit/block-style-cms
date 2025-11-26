@@ -6,21 +6,48 @@
             "enterButton": "進入",
             "actions": {
                 "writeArticle": {
-                    "title": "撰寫文章",
-                    "description": "建立一篇新的文章"
+                    "title": "寫文章",
+                    "description": "創建一篇新的文章"
                 },
                 "articleManagement": {
                     "title": "文章管理",
-                    "description": "檢視和管理所有文章"
+                    "description": "查看和管理所有文章"
+                },
+                "commentManagement": {
+                    "title": "評論管理",
+                    "description": "管理用戶評論和互動"
+                },
+                "mediaLibrary": {
+                    "title": "媒體庫",
+                    "description": "管理圖片、視頻等媒體文件 (功能擴展中)"
+                },
+                "systemSettings": {
+                    "title": "系統設置",
+                    "description": "博客配置和個性化設置"
                 },
                 "backToFrontend": {
                     "title": "返回前台",
-                    "description": "檢視前台頁面"
+                    "description": "查看前台頁面"
+                }
+            },
+            "stats": {
+                "commentCount": {
+                    "title": "評論數量",
+                    "description": "用戶互動數據"
+                },
+                "visitTrend": {
+                    "title": "訪問趨勢",
+                    "value": "+15%",
+                    "description": "相比上週增長"
                 }
             },
             "articleSummary": {
                 "title": "文章總數",
                 "publishedDraft": "已發布: {published} | 草稿: {draft}"
+            },
+            "commentSummary": {
+                "title": "評論總數",
+                "statusBreakdown": "待審核: {pending} | 已通過: {approved} | 已拒絕: {rejected}"
             },
             "storageUsage": {
                 "title": "儲存使用"

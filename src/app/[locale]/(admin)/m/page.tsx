@@ -18,6 +18,7 @@ import {
     Settings as SettingsIcon,
     TrendingUp as TrendingUpIcon,
     Visibility as VisibilityIcon,
+    Feedback as FeedbackIcon,
 } from "@mui/icons-material";
 import { getTranslations } from "next-intl/server";
 import Link from "@/components/link";
@@ -59,6 +60,13 @@ export default async function AdminDashboard() {
             icon: <CommentIcon sx={{ fontSize: 40 }} />,
             color: "warning",
             href: "/m/comment",
+        },
+        {
+            title: t("actions.suggestionManagement.title"),
+            description: t("actions.suggestionManagement.description"),
+            icon: <FeedbackIcon sx={{ fontSize: 40 }} />,
+            color: "info",
+            href: "/m/suggestion",
         },
         {
             title: "媒体库",

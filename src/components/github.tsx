@@ -1,6 +1,6 @@
 import { GitHub } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { button } from "@/lib/classes";
+import { button } from "@/lib/style-classes";
 import Link from "@/components/link";
 
 const GitHubIconButton = () => {

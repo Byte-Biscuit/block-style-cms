@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import GoHomeOnErrorButtons from "@/components/go-home-buttons";
-import { container } from "@/lib/classes";
+import { container } from "@/lib/style-classes";
 
 interface SlugNotFoundProps {
     slug: string;

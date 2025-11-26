@@ -4,7 +4,7 @@ import GitHubIconButton from "@/components/github";
 import SearchIconButton from "@/components/search";
 import SmallScreenNavButton from "@/components/layout/small-screen-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { container } from "@/lib/classes";
+import { container } from "@/lib/style-classes";
 import { LanguageToggle } from "@/components/language-toggle";
 import ChannelNav from "@/components/layout/channel-nav";
 import { channelService } from "@/lib/services/channel-service";

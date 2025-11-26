@@ -13,7 +13,7 @@ import { Language as LanguageIcon } from "@mui/icons-material";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useSearchParams } from "next/navigation";
 import { locales, localeMap } from "@/i18n/config";
-import { button } from "@/lib/classes";
+import { button } from "@/lib/style-classes";
 
 export function LanguageToggle() {
     const [mounted, setMounted] = useState(false);

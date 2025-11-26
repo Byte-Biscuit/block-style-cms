@@ -17,6 +17,10 @@
                     "title": "評論管理",
                     "description": "管理用戶評論和互動"
                 },
+                "suggestionManagement": {
+                    "title": "建議管理",
+                    "description": "查看和管理用戶建議"
+                },
                 "mediaLibrary": {
                     "title": "媒體庫",
                     "description": "管理圖片、視頻等媒體文件 (功能擴展中)"
@@ -388,6 +392,38 @@
                 "total": "共 {total} 條評論",
                 "totalWithPage": "共 {total} 條評論，第 {current} / {totalPages} 頁"
             }
+        },
+        "suggestion": {
+            "title": "建議管理",
+            "search": {
+                "placeholder": "搜尋姓名、信箱或內容"
+            },
+            "stats": {
+                "total": "總數"
+            },
+            "table": {
+                "name": "稱呼",
+                "email": "信箱",
+                "content": "建議內容",
+                "ip": "IP位址",
+                "createdAt": "提交時間",
+                "actions": "操作",
+                "noData": "暫無建議"
+            },
+            "actions": {
+                "delete": "刪除"
+            },
+            "messages": {
+                "fetchError": "獲取建議失敗",
+                "deleteSuccess": "建議已刪除",
+                "deleteError": "刪除失敗"
+            },
+            "deleteDialog": {
+                "title": "確認刪除建議",
+                "message": "確定要永久刪除此建議嗎？此操作無法撤銷。",
+                "cancel": "取消",
+                "confirm": "確認刪除"
+            }
         }
     },
     "web": {
@@ -555,6 +591,49 @@
                 "commentId": {
                     "format": "評論ID格式不正確"
                 }
+            }
+        },
+        "suggestion": {
+            "dialogTitle": "您的意見無比珍貴",
+            "description": "非常感謝您的寶貴意見！您的每一條建議都將幫助我們做得更好。",
+            "nameLabel": "如何稱呼您",
+            "nameHelper": "請告訴我們如何稱呼您",
+            "emailLabel": "信箱",
+            "emailHelper": "請輸入您的信箱地址（僅用於必要時的回覆）",
+            "contentLabel": "建議內容",
+            "contentHelper": "已輸入 {current}/{max} 字元",
+            "cancel": "取消",
+            "submit": "提交建議",
+            "submitting": "提交中...",
+            "submitSuccess": "衷心感謝您的寶貴建議！我們會認真對待每一條反饋。",
+            "submitError": "提交失敗，請稍後重試",
+            "networkError": "網路錯誤，請檢查您的網路連線",
+            "validation": {
+                "name": {
+                    "required": "姓名不能為空",
+                    "min": "姓名至少需要1個字元",
+                    "max": "姓名不能超過{max}個字元"
+                },
+                "email": {
+                    "required": "信箱不能為空",
+                    "format": "信箱格式不正確"
+                },
+                "content": {
+                    "required": "建議內容不能為空",
+                    "min": "建議內容至少需要{min}個字元",
+                    "max": "建議內容不能超過{max}個字元",
+                    "tooManyLinks": "建議內容中連結過多（最多{max}個）"
+                }
+            }
+        },
+        "floatingActions": {
+            "scrollToTop": {
+                "title": "回到頂部",
+                "ariaLabel": "回到頁面頂部"
+            },
+            "suggestion": {
+                "title": "提交建議",
+                "ariaLabel": "提交您的寶貴建議"
             }
         }
     },

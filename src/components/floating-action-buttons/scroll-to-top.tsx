@@ -39,22 +39,25 @@ export default function ScrollToTop() {
     if (!visible) return null;
 
     return (
-        <div className="fixed right-6 bottom-6 z-50">
-            <IconButton
-                aria-label="Back to top"
-                onClick={handleClick}
-                sx={{
-                    bgcolor: "background.paper",
-                    color: "text.primary",
-                    "&:hover": { bgcolor: "action.hover" },
-                    boxShadow: 3,
-                    width: 40,
-                    height: 40,
-                }}
-                title="Back to top"
-            >
-                <KeyboardArrowUpIcon fontSize="small" />
-            </IconButton>
-        </div>
+        <IconButton
+            aria-label="Back to top"
+            onClick={handleClick}
+            sx={{
+                bgcolor: "background.paper",
+                color: "primary.main",
+                border: 1,
+                borderColor: "divider",
+                "&:hover": {
+                    bgcolor: "action.hover",
+                    borderColor: "primary.main",
+                },
+                boxShadow: 3,
+                width: 40,
+                height: 40,
+            }}
+            title="Back to top"
+        >
+            <KeyboardArrowUpIcon fontSize="small" />
+        </IconButton>
     );
 }

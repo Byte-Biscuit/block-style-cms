@@ -7,6 +7,7 @@ import { createCommentSchemas } from '@/types/comment';
 import { getTranslations } from 'next-intl/server';
 import { defaultLocale } from '@/i18n/config';
 import { LOCALE_PARAM_NAME } from '@/constants';
+import { getRequestMetadata } from '@/lib/request-util';
 import { z } from 'zod';
 
 /**
@@ -42,15 +43,6 @@ function checkRateLimit(ip: string): boolean {
 }
 
 /**
- * Get client IP address
- */
-function getClientIp(request: NextRequest): string {
-    const forwarded = request.headers.get('x-forwarded-for');
-    const real = request.headers.get('x-real-ip');
-    return forwarded?.split(',')[0] || real || 'unknown';
-}
-
-/**
  * GET /api/comments?articleId={id}
  * Fetch approved comments for a specific article
  */
@@ -77,10 +69,7 @@ export const GET = withTiming(async (request: NextRequest) => {
  */
 export const POST = withTiming(async (request: NextRequest) => {
     try {
-        // Get client information
-        const ip = getClientIp(request);
-        const userAgent = request.headers.get('user-agent') || 'unknown';
-
+        const { ip, userAgent } = getRequestMetadata(request);
         // Check rate limit
         if (!checkRateLimit(ip)) {
             return forbidden('Rate limit exceeded. Please try again later.');

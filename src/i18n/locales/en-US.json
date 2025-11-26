@@ -17,6 +17,10 @@
                     "title": "Comment Management",
                     "description": "Manage user comments and interactions"
                 },
+                "suggestionManagement": {
+                    "title": "Suggestion Management",
+                    "description": "View and manage user suggestions"
+                },
                 "mediaLibrary": {
                     "title": "Media Library",
                     "description": "Manage images, videos, and other media files (Coming Soon)"
@@ -387,6 +391,38 @@
                 "total": "Total {total} comments",
                 "totalWithPage": "Total {total} comments, Page {current} / {totalPages}"
             }
+        },
+        "suggestion": {
+            "title": "Suggestion Management",
+            "search": {
+                "placeholder": "Search name, email or content"
+            },
+            "stats": {
+                "total": "Total"
+            },
+            "table": {
+                "name": "How to Address",
+                "email": "Email",
+                "content": "Suggestion Content",
+                "ip": "IP Address",
+                "createdAt": "Submitted At",
+                "actions": "Actions",
+                "noData": "No suggestions"
+            },
+            "actions": {
+                "delete": "Delete"
+            },
+            "messages": {
+                "fetchError": "Failed to fetch suggestions",
+                "deleteSuccess": "Suggestion deleted",
+                "deleteError": "Failed to delete suggestion"
+            },
+            "deleteDialog": {
+                "title": "Confirm Delete Suggestion",
+                "message": "Are you sure you want to permanently delete this suggestion? This action cannot be undone.",
+                "cancel": "Cancel",
+                "confirm": "Confirm Delete"
+            }
         }
     },
     "web": {
@@ -554,6 +590,49 @@
                 "commentId": {
                     "format": "Invalid comment ID format"
                 }
+            }
+        },
+        "suggestion": {
+            "dialogTitle": "Your Feedback is Invaluable",
+            "description": "Thank you so much for sharing your valuable feedback! Every suggestion helps us improve.",
+            "nameLabel": "How should we address you?",
+            "nameHelper": "Please let us know how to address you",
+            "emailLabel": "Email",
+            "emailHelper": "Your email address (only for necessary replies)",
+            "contentLabel": "Your Suggestion",
+            "contentHelper": "{current}/{max} characters",
+            "cancel": "Cancel",
+            "submit": "Submit Suggestion",
+            "submitting": "Submitting...",
+            "submitSuccess": "Thank you sincerely for your valuable feedback! We take every suggestion seriously.",
+            "submitError": "Submission failed, please try again later",
+            "networkError": "Network error, please check your connection",
+            "validation": {
+                "name": {
+                    "required": "Name is required",
+                    "min": "Name must be at least 1 character",
+                    "max": "Name must not exceed {max} characters"
+                },
+                "email": {
+                    "required": "Email is required",
+                    "format": "Invalid email format"
+                },
+                "content": {
+                    "required": "Suggestion content is required",
+                    "min": "Content must be at least {min} characters",
+                    "max": "Content must not exceed {max} characters",
+                    "tooManyLinks": "Too many links in content (maximum {max})"
+                }
+            }
+        },
+        "floatingActions": {
+            "scrollToTop": {
+                "title": "Back to Top",
+                "ariaLabel": "Scroll back to top of page"
+            },
+            "suggestion": {
+                "title": "Submit Feedback",
+                "ariaLabel": "Submit your valuable feedback"
             }
         }
     },

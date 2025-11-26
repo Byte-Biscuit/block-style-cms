@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { useTranslations } from "next-intl";
-import { roundedPx } from "@/lib/classes";
+import { roundedPx } from "@/lib/style-classes";
 
 export interface MermaidBlockProps {
     code?: string;

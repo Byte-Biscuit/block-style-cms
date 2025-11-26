@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { type TranslationFunction } from "@/i18n/config";
 import { BETTER_AUTH_SIGN_IN } from "@/constants";
 import { sanitize } from "@/lib/security";
-import { container, button } from "@/lib/classes";
+import { container, button } from "@/lib/style-classes";
 
 interface AuthErrorPageProps {
     error?: string;

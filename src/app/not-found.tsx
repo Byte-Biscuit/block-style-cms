@@ -1,7 +1,7 @@
 "use client";
 import { useTranslations } from "next-intl";
 import GoHomeOnErrorButtons from "@/components/go-home-buttons";
-import { container } from "@/lib/classes";
+import { container } from "@/lib/style-classes";
 
 export default function NotFound() {
     const t = useTranslations("errors");

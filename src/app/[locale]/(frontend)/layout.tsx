@@ -2,8 +2,8 @@ import React from "react";
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
-import { container } from "@/lib/classes";
-import ScrollToTop from "@/components/scroll-to-top";
+import { container } from "@/lib/style-classes";
+import FloatingActionButtons from "@/components/floating-action-buttons";
 
 export default function LocaleLayout({
     children,
@@ -26,7 +26,7 @@ export default function LocaleLayout({
                 <main className={`${container.main} flex-1`}>{children}</main>
                 <Footer />
             </div>
-            <ScrollToTop />
+            <FloatingActionButtons />
         </ThemeProvider>
     );
 }

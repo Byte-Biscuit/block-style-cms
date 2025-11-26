@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import GoHomeOnErrorButtons from "@/components/go-home-buttons";
 import { ArticleMetadata } from "@/types/article";
 import { getLanguageDisplayName } from "@/i18n/config";
-import { container } from "@/lib/classes";
+import { container } from "@/lib/style-classes";
 
 interface ArticleNotFoundProps {
     slug: string;

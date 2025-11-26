@@ -22,6 +22,7 @@ let VIDEO_THUMBNAIL_DIR: string;
 let AUDIO_DIR: string;
 let FILE_DIR: string;
 let COMMENT_DIR: string;
+let SUGGESTION_DIR: string;
 
 const APPLICATION_DATA_PATH = process.env.APPLICATION_DATA_PATH;
 if (isServer) {
@@ -46,6 +47,8 @@ if (isServer) {
     FILE_DIR = path.join(APPLICATION_DATA_PATH, 'files');
 
     COMMENT_DIR = path.join(APPLICATION_DATA_PATH, 'comments');
+
+    SUGGESTION_DIR = path.join(APPLICATION_DATA_PATH, 'suggestions');
 } else {
     // Default values for client environment (not used, but avoids compilation errors)
     ARTICLE_DIR = '';
@@ -56,6 +59,7 @@ if (isServer) {
     AUDIO_DIR = '';
     FILE_DIR = '';
     COMMENT_DIR = '';
+    SUGGESTION_DIR = '';
 }
 
 // Export server-side configuration
@@ -69,6 +73,7 @@ export {
     AUDIO_DIR,
     FILE_DIR,
     COMMENT_DIR,
+    SUGGESTION_DIR,
 };
 
 // ================================
@@ -170,6 +175,25 @@ export const COMMENT_CONFIG = {
     moderation: {
         /** Require manual approval before publishing */
         requireApproval: true,
+    },
+} as const;
+
+// ================================
+// Suggestion System Configuration
+// ================================
+export const SUGGESTION_CONFIG = {
+    /** Suggestion feature enabled */
+    enabled: true,
+    /** Maximum total suggestions limit */
+    maxTotalSuggestions: 500,
+    /** Content constraints */
+    limits: {
+        /** Minimum content length */
+        contentMinLength: 10,
+        /** Maximum content length */
+        contentMaxLength: 2000,
+        /** Maximum allowed links in suggestion */
+        maxLinksAllowed: 3,
     },
 } as const;
 

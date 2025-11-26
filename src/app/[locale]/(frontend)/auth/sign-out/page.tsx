@@ -1,5 +1,5 @@
 import Link from "@/components/link";
-import { button, container } from "@/lib/classes";
+import { button, container } from "@/lib/style-classes";
 import { HomeIcon, RightArrowIcon } from "@/components/icons";
 import { useTranslations } from "next-intl";
 

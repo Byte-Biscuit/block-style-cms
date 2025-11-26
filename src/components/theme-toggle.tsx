@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
-import { button } from "@/lib/classes";
+import { button } from "@/lib/style-classes";
 
 export function ThemeToggle() {
     const [mounted, setMounted] = useState(false);

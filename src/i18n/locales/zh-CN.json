@@ -17,6 +17,10 @@
                     "title": "评论管理",
                     "description": "管理用户评论和互动"
                 },
+                "suggestionManagement": {
+                    "title": "建议管理",
+                    "description": "查看和管理用户建议"
+                },
                 "mediaLibrary": {
                     "title": "媒体库",
                     "description": "管理图片、视频等媒体文件 (功能扩展中)"
@@ -388,6 +392,38 @@
                 "total": "共 {total} 条评论",
                 "totalWithPage": "共 {total} 条评论，第 {current} / {totalPages} 页"
             }
+        },
+        "suggestion": {
+            "title": "建议管理",
+            "search": {
+                "placeholder": "搜索姓名、邮箱或内容"
+            },
+            "stats": {
+                "total": "总数"
+            },
+            "table": {
+                "name": "称呼",
+                "email": "邮箱",
+                "content": "建议内容",
+                "ip": "IP地址",
+                "createdAt": "提交时间",
+                "actions": "操作",
+                "noData": "暂无建议"
+            },
+            "actions": {
+                "delete": "删除"
+            },
+            "messages": {
+                "fetchError": "获取建议失败",
+                "deleteSuccess": "建议已删除",
+                "deleteError": "删除失败"
+            },
+            "deleteDialog": {
+                "title": "确认删除建议",
+                "message": "确定要永久删除此建议吗？此操作无法撤销。",
+                "cancel": "取消",
+                "confirm": "确认删除"
+            }
         }
     },
     "web": {
@@ -555,6 +591,49 @@
                 "commentId": {
                     "format": "评论ID格式不正确"
                 }
+            }
+        },
+        "suggestion": {
+            "dialogTitle": "您的意见无比珍贵",
+            "description": "非常感谢您的宝贵意见！您的每一条建议都将帮助我们做得更好。",
+            "nameLabel": "如何称呼您",
+            "nameHelper": "请告诉我们如何称呼您",
+            "emailLabel": "邮箱",
+            "emailHelper": "请输入您的邮箱地址（仅用于必要时的回复）",
+            "contentLabel": "建议内容",
+            "contentHelper": "已输入 {current}/{max} 字符",
+            "cancel": "取消",
+            "submit": "提交建议",
+            "submitting": "提交中...",
+            "submitSuccess": "衷心感谢您的宝贵建议！我们会认真对待每一条反馈。",
+            "submitError": "提交失败，请稍后重试",
+            "networkError": "网络错误，请检查您的网络连接",
+            "validation": {
+                "name": {
+                    "required": "姓名不能为空",
+                    "min": "姓名至少需要1个字符",
+                    "max": "姓名不能超过{max}个字符"
+                },
+                "email": {
+                    "required": "邮箱不能为空",
+                    "format": "邮箱格式不正确"
+                },
+                "content": {
+                    "required": "建议内容不能为空",
+                    "min": "建议内容至少需要{min}个字符",
+                    "max": "建议内容不能超过{max}个字符",
+                    "tooManyLinks": "建议内容中链接过多（最多{max}个）"
+                }
+            }
+        },
+        "floatingActions": {
+            "scrollToTop": {
+                "title": "回到顶部",
+                "ariaLabel": "回到页面顶部"
+            },
+            "suggestion": {
+                "title": "提交建议",
+                "ariaLabel": "提交您的宝贵建议"
             }
         }
     },

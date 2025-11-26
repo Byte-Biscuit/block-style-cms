@@ -1,7 +1,7 @@
 "use client";
 import { useTranslations } from "next-intl";
 import Link from "@/components/link";
-import { button } from "@/lib/classes";
+import { button } from "@/lib/style-classes";
 import { HomeIcon, RightArrowIcon } from "@/components/icons";
 
 const GoHomeOnErrorButtons = ({ locale }: { locale?: string | null }) => {

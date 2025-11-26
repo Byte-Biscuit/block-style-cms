@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useCommentSubmission } from "@/lib/comment-hooks";
+import { useCommentSubmission } from "@/lib/hooks";
 import type { Comment } from "@/types/comment";
 
 interface CommentFormProps {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
-import { button, container } from "@/lib/classes";
+import { button, container } from "@/lib/style-classes";
 import { GitHubIcon, GoogleIcon, LoadingSpinner } from "@/components/icons";
 
 export default function SignInPage() {

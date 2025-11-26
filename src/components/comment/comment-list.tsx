@@ -7,7 +7,7 @@
 
 import { useTranslations } from "next-intl";
 import CommentItem from "./comment-item";
-import { useCommentTree } from "@/lib/comment-hooks";
+import { useCommentTree } from "@/lib/hooks";
 import type { Comment } from "@/types/comment";
 
 interface CommentListProps {

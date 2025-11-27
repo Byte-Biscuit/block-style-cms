@@ -229,15 +229,21 @@ class ArticleService {
 
     /**
      * Get articles by slug
+     * @param slug - Article slug
+     * @param includeUnpublished - If true, include unpublished articles (for preview); if false, only published articles
      */
-    async getArticlesBySlug(slug: string): Promise<ArticleMetadata[] | null> {
-        const cacheKey = `${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${slug}`;
+    async getArticlesBySlug(slug: string, includeUnpublished: boolean = false): Promise<ArticleMetadata[] | null> {
+        const cacheKey = `${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${slug}_${includeUnpublished ? 'all' : 'published'}`;
         if (lruCacheService.get(cacheKey)) {
             console.log('Cache hit for', cacheKey);
             return lruCacheService.get(cacheKey) as ArticleMetadata[];
         }
         const metadataMap = await this.getMetadataMap();
-        const articles = metadataMap[slug]?.filter(article => article.published) || null;
+        let articles = metadataMap[slug];
+        // 如果不包含未发布文章,则只返回已发布的
+        if (!includeUnpublished) {
+            articles = articles?.filter(article => article.published) || null;
+        }
         if (!articles || articles.length === 0) {
             return null;
         }

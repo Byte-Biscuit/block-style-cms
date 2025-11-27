@@ -621,7 +621,7 @@ export default function PostListPage() {
                                                         >
                                                             <IconButton size="small">
                                                                 <Link
-                                                                    href={`/${article.locale}/articles/${article.slug}`}
+                                                                    href={`/${article.locale}/articles/${article.slug}?preview=true`}
                                                                     target="_blank"
                                                                 >
                                                                     <ViewIcon />

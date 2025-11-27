@@ -14,10 +14,29 @@ import TableOfContentsMobile from "@/components/toc/table-of-contents-mobile";
 import { extractToc } from "@/lib/toc-utils";
 import CommentSection from "@/components/comment/comment-section";
 
-type Props = {
-    params: Promise<{ slug: string; locale: string }>;
+type PageParams = {
+    slug: string;
+    locale: string;
 };
 
+type PageSearchParams = {
+    preview?: string | string[];
+};
+
+type Props = {
+    params: Promise<PageParams>;
+    searchParams?: Promise<PageSearchParams>;
+};
+
+/**
+ * 检查是否为预览请求
+ * 只有明确传入 preview=true/1/yes 时才允许查看未发布的文章
+ */
+const isPreviewMode = (preview?: string | string[]): boolean => {
+    if (!preview) return false;
+    const value = Array.isArray(preview) ? preview[0] : preview;
+    return ["1", "true", "yes"].includes(value.toLowerCase());
+};
 export const revalidate = 3600;
 //export const dynamic = "force-static";
 
@@ -34,13 +53,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({
     params,
-}: {
-    params: Promise<{ slug: string; locale: string }>;
-}): Promise<Metadata> {
+    searchParams,
+}: Props): Promise<Metadata> {
     const { slug, locale } = await params;
+    const { preview } = (await searchParams) || {};
+    const includeUnpublished = isPreviewMode(preview);
+
     setRequestLocale(locale);
     const t = await getTranslations();
-    const articles = await articleService.getArticlesBySlug(slug);
+    const articles = await articleService.getArticlesBySlug(
+        slug,
+        includeUnpublished
+    );
     const article = articles?.find((a) => a.locale === locale);
 
     const base = process.env.NEXT_PUBLIC_BASE_URL;
@@ -65,11 +89,20 @@ export async function generateMetadata({
     };
 }
 
-export default async function ArticleDetailPage({ params }: Props) {
+export default async function ArticleDetailPage({
+    params,
+    searchParams,
+}: Props) {
     const { slug, locale } = await params;
+    const { preview } = (await searchParams) || {};
+    const includeUnpublished = isPreviewMode(preview);
+
     setRequestLocale(locale);
     const t = await getTranslations();
-    const articles = await articleService.getArticlesBySlug(slug);
+    const articles = await articleService.getArticlesBySlug(
+        slug,
+        includeUnpublished
+    );
     // If no articles found with the slug
     if (!articles || articles.length === 0) {
         return <SlugNotFound slug={slug} locale={locale} />;

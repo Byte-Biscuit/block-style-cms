@@ -25,14 +25,14 @@ import {
     MusicNote as AudioIcon,
     Close as CloseIcon,
 } from "@mui/icons-material";
-import { createReactBlockSpec, useBlockNoteEditor,type DefaultReactSuggestionItem } from "@blocknote/react";
-import type { 
-    BlockSchemaFromSpecs,PartialBlock
-} from "@blocknote/core";
-import { 
-    insertOrUpdateBlock,
-    BlockNoteEditor, 
-} from "@blocknote/core";
+import {
+    createReactBlockSpec,
+    useBlockNoteEditor,
+    type DefaultReactSuggestionItem,
+} from "@blocknote/react";
+import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
+import { BlockNoteEditor } from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import { ADMIN_API_PREFIX, AUDIO_BASE_URL } from "@/config";
 import { getBlockEditorContainer } from "../block-editor-utils";
@@ -675,21 +675,20 @@ export const getEnhancedAudioSlashMenuItem = (
         subtext: slashMenuDict?.subtext || "Add an audio player",
         group: slashMenuDict?.group || "Media",
         onItemClick: () => {
-            insertOrUpdateBlock(
-                editor,
-                {
-                    type: ENHANCED_AUDIO_BLOCK_TYPE,
-                    props: {
-                        content: "",
-                        platform: "upload",
-                        title: "",
-                        alignment: "center",
-                        autoplay: false,
-                        loop: false,
-                        controls: true,
-                    }
-                } as unknown as PartialBlock<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
-            );
+            insertOrUpdateBlockForSlashMenu(editor, {
+                type: ENHANCED_AUDIO_BLOCK_TYPE,
+                props: {
+                    content: "",
+                    platform: "upload",
+                    title: "",
+                    alignment: "center",
+                    autoplay: false,
+                    loop: false,
+                    controls: true,
+                },
+            } as unknown as PartialBlock<
+                BlockSchemaFromSpecs<typeof schema.blockSpecs>
+            >);
         },
         aliases: ["audio", "music", "sound", "mp3", ENHANCED_AUDIO_BLOCK_TYPE],
     };

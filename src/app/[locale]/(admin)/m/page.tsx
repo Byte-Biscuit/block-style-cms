@@ -16,7 +16,6 @@ import {
     Image as ImageIcon,
     Comment as CommentIcon,
     Settings as SettingsIcon,
-    TrendingUp as TrendingUpIcon,
     Visibility as VisibilityIcon,
     Feedback as FeedbackIcon,
 } from "@mui/icons-material";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback} from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { BlockNoteView } from "@blocknote/mantine";
 import {
     SuggestionMenuController,
@@ -8,18 +8,17 @@ import {
     FormattingToolbarController,
 } from "@blocknote/react";
 import type { Dictionary } from "@blocknote/core";
-import {
-    filterSuggestionItems,
-} from "@blocknote/core";
+import { filterSuggestionItems } from "@blocknote/core/extensions";
 import { type LocalBlock as Block } from "@/block-note/schema";
-import EnhanceSlashMenu,{getSlashMenuItems} from "@/block-note/slash-menu/enhanced-slash-menu";
+import EnhanceSlashMenu, {
+    getSlashMenuItems,
+} from "@/block-note/slash-menu/enhanced-slash-menu";
 import EnhancedFormattingToolbar from "@/block-note/toolbar/enhanced-formatting-toolbar";
 import { useTranslations } from "next-intl";
-import {schema} from "@/block-note/schema"
+import { schema } from "@/block-note/schema";
 import "@blocknote/core/style.css";
 import "@blocknote/mantine/style.css";
 import "@/admin/m/components/block-note-editor.css";
-
 
 interface BlockNoteEditorProps {
     value?: Block[];
@@ -199,8 +198,10 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                     onChange(editor.document);
                 }}
                 formattingToolbar={false}
-            >   
-                <FormattingToolbarController formattingToolbar={()=><EnhancedFormattingToolbar />} />
+            >
+                <FormattingToolbarController
+                    formattingToolbar={() => <EnhancedFormattingToolbar />}
+                />
                 <SuggestionMenuController
                     triggerCharacter={"/"}
                     getItems={async (query) => {
@@ -209,7 +210,7 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                             query
                         );
                     }}
-                    suggestionMenuComponent={EnhanceSlashMenu }
+                    suggestionMenuComponent={EnhanceSlashMenu}
                 />
             </BlockNoteView>
         </div>

@@ -24,9 +24,14 @@ import {
     VideoLibrary as VideoIcon,
     Close as CloseIcon,
 } from "@mui/icons-material";
-import { createReactBlockSpec, useBlockNoteEditor, type DefaultReactSuggestionItem } from "@blocknote/react";
+import {
+    createReactBlockSpec,
+    useBlockNoteEditor,
+    type DefaultReactSuggestionItem,
+} from "@blocknote/react";
 import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { insertOrUpdateBlock, BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor } from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import { ADMIN_API_PREFIX, VIDEO_BASE_URL } from "@/config";
 import { getBlockEditorContainer } from "../block-editor-utils";
@@ -679,20 +684,19 @@ export const getEnhancedVideoSlashMenuItem = (
         subtext: slashMenuDict?.subtext || "Embed a video with custom controls",
         group: slashMenuDict?.group || "Media",
         onItemClick: () => {
-            insertOrUpdateBlock(
-                editor,
-                {
-                    type: ENHANCED_VIDEO_BLOCK_TYPE,
-                    props: {
-                        content: "",
-                        platform: "upload",
-                        width: "560",
-                        height: "315",
-                        title: "",
-                        alignment: "center",
-                    }
-                } as unknown as PartialBlock<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
-            );
+            insertOrUpdateBlockForSlashMenu(editor, {
+                type: ENHANCED_VIDEO_BLOCK_TYPE,
+                props: {
+                    content: "",
+                    platform: "upload",
+                    width: "560",
+                    height: "315",
+                    title: "",
+                    alignment: "center",
+                },
+            } as unknown as PartialBlock<
+                BlockSchemaFromSpecs<typeof schema.blockSpecs>
+            >);
         },
         aliases: ["video", "movie", "embed", "mp4", ENHANCED_VIDEO_BLOCK_TYPE],
     };

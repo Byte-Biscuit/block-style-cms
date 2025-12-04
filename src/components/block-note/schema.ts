@@ -32,5 +32,8 @@ export const schema = BlockNoteSchema.create({
     },
 });
 
+// Export the Block type from the schema
 export type LocalBlock = typeof schema.Block;
 
+// Export the schema instance for use in other parts of the application
+export default schema;

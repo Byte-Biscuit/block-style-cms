@@ -19,9 +19,14 @@ import {
     InsertDriveFile as TemplateIcon,
     Palette as ThemeIcon,
 } from "@mui/icons-material";
-import { createReactBlockSpec, useBlockNoteEditor, type DefaultReactSuggestionItem } from "@blocknote/react";
+import {
+    createReactBlockSpec,
+    useBlockNoteEditor,
+    type DefaultReactSuggestionItem,
+} from "@blocknote/react";
 import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { insertOrUpdateBlock, BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor } from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import { localizeMermaidTemplates } from "@/types/mermaid";
 import mermaidMonacoEditor from "@/components/block-note/block/monaco-editor-mermaid";
@@ -727,21 +732,29 @@ export const getMermaidSlashMenuItem = (
     return {
         title: slashMenuDict?.title || "Mermaid Diagram",
         icon: <MermaidIcon />,
-        subtext: slashMenuDict?.subtext || "Create flowcharts, diagrams and more",
+        subtext:
+            slashMenuDict?.subtext || "Create flowcharts, diagrams and more",
         group: slashMenuDict?.group || "Advanced",
         onItemClick: () => {
-            insertOrUpdateBlock(
-                editor,
-                {
-                    type: MERMAID_BLOCK_TYPE,
-                    props: {
-                        code: "",
-                        mode: "edit",
-                        theme: "default",
-                    }
-                } as unknown as PartialBlock<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
-            );
+            insertOrUpdateBlockForSlashMenu(editor, {
+                type: MERMAID_BLOCK_TYPE,
+                props: {
+                    code: "",
+                    mode: "edit",
+                    theme: "default",
+                },
+            } as unknown as PartialBlock<
+                BlockSchemaFromSpecs<typeof schema.blockSpecs>
+            >);
         },
-        aliases: ["mermaid", "diagram", "flowchart", "chart", "graph", "sequence", MERMAID_BLOCK_TYPE],
+        aliases: [
+            "mermaid",
+            "diagram",
+            "flowchart",
+            "chart",
+            "graph",
+            "sequence",
+            MERMAID_BLOCK_TYPE,
+        ],
     };
 };

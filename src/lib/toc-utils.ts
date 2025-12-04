@@ -1,4 +1,12 @@
-import type { BlockData, TextContent, LinkContent } from "@/components/block-note/meta";
+import type { LocalBlock as Block } from "@/block-note/schema";
+import type { InlineContent, Link, StyledText } from "@blocknote/core";
+import { schema } from "@/block-note/schema";
+
+// Infer the InlineContent and StyleSchema types from our custom schema
+type SchemaInlineContent = InlineContent<
+    typeof schema.inlineContentSchema,
+    typeof schema.styleSchema
+>;
 
 export interface TocItem {
     id: string;
@@ -11,11 +19,11 @@ export interface TocItem {
  * @param content BlockNote content array
  * @returns Array of TOC items
  */
-export function extractToc(content: BlockData[]): TocItem[] {
+export function extractToc(content: Block[]): TocItem[] {
     const toc: TocItem[] = [];
     // Start from 2 to avoid conflict with article title and summary
     let headingIndex = 2;
-    function traverse(blocks: BlockData[]) {
+    function traverse(blocks: Block[]) {
         for (const block of blocks) {
             // Check if block is a heading
             if (block.type === "heading" && block.content) {
@@ -39,19 +47,42 @@ export function extractToc(content: BlockData[]): TocItem[] {
     return toc;
 }
 
-export function isLinkContent(item: TextContent | LinkContent): item is LinkContent {
-    return "content" in item && Array.isArray(item.content);
+/**
+ * Type guard to check if inline content is a Link type
+ */
+export function isLinkContent(
+    item: SchemaInlineContent
+): item is Link<typeof schema.styleSchema> {
+    return item.type === "link" && "content" in item && Array.isArray(item.content);
 }
 
+/**
+ * Type guard to check if inline content is a StyledText type
+ */
+export function isStyledTextContent(
+    item: SchemaInlineContent
+): item is StyledText<typeof schema.styleSchema> {
+    return item.type === "text" && "text" in item;
+}
+
+/**
+ * Extract plain text from BlockNote inline content array
+ * @param content Array of inline content items
+ * @returns Extracted plain text
+ */
 export function extractTextFromContent(
-    content: Array<TextContent | LinkContent>
+    content: SchemaInlineContent[]
 ): string {
     return content
         .map((item) => {
             if (isLinkContent(item)) {
+                // Recursively extract text from link content
                 return extractTextFromContent(item.content);
             }
-            return item.text || "";
+            if (isStyledTextContent(item)) {
+                return item.text;
+            }
+            return "";
         })
         .join("")
         .trim();

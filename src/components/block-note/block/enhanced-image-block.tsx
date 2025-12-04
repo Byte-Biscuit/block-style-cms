@@ -27,9 +27,14 @@ import {
     Close as CloseIcon,
     Image as ImageIcon,
 } from "@mui/icons-material";
-import { createReactBlockSpec, useBlockNoteEditor, type DefaultReactSuggestionItem } from "@blocknote/react";
+import {
+    createReactBlockSpec,
+    useBlockNoteEditor,
+    type DefaultReactSuggestionItem,
+} from "@blocknote/react";
 import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { insertOrUpdateBlock, BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor } from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import PexelsImagePicker from "@/admin/m/components/pexels-image-picker";
 import { ADMIN_API_PREFIX, IMAGE_BASE_URL } from "@/config";
@@ -1025,27 +1030,34 @@ export const getEnhancedImageSlashMenuItem = (
     return {
         title: slashMenuDict?.title || "Enhanced Image",
         icon: <EnhancedImageIcon />,
-        subtext: slashMenuDict?.subtext || "Insert an image with advanced options",
+        subtext:
+            slashMenuDict?.subtext || "Insert an image with advanced options",
         group: slashMenuDict?.group || "Media",
         onItemClick: () => {
-            insertOrUpdateBlock(
-                editor,
-                {
-                    type: ENHANCED_IMAGE_BLOCK_TYPE,
-                    props: {
-                        src: "",
-                        alt: "",
-                        caption: "",
-                        width: "800",
-                        height: "600",
-                        source: "upload",
-                        alignment: "center",
-                        objectFit: "cover",
-                        maxWidth: "100%",
-                    }
-                } as unknown as PartialBlock<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
-            );
+            insertOrUpdateBlockForSlashMenu(editor, {
+                type: ENHANCED_IMAGE_BLOCK_TYPE,
+                props: {
+                    src: "",
+                    alt: "",
+                    caption: "",
+                    width: "800",
+                    height: "600",
+                    source: "upload",
+                    alignment: "center",
+                    objectFit: "cover",
+                    maxWidth: "100%",
+                },
+            } as unknown as PartialBlock<
+                BlockSchemaFromSpecs<typeof schema.blockSpecs>
+            >);
         },
-        aliases: ["image", "img", "photo", "picture", "pic", ENHANCED_IMAGE_BLOCK_TYPE],
+        aliases: [
+            "image",
+            "img",
+            "photo",
+            "picture",
+            "pic",
+            ENHANCED_IMAGE_BLOCK_TYPE,
+        ],
     };
 };

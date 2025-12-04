@@ -21,9 +21,14 @@ import {
     Close as CloseIcon,
     AttachFile as AttachFileIcon,
 } from "@mui/icons-material";
-import { createReactBlockSpec, useBlockNoteEditor, type DefaultReactSuggestionItem } from "@blocknote/react";
+import {
+    createReactBlockSpec,
+    useBlockNoteEditor,
+    type DefaultReactSuggestionItem,
+} from "@blocknote/react";
 import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { insertOrUpdateBlock, BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor } from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import FileIcon from "@/components/file-icon";
 import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/config";
@@ -569,20 +574,25 @@ export const getEnhancedFileSlashMenuItem = (
         subtext: slashMenuDict?.subtext || "Upload and attach a file",
         group: slashMenuDict?.group || "Media",
         onItemClick: () => {
-            insertOrUpdateBlock(
-                editor,
-                {
-                    type: ENHANCED_FILE_BLOCK_TYPE,
-                    props: {
-                        filename: "",
-                        originalName: "",
-                        size: 0,
-                        fileExtension: "",
-                        alignment: "center",
-                    }
-                } as unknown as PartialBlock<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
-            );
+            insertOrUpdateBlockForSlashMenu(editor, {
+                type: ENHANCED_FILE_BLOCK_TYPE,
+                props: {
+                    filename: "",
+                    originalName: "",
+                    size: 0,
+                    fileExtension: "",
+                    alignment: "center",
+                },
+            } as unknown as PartialBlock<
+                BlockSchemaFromSpecs<typeof schema.blockSpecs>
+            >);
         },
-        aliases: ["file", "attachment", "document", "download", ENHANCED_FILE_BLOCK_TYPE],
+        aliases: [
+            "file",
+            "attachment",
+            "document",
+            "download",
+            ENHANCED_FILE_BLOCK_TYPE,
+        ],
     };
 };

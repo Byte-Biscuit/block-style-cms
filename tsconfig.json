@@ -19,8 +19,8 @@
             }
         ],
         "paths": {
-            "@/blockn/*": [
-                "./src/app/[locale]/(admin)/m/components/block-editor/*"
+            "@/block-note/*": [
+                "./src/components/block-note/*"
             ],
             "@/admin/*": ["./src/app/[locale]/(admin)/*"],
             "@/frontend/*": ["./src/app/[locale]/(frontend)/*"],

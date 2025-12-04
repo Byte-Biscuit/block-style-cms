@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Content > renders mixed text and link content 1`] = `
+<DocumentFragment>
+  Visit 
+  <a
+    class="inline-block max-w-full rounded wrap-break-word text-blue-600 decoration-2 underline-offset-2 transition-colors 
+            hover:text-blue-800 hover:underline focus:ring-2 focus:ring-blue-300 focus:outline-none 
+            dark:text-blue-300 dark:hover:text-blue-100 dark:focus:ring-blue-700"
+    href="https://example.com"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    <span
+      class="font-bold"
+    >
+      Example
+    </span>
+  </a>
+   for more.
+</DocumentFragment>
+`;
+
+exports[`Content > renders styled text content 1`] = `
+<DocumentFragment>
+  <span
+    class="font-bold"
+  >
+    Bold 
+  </span>
+  <span
+    class="italic"
+  >
+    Italic 
+  </span>
+  <span
+    class="font-mono bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm"
+  >
+    Code
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Content > renders text content 1`] = `
+<DocumentFragment>
+  Hello World
+</DocumentFragment>
+`;

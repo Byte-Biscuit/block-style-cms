@@ -1,0 +1,95 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EnhancedFormattingToolbar > renders toolbar with all components 1`] = `
+<DocumentFragment>
+  <div
+    data-testid="formatting-toolbar"
+  >
+    <button
+      data-testid="block-type-select"
+    >
+      BlockType
+    </button>
+    <div
+      aria-hidden="true"
+      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+    />
+    <button
+      data-testid="style-bold"
+    >
+      bold
+    </button>
+    <button
+      data-testid="style-italic"
+    >
+      italic
+    </button>
+    <button
+      data-testid="style-underline"
+    >
+      underline
+    </button>
+    <button
+      data-testid="style-strike"
+    >
+      strike
+    </button>
+    <div
+      aria-hidden="true"
+      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+    />
+    <button
+      data-testid="align-left"
+    >
+      left
+    </button>
+    <button
+      data-testid="align-center"
+    >
+      center
+    </button>
+    <button
+      data-testid="align-right"
+    >
+      right
+    </button>
+    <div
+      aria-hidden="true"
+      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+    />
+    <button
+      data-testid="color-textColor"
+    >
+      textColor
+    </button>
+    <button
+      data-testid="color-backgroundColor"
+    >
+      backgroundColor
+    </button>
+    <div
+      aria-hidden="true"
+      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+    />
+    <button
+      data-testid="nest-block"
+    >
+      Nest
+    </button>
+    <button
+      data-testid="unnest-block"
+    >
+      Unnest
+    </button>
+    <div
+      aria-hidden="true"
+      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+    />
+    <button
+      data-testid="create-link"
+    >
+      Link
+    </button>
+  </div>
+</DocumentFragment>
+`;

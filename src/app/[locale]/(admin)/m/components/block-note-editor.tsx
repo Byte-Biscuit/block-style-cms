@@ -1,60 +1,30 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useMemo } from "react";
+import React, { useState, useRef, useCallback} from "react";
 import { BlockNoteView } from "@blocknote/mantine";
 import {
     SuggestionMenuController,
     useCreateBlockNote,
-    DefaultReactSuggestionItem,
+    FormattingToolbarController,
 } from "@blocknote/react";
-import type { BlockSchemaFromSpecs, Dictionary } from "@blocknote/core";
+import type { Dictionary } from "@blocknote/core";
 import {
-    BlockNoteEditor,
     filterSuggestionItems,
-    defaultBlockSpecs,
-    getDefaultSlashMenuItems,
-    insertOrUpdateBlock,
-    BlockNoteSchema,
 } from "@blocknote/core";
-import {
-    EnhancedImageBlockSpec,
-    defaultNewEnhancedImageBlock,
-    ENHANCED_IMAGE_BLOCK_TYPE,
-    EnhancedVideoBlockSpec,
-    defaultNewEnhancedVideoBlock,
-    ENHANCED_VIDEO_BLOCK_TYPE,
-    EnhancedAudioBlockSpec,
-    defaultNewEnhancedAudioBlock,
-    ENHANCED_AUDIO_BLOCK_TYPE,
-    EnhancedFileBlockSpec,
-    defaultNewEnhancedFileBlock,
-    ENHANCED_FILE_BLOCK_TYPE,
-    MermaidBlockSpec,
-    defaultNewMermaidBlock,
-    MERMAID_BLOCK_TYPE,
-} from "@/blockn/index";
-import EnhanceSlashMenu from "@/blockn/enhanced-slash-menu";
-import type { EnhancedBlock, EnhancedPartialBlock } from "@/blockn/types";
+import { type LocalBlock as Block } from "@/block-note/schema";
+import EnhanceSlashMenu,{getSlashMenuItems} from "@/block-note/slash-menu/enhanced-slash-menu";
+import EnhancedFormattingToolbar from "@/block-note/toolbar/enhanced-formatting-toolbar";
 import { useTranslations } from "next-intl";
+import {schema} from "@/block-note/schema"
 import "@blocknote/core/style.css";
 import "@blocknote/mantine/style.css";
 import "@/admin/m/components/block-note-editor.css";
 
-const schema = BlockNoteSchema.create().extend({
-    blockSpecs: {
-        ...defaultBlockSpecs,
-        [ENHANCED_IMAGE_BLOCK_TYPE]: EnhancedImageBlockSpec,
-        [ENHANCED_VIDEO_BLOCK_TYPE]: EnhancedVideoBlockSpec,
-        [ENHANCED_AUDIO_BLOCK_TYPE]: EnhancedAudioBlockSpec,
-        [ENHANCED_FILE_BLOCK_TYPE]: EnhancedFileBlockSpec,
-        [MERMAID_BLOCK_TYPE]: MermaidBlockSpec,
-    },
-});
 
 interface BlockNoteEditorProps {
-    value?: EnhancedBlock[] | EnhancedPartialBlock[];
+    value?: Block[];
     dictionary: Record<string, unknown>;
-    onChange: (value: EnhancedBlock[] | EnhancedPartialBlock[]) => void;
+    onChange: (value: Block[]) => void;
     theme?: "light" | "dark";
 }
 
@@ -69,15 +39,20 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
     const [isMonitorFullscreen, setIsMonitorFullscreen] = useState(false);
     const editorContainerRef = useRef<HTMLDivElement>(null);
 
-    const initialContent: EnhancedPartialBlock[] =
+    const initialContent: Block[] =
         value && value.length > 0
             ? value
             : [
                   {
                       id: Math.random().toString(36).slice(2),
                       type: "paragraph",
-                      props: {},
+                      props: {
+                          textColor: "default",
+                          backgroundColor: "default",
+                          textAlignment: "left",
+                      },
                       content: [],
+                      children: [],
                   },
               ];
 
@@ -87,6 +62,11 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
         dictionary: dictionary as Dictionary,
         heading: {
             levels: [1, 2, 3, 4, 5, 6],
+        },
+        tables: {
+            splitCells: true,
+            cellTextColor: true,
+            cellBackgroundColor: true,
         },
         domAttributes: {
             editor: {
@@ -150,109 +130,6 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
             );
         };
     }, []);
-
-    const getCustomSlashMenuItems = useMemo(
-        () =>
-            (
-                editor: BlockNoteEditor<
-                    BlockSchemaFromSpecs<typeof schema.blockSpecs>
-                >
-            ): DefaultReactSuggestionItem[] => {
-                const defaultItems = getDefaultSlashMenuItems(editor);
-                const enhancedImageItem = {
-                    key: ENHANCED_IMAGE_BLOCK_TYPE,
-                    onItemClick: () => {
-                        insertOrUpdateBlock(
-                            editor,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            defaultNewEnhancedImageBlock as any
-                        );
-                    },
-                    ...editor.dictionary?.enhanced_slash_menu.enhanced_image,
-                };
-                const enhancedVideoItem = {
-                    key: ENHANCED_VIDEO_BLOCK_TYPE,
-                    onItemClick: () => {
-                        insertOrUpdateBlock(
-                            editor,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            defaultNewEnhancedVideoBlock as any
-                        );
-                    },
-                    ...editor.dictionary?.enhanced_slash_menu.enhanced_video,
-                };
-                const enhancedAudioItem = {
-                    key: ENHANCED_AUDIO_BLOCK_TYPE,
-                    onItemClick: () => {
-                        insertOrUpdateBlock(
-                            editor,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            defaultNewEnhancedAudioBlock as any
-                        );
-                    },
-                    ...editor.dictionary?.enhanced_slash_menu.enhanced_audio,
-                };
-                const enhancedFileItem = {
-                    key: ENHANCED_FILE_BLOCK_TYPE,
-                    onItemClick: () => {
-                        insertOrUpdateBlock(
-                            editor,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            defaultNewEnhancedFileBlock as any
-                        );
-                    },
-                    ...editor.dictionary?.enhanced_slash_menu.enhanced_file,
-                };
-
-                const mermaidItem = {
-                    key: MERMAID_BLOCK_TYPE,
-                    onItemClick: () => {
-                        insertOrUpdateBlock(
-                            editor,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            defaultNewMermaidBlock as any
-                        );
-                    },
-                    ...editor.dictionary?.enhanced_slash_menu.mermaid,
-                };
-
-                // Modify existing items instead of simply pushing new items
-                const modifiedItems = defaultItems.map((item) => {
-                    if (item.key === "image") {
-                        return enhancedImageItem;
-                    }
-                    if (item.key === "video") {
-                        return enhancedVideoItem;
-                    }
-                    if (item.key === "audio") {
-                        return enhancedAudioItem;
-                    }
-                    if (item.key === "file") {
-                        return enhancedFileItem;
-                    }
-                    return item;
-                });
-
-                // Find Advanced group position and insert Mermaid item
-                const advancedGroupIndex = modifiedItems.findIndex(
-                    (item) => item.key === "table"
-                );
-                if (advancedGroupIndex !== -1) {
-                    // Insert after the first item in Advanced group
-                    modifiedItems.splice(
-                        advancedGroupIndex + 1,
-                        0,
-                        mermaidItem
-                    );
-                } else {
-                    // If Advanced group not found, add to the end
-                    modifiedItems.push(mermaidItem);
-                }
-
-                return modifiedItems;
-            },
-        []
-    );
 
     return (
         <div
@@ -321,18 +198,19 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                 onChange={() => {
                     onChange(editor.document);
                 }}
-            >
+                formattingToolbar={false}
+            >   
+                <FormattingToolbarController formattingToolbar={()=><EnhancedFormattingToolbar />} />
                 <SuggestionMenuController
                     triggerCharacter={"/"}
                     getItems={async (query) => {
                         return filterSuggestionItems(
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            getCustomSlashMenuItems(editor as any),
+                            getSlashMenuItems(editor),
                             query
                         );
                     }}
-                    suggestionMenuComponent={EnhanceSlashMenu}
-                ></SuggestionMenuController>
+                    suggestionMenuComponent={EnhanceSlashMenu }
+                />
             </BlockNoteView>
         </div>
     );

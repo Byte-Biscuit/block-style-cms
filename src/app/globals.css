@@ -116,4 +116,25 @@
             color: var(--color-gray-100);
         }
     }
+
+    .list-decimal-paren {
+        list-style: decimal-paren;
+    }
+  
+    .list-dash {
+        list-style: dash;
+    }
+}
+
+/* 1. 定义 "1)" 这种样式 */
+@counter-style decimal-paren {
+  system: numeric;
+  symbols: '0' '1' '2' '3' '4' '5' '6' '7' '8' '9';
+  suffix: "). "; /* 关键在这里：定义后缀为右括号 */
+}
+/* 2. 定义 "-" (短横线) 样式 */
+@counter-style dash {
+  system: cyclic;
+  symbols: "-"; /* 使用 en-dash 或普通横线 "-" */
+  suffix: "  ";
 }

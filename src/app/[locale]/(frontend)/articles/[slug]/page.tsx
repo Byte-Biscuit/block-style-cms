@@ -3,11 +3,11 @@ import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { articleService } from "@/lib/services/article-service";
-import { groupListItems } from "@/components/block-note/universal-block-renderer";
-import type { BlockData } from "@/components/block-note/meta";
+import { BlockListRenderer } from "@/components/block-note/universal-block-renderer";
+import type { LocalBlock as Block} from "@/components/block-note/schema";
 import ArticleNotFound from "./article-not-found";
 import SlugNotFound from "./slug-not-found";
-import { getDefaultHeadingClasses } from "@/lib/tw-utils";
+import { getDefaultHeadingClasses } from "@/lib/style-classes";
 import I18NLocaleTime from "@/components/i18n-time";
 import TableOfContents from "@/components/toc/table-of-contents";
 import TableOfContentsMobile from "@/components/toc/table-of-contents-mobile";
@@ -131,7 +131,7 @@ export default async function ArticleDetailPage({
     }
     // Extract table of contents from article content
     const toc = Array.isArray(article.content)
-        ? extractToc(article.content as BlockData[])
+        ? extractToc(article.content as Block[])
         : [];
 
     return (
@@ -188,7 +188,7 @@ export default async function ArticleDetailPage({
                 <section className="space-y-4">
                     {Array.isArray(article.content) &&
                     article.content.length > 0 ? (
-                        groupListItems(article.content as BlockData[])
+                        <BlockListRenderer blocks={article.content as Block[]} />
                     ) : (
                         <section className="text-gray-500 italic">
                             No content available

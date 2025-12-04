@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TextContent > renders text and applies style classes from styles object 1`] = `
+<DocumentFragment>
+  <span
+    class="text-red-500 bg-blue-100 dark:bg-blue-900/30 font-bold italic underline underline-offset-4"
+  >
+    测试文本内容
+  </span>
+</DocumentFragment>
+`;

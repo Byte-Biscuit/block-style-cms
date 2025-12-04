@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import { Container, Typography, Box, Button, Alert } from "@mui/material";
 import dynamic from "next/dynamic";
 import type { Dictionary } from "@blocknote/core";
-import { getBlockNoteSelfDictionary } from "@/blockn/block-editor-utils";
-import type { EnhancedBlock, EnhancedPartialBlock } from "@/blockn/types";
+import { getBlockNoteSelfDictionary } from "@/block-note/block-editor-utils";
+import {LocalBlock as Block} from "@/block-note/schema";
 import { useLocale } from "next-intl";
 
 const BlockNoteEditor = dynamic(
@@ -16,9 +16,7 @@ const BlockNoteEditor = dynamic(
 const BlockEditorTestPage: React.FC = () => {
     const locale = useLocale();
     const [showJson, setShowJson] = useState(false);
-    const [content, setContent] = useState<
-        EnhancedBlock[] | EnhancedPartialBlock[]
-    >([]);
+    const [content, setContent] = useState<Block[]>([]);
 
     const [blockNoteDictionary, setBlockNoteDictionary] =
         useState<Dictionary | null>(null);
@@ -45,7 +43,7 @@ const BlockEditorTestPage: React.FC = () => {
             : Math.random().toString(36).slice(2, 9);
 
     // 初始化内容
-    const initialContent: EnhancedBlock[] | EnhancedPartialBlock[] = [
+    const initialContent: Block[] = [
         {
             id: generateId(),
             type: "paragraph",
@@ -117,10 +115,10 @@ const BlockEditorTestPage: React.FC = () => {
                 },
             ], // 纯文本内容需要包装在 text 对象中
         },
-    ] as EnhancedBlock[];
+    ] as Block[];
 
     const handleContentChange = (
-        newContent: EnhancedBlock[] | EnhancedPartialBlock[]
+        newContent: Block[]
     ) => {
         setContent(newContent);
     };

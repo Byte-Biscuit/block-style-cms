@@ -1,0 +1,83 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Paragraph > renders empty paragraph 1`] = `
+<DocumentFragment>
+  <section>
+    <p
+      class="text-foreground bg-transparent text-left"
+    />
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with link 1`] = `
+<DocumentFragment>
+  <section>
+    <p
+      class="text-foreground bg-transparent text-left"
+    >
+      Visit 
+      <a
+        class="inline-block max-w-full rounded wrap-break-word text-blue-600 decoration-2 underline-offset-2 transition-colors 
+            hover:text-blue-800 hover:underline focus:ring-2 focus:ring-blue-300 focus:outline-none 
+            dark:text-blue-300 dark:hover:text-blue-100 dark:focus:ring-blue-700"
+        href="https://example.com"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Example
+      </a>
+    </p>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with styled text 1`] = `
+<DocumentFragment>
+  <section>
+    <p
+      class="text-foreground bg-transparent text-left"
+    >
+      <span
+        class="font-bold"
+      >
+        Bold 
+      </span>
+      <span
+        class="italic"
+      >
+        Italic 
+      </span>
+      <span
+        class="font-mono bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm"
+      >
+        Code
+      </span>
+    </p>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders paragraph with text alignment 1`] = `
+<DocumentFragment>
+  <section>
+    <p
+      class="text-foreground bg-transparent text-center"
+    >
+      Centered text
+    </p>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`Paragraph > renders simple paragraph 1`] = `
+<DocumentFragment>
+  <section>
+    <p
+      class="text-foreground bg-transparent text-left"
+    >
+      Hello World
+    </p>
+  </section>
+</DocumentFragment>
+`;

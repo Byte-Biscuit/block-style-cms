@@ -19,7 +19,7 @@ import { Search as SearchIcon, Close as CloseIcon } from "@mui/icons-material";
 import VirtualizedMasonry from "@/components/virtualized-masonry";
 import type { MasonryImage } from "@/types/masonry";
 import { optimizePexelsImageWithPreset } from "@/lib/pexels-utils";
-import { getBlockEditorContainer } from "@/blockn/block-editor-utils";
+import { getBlockEditorContainer } from "@/block-note/block-editor-utils";
 import { API_BASE_URL } from "@/config";
 import { useTranslations } from "next-intl";
 

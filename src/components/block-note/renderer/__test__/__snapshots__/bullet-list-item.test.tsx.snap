@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BulletListItem > renders bullet list item with link 1`] = `
+<DocumentFragment>
+  <ul>
+    <li
+      class="text-foreground bg-transparent text-left wrap-break-word leading-relaxed"
+    >
+      Check 
+      <a
+        class="inline-block max-w-full rounded wrap-break-word text-blue-600 decoration-2 underline-offset-2 transition-colors 
+            hover:text-blue-800 hover:underline focus:ring-2 focus:ring-blue-300 focus:outline-none 
+            dark:text-blue-300 dark:hover:text-blue-100 dark:focus:ring-blue-700"
+        href="https://example.com"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        this link
+      </a>
+    </li>
+  </ul>
+</DocumentFragment>
+`;
+
+exports[`BulletListItem > renders bullet list item with styled text 1`] = `
+<DocumentFragment>
+  <ul>
+    <li
+      class="text-foreground bg-transparent text-left wrap-break-word leading-relaxed"
+    >
+      <span
+        class="font-bold"
+      >
+        Bold 
+      </span>
+      text
+    </li>
+  </ul>
+</DocumentFragment>
+`;
+
+exports[`BulletListItem > renders empty bullet list item 1`] = `
+<DocumentFragment>
+  <ul>
+    <li
+      class="text-foreground bg-transparent text-left wrap-break-word leading-relaxed"
+    />
+  </ul>
+</DocumentFragment>
+`;
+
+exports[`BulletListItem > renders simple bullet list item 1`] = `
+<DocumentFragment>
+  <ul>
+    <li
+      class="text-foreground bg-transparent text-left wrap-break-word leading-relaxed"
+    >
+      First item
+    </li>
+  </ul>
+</DocumentFragment>
+`;

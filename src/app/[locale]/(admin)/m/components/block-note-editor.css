@@ -54,8 +54,8 @@
     padding: 3px 2px;
 }
 
-/* Inline Content */
-.notion-inline-content {
+/* Inline Content - using BlockNote's native class .bn-inline-content */
+.bn-inline-content {
     padding: 0;
 }
 
@@ -97,8 +97,8 @@
     margin: 1px 0;
 }
 
-/* Links */
-.notion-inline-content a {
+/* Links - using BlockNote's native class .bn-inline-content */
+.bn-inline-content a {
     color: #0969da;
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -106,27 +106,28 @@
     transition: all 0.1s ease;
 }
 
-.notion-inline-content a:hover {
+.bn-inline-content a:hover {
     background-color: rgba(9, 105, 218, 0.1);
     border-radius: 2px;
     padding: 0 1px;
 }
 
-.notion-like-editor[data-theme="dark"] .notion-inline-content a {
+.notion-like-editor[data-theme="dark"] .bn-inline-content a,
+[data-color-scheme="dark"] .bn-inline-content a {
     color: #58a6ff;
 }
 
-/* Bold and Italic */
-.notion-inline-content strong {
+/* Bold and Italic - using BlockNote's native class .bn-inline-content */
+.bn-inline-content strong {
     font-weight: 600;
 }
 
-.notion-inline-content em {
+.bn-inline-content em {
     font-style: italic;
 }
 
-/* Code */
-.notion-inline-content code {
+/* Code - using BlockNote's native class .bn-inline-content */
+.bn-inline-content code {
     background-color: rgba(135, 131, 120, 0.15);
     border-radius: 3px;
     padding: 0.2em 0.4em;
@@ -136,7 +137,8 @@
     color: #eb5757;
 }
 
-.notion-like-editor[data-theme="dark"] .notion-inline-content code {
+.notion-like-editor[data-theme="dark"] .bn-inline-content code,
+[data-color-scheme="dark"] .bn-inline-content code {
     background-color: rgba(255, 255, 255, 0.1);
     color: #ff6b6b;
 }

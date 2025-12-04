@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LinkContent > renders link with plain text 1`] = `
+<DocumentFragment>
+  <a
+    class="inline-block max-w-full rounded wrap-break-word text-blue-600 decoration-2 underline-offset-2 transition-colors 
+            hover:text-blue-800 hover:underline focus:ring-2 focus:ring-blue-300 focus:outline-none 
+            dark:text-blue-300 dark:hover:text-blue-100 dark:focus:ring-blue-700"
+    href="https://example.com"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    Example Link
+  </a>
+</DocumentFragment>
+`;
+
+exports[`LinkContent > renders link with styled text 1`] = `
+<DocumentFragment>
+  <a
+    class="inline-block max-w-full rounded wrap-break-word text-blue-600 decoration-2 underline-offset-2 transition-colors 
+            hover:text-blue-800 hover:underline focus:ring-2 focus:ring-blue-300 focus:outline-none 
+            dark:text-blue-300 dark:hover:text-blue-100 dark:focus:ring-blue-700"
+    href="https://example.com"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    <span
+      class="font-bold"
+    >
+      Bold 
+    </span>
+    <span
+      class="italic"
+    >
+      Italic
+    </span>
+  </a>
+</DocumentFragment>
+`;

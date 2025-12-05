@@ -24,7 +24,7 @@
         "@mui/icons-material": "^7.3.2",
         "@mui/material": "^7.3.2",
         "@mui/material-nextjs": "^7.3.2",
-        "algoliasearch": "^5.41.0",
+        "algoliasearch": "^5.46.0",
         "better-auth": "^1.4.5",
         "better-sqlite3": "^12.4.1",
         "clsx": "^2.1.1",

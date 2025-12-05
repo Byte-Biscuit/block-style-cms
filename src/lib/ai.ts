@@ -39,7 +39,7 @@ function getLLM(provider: LLMProvider) {
             });
         }
         case "gemini": {
-            const apiKey = process.env.GEMINI_API_KEY || "AIzaSyA-r5HYjEI9KxS6YHfkKQyp8TVQ8rQY8t8";
+            const apiKey = process.env.GEMINI_API_KEY || "";
             return new ChatGoogleGenerativeAI({
                 apiKey,
                 model: process.env.GEMINI_MODEL || "gemini-2.0-flash",

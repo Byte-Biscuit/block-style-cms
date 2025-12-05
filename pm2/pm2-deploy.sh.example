@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# 1. Security setting: Exit immediately if an error occurs
+set -e
+
+# 2. Dynamically load NVM (Recommended way)
+# This ensures that even if you upgrade to Node 24 or 26 later,
+# as long as 'nvm alias default' is set correctly, no changes are needed here.
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# 3. Define path variables for better fault tolerance
+# NOTE: These are example placeholders. Replace with your real paths or pass them as arguments.
+#   Usage: ./pm2-deploy.sh /var/www/example-app /path/to/ecosystem.config.js
+APP_DIR="${1:-/var/www/example-app}" # Example: /var/www/example-app
+ECOSYSTEM_PATH="${2:-/path/to/ecosystem.config.js}" # Example: /path/to/ecosystem.config.js
+
+echo "🚀 Starting deployment (example script)..."
+echo "📂 Working directory (example): $APP_DIR"
+
+cd "$APP_DIR"
+
+# 4. Dependency installation strategy (Core optimization)
+# If package-lock.json exists, use npm ci for a "clean install".
+# This ensures precise dependency version locking and automatically cleans up garbage in node_modules.
+if [ -f "package-lock.json" ]; then
+    echo "📦 Lock file detected, executing strict installation (npm ci)..."
+    npm ci
+else
+    echo "⚠️ No lock file detected, executing normal installation (npm install)..."
+    npm install
+fi
+
+# 5. Clean Next.js cache (Solve potential build cache issues)
+# Note: This increases build time but guarantees a pristine build artifact,
+# uncontaminated by old versions.
+echo "🧹 Cleaning old build cache..."
+rm -rf .next
+
+# 6. Build the project
+echo "🏗️ Starting build..."
+npm run build
+
+# 7. PM2 Zero-Downtime Reload (Core optimization)
+# Previous logic killed the process before starting, causing brief downtime.
+# startOrReload attempts a hot reload, or starts the process if it doesn't exist.
+cd ".."
+echo "🔄 Reloading PM2 process..."
+# Use the configured ecosystem file path (example placeholder)
+pm2 startOrReload "$ECOSYSTEM_PATH" --env production
+
+echo "✅ Deployment completed!"

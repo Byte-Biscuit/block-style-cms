@@ -1,0 +1,202 @@
+module.exports = {
+    apps: [
+        {
+            // ============================================================================
+            // Basic configuration
+            // ============================================================================
+
+            // Application name (displayed in PM2)
+            name: "block-style-cms",
+
+            // Path to the start script (Next.js start)
+            script: "node_modules/next/dist/bin/next",
+
+            // Arguments passed to the start script ("start" runs Next in production)
+            args: "start",
+
+            // Application working directory (your app code path)
+            // Example placeholder: change to your real path or pass via deployment tooling
+            cwd: "/var/www/example-app/app",
+
+            // ============================================================================
+            // Process management
+            // ============================================================================
+
+            // Number of instances
+            // 'max' = auto based on CPU cores (recommended)
+            // or provide a fixed number like 2, 4, etc.
+            instances: "1",
+
+            // Execution mode
+            // 'cluster' = cluster mode (load-balancing across cores)
+            // 'fork' = single process
+            exec_mode: "fork",
+
+            // ============================================================================
+            // Environment variables
+            // ============================================================================
+
+            // Default environment variables
+            env: {
+                NODE_ENV: "production",
+                PORT: 3000,
+                // Enable verbose debug info (useful during investigation)
+                NEXT_PUBLIC_DEBUG: "true",
+            },
+
+            // Production environment variables (when using --env production)
+            env_production: {
+                NODE_ENV: "production",
+                PORT: 3000,
+            },
+
+            // Development environment variables (when using --env development)
+            env_development: {
+                NODE_ENV: "development",
+                PORT: 3000,
+            },
+
+            // ============================================================================
+            // Logging
+            // ============================================================================
+
+            // Error log file path (example)
+            error_file: "/var/www/example-app/logs/pm2-error.log",
+
+            // Standard output log file path (example)
+            out_file: "/var/www/example-app/logs/pm2-out.log",
+
+            // Combined log file path (includes all logs)
+            log_file: "/var/www/example-app/logs/pm2-combined.log",
+
+            // Add timestamps to log lines
+            time: true,
+
+            // Log date format
+            log_date_format: "YYYY-MM-DD HH:mm:ss Z",
+
+            // ============================================================================
+            // Performance and resource limits
+            // ============================================================================
+
+            // Memory limit (auto-restart if exceeded to prevent leaks)
+            // e.g. '1G' = 1GB, '500M' = 500MB
+            max_memory_restart: "1G",
+
+            // ============================================================================
+            // Auto-restart settings
+            // ============================================================================
+
+            // Automatically restart on crash
+            autorestart: true,
+
+            // Watch for file changes and auto-restart (recommended OFF in production)
+            watch: false,
+
+            // If watch is enabled, ignore these folders
+            ignore_watch: ["node_modules", "logs", ".next", ".git", "data"],
+
+            // Minimum uptime (if process dies before this, it's considered a failed start)
+            min_uptime: "10s",
+
+            // Maximum restart attempts within the min_uptime window
+            max_restarts: 10,
+
+            // Restart delay to avoid rapid restart loops
+            restart_delay: 4000,
+
+            // ============================================================================
+            // Health checks and timeouts
+            // ============================================================================
+
+            // Time to wait for application to become responsive after start
+            listen_timeout: 10000,
+
+            // Force kill timeout (time to wait before SIGKILL)
+            kill_timeout: 5000,
+
+            // Use graceful shutdown messaging
+            shutdown_with_message: true,
+
+            // ============================================================================
+            // Miscellaneous
+            // ============================================================================
+
+            // Enable source-map support for better stack traces
+            source_map_support: true,
+
+            // Merge logs into PM2 console
+            merge_logs: true,
+
+            // Combine logs across cluster instances
+            combine_logs: true,
+
+            // Pass additional Node args (experimental flags etc.)
+            node_args: [],
+
+            // Crash behavior
+            // 'exp' = exponential backoff restart (recommended)
+            // 'linear' = linear delay restart
+            exp_backoff_restart_delay: 100,
+
+            // ============================================================================
+            // PM2 Plus (optional for advanced monitoring)
+            // ============================================================================
+
+            // Enable PM2 Plus monitoring
+            // pmx: true,
+
+            // Enable custom metrics
+            // metrics: {
+            //   network: {
+            //     ports: true
+            //   },
+            //   http: {
+            //     latency: {
+            //       meter: true
+            //     }
+            //   }
+            // },
+        },
+    ],
+
+    // ============================================================================
+    // Global deploy configuration (optional)
+    // ============================================================================
+
+    deploy: {
+        // Production deploy configuration
+        production: {
+            // SSH user
+            user: "your-username",
+
+            // Server host or IP
+            host: "your-server-ip",
+
+            // SSH port (optional)
+            // port: 22,
+
+            // Git repository URL
+            repo: "git@github.com:your-username/block-style-cms.git",
+
+            // Git branch / ref to deploy
+            ref: "origin/main",
+
+            // Deployment path on the server (example placeholder)
+            // e.g. /var/www/example-app or ~/data/example-app
+            path: "~/data/example-app",
+
+            // Commands to run before deploying
+            "pre-deploy": "git fetch --all",
+
+            // Commands to run after deploy (build + reload PM2)
+            "post-deploy":
+                "npm install && npm run build && pm2 reload ecosystem.config.js --env production",
+
+            // Environment variables for the deployed app
+            env: {
+                NODE_ENV: "production",
+            },
+        },
+    },
+};

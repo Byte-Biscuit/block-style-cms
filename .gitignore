@@ -43,7 +43,9 @@ yarn-error.log*
 next-env.d.ts
 data
 sonar-project.properties
-ecosystem.config.js
 deploy.json
 /.github/instructions
 /.vscode/launch.json
+# pm2
+/pm2/ecosystem.config.js
+/pm2/pm2-deploy.sh

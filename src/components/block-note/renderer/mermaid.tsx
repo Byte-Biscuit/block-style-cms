@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import { roundedPx } from "@/lib/style-classes";
 
 export interface MermaidBlockProps {
@@ -109,7 +110,7 @@ const MermaidDialog: React.FC<{
                 </IconButton>
                 <div
                     ref={containerRef}
-                    className={`relative h-full min-h-[500px] w-full overflow-hidden bg-gray-50 ${isPanning ? "cursor-grab" : "cursor-default"} ${isDragging ? "cursor-grabbing" : ""} `}
+                    className={`relative h-full min-h-[500px] w-full overflow-hidden bg-white ${isPanning ? "cursor-grab" : "cursor-default"} ${isDragging ? "cursor-grabbing" : ""} `}
                     onMouseDown={(e: React.MouseEvent) => {
                         setIsDragging(true);
                         setDragStart({
@@ -160,6 +161,7 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
     const [error, setError] = useState<string>("");
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const t = useTranslations("web.mermaid");
+    const { resolvedTheme } = useTheme();
 
     const { props } = data;
     const code = props?.code?.trim();
@@ -169,11 +171,22 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
             try {
                 const mermaid = await getMermaid();
 
+                // Use dark theme when in dark mode, unless a specific theme is set
+                const mermaidTheme =
+                    props?.theme ||
+                    (resolvedTheme === "dark" ? "dark" : "default");
+
                 mermaid.default.initialize({
                     startOnLoad: false,
-                    theme: props?.theme || "default",
+                    theme: mermaidTheme,
                     securityLevel: "loose",
                     fontFamily: "inherit",
+                    themeVariables: {
+                        background: "#ffffff",
+                        mainBkg: "#ffffff",
+                        secondBkg: "#f4f4f4",
+                        tertiaryBkg: "#f0f0f0",
+                    },
                 });
 
                 const elementId = `mermaid-${data.id}-${Date.now()}`;
@@ -191,7 +204,7 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
                 );
             }
         },
-        [data.id, props?.theme, t]
+        [data.id, props?.theme, resolvedTheme, t]
     );
 
     useEffect(() => {
@@ -218,7 +231,7 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
         };
 
         renderChart();
-    }, [code, props?.theme, data.id, renderMermaid, t]);
+    }, [code, props?.theme, data.id, renderMermaid, resolvedTheme, t]);
 
     const handleImageClick = () => {
         if (svgContent && !error) {
@@ -254,12 +267,12 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
     return (
         <>
             <figure
-                className={`cursor-pointer overflow-hidden rounded-lg border border-gray-200 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 ${className}`}
+                className={`cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 ${className}`}
                 onClick={handleImageClick}
             >
                 <div
                     dangerouslySetInnerHTML={{ __html: svgContent }}
-                    className="flex w-full items-center justify-center p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:w-full"
+                    className="flex w-full items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:w-full"
                 />
             </figure>
 

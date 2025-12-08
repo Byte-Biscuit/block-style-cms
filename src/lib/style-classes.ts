@@ -100,7 +100,7 @@ export function getBlockClasses(
 
 // Base style components
 export const base = {
-    container: "w-full mx-auto px-4",
+    container: "w-full mx-auto",
     flexCenter: "flex items-center justify-center",
     flexCol: "flex-col items-center justify-center text-center",
     flexBetween: "flex items-center justify-between",
@@ -115,7 +115,7 @@ export const base = {
 
     // Spacing
     padding: {
-        page: "px-4 py-6",
+        page: "px-4 py-4",
         section: "px-6 py-4",
         compact: "px-4 py-2"
     }

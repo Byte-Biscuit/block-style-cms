@@ -6,21 +6,39 @@ import BulletListItem from "./renderer/bullet-list-item";
 import CodeBlock from "./renderer/code-block";
 import { type LocalBlock as Block } from "@/block-note/schema";
 import EnhancedFile, { EnhancedFileBlockData } from "./renderer/enhanced-file";
-import EnhancedImage, { EnhancedImageBlockData } from "./renderer/enhanced-image";
-import EnhancedVideo, { EnhancedVideoBlockData } from "./renderer/enhanced-video";
-import EnhancedAudio, { EnhancedAudioBlockData } from "./renderer/enhanced-audio";
+import EnhancedImage, {
+    EnhancedImageBlockData,
+} from "./renderer/enhanced-image";
+import EnhancedVideo, {
+    EnhancedVideoBlockData,
+} from "./renderer/enhanced-video";
+import EnhancedAudio, {
+    EnhancedAudioBlockData,
+} from "./renderer/enhanced-audio";
 import Mermaid, { MermaidBlockData } from "./renderer/mermaid";
-import NumberedListItem,{ type NumberedListBlock} from "./renderer/numbered-list-item";
-import {type BulletListItemBlock} from "./renderer/bullet-list-item";
+import NumberedListItem, {
+    type NumberedListBlock,
+} from "./renderer/numbered-list-item";
+import { type BulletListItemBlock } from "./renderer/bullet-list-item";
 import Quote from "./renderer/quote";
 import TableRender from "./renderer/table";
 import Divider from "./renderer/divider";
 
 // Bullet list style mapping: level 0 -> disc, 1 -> circle, 2 -> square
-const BULLET_STYLES = ["list-disc", "list-[circle]", "list-[square]","list-dash"];
+const BULLET_STYLES = [
+    "list-disc",
+    "list-[circle]",
+    "list-[square]",
+    "list-dash",
+];
 
 // Numbered list style mapping: level 0 -> decimal, 1 -> lower-alpha, 2 -> lower-roman
-const NUMBER_STYLES = ["list-decimal","list-decimal-paren", "list-[lower-alpha]", "list-[lower-roman]"];
+const NUMBER_STYLES = [
+    "list-decimal",
+    "list-decimal-paren",
+    "list-[lower-alpha]",
+    "list-[lower-roman]",
+];
 
 interface BlockRendererProps {
     block: Block;
@@ -41,7 +59,12 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
      */
     // paragraph
     if (block.type === "paragraph") {
-        return <Paragraph block={block} className={`${className} mb-4 leading-relaxed`} />;
+        return (
+            <Paragraph
+                block={block}
+                className={`${className} mb-4 leading-relaxed`}
+            />
+        );
     }
     // code block
     if (block.type === "codeBlock") {
@@ -100,7 +123,6 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     return null;
 };
 
-
 // ============================================================
 // BlockListRenderer - renderer for a list of Blocks (handles list grouping and heading indexing)
 // ============================================================
@@ -123,7 +145,7 @@ export const BlockListRenderer: React.FC<BlockListRendererProps> = ({
     blocks,
     className = "",
     startHeadingIndex = 2,
-    level=0
+    level = 0,
 }) => {
     if (!blocks || blocks.length === 0) return null;
 
@@ -145,7 +167,11 @@ export const BlockListRenderer: React.FC<BlockListRendererProps> = ({
                     className={`mb-4 space-y-2 pl-6 ${currentBulletClass}`}
                 >
                     {currentBulletGroup.map((item) => (
-                        <BulletListItem key={item.id} block={item} level={level} />
+                        <BulletListItem
+                            key={item.id}
+                            block={item}
+                            level={level}
+                        />
                     ))}
                 </ul>
             );
@@ -161,7 +187,11 @@ export const BlockListRenderer: React.FC<BlockListRendererProps> = ({
                     className={`mb-4 space-y-2 pl-6 ${currentNumberClass}`}
                 >
                     {currentNumberedGroup.map((item) => (
-                        <NumberedListItem key={item.id} block={item}  level={level} />
+                        <NumberedListItem
+                            key={item.id}
+                            block={item}
+                            level={level}
+                        />
                     ))}
                 </ol>
             );
@@ -199,11 +229,19 @@ export const BlockListRenderer: React.FC<BlockListRendererProps> = ({
             if (block.type === "heading") {
                 // Headings need an index for TOC anchors
                 result.push(
-                    <Heading key={block.id} data={block} index={headingIndex++} />
+                    <Heading
+                        key={block.id}
+                        data={block}
+                        index={headingIndex++}
+                    />
                 );
             } else {
                 result.push(
-                    <BlockRenderer key={block.id} block={block} className={className} />
+                    <BlockRenderer
+                        key={block.id}
+                        block={block}
+                        className={className}
+                    />
                 );
             }
         }
@@ -226,14 +264,12 @@ export const ChildrenBlockRenderer: React.FC<ChildrenBlockRendererProps> = ({
 }) => {
     if (!blocks || blocks.length === 0) return null;
     return (
-        <div className={`mt-1 w-full ml-4 ${className}`}>
-           <BlockListRenderer blocks={blocks}  className={className} level={level + 1}  />
+        <div className={`mt-1 ml-2 w-full ${className}`}>
+            <BlockListRenderer
+                blocks={blocks}
+                className={className}
+                level={level + 1}
+            />
         </div>
     );
 };
-
-
-
-
-
-

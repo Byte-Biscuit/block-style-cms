@@ -38,7 +38,7 @@ export default async function ChannelDetailPage({
     });
 
     return (
-        <div className="container mx-auto max-w-6xl px-4 py-16">
+        <div className="container mx-auto max-w-6xl">
             {/* Breadcrumb & Header */}
             <div className="mb-12">
                 <div className="flex items-baseline gap-4">

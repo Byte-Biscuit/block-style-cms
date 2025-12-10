@@ -19,9 +19,8 @@
             }
         ],
         "paths": {
-            "@/block-note/*": [
-                "./src/components/block-note/*"
-            ],
+            "@/block-note/*": ["./src/components/block-note/*"],
+            "@/types": ["./src/types/*"],
             "@/admin/*": ["./src/app/[locale]/(admin)/*"],
             "@/frontend/*": ["./src/app/[locale]/(frontend)/*"],
             "@/i18n/*": ["./src/i18n/*"],

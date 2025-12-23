@@ -34,7 +34,7 @@ import {
     MAX_FILE_SIZE,
     IMAGE_BASE_URL,
     API_BASE_URL,
-} from "@/config";
+} from "@/settings";
 import { useTranslations } from "next-intl";
 
 const ImagePreviewDialog = dynamic(

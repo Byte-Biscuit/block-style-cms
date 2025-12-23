@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Comment } from '@/types/comment';
-import { API_BASE_URL } from "@/config";
+import { API_BASE_URL } from "@/settings";
 
 /**
  * Generic debounce hook

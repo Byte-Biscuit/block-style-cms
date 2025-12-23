@@ -9,8 +9,8 @@ import type {
     ImageMetaInfo,
     ImageListOptions,
 } from '@/types/image';
-import { ALLOWED_IMAGE_MIME_TYPES } from '@/config';
-import { IMAGE_DIR, META_DIR } from '@/config';
+import { ALLOWED_IMAGE_MIME_TYPES } from '@/settings';
+import { IMAGE_DIR, META_DIR } from '@/settings';
 import { ImageOptions } from '@/types/image';
 import { optimizePexelsImageUrl } from '@/lib/pexels-utils'
 

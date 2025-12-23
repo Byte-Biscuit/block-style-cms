@@ -3,7 +3,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import { VIDEO_BASE_URL } from "@/config";
+import { VIDEO_BASE_URL } from "@/settings";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 

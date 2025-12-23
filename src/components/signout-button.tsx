@@ -3,7 +3,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { useTranslations } from "next-intl";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function SignOutButton({

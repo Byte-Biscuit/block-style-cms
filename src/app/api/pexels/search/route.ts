@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { systemConfigService } from '@/lib/services/system-config-service';
 
-const PEXELS_API_KEY = process.env.PEXELS_API_KEY;
 const PEXELS_BASE_URL = 'https://api.pexels.com/v1';
 
 export async function POST(request: NextRequest) {
     try {
-        if (!PEXELS_API_KEY) {
+        const config = await systemConfigService.readConfig();
+        const pexelsApiKey = config?.services?.pexels?.apiKey;
+
+        if (!pexelsApiKey) {
             return NextResponse.json(
-                { error: 'Pexels API key not configured' },
+                { error: 'Pexels API key not configured in settings.json' },
                 { status: 500 }
             );
         }
@@ -25,7 +28,7 @@ export async function POST(request: NextRequest) {
             `${PEXELS_BASE_URL}/search?query=${encodeURIComponent(query)}&page=${page}&per_page=${per_page}`,
             {
                 headers: {
-                    'Authorization': PEXELS_API_KEY,
+                    'Authorization': pexelsApiKey,
                 },
             }
         );

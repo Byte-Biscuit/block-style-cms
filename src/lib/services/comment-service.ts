@@ -5,7 +5,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { COMMENT_DIR, COMMENT_CONFIG } from '@/config';
+import { COMMENT_DIR, COMMENT_CONFIG } from '@/settings';
 import type { Comment, CommentSubmissionData } from '@/types/comment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -210,7 +210,7 @@ class CommentService {
         rejected: number;
     }> {
         const comments = await this.getAllComments();
-        
+
         return {
             total: comments.length,
             pending: comments.filter(c => c.status === 'pending').length,

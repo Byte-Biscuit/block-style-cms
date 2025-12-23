@@ -6,9 +6,8 @@ interface UmamiAnalyticsProps {
 }
 
 const UmamiAnalytics = ({
-    websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
-    src = process.env.NEXT_PUBLIC_UMAMI_SRC ||
-        "https://cloud.umami.is/script.js",
+    websiteId,
+    src = "https://cloud.umami.is/script.js",
 }: UmamiAnalyticsProps) => {
     if (process.env.NODE_ENV !== "production") {
         return null;

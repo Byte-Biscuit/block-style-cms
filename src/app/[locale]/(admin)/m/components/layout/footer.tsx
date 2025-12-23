@@ -1,5 +1,5 @@
 import { Paper, Container, Typography, Box } from "@mui/material";
-import { VERSION } from "@/config";
+import { VERSION } from "@/settings";
 import { getTranslations } from "next-intl/server";
 
 export default async function Footer() {

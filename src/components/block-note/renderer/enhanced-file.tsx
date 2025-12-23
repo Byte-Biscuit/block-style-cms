@@ -2,7 +2,7 @@ import React from "react";
 import { formatBytes, getFileCategory } from "@/lib/file-utils";
 import { getFileTypeColor } from "@/lib/style-classes";
 import FileIcon from "@/components/file-icon";
-import { FILE_BASE_URL } from "@/config";
+import { FILE_BASE_URL } from "@/settings";
 import Link from "next/link";
 import { IconButton } from "@mui/material";
 import { Download as DownloadIcon } from "@mui/icons-material";

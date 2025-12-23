@@ -34,7 +34,7 @@ import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
 import { BlockNoteEditor } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
-import { ADMIN_API_PREFIX, AUDIO_BASE_URL } from "@/config";
+import { ADMIN_API_PREFIX, AUDIO_BASE_URL } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedAudioIcon from "./icons/enhanced-audio-icon";
 import EnhancedAudio, {

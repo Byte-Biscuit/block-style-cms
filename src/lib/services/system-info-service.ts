@@ -1,10 +1,10 @@
 import si from "systeminformation";
 import path from 'path';
-import { APPLICATION_DATA_PATH } from "@/config"
+import { CMS_DATA_PATH } from "@/settings";
 
 
 class SystemInfoService {
-    async getMountedDirectoryStorageStatus(targetPath = APPLICATION_DATA_PATH || "/") {
+    async getMountedDirectoryStorageStatus(targetPath = CMS_DATA_PATH || "/") {
         const resolved = path.resolve(targetPath);
         const root = path.parse(resolved).root; // Windows -> 'C:\\', POSIX -> '/'
         const list = await si.fsSize(); // [{ fs, type, size, used, use, mount }, ... ]

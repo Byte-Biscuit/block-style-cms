@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { type Article, createArticleSchemas } from "@/types/article";
 import type { ApiResponse } from "@/types/response";
-import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/config";
+import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
 import { LOCALE_PARAM_NAME } from "@/constants";
 import { useTranslations } from "next-intl";
 import ErrorDisplay from "@/admin/m/components/error-display";

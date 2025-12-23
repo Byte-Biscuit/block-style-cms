@@ -35,7 +35,7 @@ import {
 } from "@mui/icons-material";
 import { useTranslations, useLocale } from "next-intl";
 import type { Suggestion } from "@/types/suggestion";
-import { ADMIN_API_PREFIX } from "@/config";
+import { ADMIN_API_PREFIX } from "@/settings";
 import { formatDateI18n } from "@/i18n/util";
 
 export default function SuggestionManagementPage() {

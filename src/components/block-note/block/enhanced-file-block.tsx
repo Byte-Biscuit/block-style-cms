@@ -31,7 +31,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import FileIcon from "@/components/file-icon";
-import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/config";
+import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import { getFileCategory, formatBytes } from "@/lib/file-utils";
 import EnhancedFileIcon from "./icons/enhanced-file-icon";

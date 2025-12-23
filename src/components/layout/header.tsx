@@ -8,12 +8,22 @@ import { container } from "@/lib/style-classes";
 import { LanguageToggle } from "@/components/language-toggle";
 import ChannelNav from "@/components/layout/channel-nav";
 import { channelService } from "@/lib/services/channel-service";
+import { systemConfigService } from "@/lib/services/system-config-service";
 import Image from "next/image";
 
 const Header = async () => {
     const t = await getTranslations("web");
     const locale = await getLocale();
     const channels = await channelService.getChannels();
+    const config = await systemConfigService.readConfig();
+
+    const algoliaConfig = config?.services.algolia.enabled
+        ? {
+              appId: config.services.algolia.appId || "",
+              searchKey: config.services.algolia.searchKey || "",
+              indexName: config.services.algolia.indexName || "articles",
+          }
+        : undefined;
 
     return (
         <header className={`${container.header}`}>
@@ -26,19 +36,19 @@ const Header = async () => {
                     <Image
                         src="/logo.png"
                         alt={t("title")}
-                        width={96}
+                        width={32}
                         height={32}
-                        className="h-8 w-auto"
+                        className="h-8 w-8"
                         priority
                     />
-                    <span className="hidden text-xl leading-[1] font-semibold text-gray-900 sm:inline-block lg:text-2xl dark:text-white">
+                    <span className="hidden text-xl leading-none font-semibold text-gray-900 sm:inline-block lg:text-2xl dark:text-white">
                         {t("title")}
                     </span>
                 </Link>
                 <ChannelNav maxVisibleItems={5} />
             </nav>
             <div className="flex items-center space-x-1 sm:space-x-2">
-                <SearchIconButton />
+                <SearchIconButton algoliaConfig={algoliaConfig} />
                 <GitHubIconButton />
                 <ThemeToggle />
                 <LanguageToggle />

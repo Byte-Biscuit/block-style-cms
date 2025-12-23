@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import path from 'path';
 import { VideoService } from '@/lib/services/video-service';
-import { VIDEO_DIR } from '@/config';
+import { VIDEO_DIR } from '@/settings';
 import { validateFileSecurity } from '@/lib/file-utils';
 import type { VideoServeOptions } from '@/types/video';
 

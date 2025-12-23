@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import fs from "fs";
 import path from "path";
-import { FILE_DIR } from "@/config";
+import { FILE_DIR } from "@/settings";
 import { validateFileSecurity, getFileMimeType } from "@/lib/file-utils";
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ filename: string }> }

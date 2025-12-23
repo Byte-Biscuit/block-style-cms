@@ -8,8 +8,8 @@ import type {
     AudioListOptions,
     AudioListResult,
 } from '@/types/audio';
-import { ALLOWED_AUDIO_MIME_TYPES, MAX_AUDIO_SIZE } from '@/config';
-import { AUDIO_DIR, META_DIR } from '@/config';
+import { ALLOWED_AUDIO_MIME_TYPES, MAX_AUDIO_SIZE } from '@/settings';
+import { AUDIO_DIR, META_DIR } from '@/settings';
 
 /**
  * 音频处理工具类

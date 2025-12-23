@@ -1,5 +1,12 @@
 export async function register() {
     if (process.env.NEXT_RUNTIME === 'nodejs') {
+        // Check required environment variables
+        if (!process.env.CMS_DATA_PATH) {
+            console.error('❌ Missing required environment variable: CMS_DATA_PATH');
+            console.error('Please set in .env.local file: CMS_DATA_PATH=your_data_path');
+            process.exit(1);
+        }
+
         // 捕获未处理的错误
         process.on('unhandledRejection', (reason, promise) => {
             console.error('🔴 Unhandled Rejection at:', promise);
@@ -19,7 +26,7 @@ export async function register() {
             VIDEO_THUMBNAIL_DIR,
             AUDIO_DIR,
             FILE_DIR,
-            COMMENT_DIR } = await import('@/config');
+            COMMENT_DIR } = await import('@/settings');
 
         await fs.mkdir(ARTICLE_DIR, { recursive: true });
         await fs.mkdir(META_DIR, { recursive: true });

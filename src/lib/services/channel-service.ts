@@ -18,7 +18,7 @@ export interface ChannelData {
 }
 
 class ChannelService {
-    private configPath = path.join(process.env.APPLICATION_DATA_PATH || 'data', 'channel.json');
+    private configPath = path.join(process.env.CMS_DATA_PATH || 'data', 'channel.json');
     private cacheKey = 'channel_key';
 
     /**

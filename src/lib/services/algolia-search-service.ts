@@ -1,5 +1,6 @@
 import { algoliasearch, type SearchClient } from 'algoliasearch';
 import type { Article } from '@/types/article';
+import { systemConfigService } from './system-config-service';
 
 /**
  * BlockNote block type definition
@@ -38,20 +39,26 @@ export interface AlgoliaArticle extends Record<string, unknown> {
 class AlgoliaSearchService {
     private client: SearchClient | null = null;
     private indexName: string;
-    private isEnabled: boolean;
+    private isEnabled: boolean | undefined;
 
     constructor() {
-        const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
-        const apiKey = process.env.ALGOLIA_ADMIN_API_KEY;
-        this.indexName = process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || 'articles';
+        const config = systemConfigService.readConfigSync();
+        const algoliaConfig = config?.services.algolia;
 
-        // Check if all required environment variables are configured
-        this.isEnabled = !!(appId && apiKey && this.indexName);
+        const appId = algoliaConfig?.appId;
+        const apiKey = algoliaConfig?.apiKey;
+        this.indexName = algoliaConfig?.indexName || "articles";
+
+        // Check if all required configuration is provided
+        this.isEnabled =
+            algoliaConfig?.enabled && !!(appId && apiKey && this.indexName);
 
         if (this.isEnabled && appId && apiKey) {
             this.client = algoliasearch(appId, apiKey);
-        } else {
-            console.warn('Algolia search service is disabled. Please check environment variables: ALGOLIA_APP_ID, ALGOLIA_API_KEY, ALGOLIA_INDEX_NAME');
+        } else if (algoliaConfig?.enabled) {
+            console.warn(
+                "Algolia search service is enabled but missing configuration (appId, apiKey, or indexName)."
+            );
         }
     }
 

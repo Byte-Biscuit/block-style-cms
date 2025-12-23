@@ -3,6 +3,7 @@ import { RunnableSequence } from "@langchain/core/runnables";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { PromptTemplate } from "@langchain/core/prompts";
+import { systemConfigService } from "./services/system-config-service";
 
 type LLMProvider = "openai" | "claude" | "gemini";
 
@@ -23,26 +24,34 @@ const promptMap: Record<GenType, string> = {
 };
 
 function getLLM(provider: LLMProvider) {
+    const config = systemConfigService.readConfigSync();
+    const aiConfig = config?.services?.ai;
+
     switch (provider) {
         case "openai": {
-            const apiKey = process.env.OPENAI_API_KEY;
+            const openaiConfig = aiConfig?.openai;
+            const apiKey = openaiConfig?.apiKey;
             if (!apiKey) {
-                throw new Error('OPENAI_API_KEY environment variable is required');
+                throw new Error('OpenAI API Key is not configured in settings.json');
             }
             return new ChatOpenAI({
                 configuration: {
                     apiKey,
-                    baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
+                    baseURL: openaiConfig?.baseUrl || "https://api.openai.com/v1",
                 },
-                model: process.env.OPENAI_MODEL || "gpt-3.5-turbo",
+                model: openaiConfig?.model || "gpt-4o-mini",
                 temperature: 0.15,
             });
         }
         case "gemini": {
-            const apiKey = process.env.GEMINI_API_KEY || "";
+            const geminiConfig = aiConfig?.gemini;
+            const apiKey = geminiConfig?.apiKey;
+            if (!apiKey) {
+                throw new Error('Gemini API Key is not configured in settings.json');
+            }
             return new ChatGoogleGenerativeAI({
                 apiKey,
-                model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+                model: geminiConfig?.model || "gemini-1.5-flash",
                 temperature: 0.15,
             });
         }

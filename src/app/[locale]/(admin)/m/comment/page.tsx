@@ -43,7 +43,7 @@ import {
 } from "@mui/icons-material";
 import { useTranslations, useLocale } from "next-intl";
 import type { Comment, CommentStatus } from "@/types/comment";
-import { ADMIN_API_PREFIX } from "@/config";
+import { ADMIN_API_PREFIX } from "@/settings";
 import { formatDateI18n } from "@/i18n/util";
 import { getGravatarUrl } from "@/lib/gravatar-utils";
 
@@ -58,7 +58,9 @@ export default function CommentManagementPage() {
     // Filters
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearchTerm = useDebounce(searchTerm, 400);
-    const [statusFilter, setStatusFilter] = useState<CommentStatus | "all">("all");
+    const [statusFilter, setStatusFilter] = useState<CommentStatus | "all">(
+        "all"
+    );
 
     // Pagination (frontend implementation)
     const [pageIndex, setPageIndex] = useState(1);
@@ -86,7 +88,9 @@ export default function CommentManagementPage() {
             const { comments: fetchedComments } = result?.payload;
             setComments(fetchedComments || []);
         } catch (err) {
-            setError(err instanceof Error ? err.message : t("messages.fetchError"));
+            setError(
+                err instanceof Error ? err.message : t("messages.fetchError")
+            );
         } finally {
             setLoading(false);
         }
@@ -107,9 +111,15 @@ export default function CommentManagementPage() {
         if (debouncedSearchTerm) {
             const term = debouncedSearchTerm.toLowerCase();
             const matchContent = comment.content.toLowerCase().includes(term);
-            const matchAuthor = comment.author.name.toLowerCase().includes(term);
-            const matchEmail = comment.author.email.toLowerCase().includes(term);
-            const matchArticle = comment.articleTitle.toLowerCase().includes(term);
+            const matchAuthor = comment.author.name
+                .toLowerCase()
+                .includes(term);
+            const matchEmail = comment.author.email
+                .toLowerCase()
+                .includes(term);
+            const matchArticle = comment.articleTitle
+                .toLowerCase()
+                .includes(term);
 
             if (!matchContent && !matchAuthor && !matchEmail && !matchArticle) {
                 return false;
@@ -137,11 +147,14 @@ export default function CommentManagementPage() {
         setError(null);
 
         try {
-            const response = await fetch(`${ADMIN_API_PREFIX}/comments/approve`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ commentId }),
-            });
+            const response = await fetch(
+                `${ADMIN_API_PREFIX}/comments/approve`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ commentId }),
+                }
+            );
 
             const result = await response.json();
 
@@ -152,7 +165,9 @@ export default function CommentManagementPage() {
             setSuccess(t("messages.approveSuccess"));
             fetchComments();
         } catch (err) {
-            setError(err instanceof Error ? err.message : t("messages.approveError"));
+            setError(
+                err instanceof Error ? err.message : t("messages.approveError")
+            );
         } finally {
             setActionLoading(null);
         }
@@ -164,11 +179,14 @@ export default function CommentManagementPage() {
         setError(null);
 
         try {
-            const response = await fetch(`${ADMIN_API_PREFIX}/comments/reject`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ commentId }),
-            });
+            const response = await fetch(
+                `${ADMIN_API_PREFIX}/comments/reject`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ commentId }),
+                }
+            );
 
             const result = await response.json();
 
@@ -179,7 +197,9 @@ export default function CommentManagementPage() {
             setSuccess(t("messages.rejectSuccess"));
             fetchComments();
         } catch (err) {
-            setError(err instanceof Error ? err.message : t("messages.rejectError"));
+            setError(
+                err instanceof Error ? err.message : t("messages.rejectError")
+            );
         } finally {
             setActionLoading(null);
         }
@@ -206,7 +226,9 @@ export default function CommentManagementPage() {
     };
 
     // Get status chip color
-    const getStatusColor = (status: CommentStatus): "default" | "success" | "warning" | "error" => {
+    const getStatusColor = (
+        status: CommentStatus
+    ): "default" | "success" | "warning" | "error" => {
         switch (status) {
             case "approved":
                 return "success";
@@ -248,13 +270,21 @@ export default function CommentManagementPage() {
                 </Box>
 
                 {error && (
-                    <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+                    <Alert
+                        severity="error"
+                        sx={{ mb: 2 }}
+                        onClose={() => setError(null)}
+                    >
                         {error}
                     </Alert>
                 )}
 
                 {success && (
-                    <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
+                    <Alert
+                        severity="success"
+                        sx={{ mb: 2 }}
+                        onClose={() => setSuccess(null)}
+                    >
                         {success}
                     </Alert>
                 )}
@@ -276,7 +306,12 @@ export default function CommentManagementPage() {
                             slotProps={{
                                 input: {
                                     startAdornment: (
-                                        <SearchIcon sx={{ mr: 1, color: "text.secondary" }} />
+                                        <SearchIcon
+                                            sx={{
+                                                mr: 1,
+                                                color: "text.secondary",
+                                            }}
+                                        />
                                     ),
                                     endAdornment: (
                                         <Box
@@ -288,21 +323,34 @@ export default function CommentManagementPage() {
                                                 gap: 0.5,
                                             }}
                                         >
-                                            {searchTerm !== debouncedSearchTerm ? (
+                                            {searchTerm !==
+                                            debouncedSearchTerm ? (
                                                 <CircularProgress size={16} />
                                             ) : (
-                                                <Box sx={{ width: 16, height: 16 }} />
+                                                <Box
+                                                    sx={{
+                                                        width: 16,
+                                                        height: 16,
+                                                    }}
+                                                />
                                             )}
                                             {searchTerm ? (
                                                 <IconButton
                                                     size="small"
-                                                    onClick={() => setSearchTerm("")}
+                                                    onClick={() =>
+                                                        setSearchTerm("")
+                                                    }
                                                     sx={{ padding: 0.5 }}
                                                 >
                                                     <ClearIcon fontSize="small" />
                                                 </IconButton>
                                             ) : (
-                                                <Box sx={{ width: 24, height: 24 }} />
+                                                <Box
+                                                    sx={{
+                                                        width: 24,
+                                                        height: 24,
+                                                    }}
+                                                />
                                             )}
                                         </Box>
                                     ),
@@ -319,20 +367,36 @@ export default function CommentManagementPage() {
                                 value={statusFilter}
                                 label={t("filters.status")}
                                 onChange={(e) =>
-                                    setStatusFilter(e.target.value as CommentStatus | "all")
+                                    setStatusFilter(
+                                        e.target.value as CommentStatus | "all"
+                                    )
                                 }
                             >
-                                <MenuItem value="all">{t("filters.all")}</MenuItem>
-                                <MenuItem value="pending">{t("filters.pending")}</MenuItem>
-                                <MenuItem value="approved">{t("filters.approved")}</MenuItem>
-                                <MenuItem value="rejected">{t("filters.rejected")}</MenuItem>
+                                <MenuItem value="all">
+                                    {t("filters.all")}
+                                </MenuItem>
+                                <MenuItem value="pending">
+                                    {t("filters.pending")}
+                                </MenuItem>
+                                <MenuItem value="approved">
+                                    {t("filters.approved")}
+                                </MenuItem>
+                                <MenuItem value="rejected">
+                                    {t("filters.rejected")}
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </Box>
                 </Paper>
 
                 {loading ? (
-                    <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            py: 4,
+                        }}
+                    >
                         <CircularProgress />
                     </Box>
                 ) : (
@@ -341,12 +405,25 @@ export default function CommentManagementPage() {
                             <Table sx={{ tableLayout: "auto", minWidth: 1000 }}>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ width: "15%" }}>{t("table.author")}</TableCell>
-                                        <TableCell sx={{ width: "35%" }}>{t("table.content")}</TableCell>
-                                        <TableCell sx={{ width: "15%" }}>{t("table.article")}</TableCell>
-                                        <TableCell sx={{ width: "10%" }}>{t("table.status")}</TableCell>
-                                        <TableCell sx={{ width: "12%" }}>{t("table.time")}</TableCell>
-                                        <TableCell align="center" sx={{ width: "13%" }}>
+                                        <TableCell sx={{ width: "15%" }}>
+                                            {t("table.author")}
+                                        </TableCell>
+                                        <TableCell sx={{ width: "35%" }}>
+                                            {t("table.content")}
+                                        </TableCell>
+                                        <TableCell sx={{ width: "15%" }}>
+                                            {t("table.article")}
+                                        </TableCell>
+                                        <TableCell sx={{ width: "10%" }}>
+                                            {t("table.status")}
+                                        </TableCell>
+                                        <TableCell sx={{ width: "12%" }}>
+                                            {t("table.time")}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            sx={{ width: "13%" }}
+                                        >
                                             {t("table.actions")}
                                         </TableCell>
                                     </TableRow>
@@ -354,9 +431,17 @@ export default function CommentManagementPage() {
                                 <TableBody>
                                     {paginatedComments.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                                                <Typography variant="body1" color="text.secondary">
-                                                    {filteredComments.length === 0 && comments.length > 0
+                                            <TableCell
+                                                colSpan={6}
+                                                align="center"
+                                                sx={{ py: 4 }}
+                                            >
+                                                <Typography
+                                                    variant="body1"
+                                                    color="text.secondary"
+                                                >
+                                                    {filteredComments.length ===
+                                                        0 && comments.length > 0
                                                         ? t("table.noResults")
                                                         : t("table.noData")}
                                                 </Typography>
@@ -366,47 +451,100 @@ export default function CommentManagementPage() {
                                         paginatedComments.map((comment) => (
                                             <TableRow key={comment.id} hover>
                                                 <TableCell>
-                                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            alignItems:
+                                                                "center",
+                                                            gap: 1,
+                                                        }}
+                                                    >
                                                         <Avatar
                                                             src={getGravatarUrl(
-                                                                comment.author.email,
-                                                                comment.author.name,
+                                                                comment.author
+                                                                    .email,
+                                                                comment.author
+                                                                    .name,
                                                                 40
                                                             )}
-                                                            alt={comment.author.name}
-                                                            sx={{ width: 40, height: 40 }}
+                                                            alt={
+                                                                comment.author
+                                                                    .name
+                                                            }
+                                                            sx={{
+                                                                width: 40,
+                                                                height: 40,
+                                                            }}
                                                         />
-                                                        <Box sx={{ minWidth: 0 }}>
+                                                        <Box
+                                                            sx={{ minWidth: 0 }}
+                                                        >
                                                             <Typography
                                                                 variant="subtitle2"
                                                                 noWrap
-                                                                sx={{ fontWeight: 500 }}
+                                                                sx={{
+                                                                    fontWeight: 500,
+                                                                }}
                                                             >
-                                                                {comment.author.name}
+                                                                {
+                                                                    comment
+                                                                        .author
+                                                                        .name
+                                                                }
                                                             </Typography>
                                                             <Typography
                                                                 variant="caption"
                                                                 color="text.secondary"
                                                                 noWrap
                                                             >
-                                                                {comment.author.email}
+                                                                {
+                                                                    comment
+                                                                        .author
+                                                                        .email
+                                                                }
                                                             </Typography>
-                                                            {comment.author.website && (
-                                                                <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
+                                                            {comment.author
+                                                                .website && (
+                                                                <Box
+                                                                    sx={{
+                                                                        display:
+                                                                            "flex",
+                                                                        alignItems:
+                                                                            "center",
+                                                                        mt: 0.5,
+                                                                    }}
+                                                                >
                                                                     <MuiLink
-                                                                        href={comment.author.website}
+                                                                        href={
+                                                                            comment
+                                                                                .author
+                                                                                .website
+                                                                        }
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         sx={{
-                                                                            display: "flex",
-                                                                            alignItems: "center",
-                                                                            fontSize: "0.75rem",
-                                                                            textDecoration: "none",
+                                                                            display:
+                                                                                "flex",
+                                                                            alignItems:
+                                                                                "center",
+                                                                            fontSize:
+                                                                                "0.75rem",
+                                                                            textDecoration:
+                                                                                "none",
                                                                         }}
-                                                                        aria-label={t("table.website")}
+                                                                        aria-label={t(
+                                                                            "table.website"
+                                                                        )}
                                                                     >
-                                                                        <WebsiteIcon sx={{ fontSize: 12, mr: 0.5 }} />
-                                                                        {t("table.website")}
+                                                                        <WebsiteIcon
+                                                                            sx={{
+                                                                                fontSize: 12,
+                                                                                mr: 0.5,
+                                                                            }}
+                                                                        />
+                                                                        {t(
+                                                                            "table.website"
+                                                                        )}
                                                                     </MuiLink>
                                                                 </Box>
                                                             )}
@@ -414,15 +552,23 @@ export default function CommentManagementPage() {
                                                     </Box>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Tooltip title={comment.content} arrow placement="top">
+                                                    <Tooltip
+                                                        title={comment.content}
+                                                        arrow
+                                                        placement="top"
+                                                    >
                                                         <Typography
                                                             variant="body2"
                                                             sx={{
-                                                                display: "-webkit-box",
+                                                                display:
+                                                                    "-webkit-box",
                                                                 WebkitLineClamp: 3,
-                                                                WebkitBoxOrient: "vertical",
-                                                                overflow: "hidden",
-                                                                wordBreak: "break-word",
+                                                                WebkitBoxOrient:
+                                                                    "vertical",
+                                                                overflow:
+                                                                    "hidden",
+                                                                wordBreak:
+                                                                    "break-word",
                                                             }}
                                                         >
                                                             {comment.content}
@@ -430,7 +576,9 @@ export default function CommentManagementPage() {
                                                     </Tooltip>
                                                     {comment.replyToId && (
                                                         <Chip
-                                                            label={t("table.reply")}
+                                                            label={t(
+                                                                "table.reply"
+                                                            )}
                                                             size="small"
                                                             variant="outlined"
                                                             sx={{ mt: 1 }}
@@ -438,44 +586,104 @@ export default function CommentManagementPage() {
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Tooltip title={comment.articleTitle} arrow>
-                                                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                                                    <Tooltip
+                                                        title={
+                                                            comment.articleTitle
+                                                        }
+                                                        arrow
+                                                    >
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                alignItems:
+                                                                    "center",
+                                                                gap: 0.5,
+                                                            }}
+                                                        >
                                                             <ArticleIcon
-                                                                sx={{ fontSize: 16, color: "text.secondary" }}
+                                                                sx={{
+                                                                    fontSize: 16,
+                                                                    color: "text.secondary",
+                                                                }}
                                                             />
-                                                            <Typography variant="body2" noWrap>
-                                                                {comment.articleTitle}
+                                                            <Typography
+                                                                variant="body2"
+                                                                noWrap
+                                                            >
+                                                                {
+                                                                    comment.articleTitle
+                                                                }
                                                             </Typography>
                                                         </Box>
                                                     </Tooltip>
                                                 </TableCell>
                                                 <TableCell>
                                                     <Chip
-                                                        label={getStatusLabel(comment.status)}
-                                                        color={getStatusColor(comment.status)}
+                                                        label={getStatusLabel(
+                                                            comment.status
+                                                        )}
+                                                        color={getStatusColor(
+                                                            comment.status
+                                                        )}
                                                         size="small"
-                                                        onClick={() => setStatusFilter(comment.status)}
-                                                        sx={{ cursor: "pointer" }}
+                                                        onClick={() =>
+                                                            setStatusFilter(
+                                                                comment.status
+                                                            )
+                                                        }
+                                                        sx={{
+                                                            cursor: "pointer",
+                                                        }}
                                                     />
                                                 </TableCell>
                                                 <TableCell>
-                                                    <Typography variant="body2" noWrap>
-                                                        {formatDateI18n(comment.createdAt, locale)}
+                                                    <Typography
+                                                        variant="body2"
+                                                        noWrap
+                                                    >
+                                                        {formatDateI18n(
+                                                            comment.createdAt,
+                                                            locale
+                                                        )}
                                                     </Typography>
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center" }}>
-                                                        {comment.status === "pending" && (
-                                                            <Tooltip title={t("actions.approve")}>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            gap: 0.5,
+                                                            justifyContent:
+                                                                "center",
+                                                        }}
+                                                    >
+                                                        {comment.status ===
+                                                            "pending" && (
+                                                            <Tooltip
+                                                                title={t(
+                                                                    "actions.approve"
+                                                                )}
+                                                            >
                                                                 <span>
                                                                     <IconButton
                                                                         size="small"
                                                                         color="success"
-                                                                        onClick={() => handleApprove(comment.id)}
-                                                                        disabled={actionLoading === comment.id}
+                                                                        onClick={() =>
+                                                                            handleApprove(
+                                                                                comment.id
+                                                                            )
+                                                                        }
+                                                                        disabled={
+                                                                            actionLoading ===
+                                                                            comment.id
+                                                                        }
                                                                     >
-                                                                        {actionLoading === comment.id ? (
-                                                                            <CircularProgress size={20} />
+                                                                        {actionLoading ===
+                                                                        comment.id ? (
+                                                                            <CircularProgress
+                                                                                size={
+                                                                                    20
+                                                                                }
+                                                                            />
                                                                         ) : (
                                                                             <ApproveIcon />
                                                                         )}
@@ -483,14 +691,26 @@ export default function CommentManagementPage() {
                                                                 </span>
                                                             </Tooltip>
                                                         )}
-                                                        {comment.status !== "rejected" && (
-                                                            <Tooltip title={t("actions.reject")}>
+                                                        {comment.status !==
+                                                            "rejected" && (
+                                                            <Tooltip
+                                                                title={t(
+                                                                    "actions.reject"
+                                                                )}
+                                                            >
                                                                 <span>
                                                                     <IconButton
                                                                         size="small"
                                                                         color="error"
-                                                                        onClick={() => handleOpenDeleteDialog(comment)}
-                                                                        disabled={actionLoading === comment.id}
+                                                                        onClick={() =>
+                                                                            handleOpenDeleteDialog(
+                                                                                comment
+                                                                            )
+                                                                        }
+                                                                        disabled={
+                                                                            actionLoading ===
+                                                                            comment.id
+                                                                        }
                                                                     >
                                                                         <DeleteIcon />
                                                                     </IconButton>
@@ -511,7 +731,10 @@ export default function CommentManagementPage() {
                             <Box
                                 sx={{
                                     display: "flex",
-                                    justifyContent: { xs: "center", sm: "space-between" },
+                                    justifyContent: {
+                                        xs: "center",
+                                        sm: "space-between",
+                                    },
                                     alignItems: "center",
                                     flexDirection: { xs: "column", sm: "row" },
                                     gap: { xs: 2, sm: 0 },
@@ -532,7 +755,9 @@ export default function CommentManagementPage() {
                                 <Pagination
                                     count={totalPages}
                                     page={pageIndex}
-                                    onChange={(_, newPage) => setPageIndex(newPage)}
+                                    onChange={(_, newPage) =>
+                                        setPageIndex(newPage)
+                                    }
                                     color="primary"
                                     size="medium"
                                     sx={{ order: { xs: 1, sm: 2 } }}
@@ -541,9 +766,20 @@ export default function CommentManagementPage() {
                         )}
 
                         {totalPages <= 1 && paginatedComments.length > 0 && (
-                            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-                                <Typography variant="body2" color="text.secondary">
-                                    {t("pagination.total", { total: filteredComments.length })}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    mt: 3,
+                                }}
+                            >
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    {t("pagination.total", {
+                                        total: filteredComments.length,
+                                    })}
                                 </Typography>
                             </Box>
                         )}
@@ -557,9 +793,22 @@ export default function CommentManagementPage() {
                 <DialogContent>
                     <DialogContentText>{t("delete.content")}</DialogContentText>
                     {deleteTarget && (
-                        <Box sx={{ mt: 2, p: 2, bgcolor: "grey.100", borderRadius: 1 }}>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                                {t("delete.author", { name: deleteTarget.author.name })}
+                        <Box
+                            sx={{
+                                mt: 2,
+                                p: 2,
+                                bgcolor: "grey.100",
+                                borderRadius: 1,
+                            }}
+                        >
+                            <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                gutterBottom
+                            >
+                                {t("delete.author", {
+                                    name: deleteTarget.author.name,
+                                })}
                             </Typography>
                             <Typography variant="body2" sx={{ mt: 1 }}>
                                 {deleteTarget.content}
@@ -571,7 +820,11 @@ export default function CommentManagementPage() {
                     <Button onClick={handleCloseDeleteDialog} color="inherit">
                         {t("delete.cancel")}
                     </Button>
-                    <Button onClick={handleConfirmDelete} color="error" variant="contained">
+                    <Button
+                        onClick={handleConfirmDelete}
+                        color="error"
+                        variant="contained"
+                    >
                         {t("delete.confirm")}
                     </Button>
                 </DialogActions>

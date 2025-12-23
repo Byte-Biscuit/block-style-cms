@@ -43,7 +43,7 @@ import {
 } from "@mui/icons-material";
 import { useTranslations, useLocale } from "next-intl";
 import type { Article } from "@/types/article";
-import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/config";
+import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
 import { localeMap, locales, getLanguageDisplayName } from "@/i18n/config";
 import { formatDateI18n } from "@/i18n/util";
 import ErrorDisplay from "@/admin/m/components/error-display";

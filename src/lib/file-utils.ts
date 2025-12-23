@@ -1,5 +1,5 @@
 import path from 'path';
-import { FILE_EXTENSIONS } from "@/config";
+import { FILE_EXTENSIONS } from "@/settings";
 
 /**
  * File security validation result

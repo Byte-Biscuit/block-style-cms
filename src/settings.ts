@@ -1,81 +1,42 @@
 /**
  * Application Configuration Management
+ * Server-side Only Configuration
  * Centralized management of all environment variables and configuration items
  */
-
-import path from 'path';
 import pkg from "../package.json"
 
 //Version
 export const VERSION = pkg.version;
 
-// Check if running in server environment
-const isServer = typeof window === 'undefined';
+/**
+ * Server-side Only Configuration
+ * These variables are only available on the server.
+ * On the client, they will be undefined or empty strings.
+ */
+export const CMS_DATA_PATH = process.env.CMS_DATA_PATH;
 
-// ================================
-// Server-side Only Configuration
-// ================================
-let META_DIR: string;
-let ARTICLE_DIR: string;
-let IMAGE_DIR: string;
-let VIDEO_DIR: string;
-let VIDEO_THUMBNAIL_DIR: string;
-let AUDIO_DIR: string;
-let FILE_DIR: string;
-let COMMENT_DIR: string;
-let SUGGESTION_DIR: string;
+// Helper to join paths safely without requiring Node.js 'path' module at top level
+// This ensures the file is safe for both server and client environments.
+const normalizePath = (p: string) => p.replace(/\\/g, '/').replace(/\/+$/, '');
+const BASE_DATA_PATH = CMS_DATA_PATH ? normalizePath(CMS_DATA_PATH) : '';
 
-const APPLICATION_DATA_PATH = process.env.APPLICATION_DATA_PATH;
-if (isServer) {
-    if (!APPLICATION_DATA_PATH) {
-        console.error('❌ Missing required environment variable: APPLICATION_DATA_PATH');
-        console.error('Please set in .env.local file: APPLICATION_DATA_PATH=your_data_path');
-        process.exit(1);
-    }
+// Server-side file system path configuration
+export const META_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/meta` : '';
 
-    // Server-side file system path configuration
-    META_DIR = path.join(APPLICATION_DATA_PATH, 'meta');
+export const ARTICLE_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/articles` : '';
 
-    ARTICLE_DIR = path.join(APPLICATION_DATA_PATH, 'articles');
+export const IMAGE_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/images` : '';
 
-    IMAGE_DIR = path.join(APPLICATION_DATA_PATH, 'images');
+export const VIDEO_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/videos` : '';
+export const VIDEO_THUMBNAIL_DIR = VIDEO_DIR ? `${VIDEO_DIR}/thumbnails` : '';
 
-    VIDEO_DIR = path.join(APPLICATION_DATA_PATH, 'videos');
-    VIDEO_THUMBNAIL_DIR = path.join(VIDEO_DIR, 'thumbnails');
+export const AUDIO_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/audios` : '';
 
-    AUDIO_DIR = path.join(APPLICATION_DATA_PATH, 'audios');
+export const FILE_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/files` : '';
 
-    FILE_DIR = path.join(APPLICATION_DATA_PATH, 'files');
+export const COMMENT_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/comments` : '';
 
-    COMMENT_DIR = path.join(APPLICATION_DATA_PATH, 'comments');
-
-    SUGGESTION_DIR = path.join(APPLICATION_DATA_PATH, 'suggestions');
-} else {
-    // Default values for client environment (not used, but avoids compilation errors)
-    ARTICLE_DIR = '';
-    META_DIR = '';
-    IMAGE_DIR = '';
-    VIDEO_DIR = '';
-    VIDEO_THUMBNAIL_DIR = '';
-    AUDIO_DIR = '';
-    FILE_DIR = '';
-    COMMENT_DIR = '';
-    SUGGESTION_DIR = '';
-}
-
-// Export server-side configuration
-export {
-    APPLICATION_DATA_PATH,
-    ARTICLE_DIR,
-    META_DIR,
-    IMAGE_DIR,
-    VIDEO_DIR,
-    VIDEO_THUMBNAIL_DIR,
-    AUDIO_DIR,
-    FILE_DIR,
-    COMMENT_DIR,
-    SUGGESTION_DIR,
-};
+export const SUGGESTION_DIR = BASE_DATA_PATH ? `${BASE_DATA_PATH}/suggestions` : '';
 
 // ================================
 // Common Configuration - Available for both server and client
@@ -152,9 +113,6 @@ export type AllowedVideoMimeType = typeof ALLOWED_VIDEO_MIME_TYPES[number];
 export type AllowedAudioMimeType = typeof ALLOWED_AUDIO_MIME_TYPES[number];
 
 export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
-// Better Auth allowed emails
-export const BETTER_AUTH_ALLOWED_EMAILS = (process.env.BETTER_AUTH_ALLOWED_EMAILS || "").split(",").map(email => email.trim().toLowerCase()).filter(email => email.length > 0);
-
 // ================================
 // Comment System Configuration
 // ================================

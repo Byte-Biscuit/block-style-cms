@@ -5,7 +5,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { SUGGESTION_DIR, SUGGESTION_CONFIG } from '@/config';
+import { SUGGESTION_DIR, SUGGESTION_CONFIG } from '@/settings';
 import type { Suggestion, SuggestionSubmissionData } from '@/types/suggestion';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -6,7 +6,15 @@ import { IconButton, Tooltip } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AlgoliaSearchDialog from "@/components/instant-search";
 
-const SearchIconButton = () => {
+interface SearchIconButtonProps {
+    algoliaConfig?: {
+        appId: string;
+        searchKey: string;
+        indexName: string;
+    };
+}
+
+const SearchIconButton = ({ algoliaConfig }: SearchIconButtonProps) => {
     const [open, setOpen] = useState(false);
     const t = useTranslations("web.search");
 
@@ -24,7 +32,11 @@ const SearchIconButton = () => {
                     <Search />
                 </IconButton>
             </Tooltip>
-            <AlgoliaSearchDialog open={open} onClose={handleClose} />
+            <AlgoliaSearchDialog
+                open={open}
+                onClose={handleClose}
+                config={algoliaConfig}
+            />
         </>
     );
 };

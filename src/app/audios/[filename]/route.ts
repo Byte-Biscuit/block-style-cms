@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { AUDIO_DIR, FILE_EXTENSIONS } from '@/config';
+import { AUDIO_DIR, FILE_EXTENSIONS } from '@/settings';
 import { validateFileSecurity, getFileMimeType, } from '@/lib/file-utils';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ filename: string }> }) {

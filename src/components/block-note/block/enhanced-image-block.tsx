@@ -37,7 +37,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import PexelsImagePicker from "@/admin/m/components/pexels-image-picker";
-import { ADMIN_API_PREFIX, IMAGE_BASE_URL } from "@/config";
+import { ADMIN_API_PREFIX, IMAGE_BASE_URL } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedImageIcon from "./icons/enhanced-image-icon";
 import EnhancedImage, {

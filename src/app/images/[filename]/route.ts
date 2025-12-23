@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { ImageService } from '@/lib/services/image-service';
-import { IMAGE_DIR } from '@/config';
+import { IMAGE_DIR } from '@/settings';
 import { validateFileSecurity } from '@/lib/file-utils';
 import type { ImageServeOptions } from '@/types/image';
 

@@ -8,7 +8,7 @@ import type {
     FileListOptions,
     FileListResult,
 } from '@/types/file';
-import { FILE_DIR, META_DIR, MAX_FILE_SIZE } from '@/config';
+import { FILE_DIR, META_DIR, MAX_FILE_SIZE } from '@/settings';
 import { ALLOWED_FILE_MIME_TYPES, isSupportedFileType, getFileCategory } from '../file-utils';
 
 

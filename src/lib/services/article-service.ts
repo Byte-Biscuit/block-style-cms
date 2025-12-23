@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { Article, ArticleMetadata } from '@/types/article';
-import { ARTICLE_DIR, META_DIR } from '@/config';
+import { ARTICLE_DIR, META_DIR } from '@/settings';
 import { lruCacheService } from "@/lib/services/lru-cache-service";
 import { algoliaSearchService } from "@/lib/services/algolia-search-service";
 

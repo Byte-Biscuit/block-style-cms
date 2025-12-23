@@ -25,10 +25,12 @@
         "@mui/icons-material": "^7.3.2",
         "@mui/material": "^7.3.2",
         "@mui/material-nextjs": "^7.3.2",
+        "@types/qrcode": "^1.5.6",
         "algoliasearch": "^5.46.0",
         "better-auth": "^1.4.6",
         "better-sqlite3": "^12.4.1",
         "clsx": "^2.1.1",
+        "hi-base32": "^0.5.1",
         "lru-cache": "^11.2.2",
         "mermaid": "^11.12.0",
         "monaco-editor": "^0.53.0",
@@ -36,7 +38,12 @@
         "next-intl": "^4.3.9",
         "next-themes": "^0.4.6",
         "node-html-parser": "^7.0.1",
+<<<<<<< HEAD
         "react": "19.2.1",
+=======
+        "qrcode": "^1.5.4",
+        "react": "19.1.0",
+>>>>>>> 9fae93a (feat: Refactor configuration management and remove the configuration method for the .env environment)
         "react-dom": "19.1.0",
         "react-instantsearch": "^7.17.0",
         "react-player": "^3.3.3",

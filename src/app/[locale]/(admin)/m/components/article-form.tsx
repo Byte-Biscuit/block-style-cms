@@ -31,7 +31,7 @@ import dynamic from "next/dynamic";
 import type { Article } from "@/types/article";
 import type { PartialBlock, Block, Dictionary } from "@blocknote/core";
 import { getBlockNoteSelfDictionary } from "@/block-note/block-editor-utils";
-import { ADMIN_API_PREFIX } from "@/config";
+import { ADMIN_API_PREFIX } from "@/settings";
 import { localeMap as LANGUAGE_OPTIONS, defaultLocale } from "@/i18n/config";
 import { useTranslations, useLocale } from "next-intl";
 

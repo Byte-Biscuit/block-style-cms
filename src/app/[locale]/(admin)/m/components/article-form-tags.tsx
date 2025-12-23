@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { LocalOffer as LocalOfferIcon } from "@mui/icons-material";
 import { useTranslations } from "next-intl";
-import { ADMIN_API_PREFIX } from "@/config";
+import { ADMIN_API_PREFIX } from "@/settings";
 
 interface ArticleFormTagsProps {
     tags: string[];

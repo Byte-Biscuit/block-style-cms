@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { button, container } from "@/lib/style-classes";
 import { GitHubIcon, GoogleIcon, LoadingSpinner } from "@/components/icons";
 

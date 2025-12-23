@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
 import {
     InstantSearch,
@@ -30,12 +31,12 @@ interface ArticleHit {
 interface AlgoliaSearchDialogProps {
     open: boolean;
     onClose: () => void;
+    config?: {
+        appId: string;
+        searchKey: string;
+        indexName: string;
+    };
 }
-
-// Initialize Algolia search client
-const appId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID || "";
-const apiKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY || "";
-const searchClient = algoliasearch(appId, apiKey);
 
 // Article hit component
 function ArticleHitComponent({ hit }: { hit: AlgoliaHit<ArticleHit> }) {
@@ -95,11 +96,20 @@ function EmptyQueryBoundary({ children }: { children: React.ReactNode }) {
 export default function AlgoliaSearchDialog({
     open,
     onClose,
+    config,
 }: AlgoliaSearchDialogProps) {
     const t = useTranslations("web.search");
 
+    // Initialize Algolia search client
+    const searchClient = useMemo(() => {
+        if (config?.appId && config?.searchKey) {
+            return algoliasearch(config.appId, config.searchKey);
+        }
+        return null;
+    }, [config?.appId, config?.searchKey]);
+
     // Check if Algolia is configured
-    const isConfigured = !!(appId && apiKey);
+    const isConfigured = !!(searchClient && config?.indexName);
 
     if (!isConfigured) {
         return null;
@@ -136,9 +146,7 @@ export default function AlgoliaSearchDialog({
             <DialogContent className="p-4">
                 <InstantSearch
                     searchClient={searchClient}
-                    indexName={
-                        process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME || "articles"
-                    }
+                    indexName={config.indexName}
                     future={{
                         preserveSharedStateOnUnmount: true,
                     }}
@@ -187,3 +195,4 @@ export default function AlgoliaSearchDialog({
         </Dialog>
     );
 }
+

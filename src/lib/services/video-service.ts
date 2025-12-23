@@ -8,7 +8,7 @@ import type {
     VideoListOptions,
     VideoListResult,
 } from '@/types/video';
-import { ALLOWED_VIDEO_MIME_TYPES, MAX_VIDEO_SIZE, VIDEO_DIR, VIDEO_THUMBNAIL_DIR, META_DIR } from '@/config';
+import { ALLOWED_VIDEO_MIME_TYPES, MAX_VIDEO_SIZE, VIDEO_DIR, VIDEO_THUMBNAIL_DIR, META_DIR } from '@/settings';
 
 /**
  * 视频处理工具类

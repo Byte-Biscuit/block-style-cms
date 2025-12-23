@@ -11,7 +11,7 @@ const nextIntlMiddleware = createMiddleware(routing);
  * `request.nextUrl` is an object (Next.js extended URL object).
  */
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     let response: NextResponse;
     // api routes should pass through

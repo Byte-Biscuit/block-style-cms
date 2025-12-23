@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { v4 as uuidv4 } from 'uuid';
 import { getTranslations } from "next-intl/server"
 import { success, failure } from '@/lib/response';
@@ -94,6 +95,7 @@ export const POST = withTiming(async (request) => {
             updatedAt: now
         };
         await articleService.saveArticle(article);
+        revalidatePath('/[locale]/m', 'layout');
         return success('Article created successfully', { "slug": articleData.slug, "locale": articleData.locale });
     } catch (error) {
         const errorMessage = 'Failed to create article: ' + (error instanceof Error ? error.message : String(error));
@@ -120,6 +122,7 @@ export const PUT = withTiming(async (request) => {
             return failure('Updating an article requires id or slug');
         }
         await articleService.updateArticle(article);
+        revalidatePath('/[locale]/m', 'layout');
         return success('Article updated successfully', { "slug": article.slug, "language": article.locale });
     } catch (error) {
         const errorMessage = 'Failed to update article: ' + (error instanceof Error ? error.message : String(error));

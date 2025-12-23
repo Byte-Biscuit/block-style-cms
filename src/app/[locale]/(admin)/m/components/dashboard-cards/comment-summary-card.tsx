@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import CommentIcon from "@mui/icons-material/Comment";
 import commentService from "@/lib/services/comment-service";
 import { getTranslations } from "next-intl/server";
+import Link from "@/components/link";
 
 const CommentSummaryCard = async () => {
     const commentCount = await commentService.getCommentCount();
@@ -21,9 +22,24 @@ const CommentSummaryCard = async () => {
                             <CommentIcon sx={{ fontSize: 30 }} />
                         </Box>
                         <Box>
-                            <Typography variant="h4" component="div">
-                                {commentCount.total}
-                            </Typography>
+                            <Link
+                                href="/m/comment"
+                                style={{
+                                    textDecoration: "none",
+                                    color: "inherit",
+                                }}
+                            >
+                                <Typography
+                                    variant="h4"
+                                    component="div"
+                                    sx={{
+                                        "&:hover": { color: "secondary.main" },
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {commentCount.total}
+                                </Typography>
+                            </Link>
                             <Typography color="text.secondary" variant="body2">
                                 {t("title")}
                             </Typography>

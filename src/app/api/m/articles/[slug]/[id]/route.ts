@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getTranslations } from "next-intl/server"
 import { success, failure } from '@/lib/response';
 import { articleService } from '@/lib/services/article-service';
@@ -57,6 +58,7 @@ export const DELETE = withTiming(async (_: NextRequest, ...args: unknown[]) => {
             return failure('Deleting an article requires both slug and id parameters');
         }
         await articleService.deleteArticle(slug, id);
+        revalidatePath('/[locale]/m', 'layout');
         return success('Article deleted successfully', { slug, id });
     } catch (error) {
         const errorMessage = 'Failed to delete article: ' + (error instanceof Error ? error.message : String(error));

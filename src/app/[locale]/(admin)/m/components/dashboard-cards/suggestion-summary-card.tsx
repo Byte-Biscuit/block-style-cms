@@ -37,9 +37,16 @@ export default async function SuggestionSummaryCard() {
                     <Box>
                         <Link
                             href="/m/suggestion"
-                            style={{ textDecoration: "none" }}
+                            style={{ textDecoration: "none", color: "inherit" }}
                         >
-                            <Typography variant="h4" component="div">
+                            <Typography
+                                variant="h4"
+                                component="div"
+                                sx={{
+                                    "&:hover": { color: "info.main" },
+                                    cursor: "pointer",
+                                }}
+                            >
                                 {suggestionCount}
                             </Typography>
                         </Link>

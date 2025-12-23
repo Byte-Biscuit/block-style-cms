@@ -14,54 +14,30 @@ import { v4 as uuidv4 } from 'uuid';
  */
 class CommentService {
     private commentsFile: string;
-    private commentsCache: Comment[] | null = null;
 
     constructor() {
         this.commentsFile = path.join(COMMENT_DIR, 'comments.json');
     }
 
     /**
-     * Ensure comments file exists
-     */
-    private async ensureCommentsFile(): Promise<void> {
-        try {
-            await fs.access(this.commentsFile);
-        } catch {
-            await fs.writeFile(this.commentsFile, JSON.stringify([], null, 2), 'utf-8');
-        }
-    }
-
-    /**
-     * Load comments from file into memory cache
-     */
-    private async loadComments(): Promise<Comment[]> {
-        await this.ensureCommentsFile();
-        const data = await fs.readFile(this.commentsFile, 'utf-8');
-        const comments: Comment[] = JSON.parse(data);
-        this.commentsCache = comments;
-        return comments;
-    }
-
-    /**
-     * Get all comments (from cache if loaded, otherwise load from file)
+     * Get all comments
      */
     async getAllComments(): Promise<Comment[]> {
-        // Return cached data if already loaded
-        if (this.commentsCache !== null) {
-            return this.commentsCache;
+        try {
+            const data = await fs.readFile(this.commentsFile, 'utf-8');
+            return JSON.parse(data);
+        } catch (error) {
+            console.error('Failed to read comments file:', error);
+            return [];
         }
-
-        // Cache not loaded, load from file
-        return await this.loadComments();
     }
 
 
     /**
-     * Write all comments to file and update cache
+     * Write all comments to file
      */
-    private async writeAllComments(): Promise<void> {
-        await this.ensureCommentsFile();
-        await fs.writeFile(this.commentsFile, JSON.stringify(this.commentsCache, null, 2), 'utf-8');
+    private async writeAllComments(comments: Comment[]): Promise<void> {
+        await fs.writeFile(this.commentsFile, JSON.stringify(comments, null, 2), 'utf-8');
     }
 
     /**
@@ -86,11 +62,10 @@ class CommentService {
         submissionData: CommentSubmissionData,
         metadata: { ip: string; userAgent: string }
     ): Promise<Comment> {
-        // Ensure cache is loaded
-        const commentsCache = await this.getAllComments();
+        const comments = await this.getAllComments();
 
         // Check total comment limit
-        if (commentsCache.length >= COMMENT_CONFIG.maxTotalComments) {
+        if (comments.length >= COMMENT_CONFIG.maxTotalComments) {
             throw new Error(`Comment limit reached (${COMMENT_CONFIG.maxTotalComments})`);
         }
 
@@ -106,10 +81,10 @@ class CommentService {
             replyToId: submissionData.replyToId,
             metadata,
         };
-        // Update cache directly
-        commentsCache.push(newComment);
+
+        comments.push(newComment);
         // Persist to file
-        await this.writeAllComments();
+        await this.writeAllComments(comments);
         return newComment;
     }
 
@@ -118,15 +93,14 @@ class CommentService {
      * Updates status, copies to article-specific file, and removes from pending pool
      */
     async approveComment(commentId: string): Promise<void> {
-        // Ensure cache is loaded
-        const commentsCache = await this.getAllComments();
-        const commentIndex = commentsCache.findIndex(c => c.id === commentId);
+        const comments = await this.getAllComments();
+        const commentIndex = comments.findIndex(c => c.id === commentId);
 
         if (commentIndex === -1) {
             throw new Error('Comment not found');
         }
 
-        const comment = commentsCache[commentIndex];
+        const comment = comments[commentIndex];
 
         if (comment.status === 'approved') {
             throw new Error('Comment already approved');
@@ -149,30 +123,30 @@ class CommentService {
         // Prepend to maintain reverse chronological order (newest first)
         articleComments.unshift(comment);
         await fs.writeFile(articleFile, JSON.stringify(articleComments, null, 2), 'utf-8');
-        // Remove from cache after distributing to article file
-        commentsCache.splice(commentIndex, 1);
-        // Persist updated cache
-        await this.writeAllComments();
+
+        // Remove from pending list
+        comments.splice(commentIndex, 1);
+        // Persist updated list
+        await this.writeAllComments(comments);
     }
 
     /**
      * Reject a comment
-     * Removes comment from cache and persists
+     * Removes comment from list and persists
      */
     async rejectComment(commentId: string): Promise<void> {
-        // Ensure cache is loaded
-        const commentsCache = await this.getAllComments();
-        const commentIndex = commentsCache.findIndex(c => c.id === commentId);
+        const comments = await this.getAllComments();
+        const commentIndex = comments.findIndex(c => c.id === commentId);
 
         if (commentIndex === -1) {
             throw new Error('Comment not found');
         }
 
-        // Remove from cache
-        commentsCache.splice(commentIndex, 1);
+        // Remove from list
+        comments.splice(commentIndex, 1);
 
         // Persist to file
-        await this.writeAllComments();
+        await this.writeAllComments(comments);
     }
 
     /**

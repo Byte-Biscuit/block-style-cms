@@ -2,23 +2,15 @@ import fs from 'fs/promises';
 import path from 'path';
 import { Article, ArticleMetadata } from '@/types/article';
 import { ARTICLE_DIR, META_DIR } from '@/settings';
-import { lruCacheService } from "@/lib/services/lru-cache-service";
 import { algoliaSearchService } from "@/lib/services/algolia-search-service";
 
 class ArticleService {
-    private metadataCache: Record<string, ArticleMetadata[]> | null = null;
-    private CACHE_KEY_PREFIX_ARTICLE_SLUG: string = 'article_slug';
-
     getArticleFile(id: string): string {
         return path.join(ARTICLE_DIR, `${id}.json`);
     }
 
     getMetadataFile(): string {
         return path.join(META_DIR, 'article_metadata.json');
-    }
-
-    clearCache(): void {
-        this.metadataCache = null;
     }
 
     /**
@@ -55,7 +47,6 @@ class ArticleService {
             await fs.writeFile(articleFile, JSON.stringify(updatedArticle, null, 2));
             await this.updateMetadata(updatedArticle);
             await algoliaSearchService.updateArticle(updatedArticle);
-            lruCacheService.delete(`${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${article.slug}`);
         } catch (error) {
             console.error(`Error updating article ${article.id}:`, error);
             throw new Error(`Failed to update article: ${error instanceof Error ? error.message : String(error)}`);
@@ -79,10 +70,8 @@ class ArticleService {
                     delete metadataMap[slug];
                 }
                 await fs.writeFile(this.getMetadataFile(), JSON.stringify(metadataMap, null, 2));
-                this.metadataCache = metadataMap;
             }
             await algoliaSearchService.deleteArticle(id);
-            lruCacheService.delete(`${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${slug}`);
         } catch (error) {
             console.error(`Error deleting article ${id}:`, error);
             throw new Error(`Failed to delete article: ${error instanceof Error ? error.message : String(error)}`);
@@ -123,23 +112,14 @@ class ArticleService {
                 metadataMap[article.slug].push(newMetadata);
             }
         }
-
-        // 持久化并刷新缓存
         await fs.writeFile(this.getMetadataFile(), JSON.stringify(metadataMap, null, 2));
-        this.metadataCache = metadataMap;
     }
 
     async getArticle(id: string): Promise<Article | null> {
-        const cacheKey = `article_${id}`;
-        if (lruCacheService.get(cacheKey)) {
-            console.log('Cache hit for', cacheKey);
-            return lruCacheService.get(cacheKey) as Article;
-        }
         try {
             const articleFile = this.getArticleFile(id);
             const content = await fs.readFile(articleFile, 'utf-8');
             const article = JSON.parse(content);
-            lruCacheService.set(cacheKey, article);
             return article;
         } catch {
             return null;
@@ -151,9 +131,6 @@ class ArticleService {
      * @returns 
      */
     async getMetadataMap(): Promise<Record<string, ArticleMetadata[]>> {
-        if (this.metadataCache) {
-            return this.metadataCache;
-        }
         const metadataFile = this.getMetadataFile();
         let metadataMap: Record<string, ArticleMetadata[]> = {};
         try {
@@ -162,7 +139,6 @@ class ArticleService {
         } catch {
             metadataMap = {};
         }
-        this.metadataCache = metadataMap;
         return metadataMap;
     }
 
@@ -192,7 +168,7 @@ class ArticleService {
      * Get the total count of articles and draft count.
      * @returns The total count of articles and draft count.
      */
-    async getArtilcesCount(): Promise<{ total: number, draft: number }> {
+    async getArticlesCount(): Promise<{ total: number, draft: number }> {
         const metadataMap = await this.getMetadataMap();
         const total = Object.values(metadataMap).reduce((count, articles) => count + articles.length, 0)
         const draft = Object.values(metadataMap).reduce((count, articles) => count + articles.filter(article => !article.published).length, 0)
@@ -233,11 +209,6 @@ class ArticleService {
      * @param includeUnpublished - If true, include unpublished articles (for preview); if false, only published articles
      */
     async getArticlesBySlug(slug: string, includeUnpublished: boolean = false): Promise<ArticleMetadata[] | null> {
-        const cacheKey = `${this.CACHE_KEY_PREFIX_ARTICLE_SLUG}_${slug}_${includeUnpublished ? 'all' : 'published'}`;
-        if (lruCacheService.get(cacheKey)) {
-            console.log('Cache hit for', cacheKey);
-            return lruCacheService.get(cacheKey) as ArticleMetadata[];
-        }
         const metadataMap = await this.getMetadataMap();
         let articles = metadataMap[slug];
         // 如果不包含未发布文章,则只返回已发布的
@@ -247,7 +218,6 @@ class ArticleService {
         if (!articles || articles.length === 0) {
             return null;
         }
-        lruCacheService.set(cacheKey, articles);
         return articles;
     };
     /**
@@ -257,11 +227,6 @@ class ArticleService {
      * @returns
      */
     async getArticlesByLocale(locale: string, limit: number = 20): Promise<ArticleMetadata[]> {
-        const cacheKey = `home_articles_${locale}_${limit}`;
-        if (lruCacheService.get(cacheKey)) {
-            console.log('Cache hit for', cacheKey);
-            return lruCacheService.get(cacheKey) as ArticleMetadata[];
-        }
         const metadataMap = await this.getMetadataMap();
         // Simulate delay (for testing skeleton screen effects).
         //await new Promise(resolve => setTimeout(resolve, 20000));
@@ -280,7 +245,6 @@ class ArticleService {
             return timeB - timeA;
         });
         const articles = allArticles.slice(0, limit)
-        lruCacheService.set(cacheKey, articles, 1000 * 10 * 60);
         return articles;
     };
 }

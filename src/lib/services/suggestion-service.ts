@@ -14,57 +14,31 @@ import { v4 as uuidv4 } from 'uuid';
  */
 class SuggestionService {
     private suggestionsFile: string;
-    private suggestionsCache: Suggestion[] | null = null;
 
     constructor() {
         this.suggestionsFile = path.join(SUGGESTION_DIR, 'suggestions.json');
     }
 
     /**
-     * Ensure suggestions file exists
-     */
-    private async ensureSuggestionsFile(): Promise<void> {
-        try {
-            await fs.access(this.suggestionsFile);
-        } catch {
-            // Create directory if not exists
-            await fs.mkdir(SUGGESTION_DIR, { recursive: true });
-            await fs.writeFile(this.suggestionsFile, JSON.stringify([], null, 2), 'utf-8');
-        }
-    }
-
-    /**
-     * Load suggestions from file into memory cache
-     */
-    private async loadSuggestions(): Promise<Suggestion[]> {
-        await this.ensureSuggestionsFile();
-        const data = await fs.readFile(this.suggestionsFile, 'utf-8');
-        const suggestions: Suggestion[] = JSON.parse(data);
-        this.suggestionsCache = suggestions;
-        return suggestions;
-    }
-
-    /**
-     * Get all suggestions (from cache if loaded, otherwise load from file)
+     * Get all suggestions
      */
     async getAllSuggestions(): Promise<Suggestion[]> {
-        // Return cached data if already loaded
-        if (this.suggestionsCache !== null) {
-            return this.suggestionsCache;
+        try {
+            const data = await fs.readFile(this.suggestionsFile, 'utf-8');
+            return JSON.parse(data);
+        } catch (error) {
+            console.error('Failed to read suggestions file:', error);
+            return [];
         }
-
-        // Cache not loaded, load from file
-        return await this.loadSuggestions();
     }
 
     /**
-     * Write all suggestions to file and update cache
+     * Write all suggestions to file
      */
-    private async writeAllSuggestions(): Promise<void> {
-        await this.ensureSuggestionsFile();
+    private async writeAllSuggestions(suggestions: Suggestion[]): Promise<void> {
         await fs.writeFile(
             this.suggestionsFile,
-            JSON.stringify(this.suggestionsCache, null, 2),
+            JSON.stringify(suggestions, null, 2),
             'utf-8'
         );
     }
@@ -77,11 +51,10 @@ class SuggestionService {
         submissionData: SuggestionSubmissionData,
         metadata: { ip: string; userAgent: string }
     ): Promise<Suggestion> {
-        // Ensure cache is loaded
-        const suggestionsCache = await this.getAllSuggestions();
+        const suggestions = await this.getAllSuggestions();
 
         // Check total suggestion limit
-        if (suggestionsCache.length >= SUGGESTION_CONFIG.maxTotalSuggestions) {
+        if (suggestions.length >= SUGGESTION_CONFIG.maxTotalSuggestions) {
             throw new Error(
                 `Suggestion limit reached (${SUGGESTION_CONFIG.maxTotalSuggestions})`
             );
@@ -97,11 +70,10 @@ class SuggestionService {
             metadata,
         };
 
-        // Add to cache
-        this.suggestionsCache!.push(newSuggestion);
+        suggestions.push(newSuggestion);
 
         // Persist to file
-        await this.writeAllSuggestions();
+        await this.writeAllSuggestions(suggestions);
 
         return newSuggestion;
     }
@@ -111,18 +83,18 @@ class SuggestionService {
      * @throws Error if suggestion not found
      */
     async deleteSuggestion(suggestionId: string): Promise<void> {
-        const suggestionsCache = await this.getAllSuggestions();
+        const suggestions = await this.getAllSuggestions();
 
-        const suggestionIndex = suggestionsCache.findIndex(s => s.id === suggestionId);
+        const suggestionIndex = suggestions.findIndex(s => s.id === suggestionId);
         if (suggestionIndex === -1) {
             throw new Error(`Suggestion ${suggestionId} not found`);
         }
 
-        // Remove from cache
-        this.suggestionsCache!.splice(suggestionIndex, 1);
+        // Remove from list
+        suggestions.splice(suggestionIndex, 1);
 
         // Persist to file
-        await this.writeAllSuggestions();
+        await this.writeAllSuggestions(suggestions);
     }
 
     /**

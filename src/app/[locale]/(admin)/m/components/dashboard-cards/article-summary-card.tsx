@@ -2,9 +2,10 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
 import { articleService } from "@/lib/services/article-service";
 import { getTranslations } from "next-intl/server";
+import Link from "@/components/link";
 
 const ArticleSummaryCard = async () => {
-    const articleCount = await articleService.getArtilcesCount();
+    const articleCount = await articleService.getArticlesCount();
     const t = await getTranslations("admin.dashboard.articleSummary");
     return (
         <Box sx={{ flex: "1 1 300px", minWidth: "250px" }}>
@@ -21,9 +22,24 @@ const ArticleSummaryCard = async () => {
                             <ArticleIcon sx={{ fontSize: 30 }} />{" "}
                         </Box>
                         <Box>
-                            <Typography variant="h4" component="div">
-                                {articleCount.total}
-                            </Typography>
+                            <Link
+                                href="/m/list"
+                                style={{
+                                    textDecoration: "none",
+                                    color: "inherit",
+                                }}
+                            >
+                                <Typography
+                                    variant="h4"
+                                    component="div"
+                                    sx={{
+                                        "&:hover": { color: "primary.main" },
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {articleCount.total}
+                                </Typography>
+                            </Link>
                             <Typography color="text.secondary" variant="body2">
                                 {t("title")}
                             </Typography>

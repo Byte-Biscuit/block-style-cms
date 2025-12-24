@@ -23,7 +23,6 @@ interface InstallWizardProps {
 
 /**
  * Installation Wizard Component
- * 安装向导组件
  *
  * Guides users through the initialization process with multiple steps:
  * 1. Welcome
@@ -128,13 +127,27 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
         <div className="container mx-auto max-w-4xl px-4 py-12">
             {/* Progress Steps */}
             <div className="mb-8">
-                <div className="flex items-center justify-between">
+                <div className="relative flex justify-between">
                     {steps.map((step, index) => (
                         <div
                             key={step.key}
-                            className="flex flex-1 items-center"
+                            className="relative flex flex-1 flex-col items-center"
                         >
-                            <div className="flex flex-col items-center">
+                            {index < steps.length - 1 && (
+                                <div
+                                    className="absolute top-6 left-[50%] h-0.5 w-full -translate-y-1/2 bg-gray-200"
+                                    style={{ zIndex: 0 }}
+                                >
+                                    <div
+                                        className={`h-full bg-blue-500 transition-all duration-500 ease-in-out ${
+                                            index < currentStepIndex
+                                                ? "w-full"
+                                                : "w-0"
+                                        }`}
+                                    />
+                                </div>
+                            )}
+                            <div className="relative z-10 flex flex-col items-center">
                                 <div
                                     className={`flex h-12 w-12 items-center justify-center rounded-full text-2xl transition-all ${
                                         index <= currentStepIndex
@@ -148,15 +161,6 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                                     {step.title}
                                 </span>
                             </div>
-                            {index < steps.length - 1 && (
-                                <div
-                                    className={`mx-2 h-1 flex-1 rounded transition-all ${
-                                        index < currentStepIndex
-                                            ? "bg-blue-500"
-                                            : "bg-gray-200"
-                                    }`}
-                                />
-                            )}
                         </div>
                     ))}
                 </div>

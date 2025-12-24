@@ -12,16 +12,16 @@ const CustomLink = ({
     const isAnchorLink = href && href.startsWith("#");
 
     if (isInternalLink) {
-        return <Link className="break-words" href={href} {...rest} />;
+        return <Link className="wrap-break-word" href={href} {...rest} />;
     }
 
     if (isAnchorLink) {
-        return <a className="break-words" href={href} {...rest} />;
+        return <a className="wrap-break-word" href={href} {...rest} />;
     }
 
     return (
         <a
-            className="break-words"
+            className="wrap-break-word"
             target="_blank"
             rel="noopener noreferrer"
             href={href}

@@ -27,7 +27,7 @@
                 },
                 "systemSettings": {
                     "title": "系統設置",
-                    "description": "博客配置和個性化設置"
+                    "description": "系統配置和個性化設置"
                 },
                 "backToFrontend": {
                     "title": "返回前台",

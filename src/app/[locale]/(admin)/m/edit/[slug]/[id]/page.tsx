@@ -14,7 +14,7 @@ import {
     Alert,
 } from "@mui/material";
 import { type Article, createArticleSchemas } from "@/types/article";
-import type { ApiResponse } from "@/types/response";
+import type { Result } from "@/types/response";
 import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
 import { LOCALE_PARAM_NAME } from "@/constants";
 import { useTranslations } from "next-intl";
@@ -45,7 +45,7 @@ export default function EditPostPage() {
                 return res.json();
             })
             .then((result) => {
-                const apiResponse = result as ApiResponse;
+                const apiResponse = result as Result;
                 if (apiResponse?.code !== 200) {
                     setError(t(`${translationPrefix}messages.fetchError`));
                     setArticle(null);

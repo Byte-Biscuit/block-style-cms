@@ -60,17 +60,17 @@ export default async function AdminDashboard() {
             href: "/m/suggestion",
         },
         {
-            title: "媒体库",
-            description: "管理图片、视频等媒体文件 (功能扩展中)",
-            icon: <ImageIcon sx={{ fontSize: 40 }} />,
-            color: "secondary",
-            href: "#",
-        },
-        {
-            title: "系统设置",
-            description: "博客配置和个性化设置",
+            title: t("actions.systemSettings.title"),
+            description: t("actions.systemSettings.description"),
             icon: <SettingsIcon sx={{ fontSize: 40 }} />,
             color: "grey",
+            href: "/m/settings",
+        },
+        {
+            title: t("actions.mediaLibrary.title"),
+            description: t("actions.mediaLibrary.description"),
+            icon: <ImageIcon sx={{ fontSize: 40 }} />,
+            color: "secondary",
             href: "#",
         },
         {

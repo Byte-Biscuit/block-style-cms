@@ -27,7 +27,7 @@
                 },
                 "systemSettings": {
                     "title": "System Settings",
-                    "description": "Blog configuration and customization"
+                    "description": "System configuration and customization"
                 },
                 "backToFrontend": {
                     "title": "Back to Frontend",

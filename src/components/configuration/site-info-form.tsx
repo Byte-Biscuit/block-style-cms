@@ -15,14 +15,14 @@ interface SiteInfoFormProps {
     /** Loading state */
     isLoading?: boolean;
     /** Custom submit button label */
-    submitLabel?: string;
+    submitLabel?: string | React.ReactNode;
     /** Custom cancel button label */
     cancelLabel?: string;
 }
 
 /**
  * Site Information Form Component (Reusable)
- * 网站基本信息表单组件（可复用）
+ * Website basic information form component (reusable)
  *
  * Collects basic website information and contact methods.
  * Can be used in both installation wizard and settings page.

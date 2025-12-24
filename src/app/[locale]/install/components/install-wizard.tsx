@@ -11,7 +11,7 @@ import {
 } from "@/types/system-config";
 import WelcomeForm from "./welcome-form";
 import EnvironmentCheckForm from "./environment-check-form";
-import SiteInfoForm from "./site-info-form";
+import { SiteInfoForm } from "@/components/configuration";
 import AdminAccountForm from "./admin-account-form";
 import AuthMethodsForm from "./auth-methods-form";
 import ServicesForm from "./services-form";
@@ -184,14 +184,15 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                 {/* Site Info Step */}
                 {currentStep === InstallStep.SiteInfo && (
                     <SiteInfoForm
-                        onNext={(data: SiteInfoConfig) => {
+                        mode="install"
+                        onSubmit={(data: SiteInfoConfig) => {
                             setInstallData({
                                 ...installData,
                                 siteInfo: data,
                             });
                             handleNext();
                         }}
-                        onBack={handleBack}
+                        onCancel={handleBack}
                     />
                 )}
 

@@ -13,6 +13,7 @@ import { SystemConfig } from "@/types/system-config";
 import SiteInfoTab from "./site-info-tab";
 import UserManagementTab from "./user-management-tab";
 import AuthenticationTab from "./authentication-tab";
+import ServicesTab from "./services-tab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -96,7 +97,6 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                     label="External Services"
                     id="settings-tab-3"
                     aria-controls="settings-tabpanel-3"
-                    disabled
                 />
                 <Tab
                     icon={<AdminPanelIcon />}
@@ -150,11 +150,72 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
             </TabPanel>
 
             <TabPanel value={activeTab} index={3}>
-                <Box
-                    sx={{ p: 3, textAlign: "center", color: "text.secondary" }}
-                >
-                    External services configuration - Coming soon
-                </Box>
+                <ServicesTab
+                    initialData={{
+                        algolia: {
+                            enabled:
+                                initialConfig.services?.algolia?.enabled ||
+                                false,
+                            appId:
+                                initialConfig.services?.algolia?.appId || "",
+                            apiKey:
+                                initialConfig.services?.algolia?.apiKey || "",
+                            searchKey:
+                                initialConfig.services?.algolia?.searchKey ||
+                                "",
+                            indexName:
+                                initialConfig.services?.algolia?.indexName ||
+                                "articles",
+                        },
+                        umami: {
+                            enabled:
+                                initialConfig.services?.umami?.enabled || false,
+                            websiteId:
+                                initialConfig.services?.umami?.websiteId || "",
+                            src:
+                                initialConfig.services?.umami?.src ||
+                                "https://cloud.umami.is/script.js",
+                        },
+                        ai: {
+                            enabled:
+                                initialConfig.services?.ai?.enabled || false,
+                            provider:
+                                initialConfig.services?.ai?.provider ||
+                                "openai",
+                            openai: {
+                                apiKey:
+                                    initialConfig.services?.ai?.openai
+                                        ?.apiKey || "",
+                                baseUrl:
+                                    initialConfig.services?.ai?.openai
+                                        ?.baseUrl ||
+                                    "https://api.openai.com/v1",
+                                model:
+                                    initialConfig.services?.ai?.openai?.model ||
+                                    "gpt-4o-mini",
+                            },
+                            gemini: {
+                                apiKey:
+                                    initialConfig.services?.ai?.gemini
+                                        ?.apiKey || "",
+                                baseUrl:
+                                    initialConfig.services?.ai?.gemini
+                                        ?.baseUrl ||
+                                    "https://generativelanguage.googleapis.com/v1beta",
+                                model:
+                                    initialConfig.services?.ai?.gemini?.model ||
+                                    "gemini-2.0-flash",
+                            },
+                        },
+                        pexels: {
+                            enabled:
+                                initialConfig.services?.pexels?.enabled ||
+                                false,
+                            apiKey:
+                                initialConfig.services?.pexels?.apiKey || "",
+                        },
+                    }}
+                />
             </TabPanel>
 
             <TabPanel value={activeTab} index={4}>

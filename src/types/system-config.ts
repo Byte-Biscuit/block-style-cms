@@ -218,29 +218,40 @@ export interface InstallAuthMethodsConfig {
 /**
  * Services Configuration for Installation
  * 安装过程中的服务配置
+ * 
+ * Uses nested structure aligned with ServicesFormData for easier conversion.
  */
 export interface InstallServicesConfig {
-    algolia: boolean;
-    algoliaAppId?: string;
-    algoliaApiKey?: string;
-    algoliaSearchKey?: string;
-    algoliaIndexName?: string;
-
-    umami: boolean;
-    umamiWebsiteId?: string;
-    umamiSrc?: string;
-
-    ai: boolean;
-    aiProvider: "openai" | "gemini";
-    openaiApiKey?: string;
-    openaiBaseUrl?: string;
-    openaiModel?: string;
-    geminiApiKey?: string;
-    geminiBaseUrl?: string;
-    geminiModel?: string;
-
-    pexels: boolean;
-    pexelsApiKey?: string;
+    algolia: {
+        enabled: boolean;
+        appId?: string;
+        apiKey?: string;
+        searchKey?: string;
+        indexName?: string;
+    };
+    umami: {
+        enabled: boolean;
+        websiteId?: string;
+        src?: string;
+    };
+    ai: {
+        enabled: boolean;
+        provider: "openai" | "gemini";
+        openai: {
+            apiKey?: string;
+            baseUrl?: string;
+            model?: string;
+        };
+        gemini: {
+            apiKey?: string;
+            baseUrl?: string;
+            model?: string;
+        };
+    };
+    pexels: {
+        enabled: boolean;
+        apiKey?: string;
+    };
 }
 
 /**

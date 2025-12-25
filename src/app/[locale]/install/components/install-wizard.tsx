@@ -12,8 +12,13 @@ import {
 import WelcomeForm from "./welcome-form";
 import EnvironmentCheckForm from "./environment-check-form";
 import AdminAccountForm from "./admin-account-form";
-import { SiteInfoForm, AuthenticationForm, AuthFormData } from "@/components/configuration";
-import ServicesForm from "./services-form";
+import {
+    SiteInfoForm,
+    AuthenticationForm,
+    AuthFormData,
+    ServicesForm,
+    ServicesFormData,
+} from "@/components/configuration";
 import { useEffect } from "react";
 
 interface InstallWizardProps {
@@ -244,27 +249,70 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                 {/* Services Step */}
                 {currentStep === InstallStep.Services && (
                     <ServicesForm
-                        onNext={(data: InstallServicesConfig) => {
+                        mode="install"
+                        initialData={{
+                            algolia: {
+                                enabled: false,
+                                indexName: "articles",
+                            },
+                            umami: {
+                                enabled: false,
+                                src: "https://cloud.umami.is/script.js",
+                            },
+                            ai: {
+                                enabled: false,
+                                provider: "openai",
+                                openai: {
+                                    baseUrl: "https://api.openai.com/v1",
+                                    model: "gpt-4o-mini",
+                                },
+                                gemini: {
+                                    baseUrl:
+                                        "https://generativelanguage.googleapis.com/v1beta",
+                                    model: "gemini-2.0-flash",
+                                },
+                            },
+                            pexels: { enabled: false },
+                        }}
+                        onSubmit={(data: ServicesFormData) => {
                             if (isLoading) return;
                             setIsLoading(true);
+                            // ServicesFormData is now identical to InstallServicesConfig
                             setInstallData({
                                 ...installData,
-                                services: data,
+                                services: data as InstallServicesConfig,
                                 isComplete: true,
                             });
                         }}
-                        onBack={handleBack}
+                        onCancel={handleBack}
                         onSkip={() => {
                             if (isLoading) return;
                             setIsLoading(true);
                             setInstallData({
                                 ...installData,
                                 services: {
-                                    algolia: false,
-                                    umami: false,
-                                    ai: false,
-                                    aiProvider: "openai",
-                                    pexels: false,
+                                    algolia: {
+                                        enabled: false,
+                                        indexName: "articles",
+                                    },
+                                    umami: {
+                                        enabled: false,
+                                        src: "https://cloud.umami.is/script.js",
+                                    },
+                                    ai: {
+                                        enabled: false,
+                                        provider: "openai",
+                                        openai: {
+                                            baseUrl: "https://api.openai.com/v1",
+                                            model: "gpt-4o-mini",
+                                        },
+                                        gemini: {
+                                            baseUrl:
+                                                "https://generativelanguage.googleapis.com/v1beta",
+                                            model: "gemini-2.0-flash",
+                                        },
+                                    },
+                                    pexels: { enabled: false },
                                 },
                                 isComplete: true,
                             });

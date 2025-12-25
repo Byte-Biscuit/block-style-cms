@@ -11,7 +11,8 @@ import {
 } from "@/types/system-config";
 import WelcomeForm from "./welcome-form";
 import EnvironmentCheckForm from "./environment-check-form";
-import { SiteInfoForm, AdminAccountForm } from "@/components/configuration";
+import AdminAccountForm from "./admin-account-form";
+import { SiteInfoForm } from "@/components/configuration";
 import AuthMethodsForm from "./auth-methods-form";
 import ServicesForm from "./services-form";
 import { useEffect } from "react";
@@ -198,15 +199,14 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                 {/* Admin Account Step */}
                 {currentStep === InstallStep.AdminAccount && (
                     <AdminAccountForm
-                        mode="install"
-                        onSubmit={(data: AdminCredentials) => {
+                        onNext={(data: AdminCredentials) => {
                             setInstallData({
                                 ...installData,
                                 admin: data,
                             });
                             handleNext();
                         }}
-                        onCancel={handleBack}
+                        onBack={handleBack}
                     />
                 )}
 

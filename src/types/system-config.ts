@@ -48,19 +48,6 @@ export interface SiteInfoConfig {
  * 认证方式配置
  */
 export interface AuthenticationMethodsConfig {
-    /** Email/Password Authentication */
-    emailPassword: {
-        enabled: boolean;
-        requireEmailVerification: boolean;
-    };
-
-    /** Two-Factor Authentication (TOTP) */
-    twoFactor: {
-        enabled: boolean;
-        /** Whether to require all users to enable 2FA */
-        required: boolean;
-    };
-
     /** GitHub OAuth */
     github: {
         enabled: boolean;
@@ -214,10 +201,10 @@ export interface AdminCredentials {
 /**
  * Authentication Methods Configuration for Installation
  * 安装过程中的认证方式配置
+ * 
+ * Note: Email/Password and 2FA are enabled by default and not configurable during installation.
  */
 export interface InstallAuthMethodsConfig {
-    emailPassword: boolean;
-    twoFactor: boolean;
     github: boolean;
     githubClientId?: string;
     githubClientSecret?: string;
@@ -291,14 +278,6 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> 
     },
     authentication: {
         methods: {
-            emailPassword: {
-                enabled: true,
-                requireEmailVerification: false,
-            },
-            twoFactor: {
-                enabled: true,
-                required: false,
-            },
             github: {
                 enabled: true,
             },

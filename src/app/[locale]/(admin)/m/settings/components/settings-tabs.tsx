@@ -12,6 +12,7 @@ import {
 import { SystemConfig } from "@/types/system-config";
 import SiteInfoTab from "./site-info-tab";
 import UserManagementTab from "./user-management-tab";
+import AuthenticationTab from "./authentication-tab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -88,7 +89,6 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                     label="Authentication"
                     id="settings-tab-2"
                     aria-controls="settings-tabpanel-2"
-                    disabled
                 />
                 <Tab
                     icon={<CloudIcon />}
@@ -118,11 +118,35 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
             </TabPanel>
 
             <TabPanel value={activeTab} index={2}>
-                <Box
-                    sx={{ p: 3, textAlign: "center", color: "text.secondary" }}
-                >
-                    Authentication settings - Coming soon
-                </Box>
+                <AuthenticationTab
+                    initialData={{
+                        github: {
+                            enabled:
+                                initialConfig.authentication?.methods?.github
+                                    ?.enabled || false,
+                            clientId:
+                                initialConfig.authentication?.methods?.github
+                                    ?.clientId || "",
+                            clientSecret:
+                                initialConfig.authentication?.methods?.github
+                                    ?.clientSecret || "",
+                        },
+                        google: {
+                            enabled:
+                                initialConfig.authentication?.methods?.google
+                                    ?.enabled || false,
+                            clientId:
+                                initialConfig.authentication?.methods?.google
+                                    ?.clientId || "",
+                            clientSecret:
+                                initialConfig.authentication?.methods?.google
+                                    ?.clientSecret || "",
+                        },
+                        allowedEmails:
+                            initialConfig.authentication?.accessControl
+                                ?.allowedEmails || [],
+                    }}
+                />
             </TabPanel>
 
             <TabPanel value={activeTab} index={3}>

@@ -12,8 +12,7 @@ import {
 import WelcomeForm from "./welcome-form";
 import EnvironmentCheckForm from "./environment-check-form";
 import AdminAccountForm from "./admin-account-form";
-import { SiteInfoForm } from "@/components/configuration";
-import AuthMethodsForm from "./auth-methods-form";
+import { SiteInfoForm, AuthenticationForm, AuthFormData } from "@/components/configuration";
 import ServicesForm from "./services-form";
 import { useEffect } from "react";
 
@@ -212,16 +211,33 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
 
                 {/* Auth Methods Step */}
                 {currentStep === InstallStep.AuthMethods && (
-                    <AuthMethodsForm
-                        adminEmail={installData.admin?.email || ""}
-                        onNext={(data: InstallAuthMethodsConfig) => {
+                    <AuthenticationForm
+                        mode="install"
+                        initialData={{
+                            github: { enabled: false, clientId: "", clientSecret: "" },
+                            google: { enabled: false, clientId: "", clientSecret: "" },
+                            allowedEmails: [installData.admin?.email || ""],
+                        }}
+                        onSubmit={(data: AuthFormData) => {
+                            // Convert AuthFormData to InstallAuthMethodsConfig
+                            // Note: emailPassword and twoFactor are enabled by default
+                            const authConfig: InstallAuthMethodsConfig = {
+                                github: data.github.enabled,
+                                githubClientId: data.github.clientId,
+                                githubClientSecret: data.github.clientSecret,
+                                google: data.google.enabled,
+                                googleClientId: data.google.clientId,
+                                googleClientSecret: data.google.clientSecret,
+                                passkey: false,
+                                allowedEmails: data.allowedEmails,
+                            };
                             setInstallData({
                                 ...installData,
-                                authMethods: data,
+                                authMethods: authConfig,
                             });
                             handleNext();
                         }}
-                        onBack={handleBack}
+                        onCancel={handleBack}
                     />
                 )}
 

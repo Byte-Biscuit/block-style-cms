@@ -1,41 +1,98 @@
 "use client";
 
 import { useState } from "react";
-import { InstallAuthMethodsConfig } from "@/types/system-config";
 import { EMAIL_REGEX } from "@/constants";
 
-interface AuthMethodsFormProps {
-    adminEmail: string;
-    onNext: (data: InstallAuthMethodsConfig) => void;
-    onBack: () => void;
+/**
+ * Authentication Form Data Structure
+ * 认证表单数据结构
+ */
+export interface AuthFormData {
+    github: {
+        enabled: boolean;
+        clientId: string;
+        clientSecret: string;
+    };
+    google: {
+        enabled: boolean;
+        clientId: string;
+        clientSecret: string;
+    };
+    allowedEmails: string[];
+}
+
+interface AuthenticationFormProps {
+    /** Form mode: 'install' for installation wizard, 'edit' for settings page */
+    mode?: "install" | "edit";
+    /** Initial form data */
+    initialData?: {
+        github?: { enabled: boolean; clientId?: string; clientSecret?: string };
+        google?: { enabled: boolean; clientId?: string; clientSecret?: string };
+        allowedEmails?: string[];
+    };
+    /** Submit handler */
+    onSubmit: (data: AuthFormData) => void;
+    /** Cancel/Back handler */
+    onCancel?: () => void;
+    /** Loading state */
+    isLoading?: boolean;
+    /** Custom submit button label */
+    submitLabel?: string | React.ReactNode;
+    /** Custom cancel button label */
+    cancelLabel?: string;
 }
 
 /**
- * Authentication Methods Form Component
- * 认证方式配置表单组件
+ * Authentication Form Component
+ * 认证配置表单组件
  *
- * Allows configuration of 4 authentication methods:
- * 1. Email/Password (always enabled)
- * 2. GitHub OAuth
- * 3. Google OAuth
- * 4. Passkey (WebAuthn)
+ * Reusable form for configuring:
+ * 1. GitHub OAuth (enabled, clientId, clientSecret)
+ * 2. Google OAuth (enabled, clientId, clientSecret)
+ * 3. Allowed Emails (admin whitelist)
+ *
+ * Can be used in both installation wizard and settings page.
+ *
+ * @example
+ * // Installation mode
+ * <AuthenticationForm
+ *   mode="install"
+ *   initialData={{ allowedEmails: [adminEmail] }}
+ *   onSubmit={(data) => handleNext(data)}
+ *   onCancel={handleBack}
+ * />
+ *
+ * @example
+ * // Edit mode
+ * <AuthenticationForm
+ *   mode="edit"
+ *   initialData={currentSettings}
+ *   onSubmit={(data) => handleSave(data)}
+ *   isLoading={isSaving}
+ *   submitLabel="Save Changes"
+ * />
  */
-export default function AuthMethodsForm({
-    adminEmail,
-    onNext,
-    onBack,
-}: AuthMethodsFormProps) {
+export default function AuthenticationForm({
+    mode = "install",
+    initialData,
+    onSubmit,
+    onCancel,
+    isLoading = false,
+    submitLabel,
+    cancelLabel,
+}: AuthenticationFormProps) {
     const [formData, setFormData] = useState({
-        emailPassword: true, // Always enabled
-        twoFactor: false,
-        github: false,
-        githubClientId: "",
-        githubClientSecret: "",
-        google: false,
-        googleClientId: "",
-        googleClientSecret: "",
-        passkey: false,
-        allowedEmails: adminEmail,
+        github: {
+            enabled: initialData?.github?.enabled ?? false,
+            clientId: initialData?.github?.clientId ?? "",
+            clientSecret: initialData?.github?.clientSecret ?? "",
+        },
+        google: {
+            enabled: initialData?.google?.enabled ?? false,
+            clientId: initialData?.google?.clientId ?? "",
+            clientSecret: initialData?.google?.clientSecret ?? "",
+        },
+        allowedEmails: initialData?.allowedEmails?.join(", ") ?? "",
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -43,22 +100,22 @@ export default function AuthMethodsForm({
         const newErrors: Record<string, string> = {};
 
         // Validate GitHub credentials if enabled
-        if (formData.github) {
-            if (!formData.githubClientId.trim()) {
+        if (formData.github.enabled) {
+            if (!formData.github.clientId.trim()) {
                 newErrors.githubClientId = "GitHub Client ID is required";
             }
-            if (!formData.githubClientSecret.trim()) {
+            if (!formData.github.clientSecret.trim()) {
                 newErrors.githubClientSecret =
                     "GitHub Client Secret is required";
             }
         }
 
         // Validate Google credentials if enabled
-        if (formData.google) {
-            if (!formData.googleClientId.trim()) {
+        if (formData.google.enabled) {
+            if (!formData.google.clientId.trim()) {
                 newErrors.googleClientId = "Google Client ID is required";
             }
-            if (!formData.googleClientSecret.trim()) {
+            if (!formData.google.clientSecret.trim()) {
                 newErrors.googleClientSecret =
                     "Google Client Secret is required";
             }
@@ -79,107 +136,75 @@ export default function AuthMethodsForm({
                 }
             }
         }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
         if (validateForm()) {
-            onNext({
-                emailPassword: true,
-                twoFactor: formData.twoFactor,
-                github: formData.github,
-                githubClientId: formData.githubClientId,
-                githubClientSecret: formData.githubClientSecret,
-                google: formData.google,
-                googleClientId: formData.googleClientId,
-                googleClientSecret: formData.googleClientSecret,
-                passkey: formData.passkey,
+            const data: AuthFormData = {
+                github: {
+                    enabled: formData.github.enabled,
+                    clientId: formData.github.clientId,
+                    clientSecret: formData.github.clientSecret,
+                },
+                google: {
+                    enabled: formData.google.enabled,
+                    clientId: formData.google.clientId,
+                    clientSecret: formData.google.clientSecret,
+                },
                 allowedEmails: formData.allowedEmails
                     .split(",")
                     .map((e) => e.trim().toLowerCase())
                     .filter(Boolean),
-            });
+            };
+
+            onSubmit(data);
         }
     };
 
+    // Determine button labels based on mode
+    const defaultSubmitLabel =
+        mode === "install" ? "Continue →" : "Save Changes";
+    const defaultCancelLabel = mode === "install" ? "← Back" : "Cancel";
+    const finalSubmitLabel = submitLabel || defaultSubmitLabel;
+    const finalCancelLabel = cancelLabel || defaultCancelLabel;
+
     return (
         <form onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Authentication Methods
-            </h2>
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
-                Choose which authentication methods to enable for your CMS.
-            </p>
+            {mode === "install" && (
+                <>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                        Authentication Methods
+                    </h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-300">
+                        Configure OAuth providers and admin access control.
+                    </p>
+                </>
+            )}
 
-            <div className="mt-6 space-y-4">
-                {/* Email/Password (Always Enabled) */}
-                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-900/20">
-                    <div className="flex items-start justify-between">
-                        <div className="flex flex-1 items-start">
-                            <input
-                                type="checkbox"
-                                checked={true}
-                                disabled
-                                className="mt-0.5 h-5 w-5 rounded border-gray-300 text-blue-600"
-                            />
-                            <div className="ml-3 flex-1">
-                                <h3 className="font-semibold text-blue-900 dark:text-blue-100">
-                                    Email/Password Authentication
-                                </h3>
-                                <p className="text-sm text-blue-800 dark:text-blue-200">
-                                    Basic authentication (always enabled)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Two-Factor Authentication */}
-                <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                    <div className="flex items-start justify-between">
-                        <div className="flex flex-1 items-start">
-                            <input
-                                type="checkbox"
-                                checked={formData.twoFactor}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        twoFactor: e.target.checked,
-                                    })
-                                }
-                                className="mt-0.5 h-5 w-5 rounded border-gray-300 text-blue-600"
-                            />
-                            <div className="ml-3 flex-1">
-                                <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    Two-Factor Authentication (2FA)
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Allow users to enable TOTP/Authenticator
-                                </p>
-                            </div>
-                        </div>
-                        <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/20 dark:text-green-400">
-                            Recommended
-                        </span>
-                    </div>
-                </div>
-
+            <div
+                className={mode === "install" ? "mt-6 space-y-4" : "space-y-4"}
+            >
                 {/* GitHub OAuth */}
                 <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
                     <div className="flex items-start justify-between">
                         <div className="flex flex-1 items-start">
                             <input
                                 type="checkbox"
-                                checked={formData.github}
+                                checked={formData.github.enabled}
                                 onChange={(e) =>
                                     setFormData({
                                         ...formData,
-                                        github: e.target.checked,
+                                        github: {
+                                            ...formData.github,
+                                            enabled: e.target.checked,
+                                        },
                                     })
                                 }
+                                disabled={isLoading}
                                 className="mt-0.5 h-5 w-5 rounded border-gray-300 text-blue-600"
                             />
                             <div className="ml-3 flex-1">
@@ -189,7 +214,7 @@ export default function AuthMethodsForm({
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Sign in with GitHub account
                                 </p>
-                                {formData.github && (
+                                {formData.github.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -197,14 +222,18 @@ export default function AuthMethodsForm({
                                             </label>
                                             <input
                                                 type="text"
-                                                value={formData.githubClientId}
+                                                value={formData.github.clientId}
                                                 onChange={(e) =>
                                                     setFormData({
                                                         ...formData,
-                                                        githubClientId:
-                                                            e.target.value,
+                                                        github: {
+                                                            ...formData.github,
+                                                            clientId:
+                                                                e.target.value,
+                                                        },
                                                     })
                                                 }
+                                                disabled={isLoading}
                                                 className={`mt-1 w-full rounded border ${
                                                     errors.githubClientId
                                                         ? "border-red-500"
@@ -225,15 +254,19 @@ export default function AuthMethodsForm({
                                             <input
                                                 type="password"
                                                 value={
-                                                    formData.githubClientSecret
+                                                    formData.github.clientSecret
                                                 }
                                                 onChange={(e) =>
                                                     setFormData({
                                                         ...formData,
-                                                        githubClientSecret:
-                                                            e.target.value,
+                                                        github: {
+                                                            ...formData.github,
+                                                            clientSecret:
+                                                                e.target.value,
+                                                        },
                                                     })
                                                 }
+                                                disabled={isLoading}
                                                 className={`mt-1 w-full rounded border ${
                                                     errors.githubClientSecret
                                                         ? "border-red-500"
@@ -260,13 +293,17 @@ export default function AuthMethodsForm({
                         <div className="flex flex-1 items-start">
                             <input
                                 type="checkbox"
-                                checked={formData.google}
+                                checked={formData.google.enabled}
                                 onChange={(e) =>
                                     setFormData({
                                         ...formData,
-                                        google: e.target.checked,
+                                        google: {
+                                            ...formData.google,
+                                            enabled: e.target.checked,
+                                        },
                                     })
                                 }
+                                disabled={isLoading}
                                 className="mt-0.5 h-5 w-5 rounded border-gray-300 text-blue-600"
                             />
                             <div className="ml-3 flex-1">
@@ -276,7 +313,7 @@ export default function AuthMethodsForm({
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Sign in with Google account
                                 </p>
-                                {formData.google && (
+                                {formData.google.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -284,14 +321,18 @@ export default function AuthMethodsForm({
                                             </label>
                                             <input
                                                 type="text"
-                                                value={formData.googleClientId}
+                                                value={formData.google.clientId}
                                                 onChange={(e) =>
                                                     setFormData({
                                                         ...formData,
-                                                        googleClientId:
-                                                            e.target.value,
+                                                        google: {
+                                                            ...formData.google,
+                                                            clientId:
+                                                                e.target.value,
+                                                        },
                                                     })
                                                 }
+                                                disabled={isLoading}
                                                 className={`mt-1 w-full rounded border ${
                                                     errors.googleClientId
                                                         ? "border-red-500"
@@ -312,15 +353,19 @@ export default function AuthMethodsForm({
                                             <input
                                                 type="password"
                                                 value={
-                                                    formData.googleClientSecret
+                                                    formData.google.clientSecret
                                                 }
                                                 onChange={(e) =>
                                                     setFormData({
                                                         ...formData,
-                                                        googleClientSecret:
-                                                            e.target.value,
+                                                        google: {
+                                                            ...formData.google,
+                                                            clientSecret:
+                                                                e.target.value,
+                                                        },
                                                     })
                                                 }
+                                                disabled={isLoading}
                                                 className={`mt-1 w-full rounded border ${
                                                     errors.googleClientSecret
                                                         ? "border-red-500"
@@ -338,36 +383,6 @@ export default function AuthMethodsForm({
                                 )}
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                {/* Passkey */}
-                <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                    <div className="flex items-start justify-between">
-                        <div className="flex flex-1 items-start">
-                            <input
-                                type="checkbox"
-                                checked={formData.passkey}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        passkey: e.target.checked,
-                                    })
-                                }
-                                className="mt-0.5 h-5 w-5 rounded border-gray-300 text-blue-600"
-                            />
-                            <div className="ml-3 flex-1">
-                                <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    Passkey (WebAuthn)
-                                </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Biometric and hardware key authentication
-                                </p>
-                            </div>
-                        </div>
-                        <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
-                            Modern
-                        </span>
                     </div>
                 </div>
 
@@ -389,6 +404,7 @@ export default function AuthMethodsForm({
                                 allowedEmails: e.target.value,
                             })
                         }
+                        disabled={isLoading}
                         className={`mt-2 w-full rounded-lg border ${
                             errors.allowedEmails
                                 ? "border-red-500"
@@ -406,19 +422,29 @@ export default function AuthMethodsForm({
             </div>
 
             {/* Action Buttons */}
-            <div className="mt-8 flex justify-between">
-                <button
-                    type="button"
-                    onClick={onBack}
-                    className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                >
-                    ← Back
-                </button>
+            <div
+                className={
+                    mode === "install"
+                        ? "mt-8 flex justify-between"
+                        : "mt-6 flex justify-end"
+                }
+            >
+                {onCancel && (
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                        disabled={isLoading}
+                        className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                    >
+                        {finalCancelLabel}
+                    </button>
+                )}
                 <button
                     type="submit"
-                    className="rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600"
+                    disabled={isLoading}
+                    className="ml-auto rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    Continue →
+                    {finalSubmitLabel}
                 </button>
             </div>
         </form>

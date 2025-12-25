@@ -90,14 +90,6 @@ export async function POST(request: NextRequest) {
                 },
                 authentication: {
                     methods: {
-                        emailPassword: {
-                            enabled: true,
-                            requireEmailVerification: false,
-                        },
-                        twoFactor: {
-                            enabled: authMethods?.twoFactor || false,
-                            required: false,
-                        },
                         github: {
                             enabled: authMethods?.github || false,
                             clientId: authMethods?.githubClientId,

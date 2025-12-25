@@ -6,3 +6,4 @@
  */
 
 export { default as SiteInfoForm } from "./site-info-form";
+export { default as AdminAccountForm } from "./admin-account-form";

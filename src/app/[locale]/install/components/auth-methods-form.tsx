@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { InstallAuthMethodsConfig } from "@/types/system-config";
+import { EMAIL_REGEX } from "@/constants";
 
 interface AuthMethodsFormProps {
     adminEmail: string;
@@ -72,7 +73,7 @@ export default function AuthMethodsForm({
                 .map((e) => e.trim())
                 .filter(Boolean);
             for (const email of emails) {
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                if (!EMAIL_REGEX.test(email)) {
                     newErrors.allowedEmails = `Invalid email format: ${email}`;
                     break;
                 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { getAuth } from "@/lib/auth/auth";
+import { EMAIL_REGEX } from "@/constants";
 
 /**
  * POST /api/install
@@ -27,8 +28,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(admin.email)) {
+        if (!EMAIL_REGEX.test(admin.email)) {
             return NextResponse.json(
                 { error: "Invalid email format" },
                 { status: 400 }

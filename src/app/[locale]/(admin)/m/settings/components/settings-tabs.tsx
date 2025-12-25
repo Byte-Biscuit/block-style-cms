@@ -4,12 +4,14 @@ import { useState } from "react";
 import { Tabs, Tab, Box } from "@mui/material";
 import {
     Language as LanguageIcon,
+    People as PeopleIcon,
     Security as SecurityIcon,
     CloudQueue as CloudIcon,
-    AdminPanelSettings as AdminIcon,
+    AdminPanelSettings as AdminPanelIcon,
 } from "@mui/icons-material";
 import { SystemConfig } from "@/types/system-config";
 import SiteInfoTab from "./site-info-tab";
+import UserManagementTab from "./user-management-tab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -74,27 +76,34 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                     aria-controls="settings-tabpanel-0"
                 />
                 <Tab
+                    icon={<PeopleIcon />}
+                    iconPosition="start"
+                    label="User Management"
+                    id="settings-tab-1"
+                    aria-controls="settings-tabpanel-1"
+                />
+                <Tab
                     icon={<SecurityIcon />}
                     iconPosition="start"
                     label="Authentication"
-                    id="settings-tab-1"
-                    aria-controls="settings-tabpanel-1"
+                    id="settings-tab-2"
+                    aria-controls="settings-tabpanel-2"
                     disabled
                 />
                 <Tab
                     icon={<CloudIcon />}
                     iconPosition="start"
                     label="External Services"
-                    id="settings-tab-2"
-                    aria-controls="settings-tabpanel-2"
+                    id="settings-tab-3"
+                    aria-controls="settings-tabpanel-3"
                     disabled
                 />
                 <Tab
-                    icon={<AdminIcon />}
+                    icon={<AdminPanelIcon />}
                     iconPosition="start"
                     label="Access Control"
-                    id="settings-tab-3"
-                    aria-controls="settings-tabpanel-3"
+                    id="settings-tab-4"
+                    aria-controls="settings-tabpanel-4"
                     disabled
                 />
             </Tabs>
@@ -105,6 +114,10 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
             </TabPanel>
 
             <TabPanel value={activeTab} index={1}>
+                <UserManagementTab />
+            </TabPanel>
+
+            <TabPanel value={activeTab} index={2}>
                 <Box
                     sx={{ p: 3, textAlign: "center", color: "text.secondary" }}
                 >
@@ -112,7 +125,7 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                 </Box>
             </TabPanel>
 
-            <TabPanel value={activeTab} index={2}>
+            <TabPanel value={activeTab} index={3}>
                 <Box
                     sx={{ p: 3, textAlign: "center", color: "text.secondary" }}
                 >
@@ -120,7 +133,7 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                 </Box>
             </TabPanel>
 
-            <TabPanel value={activeTab} index={3}>
+            <TabPanel value={activeTab} index={4}>
                 <Box
                     sx={{ p: 3, textAlign: "center", color: "text.secondary" }}
                 >

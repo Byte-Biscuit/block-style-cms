@@ -2,56 +2,100 @@
 
 import { useState } from "react";
 import { AdminCredentials } from "@/types/system-config";
+import type { AdminInfo } from "@/app/actions/settings/admin-account";
 import { EMAIL_REGEX } from "@/constants";
 
 interface AdminAccountFormProps {
-    onNext: (data: AdminCredentials) => void;
-    onBack: () => void;
+    /** Form mode: 'install' for installation wizard, 'edit' for settings page */
+    mode?: "install" | "edit";
+    /** Initial form data for install mode */
+    initialData?: {
+        name?: string;
+        email?: string;
+    };
+    /** Admin info for edit mode */
+    adminInfo?: AdminInfo;
+    /** Submit handler */
+    onSubmit: (data: any) => void;
+    /** Cancel/Back handler */
+    onCancel?: () => void;
+    /** Loading state */
+    isLoading?: boolean;
+    /** Submit button label */
+    submitLabel?: string | React.ReactNode;
+    /** Cancel button label */
+    cancelLabel?: string;
 }
 
 /**
- * Admin Account Form Component
- * 管理员账户表单组件
+ * Admin Account Form Component (Reusable)
+ * 管理员账户表单组件（可复用）
  *
- * Creates the initial admin account with:
- * - Email address
- * - Password (minimum 8 characters)
+ * Can be used in both installation wizard and settings page.
  *
- * Note: 2FA setup has been moved to backend settings (/m/settings/security)
- * for better security and user experience
+ * @example
+ * // Installation mode
+ * <AdminAccountForm
+ *   mode="install"
+ *   onSubmit={(data) => handleNext(data)}
+ *   onCancel={handleBack}
+ * />
+ *
+ * @example
+ * // Edit mode (handled by admin-account-tab.tsx)
+ * <AdminAccountForm
+ *   mode="edit"
+ *   adminInfo={currentAdmin}
+ *   onSubmit={(action) => handleAction(action)}
+ * />
  */
 export default function AdminAccountForm({
-    onNext,
-    onBack,
+    mode = "install",
+    initialData,
+    adminInfo,
+    onSubmit,
+    onCancel,
+    isLoading = false,
+    submitLabel,
+    cancelLabel,
 }: AdminAccountFormProps) {
-    const [formData, setFormData] = useState({
-        name: "Administrator",
-        email: "",
+    // 安装模式表单
+    const [installForm, setInstallForm] = useState({
+        name: initialData?.name || "Administrator",
+        email: initialData?.email || "",
         password: "",
         confirmPassword: "",
     });
+
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const validateForm = () => {
+    const isEditMode = mode === "edit";
+    const defaultSubmitLabel = mode === "install" ? "Continue →" : "Save";
+    const defaultCancelLabel = mode === "install" ? "← Back" : "Cancel";
+    const finalSubmitLabel = submitLabel || defaultSubmitLabel;
+    const finalCancelLabel = cancelLabel || defaultCancelLabel;
+
+    // 验证安装表单
+    const validateInstallForm = () => {
         const newErrors: Record<string, string> = {};
 
-        if (!formData.name.trim()) {
+        if (!installForm.name.trim()) {
             newErrors.name = "Name is required";
         }
 
-        if (!formData.email) {
+        if (!installForm.email) {
             newErrors.email = "Email is required";
-        } else if (!EMAIL_REGEX.test(formData.email)) {
+        } else if (!EMAIL_REGEX.test(installForm.email)) {
             newErrors.email = "Invalid email format";
         }
 
-        if (!formData.password) {
+        if (!installForm.password) {
             newErrors.password = "Password is required";
-        } else if (formData.password.length < 8) {
+        } else if (installForm.password.length < 8) {
             newErrors.password = "Password must be at least 8 characters";
         }
 
-        if (formData.password !== formData.confirmPassword) {
+        if (installForm.password !== installForm.confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
         }
 
@@ -59,20 +103,29 @@ export default function AdminAccountForm({
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // 处理安装表单提交
+    const handleInstallSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (validateForm()) {
-            onNext({
-                name: formData.name,
-                email: formData.email,
-                password: formData.password,
-            });
+        if (validateInstallForm()) {
+            const credentials: AdminCredentials = {
+                name: installForm.name,
+                email: installForm.email,
+                password: installForm.password,
+            };
+            onSubmit(credentials);
         }
     };
 
+    // 编辑模式由 admin-account-tab.tsx 处理
+    // 这里只返回安装模式的UI
+    if (isEditMode) {
+        return null; // 编辑模式UI在 tab 组件中
+    }
+
+    // ========== 安装模式 ==========
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleInstallSubmit}>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Create Admin Account
             </h2>
@@ -92,9 +145,12 @@ export default function AdminAccountForm({
                     </p>
                     <input
                         type="text"
-                        value={formData.name}
+                        value={installForm.name}
                         onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
+                            setInstallForm({
+                                ...installForm,
+                                name: e.target.value,
+                            })
                         }
                         className={`mt-1 w-full rounded-lg border ${
                             errors.name
@@ -102,6 +158,7 @@ export default function AdminAccountForm({
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
                         placeholder="Administrator"
+                        disabled={isLoading}
                     />
                     {errors.name && (
                         <p className="mt-1 text-sm text-red-500">
@@ -117,9 +174,12 @@ export default function AdminAccountForm({
                     </label>
                     <input
                         type="email"
-                        value={formData.email}
+                        value={installForm.email}
                         onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
+                            setInstallForm({
+                                ...installForm,
+                                email: e.target.value,
+                            })
                         }
                         className={`mt-1 w-full rounded-lg border ${
                             errors.email
@@ -127,6 +187,7 @@ export default function AdminAccountForm({
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
                         placeholder="admin@example.com"
+                        disabled={isLoading}
                     />
                     {errors.email && (
                         <p className="mt-1 text-sm text-red-500">
@@ -142,10 +203,10 @@ export default function AdminAccountForm({
                     </label>
                     <input
                         type="password"
-                        value={formData.password}
+                        value={installForm.password}
                         onChange={(e) =>
-                            setFormData({
-                                ...formData,
+                            setInstallForm({
+                                ...installForm,
                                 password: e.target.value,
                             })
                         }
@@ -155,6 +216,7 @@ export default function AdminAccountForm({
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
                         placeholder="Minimum 8 characters"
+                        disabled={isLoading}
                     />
                     {errors.password && (
                         <p className="mt-1 text-sm text-red-500">
@@ -170,10 +232,10 @@ export default function AdminAccountForm({
                     </label>
                     <input
                         type="password"
-                        value={formData.confirmPassword}
+                        value={installForm.confirmPassword}
                         onChange={(e) =>
-                            setFormData({
-                                ...formData,
+                            setInstallForm({
+                                ...installForm,
                                 confirmPassword: e.target.value,
                             })
                         }
@@ -183,6 +245,7 @@ export default function AdminAccountForm({
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
                         placeholder="Re-enter password"
+                        disabled={isLoading}
                     />
                     {errors.confirmPassword && (
                         <p className="mt-1 text-sm text-red-500">
@@ -212,8 +275,8 @@ export default function AdminAccountForm({
                                 Two-Factor Authentication (2FA)
                             </h3>
                             <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
-                                You can enable 2FA later in Settings → Security
-                                for enhanced account protection.
+                                You can enable 2FA later in Settings → Admin
+                                Account for enhanced account protection.
                             </p>
                         </div>
                     </div>
@@ -222,18 +285,22 @@ export default function AdminAccountForm({
 
             {/* Action Buttons */}
             <div className="mt-8 flex justify-between">
-                <button
-                    type="button"
-                    onClick={onBack}
-                    className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-                >
-                    ← Back
-                </button>
+                {onCancel && (
+                    <button
+                        type="button"
+                        onClick={onCancel}
+                        disabled={isLoading}
+                        className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                    >
+                        {finalCancelLabel}
+                    </button>
+                )}
                 <button
                     type="submit"
-                    className="rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600"
+                    disabled={isLoading}
+                    className="ml-auto rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600 disabled:opacity-50"
                 >
-                    Continue →
+                    {finalSubmitLabel}
                 </button>
             </div>
         </form>

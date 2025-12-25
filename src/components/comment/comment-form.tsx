@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useCommentSubmission } from "@/lib/hooks";
 import type { Comment } from "@/types/comment";
+import { EMAIL_REGEX } from "@/constants";
 
 interface CommentFormProps {
     articleId: string;
@@ -71,7 +72,7 @@ export default function CommentForm({
 
         if (!formData.email.trim()) {
             newErrors.email = t("errors.emailRequired");
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        } else if (!EMAIL_REGEX.test(formData.email)) {
             newErrors.email = t("errors.emailInvalid");
         }
 

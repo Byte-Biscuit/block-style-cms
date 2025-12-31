@@ -10,3 +10,5 @@ export { default as AuthenticationForm } from "./authentication-form";
 export type { AuthFormData } from "./authentication-form";
 export { default as ServicesForm } from "./services-form";
 export type { ServicesFormData } from "./services-form";
+export { default as ChannelForm } from "./channel-form";
+export type { ChannelFormData } from "./channel-form";

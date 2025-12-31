@@ -7,13 +7,14 @@ import {
     People as PeopleIcon,
     Security as SecurityIcon,
     CloudQueue as CloudIcon,
-    AdminPanelSettings as AdminPanelIcon,
+    ViewList as ViewListIcon,
 } from "@mui/icons-material";
 import { SystemConfig } from "@/types/system-config";
 import SiteInfoTab from "./site-info-tab";
 import UserManagementTab from "./user-management-tab";
 import AuthenticationTab from "./authentication-tab";
 import ServicesTab from "./services-tab";
+import ChannelTab from "./channel-tab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -99,12 +100,11 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                     aria-controls="settings-tabpanel-3"
                 />
                 <Tab
-                    icon={<AdminPanelIcon />}
+                    icon={<ViewListIcon />}
                     iconPosition="start"
-                    label="Access Control"
+                    label="Channel Management"
                     id="settings-tab-4"
                     aria-controls="settings-tabpanel-4"
-                    disabled
                 />
             </Tabs>
 
@@ -156,8 +156,7 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                             enabled:
                                 initialConfig.services?.algolia?.enabled ||
                                 false,
-                            appId:
-                                initialConfig.services?.algolia?.appId || "",
+                            appId: initialConfig.services?.algolia?.appId || "",
                             apiKey:
                                 initialConfig.services?.algolia?.apiKey || "",
                             searchKey:
@@ -219,11 +218,7 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
             </TabPanel>
 
             <TabPanel value={activeTab} index={4}>
-                <Box
-                    sx={{ p: 3, textAlign: "center", color: "text.secondary" }}
-                >
-                    Access control settings - Coming soon
-                </Box>
+                <ChannelTab initialData={initialConfig.channel || []} />
             </TabPanel>
         </Box>
     );

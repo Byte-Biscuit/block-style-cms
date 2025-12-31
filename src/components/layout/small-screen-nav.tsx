@@ -4,10 +4,10 @@ import { IconButton, Tooltip, Menu, MenuItem } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "@/components/link";
-import { Channel } from "@/lib/services/channel-service";
+import { ChannelItem } from "@/types/system-config";
 
 interface SmallScreenNavButtonProps {
-    channels: Channel[];
+    channels: ChannelItem[];
 }
 
 export default function SmallScreenNavButton({
@@ -25,7 +25,7 @@ export default function SmallScreenNavButton({
         setAnchorEl(null);
     };
 
-    const getChannelHref = (channel: Channel): string => {
+    const getChannelHref = (channel: ChannelItem): string => {
         if (channel.type === "page") {
             return channel.href!;
         }
@@ -66,7 +66,7 @@ export default function SmallScreenNavButton({
                     },
                 }}
             >
-                {channels?.map((channel: Channel) => {
+                {channels?.map((channel: ChannelItem) => {
                     return (
                         <Link
                             key={`nav-${channel.id}`}
@@ -74,7 +74,7 @@ export default function SmallScreenNavButton({
                             className="hover:bg-primary-600 block min-w-3xs hover:text-white dark:bg-gray-800 dark:text-white"
                         >
                             <MenuItem onClick={handleClose}>
-                                {t(`channel.${channel.labelKey}`)}
+                                {t(`channel.${channel.id}`)}
                             </MenuItem>
                         </Link>
                     );

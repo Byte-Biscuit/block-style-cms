@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { tagService } from "@/lib/services/tag-service";
-import { channelService } from "@/lib/services/channel-service";
+import { systemConfigService } from "@/lib/services/system-config-service";
 import { Locale, locales } from "@/i18n/config";
 import { success, failure, badRequest } from "@/lib/response";
 
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
             return badRequest("Invalid or missing locale parameter");
         }
 
-        const channels = await channelService.getChannels();
+        const channels = await systemConfigService.getChannels();
         const channelTagSet = new Set(
             channels
                 .filter((ch) => ch.type === "tag" && ch.tag)

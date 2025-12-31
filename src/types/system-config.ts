@@ -1,15 +1,33 @@
 /**
  * System Configuration Type Definitions
- * 系统配置类型定义 - 运行时配置（存储在 data/settings.json）
+ * Runtime configuration (stored in data/settings.json)
  * 
- * 注意：与 src/config.ts 的区别
- * - src/config.ts: 环境变量常量（编译时）
- * - system-config.ts: 运行时配置（可动态修改）
  */
 
 /**
+ * Channel Item Configuration
+ */
+export interface ChannelItem {
+    /** Unique channel identifier (also used as i18n key) */
+    id: string;
+    /** Channel type */
+    type: 'tag' | 'page';
+    /** Channel link path */
+    href: string;
+    /** Tag name (only for type="tag") */
+    tag?: string;
+    /** Optional icon identifier (e.g., icon name, emoji, or custom identifier) */
+    icon?: string;
+}
+
+/**
+ * Channel Configuration
+ * Stored in data/settings.json under channel property
+ */
+export type ChannelConfig = ChannelItem[];
+
+/**
  * Contact Information Configuration
- * 联系方式配置
  */
 export interface ContactInfo {
     /** Contact email */
@@ -32,7 +50,6 @@ export interface ContactInfo {
 
 /**
  * Website Basic Information Configuration
- * 网站基本信息配置
  */
 export interface SiteInfoConfig {
     /** Website title */
@@ -45,7 +62,6 @@ export interface SiteInfoConfig {
 
 /**
  * Authentication Methods Configuration
- * 认证方式配置
  */
 export interface AuthenticationMethodsConfig {
     /** GitHub OAuth */
@@ -70,7 +86,6 @@ export interface AuthenticationMethodsConfig {
 
 /**
  * Access Control Configuration
- * 访问控制配置
  */
 export interface AccessControlConfig {
     /** Allowed admin emails (whitelist) */
@@ -79,7 +94,6 @@ export interface AccessControlConfig {
 
 /**
  * Authentication Configuration
- * 认证配置
  */
 export interface AuthenticationConfig {
     methods: AuthenticationMethodsConfig;
@@ -88,7 +102,6 @@ export interface AuthenticationConfig {
 
 /**
  * Algolia Search Service Configuration
- * Algolia 搜索服务配置
  */
 export interface AlgoliaServiceConfig {
     enabled: boolean;
@@ -104,7 +117,6 @@ export interface AlgoliaServiceConfig {
 
 /**
  * Umami Analytics Service Configuration
- * Umami 分析服务配置
  */
 export interface UmamiServiceConfig {
     enabled: boolean;
@@ -128,7 +140,6 @@ export interface AIProviderConfig {
 
 /**
  * AI Service Configuration
- * AI 服务配置
  */
 export interface AIServiceConfig {
     enabled: boolean;
@@ -142,7 +153,6 @@ export interface AIServiceConfig {
 
 /**
  * Pexels Stock Photos Service Configuration
- * Pexels 图库服务配置
  */
 export interface PexelsServiceConfig {
     enabled: boolean;
@@ -152,7 +162,6 @@ export interface PexelsServiceConfig {
 
 /**
  * External Services Configuration
- * 外部服务配置
  */
 export interface ServicesConfig {
     algolia: AlgoliaServiceConfig;
@@ -163,7 +172,6 @@ export interface ServicesConfig {
 
 /**
  * Complete System Configuration Structure
- * 完整的系统配置结构
  */
 export interface SystemConfig {
     /** System version */
@@ -183,11 +191,14 @@ export interface SystemConfig {
 
     /** External services configuration */
     services: ServicesConfig;
+
+    /** Channel configuration */
+    channel?: ChannelConfig;
 }
 
 /**
  * Admin Credentials for Installation
- * 管理员凭证（仅用于安装过程）
+ * Used only during installation process
  */
 export interface AdminCredentials {
     /** Admin email */
@@ -200,7 +211,6 @@ export interface AdminCredentials {
 
 /**
  * Authentication Methods Configuration for Installation
- * 安装过程中的认证方式配置
  * 
  * Note: Email/Password and 2FA are enabled by default and not configurable during installation.
  */
@@ -217,7 +227,6 @@ export interface InstallAuthMethodsConfig {
 
 /**
  * Services Configuration for Installation
- * 安装过程中的服务配置
  * 
  * Uses nested structure aligned with ServicesFormData for easier conversion.
  */
@@ -256,7 +265,6 @@ export interface InstallServicesConfig {
 
 /**
  * Installation Step Status
- * 安装步骤状态
  */
 export enum InstallStep {
     Welcome = 'welcome',
@@ -270,7 +278,6 @@ export enum InstallStep {
 
 /**
  * Default System Configuration
- * 默认系统配置
  */
 export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> = {
     siteInfo: {

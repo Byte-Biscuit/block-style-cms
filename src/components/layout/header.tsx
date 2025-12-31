@@ -7,14 +7,13 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { container } from "@/lib/style-classes";
 import { LanguageToggle } from "@/components/language-toggle";
 import ChannelNav from "@/components/layout/channel-nav";
-import { channelService } from "@/lib/services/channel-service";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import Image from "next/image";
 
 const Header = async () => {
     const t = await getTranslations("web");
     const locale = await getLocale();
-    const channels = await channelService.getChannels();
+    const channels = await systemConfigService.getChannels();
     const config = await systemConfigService.readConfig();
 
     const algoliaConfig = config?.services.algolia.enabled

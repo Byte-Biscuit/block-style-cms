@@ -1,10 +1,33 @@
-import { channelService } from "@/lib/services/channel-service";
+import { systemConfigService } from "@/lib/services/system-config-service";
 import { tagService } from "@/lib/services/tag-service";
 import ArticleItem from "@/components/article-list-item";
 import Link from "@/components/link";
 import { Locale } from "@/i18n/config";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+/**
+ * Generate metadata for channel page
+ * Based on internationalization configuration
+ */
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+    const { locale, id } = await params;
+    const t = await getTranslations("web");
+
+    // Get title and description from i18n with fallback to ID
+    const title = t(`channel.${id}.meta.title`, { defaultValue: id });
+    const description = t(`channel.${id}.meta.description`, { defaultValue: "" });
+
+    return {
+        title,
+        description: description || undefined,
+    };
+}
 
 export default async function ChannelDetailPage({
     params,
@@ -15,7 +38,7 @@ export default async function ChannelDetailPage({
     const t = await getTranslations("web");
 
     // Get channel config by id
-    const channels = await channelService.getChannels();
+    const channels = await systemConfigService.getChannels();
     const channel = channels.find((c) => c.id === id);
 
     // If channel not found or not tag type, 404
@@ -43,7 +66,7 @@ export default async function ChannelDetailPage({
             <div className="mb-12">
                 <div className="flex items-baseline gap-4">
                     <h1 className="text-5xl font-bold text-pink-500 dark:text-pink-400">
-                        {t(`channel.${channel.labelKey}`)}
+                        {t(`channel.${channel.id}`)}
                     </h1>
                     <span className="text-2xl text-gray-500 dark:text-gray-400">
                         ({t("channel.articleCount", { count: articles.length })}
@@ -75,17 +98,3 @@ export default async function ChannelDetailPage({
         </div>
     );
 }
-
-/** 
-// Generate static params for all tag-type channels at build time
-export async function generateStaticParams() {
-    const channels = await channelService.getChannels();
-
-    // Only generate for tag-type channels
-    const tagChannels = channels.filter((c) => c.type === "tag" && c.tag);
-
-    return tagChannels.map((channel) => ({
-        id: channel.id,
-    }));
-}
-*/

@@ -1,7 +1,7 @@
-// src/components/layout/channel-nav.tsx
 import { getTranslations, getLocale } from "next-intl/server";
 import Link from "@/components/link";
-import { channelService, Channel } from "@/lib/services/channel-service";
+import { systemConfigService } from "@/lib/services/system-config-service";
+import { ChannelItem } from "@/types/system-config";
 import ChannelDropdown from "./channel-dropdown";
 
 const navItemLinkTwCls =
@@ -16,13 +16,13 @@ export default async function ChannelNav({
 }: ChannelNavProps) {
     const t = await getTranslations("web");
     const locale = await getLocale();
-    const channels = await channelService.getChannels();
+    const channels = await systemConfigService.getChannels();
 
     // 如果 channel 数量超过限制，分为可见和折叠两部分
     const visibleChannels = channels.slice(0, maxVisibleItems);
     const hiddenChannels = channels.slice(maxVisibleItems);
 
-    const getChannelHref = (channel: Channel): string => {
+    const getChannelHref = (channel: ChannelItem): string => {
         if (channel.type === "page") {
             return `/${locale}${channel.href!}`;
         }
@@ -39,7 +39,7 @@ export default async function ChannelNav({
                     className={navItemLinkTwCls}
                     href={getChannelHref(channel)}
                 >
-                    {t(`channel.${channel.labelKey}`)}
+                    {t(`channel.${channel.id}`)}
                 </Link>
             ))}
 

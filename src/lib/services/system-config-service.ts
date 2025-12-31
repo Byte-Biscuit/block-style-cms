@@ -10,7 +10,7 @@
 
 import fs from 'fs/promises';
 import fsSync from 'fs';
-import { SystemConfig, DEFAULT_SYSTEM_CONFIG } from '@/types/system-config';
+import { SystemConfig, DEFAULT_SYSTEM_CONFIG, ChannelConfig } from '@/types/system-config';
 import { VERSION } from '@/settings';
 
 class SystemConfigService {
@@ -213,6 +213,28 @@ class SystemConfigService {
     public getAllowedEmails(): string[] {
         const config = this.readConfigSync();
         return config?.authentication.accessControl.allowedEmails || [];
+    }
+
+    /**
+     * Get channel configuration
+     * 获取频道配置
+     * 
+     * @returns Channel configuration array
+     */
+    public async getChannels(): Promise<ChannelConfig> {
+        const config = await this.readConfig();
+        return config?.channel || [];
+    }
+
+    /**
+     * Get channel configuration (Synchronous)
+     * 同步获取频道配置
+     * 
+     * @returns Channel configuration array
+     */
+    public getChannelsSync(): ChannelConfig {
+        const config = this.readConfigSync();
+        return config?.channel || [];
     }
 }
 

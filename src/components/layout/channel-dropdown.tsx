@@ -3,12 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "@/components/link";
-import { Channel } from "@/lib/services/channel-service";
+import { ChannelItem } from "@/types/system-config";
 import { IconButton } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 interface ChannelDropdownProps {
-    channels: Channel[];
+    channels: ChannelItem[];
 }
 
 export default function ChannelDropdown({ channels }: ChannelDropdownProps) {
@@ -37,7 +37,7 @@ export default function ChannelDropdown({ channels }: ChannelDropdownProps) {
         };
     }, [isOpen]);
 
-    const getChannelHref = (channel: Channel): string => {
+    const getChannelHref = (channel: ChannelItem): string => {
         if (channel.type === "page") {
             return channel.href!;
         }
@@ -65,7 +65,7 @@ export default function ChannelDropdown({ channels }: ChannelDropdownProps) {
                             className={`hover:bg-primary-600 block px-4 py-2 text-sm hover:text-white dark:bg-gray-800 dark:text-white ${index === 0 ? "rounded-t-md" : ""} ${index === channels.length - 1 ? "rounded-b-md" : ""}`}
                             onClick={() => setIsOpen(false)}
                         >
-                            {t(`channel.${channel.labelKey}`)}
+                            {t(`channel.${channel.id}`)}
                         </Link>
                     ))}
                 </div>

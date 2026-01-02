@@ -84,13 +84,13 @@ export default function CommentItem({
                 </div>
 
                 {/* Comment Content */}
-                <div className="mb-2 pl-[60px] text-sm break-words whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+                <div className="wrap-break-words mb-2 pl-15 text-sm whitespace-pre-wrap text-gray-700 dark:text-gray-300">
                     {comment.content}
                 </div>
 
                 {/* Reply Button */}
                 {canReply && onReply && (
-                    <div className="pl-[60px]">
+                    <div className="pl-15">
                         <button
                             onClick={() => onReply(comment)}
                             className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"

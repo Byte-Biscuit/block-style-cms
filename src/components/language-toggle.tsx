@@ -71,7 +71,7 @@ export function LanguageToggle() {
                     className={button.icon}
                 >
                     {mounted ? (
-                        <span className="min-w-[24px] text-center text-base leading-6 font-medium">
+                        <span className="min-w-6 text-center text-base leading-6 font-medium">
                             {localeMap[locale as keyof typeof localeMap]
                                 ?.flag || "EN"}
                         </span>
@@ -118,7 +118,7 @@ export function LanguageToggle() {
                                     "group-hover:text-white dark:text-gray-300"
                                 }
                             >
-                                <span className="block h-full min-w-[20px] text-center align-middle text-base leading-6 font-medium">
+                                <span className="block h-full min-w-5 text-center align-middle text-base leading-6 font-medium">
                                     {langInfo.flag}
                                 </span>
                             </ListItemIcon>

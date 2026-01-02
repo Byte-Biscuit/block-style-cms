@@ -1,11 +1,7 @@
 /**
  * System Configuration Service
- * 系统配置服务 - 管理 data/settings.json'
+ * Manages CMS_DATA_PATH/settings.json
  * 
- * 功能：
- * - 检查应用是否已初始化
- * - 读取/写入系统配置
- * - 更新认证和服务配置
  */
 
 import fs from 'fs/promises';
@@ -20,7 +16,6 @@ class SystemConfigService {
 
     /**
      * Get the full path to settings.json
-     * 获取配置文件完整路径
      */
     public getConfigPath(): string {
         if (!this.configFilePath) {
@@ -47,7 +42,6 @@ class SystemConfigService {
 
     /**
      * Read configuration from settings.json
-     * 读取配置文件
      * 
      * @returns System configuration object or null if file doesn't exist
      */
@@ -75,7 +69,6 @@ class SystemConfigService {
 
     /**
      * Write configuration to settings.json
-     * 写入配置文件
      * 
      * @param config - System configuration to write
      */
@@ -102,7 +95,6 @@ class SystemConfigService {
 
     /**
      * Initialize configuration with default values
-     * 使用默认值初始化配置
      * 
      * @param customConfig - Optional custom configuration to override defaults
      * @returns Initialized configuration
@@ -126,7 +118,6 @@ class SystemConfigService {
 
     /**
      * Update partial configuration
-     * 更新部分配置
      * 
      * @param updates - Partial configuration updates
      * @returns Updated configuration
@@ -151,7 +142,6 @@ class SystemConfigService {
 
     /**
      * Update authentication configuration
-     * 更新认证配置
      * 
      * @param authConfig - Partial authentication configuration
      * @returns Updated configuration
@@ -187,7 +177,6 @@ class SystemConfigService {
 
     /**
      * Read configuration from settings.json (Synchronous)
-     * 同步读取配置文件
      * 
      * @returns System configuration object or null if file doesn't exist
      */
@@ -217,7 +206,6 @@ class SystemConfigService {
 
     /**
      * Get channel configuration
-     * 获取频道配置
      * 
      * @returns Channel configuration array
      */
@@ -228,7 +216,6 @@ class SystemConfigService {
 
     /**
      * Get channel configuration (Synchronous)
-     * 同步获取频道配置
      * 
      * @returns Channel configuration array
      */

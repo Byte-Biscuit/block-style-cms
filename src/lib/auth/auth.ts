@@ -15,7 +15,7 @@ import { systemConfigService } from "../services/system-config-service";
  * 4. Passkey (WebAuthn)
  * 
  * OAuth and service keys are stored in settings.json (preferred) or .env
- * Method enablement is controlled by data/settings.json
+ * Method enablement is controlled by CMS_DATA_PATH/settings.json
  */
 
 const databasePath = path.join(process.env.CMS_DATA_PATH || "./data", 'better-auth.db');

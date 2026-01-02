@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { SiteInfoConfig } from "@/types/system-config";
+import { uploadLogo } from "@/app/actions/settings/site-info";
+import { isSuccess } from "@/lib/response";
 
 interface SiteInfoFormProps {
     /** Form mode: 'install' for installation wizard, 'edit' for settings page */
@@ -26,24 +28,6 @@ interface SiteInfoFormProps {
  *
  * Collects basic website information and contact methods.
  * Can be used in both installation wizard and settings page.
- *
- * @example
- * // Installation mode
- * <SiteInfoForm
- *   mode="install"
- *   onSubmit={(data) => handleNext(data)}
- *   onCancel={handleBack}
- * />
- *
- * @example
- * // Edit mode
- * <SiteInfoForm
- *   mode="edit"
- *   initialData={currentSettings}
- *   onSubmit={(data) => handleSave(data)}
- *   onCancel={handleCancel}
- *   submitLabel="Save Changes"
- * />
  */
 export default function SiteInfoForm({
     mode = "install",
@@ -56,8 +40,6 @@ export default function SiteInfoForm({
 }: SiteInfoFormProps) {
     const [formData, setFormData] = useState<SiteInfoConfig>(
         initialData || {
-            title: "",
-            description: "",
             contact: {
                 email: "",
                 wechat: "",
@@ -71,8 +53,50 @@ export default function SiteInfoForm({
         }
     );
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [logoPreview, setLogoPreview] = useState<string>("/api/logo");
+    const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.type !== "image/png") {
+            alert("Please upload a PNG file.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setLogoPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // If there's a new logo file, upload it first
+        if (fileInputRef.current?.files?.[0]) {
+            setIsUploadingLogo(true);
+            const logoFormData = new FormData();
+            logoFormData.append("logo", fileInputRef.current.files[0]);
+
+            try {
+                const result = await uploadLogo(logoFormData);
+                if (!isSuccess(result)) {
+                    alert(result.message || "Failed to upload logo");
+                    setIsUploadingLogo(false);
+                    return;
+                }
+            } catch (error) {
+                alert("An error occurred while uploading the logo");
+                setIsUploadingLogo(false);
+                return;
+            }
+            setIsUploadingLogo(false);
+        }
+
         onSubmit(formData);
     };
 
@@ -93,46 +117,52 @@ export default function SiteInfoForm({
                 will be displayed on your website.
             </p>
 
+            <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+                <p className="font-semibold">Note:</p>
+                <p className="mt-1">
+                    Website title, sub-title, and description are managed
+                    through internationalization (i18n) files in{" "}
+                    <code>CMS_DATA_PATH/locales/</code>.
+                </p>
+            </div>
+
             <div className="mt-6 space-y-6">
-                {/* Basic Information */}
+                {/* Logo Upload */}
                 <div>
                     <h3 className="mb-3 font-semibold text-gray-900">
-                        Basic Information
+                        Website Logo
                     </h3>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Website Title
-                            </label>
-                            <input
-                                type="text"
-                                value={formData.title}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        title: e.target.value,
-                                    })
-                                }
-                                placeholder="My Awesome Site"
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    <div className="flex items-center space-x-8">
+                        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                            <img
+                                src={logoPreview}
+                                alt="Logo Preview"
+                                className="h-full w-full object-contain"
+                                onError={(e) => {
+                                    (e.target as HTMLImageElement).src =
+                                        "https://placehold.co/200x200?text=Logo";
+                                }}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Website Description
-                            </label>
-                            <textarea
-                                value={formData.description}
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        description: e.target.value,
-                                    })
-                                }
-                                placeholder="A place to share my thoughts and ideas..."
-                                rows={3}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                            <input
+                                type="file"
+                                accept="image/png"
+                                className="hidden"
+                                ref={fileInputRef}
+                                onChange={handleLogoChange}
                             />
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                Change Logo
+                            </button>
+                            <p className="mt-2 text-xs text-gray-500">
+                                PNG only. Recommended size: 512x512px. This logo
+                                will also be used as the website favicon.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -317,7 +347,7 @@ export default function SiteInfoForm({
                     <button
                         type="button"
                         onClick={onCancel}
-                        disabled={isLoading}
+                        disabled={isLoading || isUploadingLogo}
                         className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
                     >
                         {finalCancelLabel}
@@ -325,10 +355,10 @@ export default function SiteInfoForm({
                 )}
                 <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || isUploadingLogo}
                     className="ml-auto rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600 disabled:opacity-50"
                 >
-                    {finalSubmitLabel}
+                    {isUploadingLogo ? "Uploading Logo..." : finalSubmitLabel}
                 </button>
             </div>
         </form>

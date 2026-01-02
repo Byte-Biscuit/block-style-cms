@@ -51,7 +51,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     // Load default messages from src/i18n/locales
     const defaultMessages = (await import(`./locales/${locale}.json`)).default;
     
-    // Try to load custom messages from data/locales if CMS_DATA_PATH is configured
+    // Try to load custom messages from CMS_DATA_PATH/locales if CMS_DATA_PATH is configured
     let finalMessages = defaultMessages;
     
     if (CMS_DATA_PATH) {

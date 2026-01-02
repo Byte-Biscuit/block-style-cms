@@ -1,6 +1,6 @@
 /**
  * System Configuration Type Definitions
- * Runtime configuration (stored in data/settings.json)
+ * Runtime configuration (stored in CMS_DATA_PATH/settings.json)
  * 
  */
 
@@ -22,7 +22,7 @@ export interface ChannelItem {
 
 /**
  * Channel Configuration
- * Stored in data/settings.json under channel property
+ * Stored in CMS_DATA_PATH/settings.json under channel property
  */
 export type ChannelConfig = ChannelItem[];
 
@@ -52,10 +52,6 @@ export interface ContactInfo {
  * Website Basic Information Configuration
  */
 export interface SiteInfoConfig {
-    /** Website title */
-    title?: string;
-    /** Website description */
-    description?: string;
     /** Contact information */
     contact: ContactInfo;
 }
@@ -281,8 +277,6 @@ export enum InstallStep {
  */
 export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> = {
     siteInfo: {
-        title: '',
-        description: '',
         contact: {
             email: '',
             wechat: '',

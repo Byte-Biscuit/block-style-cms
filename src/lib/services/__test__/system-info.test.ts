@@ -1,8 +1,8 @@
 import { vi, describe, it } from "vitest";
 import path from "path";
 
-vi.mock('@/config', () => ({
-    APPLICATION_DATA_PATH: path.join(__dirname, "..", "..", "..", "..", "data"),
+vi.mock('@/settings', () => ({
+    CMS_DATA_PATH: path.join(__dirname, "..", "..", "..", "..", "data"),
 }));
 const { systemInfoService } = await import("../system-info-service");
 describe("system-info-service", () => {

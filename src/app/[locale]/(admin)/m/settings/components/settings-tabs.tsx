@@ -8,6 +8,7 @@ import {
     Security as SecurityIcon,
     CloudQueue as CloudIcon,
     ViewList as ViewListIcon,
+    Settings as SettingsIcon,
 } from "@mui/icons-material";
 import { SystemConfig } from "@/types/system-config";
 import SiteInfoTab from "./site-info-tab";
@@ -15,6 +16,7 @@ import UserManagementTab from "./user-management-tab";
 import AuthenticationTab from "./authentication-tab";
 import ServicesTab from "./services-tab";
 import ChannelTab from "./channel-tab";
+import BasicConfigTab from "./basic-config-tab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -72,52 +74,63 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                 }}
             >
                 <Tab
+                    icon={<SettingsIcon />}
+                    iconPosition="start"
+                    label="Basic Configuration"
+                    id="settings-tab-0"
+                    aria-controls="settings-tabpanel-0"
+                />
+                <Tab
                     icon={<LanguageIcon />}
                     iconPosition="start"
                     label="Website Info"
-                    id="settings-tab-0"
-                    aria-controls="settings-tabpanel-0"
+                    id="settings-tab-1"
+                    aria-controls="settings-tabpanel-1"
                 />
                 <Tab
                     icon={<PeopleIcon />}
                     iconPosition="start"
                     label="User Management"
-                    id="settings-tab-1"
-                    aria-controls="settings-tabpanel-1"
+                    id="settings-tab-2"
+                    aria-controls="settings-tabpanel-2"
                 />
                 <Tab
                     icon={<SecurityIcon />}
                     iconPosition="start"
                     label="Authentication"
-                    id="settings-tab-2"
-                    aria-controls="settings-tabpanel-2"
+                    id="settings-tab-3"
+                    aria-controls="settings-tabpanel-3"
                 />
                 <Tab
                     icon={<CloudIcon />}
                     iconPosition="start"
                     label="External Services"
-                    id="settings-tab-3"
-                    aria-controls="settings-tabpanel-3"
+                    id="settings-tab-4"
+                    aria-controls="settings-tabpanel-4"
                 />
                 <Tab
                     icon={<ViewListIcon />}
                     iconPosition="start"
                     label="Channel Management"
-                    id="settings-tab-4"
-                    aria-controls="settings-tabpanel-4"
+                    id="settings-tab-5"
+                    aria-controls="settings-tabpanel-5"
                 />
             </Tabs>
 
             {/* Tab Panels */}
             <TabPanel value={activeTab} index={0}>
-                <SiteInfoTab initialData={initialConfig.siteInfo} />
+                <BasicConfigTab initialData={initialConfig.basic} />
             </TabPanel>
 
             <TabPanel value={activeTab} index={1}>
-                <UserManagementTab />
+                <SiteInfoTab initialData={initialConfig.siteInfo} />
             </TabPanel>
 
             <TabPanel value={activeTab} index={2}>
+                <UserManagementTab />
+            </TabPanel>
+
+            <TabPanel value={activeTab} index={3}>
                 <AuthenticationTab
                     initialData={{
                         github: {
@@ -149,7 +162,7 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                 />
             </TabPanel>
 
-            <TabPanel value={activeTab} index={3}>
+            <TabPanel value={activeTab} index={4}>
                 <ServicesTab
                     initialData={{
                         algolia: {
@@ -217,7 +230,7 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                 />
             </TabPanel>
 
-            <TabPanel value={activeTab} index={4}>
+            <TabPanel value={activeTab} index={5}>
                 <ChannelTab initialData={initialConfig.channel || []} />
             </TabPanel>
         </Box>

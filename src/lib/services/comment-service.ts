@@ -5,9 +5,27 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { COMMENT_DIR, COMMENT_CONFIG } from '@/settings';
+import { COMMENT_DIR } from '@/settings';
 import type { Comment, CommentSubmissionData } from '@/types/comment';
+import type { CommentConfig } from '@/types/system-config';
 import { v4 as uuidv4 } from 'uuid';
+import { systemConfigService } from './system-config-service';
+
+/**
+ * Default comment configuration (fallback)
+ */
+const DEFAULT_COMMENT_CONFIG: CommentConfig = {
+    enabled: true,
+    maxTotalComments: 1000,
+    limits: {
+        contentMinLength: 10,
+        contentMaxLength: 1000,
+        maxLinksAllowed: 2,
+    },
+    moderation: {
+        requireApproval: true,
+    },
+};
 
 /**
  * Comment Service with in-memory cache
@@ -17,6 +35,19 @@ class CommentService {
 
     constructor() {
         this.commentsFile = path.join(COMMENT_DIR, 'comments.json');
+    }
+
+    /**
+     * Get comment configuration from system config
+     */
+    private async getConfig(): Promise<CommentConfig> {
+        try {
+            const systemConfig = await systemConfigService.readConfig();
+            return systemConfig?.basic?.comment || DEFAULT_COMMENT_CONFIG;
+        } catch (error) {
+            console.error('Failed to read comment config, using defaults:', error);
+            return DEFAULT_COMMENT_CONFIG;
+        }
     }
 
     /**
@@ -62,11 +93,12 @@ class CommentService {
         submissionData: CommentSubmissionData,
         metadata: { ip: string; userAgent: string }
     ): Promise<Comment> {
+        const config = await this.getConfig();
         const comments = await this.getAllComments();
 
         // Check total comment limit
-        if (comments.length >= COMMENT_CONFIG.maxTotalComments) {
-            throw new Error(`Comment limit reached (${COMMENT_CONFIG.maxTotalComments})`);
+        if (comments.length >= config.maxTotalComments) {
+            throw new Error(`Comment limit reached (${config.maxTotalComments})`);
         }
 
         // Create new comment
@@ -153,8 +185,9 @@ class CommentService {
      * Validate comment content
      * @throws Error if validation fails
      */
-    validateCommentContent(content: string): void {
-        const { contentMinLength, contentMaxLength, maxLinksAllowed } = COMMENT_CONFIG.limits;
+    async validateCommentContent(content: string): Promise<void> {
+        const config = await this.getConfig();
+        const { contentMinLength, contentMaxLength, maxLinksAllowed } = config.limits;
 
         // Check length
         if (content.length < contentMinLength) {

@@ -1,10 +1,9 @@
-import React from "react";
 import { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { articleService } from "@/lib/services/article-service";
 import { BlockListRenderer } from "@/components/block-note/universal-block-renderer";
-import type { LocalBlock as Block} from "@/components/block-note/schema";
+import type { LocalBlock as Block } from "@/components/block-note/schema";
 import ArticleNotFound from "./article-not-found";
 import SlugNotFound from "./slug-not-found";
 import { getDefaultHeadingClasses } from "@/lib/style-classes";
@@ -13,6 +12,7 @@ import TableOfContents from "@/components/toc/table-of-contents";
 import TableOfContentsMobile from "@/components/toc/table-of-contents-mobile";
 import { extractToc } from "@/lib/toc-utils";
 import CommentSection from "@/components/comment/comment-section";
+import { systemConfigService } from "@/lib/services/system-config-service";
 
 type PageParams = {
     slug: string;
@@ -96,6 +96,7 @@ export default async function ArticleDetailPage({
     const { slug, locale } = await params;
     const { preview } = (await searchParams) || {};
     const includeUnpublished = isPreviewMode(preview);
+    const systemConfig = await systemConfigService.readConfig();
 
     setRequestLocale(locale);
     const t = await getTranslations();
@@ -114,6 +115,7 @@ export default async function ArticleDetailPage({
             <ArticleNotFound
                 slug={slug}
                 currentLocale={locale}
+                email={systemConfig?.siteInfo.contact.email || ""}
                 availableLanguages={articles}
             />
         );
@@ -125,6 +127,7 @@ export default async function ArticleDetailPage({
             <ArticleNotFound
                 slug={slug}
                 currentLocale={locale}
+                email={systemConfig?.siteInfo.contact.email || ""}
                 availableLanguages={articles}
             />
         );
@@ -188,7 +191,9 @@ export default async function ArticleDetailPage({
                 <section className="space-y-4">
                     {Array.isArray(article.content) &&
                     article.content.length > 0 ? (
-                        <BlockListRenderer blocks={article.content as Block[]} />
+                        <BlockListRenderer
+                            blocks={article.content as Block[]}
+                        />
                     ) : (
                         <section className="text-gray-500 italic">
                             No content available

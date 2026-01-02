@@ -5,9 +5,24 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { SUGGESTION_DIR, SUGGESTION_CONFIG } from '@/settings';
+import { SUGGESTION_DIR } from '@/settings';
 import type { Suggestion, SuggestionSubmissionData } from '@/types/suggestion';
+import type { SuggestionConfig } from '@/types/system-config';
 import { v4 as uuidv4 } from 'uuid';
+import { systemConfigService } from './system-config-service';
+
+/**
+ * Default suggestion configuration (fallback)
+ */
+const DEFAULT_SUGGESTION_CONFIG: SuggestionConfig = {
+    enabled: true,
+    maxTotalSuggestions: 500,
+    limits: {
+        contentMinLength: 10,
+        contentMaxLength: 2000,
+        maxLinksAllowed: 3,
+    },
+};
 
 /**
  * Suggestion Service with in-memory cache
@@ -17,6 +32,19 @@ class SuggestionService {
 
     constructor() {
         this.suggestionsFile = path.join(SUGGESTION_DIR, 'suggestions.json');
+    }
+
+    /**
+     * Get suggestion configuration from system config
+     */
+    private async getConfig(): Promise<SuggestionConfig> {
+        try {
+            const systemConfig = await systemConfigService.readConfig();
+            return systemConfig?.basic?.suggestion || DEFAULT_SUGGESTION_CONFIG;
+        } catch (error) {
+            console.error('Failed to read suggestion config, using defaults:', error);
+            return DEFAULT_SUGGESTION_CONFIG;
+        }
     }
 
     /**
@@ -51,12 +79,13 @@ class SuggestionService {
         submissionData: SuggestionSubmissionData,
         metadata: { ip: string; userAgent: string }
     ): Promise<Suggestion> {
+        const config = await this.getConfig();
         const suggestions = await this.getAllSuggestions();
 
         // Check total suggestion limit
-        if (suggestions.length >= SUGGESTION_CONFIG.maxTotalSuggestions) {
+        if (suggestions.length >= config.maxTotalSuggestions) {
             throw new Error(
-                `Suggestion limit reached (${SUGGESTION_CONFIG.maxTotalSuggestions})`
+                `Suggestion limit reached (${config.maxTotalSuggestions})`
             );
         }
 
@@ -101,9 +130,10 @@ class SuggestionService {
      * Validate suggestion content
      * @throws Error if validation fails
      */
-    validateSuggestionContent(content: string): void {
+    async validateSuggestionContent(content: string): Promise<void> {
+        const config = await this.getConfig();
         const { contentMinLength, contentMaxLength, maxLinksAllowed } =
-            SUGGESTION_CONFIG.limits;
+            config.limits;
 
         // Check length
         if (content.length < contentMinLength) {

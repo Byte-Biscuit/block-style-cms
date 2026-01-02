@@ -10,12 +10,14 @@ import { container } from "@/lib/style-classes";
 interface ArticleNotFoundProps {
     slug: string;
     currentLocale: string;
+    email: string;
     availableLanguages?: ArticleMetadata[];
 }
 
 export default function ArticleNotFound({
     slug,
     currentLocale,
+    email,
     availableLanguages = [],
 }: ArticleNotFoundProps) {
     const t = useTranslations("errors");
@@ -72,7 +74,7 @@ export default function ArticleNotFound({
 
             <div className="text-xs text-gray-500 dark:text-gray-400">
                 {t("contactSupport", {
-                    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
+                    email: email || "",
                 })}
             </div>
         </div>

@@ -167,6 +167,59 @@ export interface ServicesConfig {
 }
 
 /**
+ * Comment System Configuration
+ */
+export interface CommentConfig {
+    /** Comment feature enabled */
+    enabled: boolean;
+    /** Maximum total comments limit */
+    maxTotalComments: number;
+    /** Content constraints */
+    limits: {
+        /** Minimum content length */
+        contentMinLength: number;
+        /** Maximum content length */
+        contentMaxLength: number;
+        /** Maximum allowed links in comment */
+        maxLinksAllowed: number;
+    };
+    /** Moderation settings */
+    moderation: {
+        /** Require manual approval before publishing */
+        requireApproval: boolean;
+    };
+}
+
+/**
+ * Suggestion System Configuration
+ */
+export interface SuggestionConfig {
+    /** Suggestion feature enabled */
+    enabled: boolean;
+    /** Maximum total suggestions limit */
+    maxTotalSuggestions: number;
+    /** Content constraints */
+    limits: {
+        /** Minimum content length */
+        contentMinLength: number;
+        /** Maximum content length */
+        contentMaxLength: number;
+        /** Maximum allowed links in suggestion */
+        maxLinksAllowed: number;
+    };
+}
+
+/**
+ * Basic Configuration
+ */
+export interface BasicConfig {
+    /** Comment system configuration */
+    comment: CommentConfig;
+    /** Suggestion system configuration */
+    suggestion: SuggestionConfig;
+}
+
+/**
  * Complete System Configuration Structure
  */
 export interface SystemConfig {
@@ -190,6 +243,9 @@ export interface SystemConfig {
 
     /** Channel configuration */
     channel?: ChannelConfig;
+
+    /** Basic configuration */
+    basic?: BasicConfig;
 }
 
 /**
@@ -278,14 +334,14 @@ export enum InstallStep {
 export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> = {
     siteInfo: {
         contact: {
-            email: '',
+            email: 'biscuit_zhou@outlook.com',
             wechat: '',
             x: '',
             telegram: '',
             discord: '',
             whatsapp: '',
             linkedin: '',
-            github: '',
+            github: 'https://github.com/Byte-Biscuit/block-style-cms',
         },
     },
     authentication: {
@@ -334,6 +390,29 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> 
         pexels: {
             enabled: false,
             apiKey: '',
+        },
+    },
+    basic: {
+        comment: {
+            enabled: true,
+            maxTotalComments: 1000,
+            limits: {
+                contentMinLength: 10,
+                contentMaxLength: 1000,
+                maxLinksAllowed: 2,
+            },
+            moderation: {
+                requireApproval: true,
+            },
+        },
+        suggestion: {
+            enabled: true,
+            maxTotalSuggestions: 500,
+            limits: {
+                contentMinLength: 10,
+                contentMaxLength: 2000,
+                maxLinksAllowed: 3,
+            },
         },
     },
 };

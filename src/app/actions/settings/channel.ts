@@ -4,19 +4,19 @@ import { revalidatePath } from "next/cache";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { Result, HttpStatus } from "@/lib/response";
 import { ChannelConfig } from "@/types/system-config";
+import { withAuth } from "@/lib/auth/permissions";
 
 /**
  * Server Action: Update Channel Configuration
- * 更新频道配置
  *
  * Updates the channel navigation configuration in settings.json.
  *
  * @param data - Channel configuration data (ChannelConfig)
  * @returns Result object with status code
  */
-export async function updateChannel(
+export const updateChannel = withAuth(async (
     data: ChannelConfig
-): Promise<Result<ChannelConfig>> {
+): Promise<Result<ChannelConfig>> => {
     try {
         // Read current config
         const currentConfig = await systemConfigService.readConfig();
@@ -115,17 +115,16 @@ export async function updateChannel(
             payload: [],
         };
     }
-}
+});
 
 /**
  * Server Action: Get Channel Configuration
- * 获取频道配置
  *
  * Reads the current channel configuration from settings.json.
  *
  * @returns Result object with channel configuration
  */
-export async function getChannel(): Promise<Result<ChannelConfig>> {
+export const getChannel = withAuth(async (): Promise<Result<ChannelConfig>> => {
     try {
         // Read current config
         const currentConfig = await systemConfigService.readConfig();
@@ -158,4 +157,4 @@ export async function getChannel(): Promise<Result<ChannelConfig>> {
             payload: [],
         };
     }
-}
+});

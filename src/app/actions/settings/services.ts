@@ -4,19 +4,20 @@ import { revalidatePath } from "next/cache";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { Result, HttpStatus } from "@/lib/response";
 import { ServicesFormData } from "@/components/configuration";
+import { withAuth } from "@/lib/auth/permissions";
 
 /**
  * Server Action: Update External Services Configuration
- * 更新外部服务配置
+ * Update external services configuration
  *
  * Updates Algolia, Umami, AI, and Pexels service configurations.
  *
  * @param data - Services configuration data (ServicesFormData)
  * @returns Result object with status code
  */
-export async function updateServices(
+export const updateServices = withAuth(async (
     data: ServicesFormData
-): Promise<Result<ServicesFormData>> {
+): Promise<Result<ServicesFormData>> => {
     try {
         // Read current config
         const currentConfig = await systemConfigService.readConfig();
@@ -179,15 +180,15 @@ export async function updateServices(
             payload: {} as ServicesFormData,
         };
     }
-}
+});
 
 /**
  * Server Action: Get External Services Configuration
- * 获取外部服务配置
+ * Get external services configuration
  *
  * @returns Result object with services configuration
  */
-export async function getServices(): Promise<Result<ServicesFormData>> {
+export const getServices = withAuth(async (): Promise<Result<ServicesFormData>> => {
     try {
         const config = await systemConfigService.readConfig();
 
@@ -253,4 +254,4 @@ export async function getServices(): Promise<Result<ServicesFormData>> {
             payload: {} as ServicesFormData,
         };
     }
-}
+});

@@ -1,19 +1,20 @@
 /**
  * Permission Control System
  * 
- * 提供权限控制功能：
- * - 获取当前登录会话
- * - Server Action 权限检查
+ * Provides permission control functions:
+ * - Get current login session
+ * - Server Action permission check
  */
 
 import { getAuth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
-import { HttpStatus } from "@/lib/response";
+import { HttpStatus, Result } from "@/lib/response";
+import { systemConfigService } from "@/lib/services/system-config-service";
 
-// ==================== 类型定义 ====================
+// ==================== Type Definitions ====================
 
 /**
- * 用户会话信息
+ * User session information
  */
 export interface UserSession {
     user: {
@@ -32,7 +33,7 @@ export interface UserSession {
 }
 
 /**
- * 权限检查结果
+ * Permission check result
  */
 export interface PermissionCheckResult {
     allowed: boolean;
@@ -41,19 +42,19 @@ export interface PermissionCheckResult {
     session?: UserSession;
 }
 
-// ==================== 会话管理 ====================
+// ==================== Session Management ====================
 
 /**
- * 获取当前登录用户的会话信息
+ * Get current logged-in user's session information
  * 
- * @returns 会话信息，未登录返回 null
+ * @returns Session information, or null if not logged in
  */
 export async function getCurrentSession(): Promise<UserSession | null> {
     try {
         const auth = await getAuth();
         const headersList = await headers();
 
-        // 使用 Better-Auth API 获取会话
+        // Use Better-Auth API to get session
         const session = await auth.api.getSession({
             headers: headersList,
         });
@@ -69,14 +70,14 @@ export async function getCurrentSession(): Promise<UserSession | null> {
     }
 }
 
-// ==================== 权限检查 ====================
+// ==================== Permission Check ====================
 
 /**
- * 要求已登录（任何用户）
+ * Requires being logged in (any user)
  * 
- * 用于需要登录认证的操作
+ * Used for operations requiring authentication
  * 
- * @returns 权限检查结果
+ * @returns Permission check result
  * 
  * @example
  * ```typescript
@@ -85,7 +86,7 @@ export async function getCurrentSession(): Promise<UserSession | null> {
  *     if (!permission.allowed) {
  *         return { code: permission.code, message: permission.message };
  *     }
- *     // ... 执行操作
+ *     // ... perform operation
  * }
  * ```
  */
@@ -114,3 +115,34 @@ export async function requireAuthenticated(): Promise<PermissionCheckResult> {
         };
     }
 }
+
+/**
+ * Server Action Wrapper: Automatically handles installation mode bypass and admin mode authentication
+ * 
+ * @param action - Original Server Action function
+ * @returns Wrapped Server Action function
+ */
+export function withAuth<T extends any[], R>(
+    action: (...args: T) => Promise<Result<R>>
+) {
+    return async (...args: T): Promise<Result<R>> => {
+        // 1. Check if the system is initialized
+        const isInitialized = await systemConfigService.isInitialized();
+
+        // 2. If initialized, authentication is required
+        if (isInitialized) {
+            const permission = await requireAuthenticated();
+            if (!permission.allowed) {
+                return {
+                    code: permission.code || HttpStatus.UNAUTHORIZED,
+                    message: permission.message || "Unauthorized",
+                    payload: {} as R,
+                };
+            }
+        }
+
+        // 3. Not initialized (installation mode) or logged in, execute original Action
+        return action(...args);
+    };
+}
+

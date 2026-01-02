@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { SiteInfoConfig } from "@/types/system-config";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { Result, HttpStatus } from "@/lib/response";
+import { withAuth } from "@/lib/auth/permissions";
 
 /**
  * Server Action: Update Site Information
@@ -12,7 +13,7 @@ import { Result, HttpStatus } from "@/lib/response";
  * @param data - Site information configuration
  * @returns Result object with status code
  */
-export async function updateSiteInfo(data: SiteInfoConfig): Promise<Result<SiteInfoConfig>> {
+export const updateSiteInfo = withAuth(async (data: SiteInfoConfig): Promise<Result<SiteInfoConfig>> => {
     try {
         // Read current config
         const currentConfig = await systemConfigService.readConfig();
@@ -52,7 +53,7 @@ export async function updateSiteInfo(data: SiteInfoConfig): Promise<Result<SiteI
             payload: {} as SiteInfoConfig,
         };
     }
-}
+});
 
 /**
  * Server Action: Get Site Information
@@ -60,7 +61,7 @@ export async function updateSiteInfo(data: SiteInfoConfig): Promise<Result<SiteI
  * 
  * @returns Result object with site information
  */
-export async function getSiteInfo(): Promise<Result<SiteInfoConfig>> {
+export const getSiteInfo = withAuth(async (): Promise<Result<SiteInfoConfig>> => {
     try {
         const config = await systemConfigService.readConfig();
         const siteInfo = config?.siteInfo;
@@ -86,4 +87,4 @@ export async function getSiteInfo(): Promise<Result<SiteInfoConfig>> {
             payload: {} as SiteInfoConfig,
         };
     }
-}
+});

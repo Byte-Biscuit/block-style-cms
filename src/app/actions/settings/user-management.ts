@@ -3,61 +3,51 @@
 /**
  * User Management Server Actions
  * 
- * 提供用户管理的服务端操作：
- * - 获取用户列表
- * - 创建新用户
- * - 更新用户信息
- * - 重置用户密码
- * - 删除用户
+ * Provides server-side operations for user management:
+ * - Get user list
+ * - Create new user
+ * - Update user information
+ * - Reset user password
+ * - Delete user
  * 
- * 所有操作需要登录认证
+ * All operations require authentication
  */
 
 import { Result, HttpStatus } from "@/lib/response";
 import { UserManagementService, UserWithProvider, CreateUserData } from "@/lib/services/user-management-service";
-import { requireAuthenticated, getCurrentSession } from "@/lib/auth/permissions";
+import { requireAuthenticated, getCurrentSession, withAuth } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
 import { EMAIL_REGEX } from "@/constants";
 
-// ==================== 类型定义 ====================
+// ==================== Type Definitions ====================
 
 /**
- * 更新用户数据
+ * Update user data
  */
 export interface UpdateUserData {
     name?: string;
 }
 
 /**
- * 重置密码数据
+ * Reset password data
  */
 export interface ResetPasswordData {
     userId: string;
     newPassword: string;
 }
 
-// ==================== 获取用户列表 ====================
+// ==================== Get User List ====================
 
 /**
- * 获取所有用户列表
+ * Get all users list
  * 
- * 需要登录认证
+ * Requires authentication
  * 
- * @returns 用户列表
+ * @returns User list
  */
-export async function getUsers(): Promise<Result<UserWithProvider[]>> {
+export const getUsers = withAuth(async (): Promise<Result<UserWithProvider[]>> => {
     try {
-        // 权限检查
-        const permission = await requireAuthenticated();
-        if (!permission.allowed) {
-            return {
-                code: permission.code!,
-                message: permission.message!,
-                payload: [],
-            };
-        }
-
-        // 获取用户列表
+        // Get user list
         const users = await UserManagementService.getAllUsers();
 
         return {
@@ -73,29 +63,19 @@ export async function getUsers(): Promise<Result<UserWithProvider[]>> {
             payload: [],
         };
     }
-}
+});
 
 /**
- * 获取单个用户信息
+ * Get single user information
  * 
- * 需要登录认证
+ * Requires authentication
  * 
- * @param userId 用户 ID
- * @returns 用户信息
+ * @param userId User ID
+ * @returns User information
  */
-export async function getUser(userId: string): Promise<Result<UserWithProvider | null>> {
+export const getUser = withAuth(async (userId: string): Promise<Result<UserWithProvider | null>> => {
     try {
-        // 权限检查
-        const permission = await requireAuthenticated();
-        if (!permission.allowed) {
-            return {
-                code: permission.code!,
-                message: permission.message!,
-                payload: null,
-            };
-        }
-
-        // 获取用户信息
+        // Get user information
         const user = await UserManagementService.getUserById(userId);
 
         if (!user) {
@@ -119,33 +99,23 @@ export async function getUser(userId: string): Promise<Result<UserWithProvider |
             payload: null,
         };
     }
-}
+});
 
-// ==================== 创建用户 ====================
+// ==================== Create User ====================
 
 /**
- * 创建新的 Credential 用户
+ * Create a new Credential user
  * 
- * 需要登录认证
+ * Requires authentication
  * 
- * @param data 用户数据（姓名、邮箱、密码）
- * @returns 创建结果，包含新用户的 ID
+ * @param data User data (name, email, password)
+ * @returns Creation result, including the new user's ID
  */
-export async function createUser(
+export const createUser = withAuth(async (
     data: CreateUserData
-): Promise<Result<{ userId: string }>> {
+): Promise<Result<{ userId: string }>> => {
     try {
-        // 权限检查
-        const permission = await requireAuthenticated();
-        if (!permission.allowed) {
-            return {
-                code: permission.code!,
-                message: permission.message!,
-                payload: { userId: "" },
-            };
-        }
-
-        // 验证输入
+        // Validate input
         if (!data.name || !data.email || !data.password) {
             return {
                 code: HttpStatus.BAD_REQUEST,
@@ -154,7 +124,7 @@ export async function createUser(
             };
         }
 
-        // 验证邮箱格式
+        // Validate email format
         if (!EMAIL_REGEX.test(data.email)) {
             return {
                 code: HttpStatus.BAD_REQUEST,
@@ -163,7 +133,7 @@ export async function createUser(
             };
         }
 
-        // 验证密码长度
+        // Validate password length
         if (data.password.length < 8) {
             return {
                 code: HttpStatus.BAD_REQUEST,
@@ -172,7 +142,7 @@ export async function createUser(
             };
         }
 
-        // 检查邮箱是否已存在
+        // Check if email already exists
         const emailExists = await UserManagementService.emailExists(data.email);
         if (emailExists) {
             return {
@@ -182,10 +152,10 @@ export async function createUser(
             };
         }
 
-        // 创建用户
+        // Create user
         const result = await UserManagementService.createCredentialUser(data);
 
-        // 重新验证设置页面
+        // Revalidate settings page
         revalidatePath("/m/settings");
 
         return {
@@ -201,35 +171,25 @@ export async function createUser(
             payload: { userId: "" },
         };
     }
-}
+});
 
-// ==================== 更新用户 ====================
+// ==================== Update User ====================
 
 /**
- * 更新用户基本信息
+ * Update basic user information
  * 
- * 需要登录认证
+ * Requires authentication
  * 
- * @param userId 用户 ID
- * @param data 更新数据
- * @returns 更新结果
+ * @param userId User ID
+ * @param data Update data
+ * @returns Update result
  */
-export async function updateUser(
+export const updateUser = withAuth(async (
     userId: string,
     data: UpdateUserData
-): Promise<Result<void>> {
+): Promise<Result<void>> => {
     try {
-        // 权限检查
-        const permission = await requireAuthenticated();
-        if (!permission.allowed) {
-            return {
-                code: permission.code!,
-                message: permission.message!,
-                payload: undefined,
-            };
-        }
-
-        // 验证用户是否存在
+        // Validate if user exists
         const user = await UserManagementService.getUserById(userId);
         if (!user) {
             return {
@@ -239,7 +199,7 @@ export async function updateUser(
             };
         }
 
-        // 更新用户名
+        // Update user name
         if (data.name) {
             if (data.name.trim().length === 0) {
                 return {
@@ -251,7 +211,7 @@ export async function updateUser(
             await UserManagementService.updateUserName(userId, data.name);
         }
 
-        // 重新验证设置页面
+        // Revalidate settings page
         revalidatePath("/m/settings");
 
         return {
@@ -267,31 +227,21 @@ export async function updateUser(
             payload: undefined,
         };
     }
-}
+});
 
 /**
- * 重置用户密码（仅限 Credential 用户）
+ * Reset user password (Credential users only)
  * 
- * 需要登录认证
+ * Requires authentication
  * 
- * @param data 重置密码数据
- * @returns 重置结果
+ * @param data Reset password data
+ * @returns Reset result
  */
-export async function resetUserPassword(
+export const resetUserPassword = withAuth(async (
     data: ResetPasswordData
-): Promise<Result<void>> {
+): Promise<Result<void>> => {
     try {
-        // 权限检查
-        const permission = await requireAuthenticated();
-        if (!permission.allowed) {
-            return {
-                code: permission.code!,
-                message: permission.message!,
-                payload: undefined,
-            };
-        }
-
-        // 验证密码长度
+        // Validate password length
         if (data.newPassword.length < 8) {
             return {
                 code: HttpStatus.BAD_REQUEST,
@@ -300,7 +250,7 @@ export async function resetUserPassword(
             };
         }
 
-        // 验证用户是否存在
+        // Validate if user exists
         const user = await UserManagementService.getUserById(data.userId);
         if (!user) {
             return {
@@ -310,7 +260,7 @@ export async function resetUserPassword(
             };
         }
 
-        // 检查用户是否有 credential 账户
+        // Check if user has a credential account
         const hasCredential = user.providers.some(
             (p) => p.providerId === "credential"
         );
@@ -322,10 +272,10 @@ export async function resetUserPassword(
             };
         }
 
-        // 重置密码
+        // Reset password
         await UserManagementService.updateUserPassword(data.userId, data.newPassword);
 
-        // 重新验证设置页面
+        // Revalidate settings page
         revalidatePath("/m/settings");
 
         return {
@@ -341,35 +291,25 @@ export async function resetUserPassword(
             payload: undefined,
         };
     }
-}
+});
 
-// ==================== 删除用户 ====================
+// ==================== Delete User ====================
 
 /**
- * 删除用户
+ * Delete user
  * 
- * 需要登录认证
+ * Requires authentication
  * 
- * 限制：
- * 1. 不能删除自己
- * 2. 不能删除最后一个用户
+ * Restrictions:
+ * 1. Cannot delete yourself
+ * 2. Cannot delete the last user
  * 
- * @param userId 用户 ID
- * @returns 删除结果
+ * @param userId User ID
+ * @returns Deletion result
  */
-export async function deleteUser(userId: string): Promise<Result<void>> {
+export const deleteUser = withAuth(async (userId: string): Promise<Result<void>> => {
     try {
-        // 权限检查
-        const permission = await requireAuthenticated();
-        if (!permission.allowed) {
-            return {
-                code: permission.code!,
-                message: permission.message!,
-                payload: undefined,
-            };
-        }
-
-        // 获取当前会话
+        // Get current session
         const session = await getCurrentSession();
         if (!session) {
             return {
@@ -379,7 +319,7 @@ export async function deleteUser(userId: string): Promise<Result<void>> {
             };
         }
 
-        // 1. 不能删除自己
+        // 1. Cannot delete yourself
         if (session.user.id === userId) {
             return {
                 code: HttpStatus.FORBIDDEN,
@@ -388,7 +328,7 @@ export async function deleteUser(userId: string): Promise<Result<void>> {
             };
         }
 
-        // 2. 检查是否是最后一个用户
+        // 2. Check if it's the last user
         const userCount = await UserManagementService.getUserCount();
         if (userCount <= 1) {
             return {
@@ -398,7 +338,7 @@ export async function deleteUser(userId: string): Promise<Result<void>> {
             };
         }
 
-        // 3. 验证用户是否存在
+        // 3. Validate if user exists
         const user = await UserManagementService.getUserById(userId);
         if (!user) {
             return {
@@ -408,10 +348,10 @@ export async function deleteUser(userId: string): Promise<Result<void>> {
             };
         }
 
-        // 4. 删除用户
+        // 4. Delete user
         await UserManagementService.deleteUser(userId);
 
-        // 重新验证设置页面
+        // Revalidate settings page
         revalidatePath("/m/settings");
 
         return {
@@ -427,4 +367,4 @@ export async function deleteUser(userId: string): Promise<Result<void>> {
             payload: undefined,
         };
     }
-}
+});

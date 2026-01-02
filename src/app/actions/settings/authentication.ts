@@ -4,10 +4,10 @@ import { revalidatePath } from "next/cache";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { Result, HttpStatus } from "@/lib/response";
 import { AuthFormData } from "@/components/configuration";
+import { withAuth } from "@/lib/auth/permissions";
 
 /**
  * Server Action: Update Authentication Configuration
- * 更新认证配置
  *
  * Updates GitHub OAuth, Google OAuth, and allowed emails configuration.
  * Note: Email/Password, 2FA, and Passkey settings are preserved but not modified here.
@@ -15,9 +15,9 @@ import { AuthFormData } from "@/components/configuration";
  * @param data - Authentication configuration data (AuthFormData)
  * @returns Result object with status code
  */
-export async function updateAuthentication(
+export const updateAuthentication = withAuth(async (
     data: AuthFormData
-): Promise<Result<AuthFormData>> {
+): Promise<Result<AuthFormData>> => {
     try {
         // Read current config
         const currentConfig = await systemConfigService.readConfig();
@@ -124,15 +124,14 @@ export async function updateAuthentication(
             payload: {} as AuthFormData,
         };
     }
-}
+});
 
 /**
  * Server Action: Get Authentication Configuration
- * 获取认证配置
  *
  * @returns Result object with authentication configuration
  */
-export async function getAuthentication(): Promise<Result<AuthFormData>> {
+export const getAuthentication = withAuth(async (): Promise<Result<AuthFormData>> => {
     try {
         const config = await systemConfigService.readConfig();
 
@@ -174,4 +173,4 @@ export async function getAuthentication(): Promise<Result<AuthFormData>> {
             payload: {} as AuthFormData,
         };
     }
-}
+});

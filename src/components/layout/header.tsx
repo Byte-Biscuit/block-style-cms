@@ -33,7 +33,7 @@ const Header = async () => {
                     className="flex items-center gap-2"
                 >
                     <Image
-                        src="/logo.png"
+                        src="/api/logo"
                         alt={t("title")}
                         width={32}
                         height={32}

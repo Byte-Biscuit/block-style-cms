@@ -421,9 +421,9 @@
         }
     },
     "web": {
-        "title": "博采众生",
-        "subtitle": "创意在此汇聚，灵感由此启航",
-        "description": "博采众生是一个开放的平台，融合IT技术、人工智能、教育与音乐。我们尊重创意，包容多元，分享知识，激发更多创新灵感。",
+        "title": "Block Style CMS",
+        "subtitle": "模块化、可视化、AI 驱动的现代化内容管理平台",
+        "description": "Block Style CMS 是一款基于 Next.js、MUI、BlockNote 和 Tailwind CSS 构建的开源内容管理系统。它提供直观的模块化 Block 编辑体验，深度集成 AI 辅助创作，支持多语言国际化与响应式布局，助力开发者快速搭建高性能、易扩展的内容平台。",
         "language": "语言",
         "theme": {
             "title": "主题",
@@ -433,11 +433,6 @@
         },
         "channel": {
             "title": "频道",
-            "tags": "标签",
-            "ai": "AI",
-            "instant": "即时",
-            "education": "学习",
-            "about": "关于",
             "articleCount": "{count} 篇文章",
             "noArticles": "该频道暂无文章",
             "backToHome": "← 返回首页"

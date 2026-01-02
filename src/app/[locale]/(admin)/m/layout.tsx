@@ -51,7 +51,7 @@ export default async function AdminLayout({
                         className="flex items-center gap-2"
                     >
                         <Image
-                            src="/logo.png"
+                            src="/api/logo"
                             alt="Logo"
                             width={32}
                             height={32}

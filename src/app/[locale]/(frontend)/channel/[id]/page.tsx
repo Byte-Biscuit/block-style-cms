@@ -20,8 +20,8 @@ export async function generateMetadata({
     const t = await getTranslations("web");
 
     // Get title and description from i18n with fallback to ID
-    const title = t(`channel.${id}.meta.title`, { defaultValue: id });
-    const description = t(`channel.${id}.meta.description`, { defaultValue: "" });
+    const title = t(`channel.${id}.title`, { defaultValue: id });
+    const description = t(`channel.${id}.description`, { defaultValue: "" });
 
     return {
         title,
@@ -66,7 +66,7 @@ export default async function ChannelDetailPage({
             <div className="mb-12">
                 <div className="flex items-baseline gap-4">
                     <h1 className="text-5xl font-bold text-pink-500 dark:text-pink-400">
-                        {t(`channel.${channel.id}`)}
+                        {t(`channel.${channel.id}.title`)}
                     </h1>
                     <span className="text-2xl text-gray-500 dark:text-gray-400">
                         ({t("channel.articleCount", { count: articles.length })}

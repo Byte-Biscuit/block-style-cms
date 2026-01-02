@@ -74,7 +74,7 @@ export default function SmallScreenNavButton({
                             className="hover:bg-primary-600 block min-w-3xs hover:text-white dark:bg-gray-800 dark:text-white"
                         >
                             <MenuItem onClick={handleClose}>
-                                {t(`channel.${channel.id}`)}
+                                {t(`channel.${channel.id}.title`)}
                             </MenuItem>
                         </Link>
                     );

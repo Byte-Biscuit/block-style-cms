@@ -9,7 +9,7 @@ export default async function Home() {
 
     if (!latestArticles || latestArticles?.length === 0) {
         return (
-            <div className="flex min-h-[400px] items-center justify-center">
+            <div className="flex min-h-100 items-center justify-center">
                 <div className="text-center">
                     <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
                         {t("emptyTitle")}
@@ -32,7 +32,7 @@ export default async function Home() {
                     <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
                         {t("title")}
                     </h1>
-                    <div className="h-1 w-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                    <div className="h-1 w-20 rounded-full bg-linear-to-r from-blue-500 to-purple-600"></div>
                 </div>
 
                 <div className="space-y-4">

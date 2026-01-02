@@ -39,7 +39,7 @@ export default async function ChannelNav({
                     className={navItemLinkTwCls}
                     href={getChannelHref(channel)}
                 >
-                    {t(`channel.${channel.id}`)}
+                    {t(`channel.${channel.id}.title`)}
                 </Link>
             ))}
 

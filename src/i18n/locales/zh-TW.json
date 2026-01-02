@@ -421,9 +421,9 @@
         }
     },
     "web": {
-        "title": "博採眾生",
-        "subtitle": "創意在此匯聚，靈感由此啟航",
-        "description": "博採眾生是一個開放的平台，融合IT技術、人工智能、教育與音樂。我們尊重創意，包容多元，分享知識，激發更多創新靈感。",
+        "title": "Block Style CMS",
+        "subtitle": "模組化、可視化、AI 驅動的現代化內容管理平台",
+        "description": "Block Style CMS 是一款基於 Next.js、MUI、BlockNote 和 Tailwind CSS 構建的開源內容管理系統。它提供直觀的模組化 Block 編輯體驗，深度集成 AI 輔助創作，支持多語言國際化與響應式佈局，助力開發者快速搭建高性能、易擴展的內容平台。",
         "language": "語言",
         "theme": {
             "title": "主題",
@@ -433,11 +433,6 @@
         },
         "channel": {
             "title": "頻道",
-            "tags": "標籤",
-            "ai": "AI",
-            "instant": "即時",
-            "education": "學習",
-            "about": "關於",
             "articleCount": "{count} 篇文章",
             "noArticles": "該頻道暫無文章",
             "backToHome": "← 返回首頁"

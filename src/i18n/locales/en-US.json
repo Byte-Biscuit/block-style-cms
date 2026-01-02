@@ -420,9 +420,9 @@
         }
     },
     "web": {
-        "title": "PluralitySpace",
-        "subtitle": "Inspiring Creativity, Connecting Minds",
-        "description": "PluralitySpace is an open platform that brings together technology, AI, education, and music. We respect creativity, embrace diversity, and share knowledge to inspire innovation.",
+        "title": "Block Style CMS",
+        "subtitle": "Modular, Visual, AI-Driven Modern Content Management Platform",
+        "description": "Block Style CMS is an open-source content management system built with Next.js, MUI, BlockNote, and Tailwind CSS. It features an intuitive modular Block editing experience, deep AI-assisted creation integration, multi-language support, and responsive design, empowering developers to quickly build high-performance, scalable content platforms.",
         "language": "Language",
         "theme": {
             "title": "Theme",
@@ -432,11 +432,6 @@
         },
         "channel": {
             "title": "Channel",
-            "tags": "Tags",
-            "ai": "AI",
-            "instant": "Instant",
-            "education": "Learning",
-            "about": "About",
             "articleCount": "{count, plural, =1 {# article} other {# articles}}",
             "noArticles": "No articles found in this channel",
             "backToHome": "← Back to home"

@@ -65,7 +65,7 @@ export default function ChannelDropdown({ channels }: ChannelDropdownProps) {
                             className={`hover:bg-primary-600 block px-4 py-2 text-sm hover:text-white dark:bg-gray-800 dark:text-white ${index === 0 ? "rounded-t-md" : ""} ${index === channels.length - 1 ? "rounded-b-md" : ""}`}
                             onClick={() => setIsOpen(false)}
                         >
-                            {t(`channel.${channel.id}`)}
+                            {t(`channel.${channel.id}.title`)}
                         </Link>
                     ))}
                 </div>

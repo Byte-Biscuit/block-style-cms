@@ -11,7 +11,6 @@ import { CMS_DATA_PATH } from "@/settings";
 
 /**
  * Server Action: Update Site Information
- * 更新网站基本信息
  * 
  * @param data - Site information configuration
  * @returns Result object with status code
@@ -60,7 +59,6 @@ export const updateSiteInfo = withAuth(async (data: SiteInfoConfig): Promise<Res
 
 /**
  * Server Action: Get Site Information
- * 获取网站基本信息
  * 
  * @returns Result object with site information
  */

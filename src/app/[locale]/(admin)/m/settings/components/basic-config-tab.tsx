@@ -200,7 +200,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     comment: {
                                         ...formData.comment,
                                         maxTotalComments:
-                                            parseInt(e.target.value) || 0,
+                                            parseInt(e.target.value) || "",
                                     },
                                 })
                             }
@@ -236,7 +236,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                                 ...formData.comment.limits,
                                                 contentMinLength:
                                                     parseInt(e.target.value) ||
-                                                    0,
+                                                    "",
                                             },
                                         },
                                     })
@@ -258,7 +258,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                                 ...formData.comment.limits,
                                                 contentMaxLength:
                                                     parseInt(e.target.value) ||
-                                                    0,
+                                                    "",
                                             },
                                         },
                                     })
@@ -280,7 +280,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                                 ...formData.comment.limits,
                                                 maxLinksAllowed:
                                                     parseInt(e.target.value) ||
-                                                    0,
+                                                    "",
                                             },
                                         },
                                     })
@@ -365,7 +365,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     suggestion: {
                                         ...formData.suggestion,
                                         maxTotalSuggestions:
-                                            parseInt(e.target.value) || 0,
+                                            parseInt(e.target.value) || "",
                                     },
                                 })
                             }
@@ -403,7 +403,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                                 ...formData.suggestion.limits,
                                                 contentMinLength:
                                                     parseInt(e.target.value) ||
-                                                    0,
+                                                    "",
                                             },
                                         },
                                     })
@@ -427,7 +427,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                                 ...formData.suggestion.limits,
                                                 contentMaxLength:
                                                     parseInt(e.target.value) ||
-                                                    0,
+                                                    "",
                                             },
                                         },
                                     })
@@ -451,7 +451,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                                 ...formData.suggestion.limits,
                                                 maxLinksAllowed:
                                                     parseInt(e.target.value) ||
-                                                    0,
+                                                    "",
                                             },
                                         },
                                     })

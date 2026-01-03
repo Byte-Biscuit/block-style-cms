@@ -173,15 +173,15 @@ export interface CommentConfig {
     /** Comment feature enabled */
     enabled: boolean;
     /** Maximum total comments limit */
-    maxTotalComments: number;
+    maxTotalComments: number | string;
     /** Content constraints */
     limits: {
         /** Minimum content length */
-        contentMinLength: number;
+        contentMinLength: number | string;
         /** Maximum content length */
-        contentMaxLength: number;
+        contentMaxLength: number | string;
         /** Maximum allowed links in comment */
-        maxLinksAllowed: number;
+        maxLinksAllowed: number | string;
     };
     /** Moderation settings */
     moderation: {
@@ -197,15 +197,15 @@ export interface SuggestionConfig {
     /** Suggestion feature enabled */
     enabled: boolean;
     /** Maximum total suggestions limit */
-    maxTotalSuggestions: number;
+    maxTotalSuggestions: number | string;
     /** Content constraints */
     limits: {
         /** Minimum content length */
-        contentMinLength: number;
+        contentMinLength: number | string;
         /** Maximum content length */
-        contentMaxLength: number;
+        contentMaxLength: number | string;
         /** Maximum allowed links in suggestion */
-        maxLinksAllowed: number;
+        maxLinksAllowed: number | string;
     };
 }
 

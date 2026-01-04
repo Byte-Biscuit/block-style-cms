@@ -2,6 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import Link from "@/components/link";
 import GitHubIconButton from "@/components/github";
 import SearchIconButton from "@/components/search";
+import ManageIconButton from "@/components/manage";
 import SmallScreenNavButton from "@/components/layout/small-screen-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { container } from "@/lib/style-classes";
@@ -52,6 +53,7 @@ const Header = async () => {
                 <ThemeToggle />
                 <LanguageToggle />
                 <SmallScreenNavButton channels={channels} />
+                <ManageIconButton />
             </div>
         </header>
     );

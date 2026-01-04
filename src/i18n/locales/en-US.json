@@ -424,6 +424,7 @@
         "subtitle": "Modular, Visual, AI-Driven Modern Content Management Platform",
         "description": "Block Style CMS is an open-source content management system built with Next.js, MUI, BlockNote, and Tailwind CSS. It features an intuitive modular Block editing experience, deep AI-assisted creation integration, multi-language support, and responsive design, empowering developers to quickly build high-performance, scalable content platforms.",
         "language": "Language",
+        "manage": "Manage",
         "theme": {
             "title": "Theme",
             "system": "System",

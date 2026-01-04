@@ -425,6 +425,7 @@
         "subtitle": "模块化、可视化、AI 驱动的现代化内容管理平台",
         "description": "Block Style CMS 是一款基于 Next.js、MUI、BlockNote 和 Tailwind CSS 构建的开源内容管理系统。它提供直观的模块化 Block 编辑体验，深度集成 AI 辅助创作，支持多语言国际化与响应式布局，助力开发者快速搭建高性能、易扩展的内容平台。",
         "language": "语言",
+        "manage": "管理",
         "theme": {
             "title": "主题",
             "system": "跟随系统",

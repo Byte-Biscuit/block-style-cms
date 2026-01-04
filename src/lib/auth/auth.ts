@@ -4,6 +4,7 @@ import { twoFactor } from "better-auth/plugins";
 import { passkey } from "@better-auth/passkey"
 import Database from "better-sqlite3";
 import { systemConfigService } from "../services/system-config-service";
+import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE } from "@/constants";
 
 /**
  * Better Auth Configuration
@@ -60,12 +61,20 @@ export async function getAuth() {
     // D. Rebuild Instance (Only when timestamp differs or instance is null)
     console.log(`[Auth] ♻️ Config updated (Time: ${currentInitializedAt}). Rebuilding instance...`);
 
+    const allowedEmails = config?.authentication?.accessControl?.allowedEmails || [];
+
     const githubConfig = config?.authentication?.methods?.github;
     const googleConfig = config?.authentication?.methods?.google;
 
     const newInstance = betterAuth({
         appName: "Block Style CMS",
         database: authDatabase,
+
+        // Custom pages for authentication
+        pages: {
+            signIn: BETTER_AUTH_SIGN_IN,
+            error: BETTER_AUTH_ERROR_PAGE,
+        },
 
         // Email and password authentication (always available)
         emailAndPassword: {
@@ -99,6 +108,38 @@ export async function getAuth() {
             // Passkey (WebAuthn) support
             passkey(),
         ],
+        // Database hooks
+        databaseHooks: {
+            user: {
+                create: {
+                    before: async (user, ctx) => {
+                        const email = user.email?.toLowerCase() || '';
+                        // Enforce allowed emails if configured
+                        if (allowedEmails.length > 0 && !allowedEmails.includes(email)) {
+                            console.error(`[Auth][Hook] Registration blocked for disallowed email: ${email}`);
+                            return false;
+                        }
+                        console.log("[Auth][Hook] Creating user:", user);
+                        return true;
+                    }
+                }
+            },
+            session: {
+                create: {
+                    before: async (session, ctx) => {
+                        console.log("[Auth][Hook] Creating session:", session);
+                        const user = await authDatabase
+                            .prepare("SELECT email FROM user WHERE id = ?")
+                            .get(session.userId) as { email: string };
+                        if (user && !allowedEmails.includes(user.email)) {
+                            console.warn(`[Auth] 🚫 Blocked login attempt: ${user.email}`);
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
     });
 
     // E. Automatic Database Schema Synchronization (Auto-Migration)

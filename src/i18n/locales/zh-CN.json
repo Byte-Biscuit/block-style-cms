@@ -461,6 +461,7 @@
                 "invalid_request": "请求参数不正确或缺失。",
                 "server_error": "服务器内部错误，请稍后重试。",
                 "temporarily_unavailable": "认证服务暂时不可用，请稍候再试。",
+                "unable_to_create_user": "无法创建用户。您的邮箱可能未被授权或已存在。",
                 "unknown": "发生未知的认证错误。"
             },
             "logout": {

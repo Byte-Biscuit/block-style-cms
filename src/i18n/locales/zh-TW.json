@@ -461,6 +461,7 @@
                 "invalid_request": "請求參數不正確或遺失。",
                 "server_error": "伺服器內部發生錯誤，請稍後再試。",
                 "temporarily_unavailable": "驗證服務暫時無法使用，請稍候再試。",
+                "unable_to_create_user": "無法建立使用者。您的電子郵件可能未被授權或已存在。",
                 "unknown": "發生未知的驗證錯誤。"
             },
             "logout": {

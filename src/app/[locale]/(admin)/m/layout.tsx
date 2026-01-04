@@ -3,8 +3,7 @@ import Image from "next/image";
 import { headers } from "next/headers";
 import { Box, Typography, AppBar, Toolbar } from "@mui/material";
 import { getAuth } from "@/lib/auth/auth";
-import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE } from "@/constants";
-import { systemConfigService } from "@/lib/services/system-config-service";
+import { BETTER_AUTH_SIGN_IN } from "@/constants";
 import Link from "@/components/link";
 import Footer from "./components/layout/footer";
 import { getTranslations } from "next-intl/server";
@@ -23,17 +22,6 @@ export default async function AdminLayout({
     if (!session) {
         redirect(BETTER_AUTH_SIGN_IN);
     }
-    const { user } = session;
-    const email = user.email.toLowerCase();
-    const allowedEmails = systemConfigService
-        .getAllowedEmails()
-        .map((e) => e.toLowerCase());
-    if (allowedEmails.length == 0 && !allowedEmails.includes(email)) {
-        redirect(
-            `${BETTER_AUTH_ERROR_PAGE}?error=access_denied&error_description=Your email (${email}) is not authorized to access this application.`
-        );
-    }
-
     return (
         <Box
             sx={{

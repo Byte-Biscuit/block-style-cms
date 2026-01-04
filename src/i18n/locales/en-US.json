@@ -460,6 +460,7 @@
                 "invalid_request": "The request was invalid or missing required parameters.",
                 "server_error": "An internal server error occurred. Please try again later.",
                 "temporarily_unavailable": "Authentication service is temporarily unavailable. Please try again shortly.",
+                "unable_to_create_user": "Unable to create user. Your email may not be authorized or already exists.",
                 "unknown": "An unknown authentication error occurred."
             },
             "logout": {

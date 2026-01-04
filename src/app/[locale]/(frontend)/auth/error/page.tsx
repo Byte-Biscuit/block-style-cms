@@ -21,6 +21,7 @@ const formatMessage = (
         invalid_request: t("messages.invalid_request"),
         server_error: t("messages.server_error"),
         temporarily_unavailable: t("messages.temporarily_unavailable"),
+        unable_to_create_user: t("messages.unable_to_create_user"),
     };
     let errorMessage = sanitize(errorDescription);
     errorMessage =

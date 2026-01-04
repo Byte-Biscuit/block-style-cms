@@ -2,99 +2,72 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { authClient } from "@/lib/auth/auth-client";
-import { button, container } from "@/lib/style-classes";
-import { GitHubIcon, GoogleIcon, LoadingSpinner } from "@/components/icons";
+import Image from "next/image";
+import { container } from "@/lib/style-classes";
+import { EmailPasswordSignIn } from "./email-password-sign-in";
+import { TwoFactorAuth } from "./two-factor-auth";
+import { SocialAuth } from "./social-auth";
 
 export default function SignInPage() {
-    const [isLoading, setIsLoading] = useState({
-        google: false,
-        github: false,
-    });
+    const [showTwoFactor, setShowTwoFactor] = useState(false);
     const [error, setError] = useState("");
     const t = useTranslations("web.auth.login");
-
-    const handleSocialSignIn = async (provider: "GitHub" | "Google") => {
-        setIsLoading({ ...isLoading, [provider]: true });
-        setError("");
-
-        try {
-            switch (provider) {
-                case "GitHub":
-                    await authClient.signIn.social({
-                        provider: "github",
-                        callbackURL: "/m",
-                        errorCallbackURL: "/auth/error",
-                    });
-                    break;
-                case "Google":
-                    await authClient.signIn.social({
-                        provider: "google",
-                        callbackURL: "/m",
-                        errorCallbackURL: "/auth/error",
-                    });
-                    break;
-            }
-        } catch {
-            setError(
-                t("error.with", {
-                    provider: provider,
-                })
-            );
-        } finally {
-            setIsLoading({ ...isLoading, [provider]: false });
-        }
-    };
+    const tWeb = useTranslations("web");
 
     return (
-        <div className={`${container.messagePage} flex-col space-y-8 pt-10`}>
-            <div className="mx-auto flex w-full items-center justify-center">
+        <div
+            className={`${container.messagePage} flex flex-col space-y-8 pt-4`}
+        >
+            <div className="flex flex-col items-center justify-center">
                 {/* Sign-in Icon */}
                 <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-transparent bg-blue-100 dark:border-blue-500/30 dark:bg-blue-900/20">
-                    <svg
-                        className="h-10 w-10 text-blue-600 dark:text-blue-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                    </svg>
+                    <Image
+                        src="/api/logo"
+                        alt={tWeb("title")}
+                        width={48}
+                        height={48}
+                        className="h-12 w-12"
+                        priority
+                    />
                 </div>
+                {!showTwoFactor && (
+                    <p className="mt-1 text-gray-600 dark:text-gray-400">
+                        {t("subtitle")}
+                    </p>
+                )}
             </div>
-            {/* Title */}
-            <div className="space-y-2">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                    {t("title")}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                    {t("subtitle")}
-                </p>
-            </div>
+            {/* Login Form Container */}
+            <div className="mx-auto w-full max-w-md">
+                {/* Conditional Rendering: 2FA Form or Email/Password Form */}
+                {showTwoFactor ? (
+                    <TwoFactorAuth
+                        onCancel={() => {
+                            setShowTwoFactor(false);
+                            setError("");
+                        }}
+                        onError={setError}
+                    />
+                ) : (
+                    <div className="space-y-6">
+                        {/* Email Password Sign In */}
+                        <EmailPasswordSignIn
+                            onRequireTwoFactor={() => setShowTwoFactor(true)}
+                            onError={setError}
+                        />
 
-            {/* Login Buttons */}
-            <div className="mx-auto w-full max-w-sm space-y-4">
-                <button
-                    className={`${button.secondary} w-full justify-start space-x-3`}
-                    onClick={() => handleSocialSignIn("GitHub")}
-                    disabled={isLoading.github}
-                >
-                    {isLoading.github ? <LoadingSpinner /> : <GitHubIcon />}
-                    <span>{t("signWith", { provider: "GitHub" })}</span>
-                </button>
+                        {/* Divider with "OR" */}
+                        <div className="relative flex items-center py-2">
+                            <div className="grow border-t border-gray-300 dark:border-gray-600"></div>
+                            <span className="mx-4 shrink text-sm text-gray-500 dark:text-gray-400">
+                                {t("divider")}
+                            </span>
+                            <div className="grow border-t border-gray-300 dark:border-gray-600"></div>
+                        </div>
 
-                <button
-                    className={`${button.secondary} w-full justify-start space-x-3`}
-                    onClick={() => handleSocialSignIn("Google")}
-                    disabled={isLoading.google}
-                >
-                    {isLoading.google ? <LoadingSpinner /> : <GoogleIcon />}
-                    <span>{t("signWith", { provider: "Google" })}</span>
-                </button>
+                        {/* Social Auth */}
+                        <SocialAuth onError={setError} />
+                    </div>
+                )}
 
                 {/* Error Message */}
                 {error && (

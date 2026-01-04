@@ -472,12 +472,31 @@
                 }
             },
             "login": {
-                "title": "管理員後台",
                 "subtitle": "請登入以存取管理功能",
+                "divider": "或",
+                "email": "電子郵件地址",
+                "password": "密碼",
+                "submit": "登入",
+                "submitting": "登入中...",
                 "signWith": "使用 {provider} 登入",
                 "error": {
                     "title": "登入失敗",
+                    "required": "請輸入電子郵件和密碼",
+                    "invalid": "登入失敗，請檢查電子郵件和密碼",
                     "with": "{provider} 登入失敗，請稍後重試"
+                },
+                "twoFactor": {
+                    "title": "雙因素認證",
+                    "subtitle": "請輸入您的身份驗證器應用中的6位驗證碼",
+                    "label": "驗證碼",
+                    "verify": "驗證",
+                    "verifying": "驗證中...",
+                    "cancel": "返回登入",
+                    "error": {
+                        "required": "請輸入6位驗證碼",
+                        "invalid": "驗證碼錯誤，請重新輸入",
+                        "failed": "驗證失敗，請重試"
+                    }
                 }
             }
         },

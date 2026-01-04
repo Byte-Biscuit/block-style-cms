@@ -1,27 +1,29 @@
 /**
  * User Management Service
  * 
- * 提供用户管理的底层服务，包括：
- * - 用户查询（所有用户、单个用户、Credential 用户）
- * - 用户创建（仅 Credential 方式）
- * - 用户更新（姓名、密码）
- * - 用户删除
- * - 密码加密和验证（使用 better-auth/crypto）
+ * Provides low-level services for user management, including:
+ * - User queries (all users, single user, Credential users)
+ * - User creation (Credential method only)
+ * - User updates (name, password)
+ * - User deletion
+ * - Password encryption and verification (using better-auth/crypto)
+ * - 2FA management (generation, enabling, disabling)
  */
 
 import { getAuth } from "@/lib/auth/auth";
-import { hashPassword, verifyPassword } from "better-auth/crypto";
+import { hashPassword, verifyPassword, symmetricEncrypt, symmetricDecrypt, generateRandomString } from "better-auth/crypto";
+import { createOTP } from "@better-auth/utils/otp";
 import crypto from "crypto";
 
-// ==================== 类型定义 ====================
+// ==================== Type Definitions ====================
 
 /**
- * 认证提供商类型
+ * Authentication provider types
  */
 export type ProviderId = "credential" | "github" | "google";
 
 /**
- * 用户认证方式信息
+ * User authentication method information
  */
 export interface UserProvider {
     providerId: ProviderId;
@@ -29,7 +31,7 @@ export interface UserProvider {
 }
 
 /**
- * 完整的用户信息（包含认证方式）
+ * Complete user information (including authentication methods)
  */
 export interface UserWithProvider {
     id: string;
@@ -38,10 +40,11 @@ export interface UserWithProvider {
     emailVerified: boolean;
     createdAt: string;
     providers: UserProvider[];
+    twoFactorEnabled?: boolean;
 }
 
 /**
- * 创建用户的数据
+ * Data for creating a user
  */
 export interface CreateUserData {
     name: string;
@@ -50,28 +53,28 @@ export interface CreateUserData {
 }
 
 /**
- * 更新用户的数据
+ * Data for updating a user
  */
 export interface UpdateUserData {
     name?: string;
 }
 
-// ==================== 用户管理服务类 ====================
+// ==================== User Management Service Class ====================
 
 export class UserManagementService {
     /**
-     * 获取所有用户及其认证方式
+     * Get all users and their authentication methods
      * 
-     * 注意：一个用户可以有多种登录方式（credential, github, google）
-     * 因此需要聚合 user 和 account 表的数据
+     * Note: A user can have multiple login methods (credential, github, google)
+     * Therefore, it is necessary to aggregate data from the user and account tables
      */
     static async getAllUsers(): Promise<UserWithProvider[]> {
         try {
             const auth = await getAuth();
             const db = auth.options.database as any;
 
-            // 查询所有用户和他们的账户信息
-            // LEFT JOIN: 一个用户可能有多个 account 记录（不同的 providerId）
+            // Query all users and their account information
+            // LEFT JOIN: A user may have multiple account records (different providerIds)
             const rows = db
                 .prepare(
                     `
@@ -81,6 +84,7 @@ export class UserManagementService {
                     u.email, 
                     u.emailVerified, 
                     u.createdAt,
+                    u.twoFactorEnabled,
                     a.providerId,
                     CASE WHEN a.password IS NOT NULL AND a.password != '' THEN 1 ELSE 0 END as hasPassword
                 FROM user u
@@ -90,9 +94,9 @@ export class UserManagementService {
                 )
                 .all();
 
-            // 按用户 ID 聚合数据
-            // 示例：用户 A 有 credential + github 两种登录方式
-            // 查询结果会有 2 行，需要合并成 1 个用户对象，providers 数组包含 2 个元素
+            // Aggregate data by user ID
+            // Example: User A has both credential and github login methods
+            // The query result will have 2 rows, which need to be merged into 1 user object, with the providers array containing 2 elements
             const userMap = new Map<string, UserWithProvider>();
 
             for (const row of rows) {
@@ -104,6 +108,7 @@ export class UserManagementService {
                         emailVerified: !!row.emailVerified,
                         createdAt: row.createdAt,
                         providers: [],
+                        twoFactorEnabled: !!row.twoFactorEnabled,
                     });
                 }
 
@@ -124,7 +129,7 @@ export class UserManagementService {
     }
 
     /**
-     * 根据 ID 获取单个用户
+     * Get a single user by ID
      */
     static async getUserById(userId: string): Promise<UserWithProvider | null> {
         try {
@@ -140,6 +145,7 @@ export class UserManagementService {
                     u.email, 
                     u.emailVerified, 
                     u.createdAt,
+                    u.twoFactorEnabled,
                     a.providerId,
                     CASE WHEN a.password IS NOT NULL AND a.password != '' THEN 1 ELSE 0 END as hasPassword
                 FROM user u
@@ -161,6 +167,7 @@ export class UserManagementService {
                 emailVerified: !!firstRow.emailVerified,
                 createdAt: firstRow.createdAt,
                 providers: [],
+                twoFactorEnabled: !!firstRow.twoFactorEnabled,
             };
 
             for (const row of rows) {
@@ -180,7 +187,7 @@ export class UserManagementService {
     }
 
     /**
-     * 获取所有拥有 Credential 账户的用户
+     * Get all users with a Credential account
      */
     static async getCredentialUsers(): Promise<UserWithProvider[]> {
         try {
@@ -195,10 +202,10 @@ export class UserManagementService {
     }
 
     /**
-     * 创建新的 Credential 用户
+     * Create a new Credential user
      * 
-     * @param data 用户数据（姓名、邮箱、密码）
-     * @returns 成功返回用户 ID，失败抛出异常
+     * @param data User data (name, email, password)
+     * @returns Returns user ID on success, throws exception on failure
      */
     static async createCredentialUser(
         data: CreateUserData
@@ -207,7 +214,7 @@ export class UserManagementService {
             const auth = await getAuth();
             const db = auth.options.database as any;
 
-            // 1. 检查邮箱是否已存在
+            // 1. Check if the email already exists
             const existingUser = db
                 .prepare("SELECT id FROM user WHERE email = ?")
                 .get(data.email);
@@ -216,14 +223,14 @@ export class UserManagementService {
                 throw new Error("Email already exists");
             }
 
-            // 2. 生成用户 ID
+            // 2. Generate user ID
             const userId = crypto.randomUUID();
             const accountId = crypto.randomUUID();
 
-            // 3. 哈希密码（使用 better-auth/crypto）
+            // 3. Hash password (using better-auth/crypto)
             const hashedPassword = await hashPassword(data.password);
 
-            // 4. 插入用户记录
+            // 4. Insert user record
             const now = new Date().toISOString();
             db.prepare(
                 `
@@ -232,7 +239,7 @@ export class UserManagementService {
             `
             ).run(userId, data.name, data.email, now, now);
 
-            // 5. 插入账户记录（credential 类型）
+            // 5. Insert account record (credential type)
             db.prepare(
                 `
                 INSERT INTO account (id, userId, providerId, accountId, password, createdAt, updatedAt)
@@ -250,7 +257,7 @@ export class UserManagementService {
     }
 
     /**
-     * 更新用户姓名
+     * Update user name
      */
     static async updateUserName(
         userId: string,
@@ -260,7 +267,7 @@ export class UserManagementService {
             const auth = await getAuth();
             const db = auth.options.database as any;
 
-            // 检查用户是否存在
+            // Check if the user exists
             const user = db.prepare("SELECT id FROM user WHERE id = ?").get(userId);
             if (!user) {
                 throw new Error("User not found");
@@ -283,10 +290,10 @@ export class UserManagementService {
     }
 
     /**
-     * 更新用户密码（仅限 Credential 用户）
+     * Update user password (Credential users only)
      * 
-     * @param userId 用户 ID
-     * @param newPassword 新密码（明文）
+     * @param userId User ID
+     * @param newPassword New password (plain text)
      */
     static async updateUserPassword(
         userId: string,
@@ -296,7 +303,7 @@ export class UserManagementService {
             const auth = await getAuth();
             const db = auth.options.database as any;
 
-            // 1. 检查用户是否有 credential 账户
+            // 1. Check if the user has a credential account
             const account = db
                 .prepare(
                     `
@@ -310,10 +317,10 @@ export class UserManagementService {
                 throw new Error("User does not have credential account");
             }
 
-            // 2. 哈希新密码
+            // 2. Hash new password
             const hashedPassword = await hashPassword(newPassword);
 
-            // 3. 更新密码
+            // 3. Update password
             const now = new Date().toISOString();
             db.prepare(
                 `
@@ -331,25 +338,25 @@ export class UserManagementService {
     }
 
     /**
-     * 删除用户（级联删除所有关联的账户）
+     * Delete a user (cascading delete of all associated accounts)
      * 
-     * @param userId 用户 ID
+     * @param userId User ID
      */
     static async deleteUser(userId: string): Promise<void> {
         try {
             const auth = await getAuth();
             const db = auth.options.database as any;
 
-            // 检查用户是否存在
+            // Check if the user exists
             const user = db.prepare("SELECT id FROM user WHERE id = ?").get(userId);
             if (!user) {
                 throw new Error("User not found");
             }
 
-            // 1. 删除所有关联的账户
+            // 1. Delete all associated accounts
             db.prepare("DELETE FROM account WHERE userId = ?").run(userId);
 
-            // 2. 删除用户
+            // 2. Delete user
             db.prepare("DELETE FROM user WHERE id = ?").run(userId);
 
             console.log(`[UserManagementService] User deleted: ${userId}`);
@@ -360,11 +367,11 @@ export class UserManagementService {
     }
 
     /**
-     * 验证密码是否正确
+     * Verify if the password is correct
      * 
-     * @param plainPassword 明文密码
-     * @param hashedPassword 哈希后的密码
-     * @returns true 表示密码正确
+     * @param plainPassword Plain text password
+     * @param hashedPassword Hashed password
+     * @returns true if the password is correct
      */
     static async verifyPassword(
         plainPassword: string,
@@ -382,7 +389,7 @@ export class UserManagementService {
     }
 
     /**
-     * 检查邮箱是否已存在
+     * Check if the email already exists
      */
     static async emailExists(email: string): Promise<boolean> {
         try {
@@ -401,7 +408,7 @@ export class UserManagementService {
     }
 
     /**
-     * 获取用户总数
+     * Get the total number of users
      */
     static async getUserCount(): Promise<number> {
         try {
@@ -415,6 +422,199 @@ export class UserManagementService {
             return result?.count || 0;
         } catch (error) {
             console.error("[UserManagementService] Error getting user count:", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Check if 2FA is enabled for the user
+     */
+    static async isTwoFactorEnabled(userId: string): Promise<boolean> {
+        try {
+            const auth = await getAuth();
+            const db = auth.options.database as any;
+
+            const result = db
+                .prepare("SELECT twoFactorEnabled FROM user WHERE id = ?")
+                .get(userId);
+
+            return !!result?.twoFactorEnabled;
+        } catch (error) {
+            console.error("[UserManagementService] Error checking 2FA status:", error);
+            return false;
+        }
+    }
+
+    /**
+     * Disable 2FA for the user
+     */
+    static async disableTwoFactor(userId: string): Promise<void> {
+        try {
+            const auth = await getAuth();
+            const db = auth.options.database as any;
+
+            // Delete 2FA record
+            db.prepare("DELETE FROM twoFactor WHERE userId = ?").run(userId);
+
+            // Update the twoFactorEnabled field in the user table
+            db.prepare("UPDATE user SET twoFactorEnabled = 0 WHERE id = ?").run(userId);
+
+            console.log(`[UserManagementService] 2FA disabled for user: ${userId}`);
+        } catch (error) {
+            console.error("[UserManagementService] Error disabling 2FA:", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Generate backup codes (referencing better-auth implementation)
+     * Generates 10 backup codes in the format "XXXXX-XXXXX"
+     */
+    private static async generateBackupCodes(authSecret: string): Promise<{
+        encryptedBackupCodes: string;
+        backupCodes: string[];
+    }> {
+        // Generate 10 backup codes of 10 random characters each, format: XXXXX-XXXXX
+        const backupCodes = Array.from({ length: 10 })
+            .fill(null)
+            .map(() => generateRandomString(10, "a-z", "0-9", "A-Z"))
+            .map((code) => `${code.slice(0, 5)}-${code.slice(5)}`);
+
+        // Encrypt backup codes and store them in the database
+        const encryptedBackupCodes = await symmetricEncrypt({
+            key: authSecret,
+            data: JSON.stringify(backupCodes),
+        });
+
+        return {
+            encryptedBackupCodes,
+            backupCodes,
+        };
+    }
+
+    /**
+     * Generate 2FA Secret for a user (admin operation)
+     * Returns secret, otpauth URL, and backup codes
+     */
+    static async generateTwoFactorSecret(userId: string): Promise<{
+        secret: string;
+        otpauthUrl: string;
+        backupCodes: string[];
+    }> {
+        try {
+            const auth = await getAuth();
+            const db = auth.options.database as any;
+
+            // Get user information
+            const user = await this.getUserById(userId);
+            if (!user) {
+                throw new Error("User not found");
+            }
+
+            // Generate a 32-character random secret using the better-auth standard method
+            const secret = generateRandomString(32);
+
+            // Get the better-auth secret for encryption (from environment variables or configuration)
+            const authSecret = process.env.BETTER_AUTH_SECRET;
+            if (!authSecret) {
+                throw new Error("BETTER_AUTH_SECRET not configured");
+            }
+
+            // Store the secret using better-auth's symmetric encryption (AES-256-GCM)
+            const encryptedSecret = await symmetricEncrypt({
+                key: authSecret,
+                data: secret,
+            });
+
+            // Generate backup codes (using internal method, referencing better-auth implementation)
+            const backupCodes = await this.generateBackupCodes(authSecret);
+
+            // Delete old 2FA record (if it exists)
+            db.prepare("DELETE FROM twoFactor WHERE userId = ?").run(userId);
+
+            // Insert new 2FA record, storing the encrypted secret and backup codes
+            db.prepare(
+                `INSERT INTO twoFactor (id, userId, secret, backupCodes)
+                 VALUES (?, ?, ?, ?)`
+            ).run(crypto.randomUUID(), userId, encryptedSecret, backupCodes.encryptedBackupCodes);
+
+            // Generate otpauthUrl using better-auth's createOTP
+            const appName = "Block Style CMS";
+            const otpauthUrl = createOTP(secret, {
+                digits: 6,
+                period: 30,
+            }).url(appName, user.email);
+
+            console.log(`[UserManagementService] 2FA secret generated for user: ${userId}`);
+
+            return {
+                secret,  // Return original secret (user can enter manually)
+                otpauthUrl,
+                backupCodes: backupCodes.backupCodes,
+            };
+        } catch (error) {
+            console.error("[UserManagementService] Error generating 2FA secret:", error);
+            throw error;
+        }
+    }
+
+    /**
+     * Verify TOTP code and enable 2FA (using better-auth's createOTP)
+     */
+    static async verifyAndEnableTwoFactor(userId: string, code: string): Promise<boolean> {
+        try {
+            const auth = await getAuth();
+            const db = auth.options.database as any;
+
+            // Get the user's 2FA record
+            const twoFactor = db
+                .prepare("SELECT * FROM twoFactor WHERE userId = ?")
+                .get(userId);
+
+            if (!twoFactor) {
+                throw new Error("No 2FA setup found for this user");
+            }
+
+            // Get the better-auth secret for decryption
+            const authSecret = process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET;
+            if (!authSecret) {
+                throw new Error("BETTER_AUTH_SECRET not configured");
+            }
+
+            // Decrypt the encrypted secret stored in the database
+            const decryptedSecret = await symmetricDecrypt({
+                key: authSecret,
+                data: twoFactor.secret,  // Decrypt the stored ciphertext
+            });
+
+            console.log('[2FA Debug] User Code:', code);
+            console.log('[2FA Debug] Decrypted secret length:', decryptedSecret.length);
+
+            // Perform TOTP verification using better-auth's createOTP
+            const otpVerifier = createOTP(decryptedSecret, {
+                period: 30,  // 30-second time window
+                digits: 6,   // 6-digit verification code
+            });
+
+            // The verify method automatically handles ±1 time window (total 90 seconds tolerance)
+            const isValid = await otpVerifier.verify(code, {
+                window: 1,  // Allow 1 window before and after
+            });
+
+            console.log('[2FA Debug] Verification result:', isValid ? '✅ Valid' : '❌ Invalid');
+
+            if (!isValid) {
+                return false;
+            }
+
+            // Verification successful, update the twoFactorEnabled field in the user table
+            db.prepare("UPDATE user SET twoFactorEnabled = 1 WHERE id = ?").run(userId);
+
+            console.log(`[UserManagementService] 2FA enabled for user: ${userId}`);
+
+            return true;
+        } catch (error) {
+            console.error("[UserManagementService] Error verifying 2FA code:", error);
             throw error;
         }
     }

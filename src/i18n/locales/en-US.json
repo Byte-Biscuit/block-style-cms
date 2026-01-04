@@ -471,12 +471,31 @@
                 }
             },
             "login": {
-                "title": "Admin Portal",
                 "subtitle": "Please sign in to access management features",
+                "divider": "OR",
+                "email": "Email Address",
+                "password": "Password",
+                "submit": "Sign In",
+                "submitting": "Signing in...",
                 "signWith": "Sign in with {provider}",
                 "error": {
                     "title": "Sign In Failed",
+                    "required": "Please enter email and password",
+                    "invalid": "Sign in failed, please check your email and password",
                     "with": "{provider} sign in failed, please try again later"
+                },
+                "twoFactor": {
+                    "title": "Two-Factor Authentication",
+                    "subtitle": "Please enter the 6-digit code from your authenticator app",
+                    "label": "Verification Code",
+                    "verify": "Verify",
+                    "verifying": "Verifying...",
+                    "cancel": "Return to Login",
+                    "error": {
+                        "required": "Please enter 6-digit code",
+                        "invalid": "Invalid code, please try again",
+                        "failed": "Verification failed, please try again"
+                    }
                 }
             }
         },

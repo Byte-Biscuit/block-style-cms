@@ -40,6 +40,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import SecurityIcon from "@mui/icons-material/Security";
 import { UserWithProvider } from "@/lib/services/user-management-service";
 import {
     getUsers,
@@ -47,6 +48,9 @@ import {
     createUser,
     updateUser,
     resetUserPassword,
+    disableTwoFactor,
+    generateTwoFactorSecret,
+    verifyAndEnableTwoFactor,
 } from "@/app/actions/settings/user-management";
 import { isSuccess } from "@/lib/response";
 import { EMAIL_REGEX } from "@/constants";
@@ -89,6 +93,18 @@ export default function UserManagementTab() {
             password: "",
             confirmPassword: "",
         },
+    });
+
+    // 2FA设置对话框
+    const [twoFactorDialog, setTwoFactorDialog] = useState({
+        open: false,
+        userId: "",
+        userName: "",
+        step: 1, // 1: 显示QR码, 2: 输入验证码
+        secret: "",
+        otpauthUrl: "",
+        verificationCode: "",
+        error: "",
     });
 
     // 编辑用户对话框
@@ -159,6 +175,107 @@ export default function UserManagementTab() {
             }
 
             setDeleteDialog({ open: false, userId: "", userName: "" });
+        });
+    };
+
+    // 处理启用2FA - 打开对话框并生成secret
+    const handleEnable2FA = async (userId: string, userName: string) => {
+        setTwoFactorDialog({
+            open: true,
+            userId,
+            userName,
+            step: 1,
+            secret: "",
+            otpauthUrl: "",
+            verificationCode: "",
+            error: "",
+        });
+
+        // 生成2FA secret
+        startTransition(async () => {
+            const result = await generateTwoFactorSecret(userId);
+
+            if (isSuccess(result)) {
+                setTwoFactorDialog(prev => ({
+                    ...prev,
+                    secret: result.payload.secret,
+                    otpauthUrl: result.payload.otpauthUrl,
+                }));
+            } else {
+                setTwoFactorDialog(prev => ({
+                    ...prev,
+                    error: result.message,
+                }));
+            }
+        });
+    };
+
+    // 处理验证2FA代码
+    const handleVerify2FA = () => {
+        const { userId, verificationCode } = twoFactorDialog;
+
+        if (!verificationCode || verificationCode.length !== 6) {
+            setTwoFactorDialog(prev => ({
+                ...prev,
+                error: "请输入6位验证码",
+            }));
+            return;
+        }
+
+        startTransition(async () => {
+            const result = await verifyAndEnableTwoFactor(userId, verificationCode);
+
+            if (isSuccess(result)) {
+                setSnackbar({
+                    open: true,
+                    message: "2FA enabled successfully",
+                    severity: "success",
+                });
+                setTwoFactorDialog({
+                    open: false,
+                    userId: "",
+                    userName: "",
+                    step: 1,
+                    secret: "",
+                    otpauthUrl: "",
+                    verificationCode: "",
+                    error: "",
+                });
+                // 重新加载用户列表
+                await loadUsers();
+            } else {
+                setTwoFactorDialog(prev => ({
+                    ...prev,
+                    error: result.message,
+                }));
+            }
+        });
+    };
+
+    // 处理禁用2FA
+    const handleDisable2FA = (userId: string, userName: string) => {
+        if (!confirm(`Are you sure you want to disable 2FA for user "${userName}"?`)) {
+            return;
+        }
+
+        startTransition(async () => {
+            const result = await disableTwoFactor(userId);
+
+            if (isSuccess(result)) {
+                setSnackbar({
+                    open: true,
+                    message: "2FA disabled successfully",
+                    severity: "success",
+                });
+                // 重新加载用户列表
+                await loadUsers();
+            } else {
+                setSnackbar({
+                    open: true,
+                    message: result.message,
+                    severity: "error",
+                });
+            }
         });
     };
 
@@ -438,6 +555,7 @@ export default function UserManagementTab() {
                             <TableCell>Name</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>Auth Methods</TableCell>
+                            <TableCell align="center">2FA Status</TableCell>
                             <TableCell align="center">Email Verified</TableCell>
                             <TableCell>Created At</TableCell>
                             <TableCell align="center">Actions</TableCell>
@@ -446,13 +564,13 @@ export default function UserManagementTab() {
                     <TableBody>
                         {loading ? (
                             <TableRow>
-                                <TableCell colSpan={6} align="center">
+                                <TableCell colSpan={7} align="center">
                                     <CircularProgress />
                                 </TableCell>
                             </TableRow>
                         ) : users.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={6} align="center">
+                                <TableCell colSpan={7} align="center">
                                     No users found
                                 </TableCell>
                             </TableRow>
@@ -463,6 +581,27 @@ export default function UserManagementTab() {
                                     <TableCell>{user.email}</TableCell>
                                     <TableCell>
                                         {renderProviders(user.providers)}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {/* 2FA Status - 仅对credential用户显示 */}
+                                        {user.providers.some(p => p.providerId === "credential") ? (
+                                            user.twoFactorEnabled ? (
+                                                <Chip
+                                                    label="Enabled"
+                                                    color="success"
+                                                    size="small"
+                                                    icon={<SecurityIcon />}
+                                                />
+                                            ) : (
+                                                <Chip
+                                                    label="Disabled"
+                                                    color="default"
+                                                    size="small"
+                                                />
+                                            )
+                                        ) : (
+                                            <span style={{ color: "#999" }}>N/A</span>
+                                        )}
                                     </TableCell>
                                     <TableCell align="center">
                                         {user.emailVerified ? (
@@ -494,6 +633,30 @@ export default function UserManagementTab() {
                                         >
                                             <EditIcon fontSize="small" />
                                         </IconButton>
+                                        {/* 2FA管理按钮 - 仅对credential用户显示 */}
+                                        {user.providers.some(p => p.providerId === "credential") && (
+                                            user.twoFactorEnabled ? (
+                                                <IconButton
+                                                    size="small"
+                                                    color="warning"
+                                                    onClick={() => handleDisable2FA(user.id, user.name)}
+                                                    title="Disable 2FA"
+                                                    disabled={isPending}
+                                                >
+                                                    <SecurityIcon fontSize="small" />
+                                                </IconButton>
+                                            ) : (
+                                                <IconButton
+                                                    size="small"
+                                                    color="success"
+                                                    onClick={() => handleEnable2FA(user.id, user.name)}
+                                                    title="Enable 2FA"
+                                                    disabled={isPending}
+                                                >
+                                                    <SecurityIcon fontSize="small" />
+                                                </IconButton>
+                                            )
+                                        )}
                                         <IconButton
                                             size="small"
                                             color="error"
@@ -854,6 +1017,116 @@ export default function UserManagementTab() {
                     >
                         Save Changes
                     </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* 2FA设置对话框 */}
+            <Dialog
+                open={twoFactorDialog.open}
+                onClose={() => setTwoFactorDialog({ ...twoFactorDialog, open: false })}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>
+                    Enable 2FA for {twoFactorDialog.userName}
+                </DialogTitle>
+                <DialogContent>
+                    {twoFactorDialog.step === 1 ? (
+                        // Step 1: 显示QR码
+                        <Box sx={{ textAlign: "center", py: 2 }}>
+                            {isPending ? (
+                                <CircularProgress />
+                            ) : twoFactorDialog.error ? (
+                                <Alert severity="error">{twoFactorDialog.error}</Alert>
+                            ) : twoFactorDialog.otpauthUrl ? (
+                                <>
+                                    <DialogContentText sx={{ mb: 2 }}>
+                                        Step 1: Scan the QR code with an authenticator app (e.g., Google Authenticator, Authy)
+                                    </DialogContentText>
+                                    
+                                    {/* QR码 */}
+                                    <Box sx={{ 
+                                        display: "flex", 
+                                        justifyContent: "center",
+                                        mb: 2 
+                                    }}>
+                                        <img
+                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(twoFactorDialog.otpauthUrl)}`}
+                                            alt="2FA QR Code"
+                                            style={{ border: "1px solid #ddd", padding: "10px" }}
+                                        />
+                                    </Box>
+
+                                    {/* Manual entry secret */}
+                                    <DialogContentText variant="body2" color="text.secondary">
+                                        Or enter this code manually:
+                                    </DialogContentText>
+                                    <TextField
+                                        value={twoFactorDialog.secret}
+                                        fullWidth
+                                        InputProps={{
+                                            readOnly: true,
+                                        }}
+                                        sx={{ mt: 1, mb: 2 }}
+                                        size="small"
+                                    />
+
+                                    <DialogContentText sx={{ mt: 2 }}>
+                                        Step 2: After scanning, click "Next" to enter the verification code
+                                    </DialogContentText>
+                                </>
+                            ) : null}
+                        </Box>
+                    ) : (
+                        // Step 2: 输入验证码
+                        <Box sx={{ py: 2 }}>
+                            <DialogContentText sx={{ mb: 2 }}>
+                                Enter the 6-digit verification code from your authenticator app:
+                            </DialogContentText>
+                            <TextField
+                                label="Verification Code"
+                                value={twoFactorDialog.verificationCode}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                                    setTwoFactorDialog({
+                                        ...twoFactorDialog,
+                                        verificationCode: value,
+                                        error: "",
+                                    });
+                                }}
+                                fullWidth
+                                inputProps={{ maxLength: 6, style: { textAlign: "center", fontSize: "24px", letterSpacing: "8px" } }}
+                                error={!!twoFactorDialog.error}
+                                helperText={twoFactorDialog.error}
+                                disabled={isPending}
+                            />
+                        </Box>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => setTwoFactorDialog({ ...twoFactorDialog, open: false })}
+                        disabled={isPending}
+                    >
+                        Cancel
+                    </Button>
+                    {twoFactorDialog.step === 1 ? (
+                        <Button
+                            onClick={() => setTwoFactorDialog({ ...twoFactorDialog, step: 2 })}
+                            variant="contained"
+                            disabled={isPending || !twoFactorDialog.otpauthUrl}
+                        >
+                            Next
+                        </Button>
+                    ) : (
+                        <Button
+                            onClick={handleVerify2FA}
+                            variant="contained"
+                            disabled={isPending || twoFactorDialog.verificationCode.length !== 6}
+                        >
+                            {isPending ? <CircularProgress size={24} /> : "Verify & Enable"}
+                        </Button>
+                    )}
                 </DialogActions>
             </Dialog>
 

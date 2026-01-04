@@ -472,12 +472,31 @@
                 }
             },
             "login": {
-                "title": "管理员后台",
                 "subtitle": "请登录以访问管理功能",
+                "divider": "或",
+                "email": "邮箱地址",
+                "password": "密码",
+                "submit": "登录",
+                "submitting": "登录中...",
                 "signWith": "使用 {provider} 登录",
                 "error": {
                     "title": "登录失败",
+                    "required": "请输入邮箱和密码",
+                    "invalid": "登录失败，请检查邮箱和密码",
                     "with": "{provider} 登录失败，请稍后重试"
+                },
+                "twoFactor": {
+                    "title": "双因素认证",
+                    "subtitle": "请输入您的身份验证器应用中的6位验证码",
+                    "label": "验证码",
+                    "verify": "验证",
+                    "verifying": "验证中...",
+                    "cancel": "返回登录",
+                    "error": {
+                        "required": "请输入6位验证码",
+                        "invalid": "验证码错误，请重新输入",
+                        "failed": "验证失败，请重试"
+                    }
                 }
             }
         },

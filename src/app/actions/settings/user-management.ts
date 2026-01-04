@@ -15,9 +15,11 @@
 
 import { Result, HttpStatus } from "@/lib/response";
 import { UserManagementService, UserWithProvider, CreateUserData } from "@/lib/services/user-management-service";
-import { requireAuthenticated, getCurrentSession, withAuth } from "@/lib/auth/permissions";
+import { getCurrentSession, withAuth } from "@/lib/auth/permissions";
 import { revalidatePath } from "next/cache";
 import { EMAIL_REGEX } from "@/constants";
+import { getAuth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
 
 // ==================== Type Definitions ====================
 
@@ -364,6 +366,177 @@ export const deleteUser = withAuth(async (userId: string): Promise<Result<void>>
         return {
             code: HttpStatus.INTERNAL_SERVER_ERROR,
             message: error instanceof Error ? error.message : "Failed to delete user",
+            payload: undefined,
+        };
+    }
+});
+
+// ==================== 2FA Management ====================
+
+/**
+ * Disable 2FA for a user
+ * 
+ * Requires authentication
+ * 
+ * @param userId User ID
+ * @returns Success or error result
+ */
+export const disableTwoFactor = withAuth(async (userId: string): Promise<Result<undefined>> => {
+    try {
+        // 1. Validate user ID
+        if (!userId) {
+            return {
+                code: HttpStatus.BAD_REQUEST,
+                message: "User ID is required",
+                payload: undefined,
+            };
+        }
+
+        // 2. Check if user exists
+        const user = await UserManagementService.getUserById(userId);
+        if (!user) {
+            return {
+                code: HttpStatus.NOT_FOUND,
+                message: "User not found",
+                payload: undefined,
+            };
+        }
+
+        // 3. Check if user has credential provider
+        const hasCredential = user.providers.some(p => p.providerId === "credential");
+        if (!hasCredential) {
+            return {
+                code: HttpStatus.BAD_REQUEST,
+                message: "User does not have credential authentication",
+                payload: undefined,
+            };
+        }
+
+        // 4. Disable 2FA
+        await UserManagementService.disableTwoFactor(userId);
+
+        // Revalidate settings page
+        revalidatePath("/m/settings");
+
+        return {
+            code: HttpStatus.OK,
+            message: "2FA disabled successfully",
+            payload: undefined,
+        };
+    } catch (error) {
+        console.error("[UserManagement] Error disabling 2FA:", error);
+        return {
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: error instanceof Error ? error.message : "Failed to disable 2FA",
+            payload: undefined,
+        };
+    }
+});
+
+/**
+ * Generate 2FA secret for a user (admin operation)
+ * 
+ * Requires authentication
+ * 
+ * @param userId User ID
+ * @returns 2FA secret and QR code URL
+ */
+export const generateTwoFactorSecret = withAuth(async (userId: string): Promise<Result<{
+    secret: string;
+    otpauthUrl: string;
+}>> => {
+    try {
+        // 1. Validate user ID
+        if (!userId) {
+            return {
+                code: HttpStatus.BAD_REQUEST,
+                message: "User ID is required",
+                payload: { secret: "", otpauthUrl: "" },
+            };
+        }
+
+        // 2. Check if user exists
+        const user = await UserManagementService.getUserById(userId);
+        if (!user) {
+            return {
+                code: HttpStatus.NOT_FOUND,
+                message: "User not found",
+                payload: { secret: "", otpauthUrl: "" },
+            };
+        }
+
+        // 3. Check if user has credential provider
+        const hasCredential = user.providers.some(p => p.providerId === "credential");
+        if (!hasCredential) {
+            return {
+                code: HttpStatus.BAD_REQUEST,
+                message: "User does not have credential authentication",
+                payload: { secret: "", otpauthUrl: "" },
+            };
+        }
+
+        // 4. Generate 2FA secret
+        const result = await UserManagementService.generateTwoFactorSecret(userId);
+
+        return {
+            code: HttpStatus.OK,
+            message: "2FA secret generated successfully",
+            payload: result,
+        };
+    } catch (error) {
+        console.error("[UserManagement] Error generating 2FA secret:", error);
+        return {
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: error instanceof Error ? error.message : "Failed to generate 2FA secret",
+            payload: { secret: "", otpauthUrl: "" },
+        };
+    }
+});
+
+/**
+ * Verify TOTP code and enable 2FA for a user
+ * 
+ * Requires authentication
+ * 
+ * @param userId User ID
+ * @param code TOTP verification code
+ * @returns Success or error result
+ */
+export const verifyAndEnableTwoFactor = withAuth(async (userId: string, code: string): Promise<Result<undefined>> => {
+    try {
+        // 1. Validate inputs
+        if (!userId || !code) {
+            return {
+                code: HttpStatus.BAD_REQUEST,
+                message: "User ID and verification code are required",
+                payload: undefined,
+            };
+        }
+
+        // 2. Verify and enable 2FA
+        const isValid = await UserManagementService.verifyAndEnableTwoFactor(userId, code);
+
+        if (!isValid) {
+            return {
+                code: HttpStatus.BAD_REQUEST,
+                message: "Invalid verification code",
+                payload: undefined,
+            };
+        }
+
+        // Revalidate settings page
+        revalidatePath("/m/settings");
+
+        return {
+            code: HttpStatus.OK,
+            message: "2FA enabled successfully",
+            payload: undefined,
+        };
+    } catch (error) {
+        console.error("[UserManagement] Error enabling 2FA:", error);
+        return {
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: error instanceof Error ? error.message : "Failed to enable 2FA",
             payload: undefined,
         };
     }

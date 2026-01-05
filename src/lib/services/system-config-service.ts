@@ -181,10 +181,6 @@ class SystemConfigService {
      * @returns System configuration object or null if file doesn't exist
      */
     public readConfigSync(): SystemConfig | null {
-        if (this._cachedConfig) {
-            return this._cachedConfig;
-        }
-
         try {
             const configPath = this.getConfigPath();
             if (!fsSync.existsSync(configPath)) {

@@ -55,16 +55,7 @@ export default function SignInPage() {
                             onError={setError}
                         />
 
-                        {/* Divider with "OR" */}
-                        <div className="relative flex items-center py-2">
-                            <div className="grow border-t border-gray-300 dark:border-gray-600"></div>
-                            <span className="mx-4 shrink text-sm text-gray-500 dark:text-gray-400">
-                                {t("divider")}
-                            </span>
-                            <div className="grow border-t border-gray-300 dark:border-gray-600"></div>
-                        </div>
-
-                        {/* Social Auth */}
+                        {/* Social Auth - will auto-hide if no methods enabled */}
                         <SocialAuth onError={setError} />
                     </div>
                 )}

@@ -36,9 +36,7 @@ export default function SignOutButton({
         }
     }
 
-    const userDisplay = session?.user?.name || session?.user?.email || "";
-    const buttonText = userDisplay || t("web.auth.logout.label");
-
+    const userDisplay = session?.user?.name || session?.user?.email || "User";
     return (
         <Button
             color="inherit"
@@ -47,8 +45,9 @@ export default function SignOutButton({
             onClick={handleSignOut}
             disabled={loading}
             sx={{ textTransform: "none", opacity: 0.9 }}
+            ria-label={`${t("web.auth.logout.label")}`}
         >
-            {buttonText}
+            {userDisplay}
         </Button>
     );
 }

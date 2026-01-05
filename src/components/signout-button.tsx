@@ -14,6 +14,7 @@ export default function SignOutButton({
     const router = useRouter();
     const [loading, setLoading] = React.useState(false);
     const t = useTranslations();
+    const { data: session } = authClient.useSession();
 
     async function handleSignOut(e: React.MouseEvent) {
         e.preventDefault();
@@ -35,6 +36,9 @@ export default function SignOutButton({
         }
     }
 
+    const userDisplay = session?.user?.name || session?.user?.email || "";
+    const buttonText = userDisplay || t("web.auth.logout.label");
+
     return (
         <Button
             color="inherit"
@@ -44,7 +48,7 @@ export default function SignOutButton({
             disabled={loading}
             sx={{ textTransform: "none", opacity: 0.9 }}
         >
-            {t("web.auth.logout.label")}
+            {buttonText}
         </Button>
     );
 }

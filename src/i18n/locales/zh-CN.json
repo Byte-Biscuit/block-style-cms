@@ -491,12 +491,16 @@
                     "title": "双因素认证",
                     "subtitle": "请输入您的身份验证器应用中的6位验证码",
                     "label": "验证码",
+                    "backupCodeLabel": "备份码",
                     "verify": "验证",
                     "verifying": "验证中...",
                     "cancel": "返回登录",
+                    "useBackupCode": "使用备份码",
+                    "useAuthenticator": "使用验证器应用",
                     "error": {
                         "required": "请输入6位验证码",
                         "invalid": "验证码错误，请重新输入",
+                        "invalidBackupCode": "备份码格式错误，格式应为XXXXX-XXXXX",
                         "failed": "验证失败，请重试"
                     }
                 }

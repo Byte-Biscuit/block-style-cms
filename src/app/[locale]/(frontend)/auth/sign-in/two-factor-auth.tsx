@@ -14,13 +14,24 @@ interface TwoFactorAuthProps {
 export function TwoFactorAuth({ onCancel, onError }: TwoFactorAuthProps) {
     const [twoFactorCode, setTwoFactorCode] = useState("");
     const [is2FALoading, setIs2FALoading] = useState(false);
+    const [useBackupCode, setUseBackupCode] = useState(false);
     const t = useTranslations("web.auth.login.twoFactor");
 
     const handleTwoFactorVerify = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!twoFactorCode || twoFactorCode.length !== 6) {
-            onError(t("error.required"));
+        // 验证码格式：6位数字 或 backup code格式（XXXXX-XXXXX）
+        const isValidTOTP = !useBackupCode && twoFactorCode.length === 6;
+        const isValidBackupCode =
+            useBackupCode &&
+            /^[A-Za-z0-9]{5}-[A-Za-z0-9]{5}$/.test(twoFactorCode);
+
+        if (!twoFactorCode || (!isValidTOTP && !isValidBackupCode)) {
+            onError(
+                useBackupCode
+                    ? t("error.invalidBackupCode")
+                    : t("error.required")
+            );
             return;
         }
 
@@ -28,9 +39,21 @@ export function TwoFactorAuth({ onCancel, onError }: TwoFactorAuthProps) {
         onError("");
 
         try {
-            const result = await authClient.twoFactor.verifyTotp({
-                code: twoFactorCode,
-            });
+            let result;
+
+            if (useBackupCode) {
+                console.log(
+                    "🍪 Cookies before verifyBackupCode:",
+                    document.cookie
+                );
+                result = await authClient.twoFactor.verifyBackupCode({
+                    code: twoFactorCode,
+                });
+            } else {
+                result = await authClient.twoFactor.verifyTotp({
+                    code: twoFactorCode,
+                });
+            }
 
             if (result.error) {
                 onError(result.error.message || t("error.invalid"));
@@ -64,30 +87,45 @@ export function TwoFactorAuth({ onCancel, onError }: TwoFactorAuthProps) {
                         htmlFor="twoFactorCode"
                         className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        {t("label")}
+                        {useBackupCode ? t("backupCodeLabel") : t("label")}
                     </label>
                     <input
                         id="twoFactorCode"
                         type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        maxLength={6}
+                        inputMode={useBackupCode ? "text" : "numeric"}
+                        pattern={useBackupCode ? undefined : "[0-9]*"}
+                        maxLength={useBackupCode ? 11 : 6}
                         value={twoFactorCode}
-                        onChange={(e) =>
-                            setTwoFactorCode(e.target.value.replace(/\D/g, ""))
-                        }
-                        placeholder="000000"
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setTwoFactorCode(value);
+                        }}
+                        placeholder={useBackupCode ? "XXXXX-XXXXX" : "000000"}
                         className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-2xl tracking-widest text-gray-900 placeholder:text-gray-400 focus:border-transparent focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
                         required
                         disabled={is2FALoading}
                         autoFocus
                     />
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setUseBackupCode(!useBackupCode);
+                            setTwoFactorCode("");
+                            onError("");
+                        }}
+                        className="mt-2 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                        disabled={is2FALoading}
+                    >
+                        {useBackupCode
+                            ? t("useAuthenticator")
+                            : t("useBackupCode")}
+                    </button>
                 </div>
 
                 <button
                     type="submit"
                     className={`${button.primary} w-full`}
-                    disabled={is2FALoading || twoFactorCode.length !== 6}
+                    disabled={is2FALoading || twoFactorCode.length === 0}
                 >
                     {is2FALoading ? (
                         <>

@@ -444,6 +444,7 @@ export const disableTwoFactor = withAuth(async (userId: string): Promise<Result<
 export const generateTwoFactorSecret = withAuth(async (userId: string): Promise<Result<{
     secret: string;
     otpauthUrl: string;
+    backupCodes: string[];
 }>> => {
     try {
         // 1. Validate user ID
@@ -451,7 +452,7 @@ export const generateTwoFactorSecret = withAuth(async (userId: string): Promise<
             return {
                 code: HttpStatus.BAD_REQUEST,
                 message: "User ID is required",
-                payload: { secret: "", otpauthUrl: "" },
+                payload: { secret: "", otpauthUrl: "", backupCodes: [] },
             };
         }
 
@@ -461,7 +462,7 @@ export const generateTwoFactorSecret = withAuth(async (userId: string): Promise<
             return {
                 code: HttpStatus.NOT_FOUND,
                 message: "User not found",
-                payload: { secret: "", otpauthUrl: "" },
+                payload: { secret: "", otpauthUrl: "", backupCodes: [] },
             };
         }
 
@@ -471,7 +472,7 @@ export const generateTwoFactorSecret = withAuth(async (userId: string): Promise<
             return {
                 code: HttpStatus.BAD_REQUEST,
                 message: "User does not have credential authentication",
-                payload: { secret: "", otpauthUrl: "" },
+                payload: { secret: "", otpauthUrl: "", backupCodes: [] },
             };
         }
 
@@ -488,7 +489,7 @@ export const generateTwoFactorSecret = withAuth(async (userId: string): Promise<
         return {
             code: HttpStatus.INTERNAL_SERVER_ERROR,
             message: error instanceof Error ? error.message : "Failed to generate 2FA secret",
-            payload: { secret: "", otpauthUrl: "" },
+            payload: { secret: "", otpauthUrl: "", backupCodes: [] },
         };
     }
 });

@@ -490,12 +490,16 @@
                     "title": "Two-Factor Authentication",
                     "subtitle": "Please enter the 6-digit code from your authenticator app",
                     "label": "Verification Code",
+                    "backupCodeLabel": "Backup Code",
                     "verify": "Verify",
                     "verifying": "Verifying...",
                     "cancel": "Return to Login",
+                    "useBackupCode": "Use Backup Code",
+                    "useAuthenticator": "Use Authenticator App",
                     "error": {
                         "required": "Please enter 6-digit code",
                         "invalid": "Invalid code, please try again",
+                        "invalidBackupCode": "Invalid backup code format, should be XXXXX-XXXXX",
                         "failed": "Verification failed, please try again"
                     }
                 }

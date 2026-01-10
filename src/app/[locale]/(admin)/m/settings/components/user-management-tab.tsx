@@ -100,11 +100,13 @@ export default function UserManagementTab() {
         open: false,
         userId: "",
         userName: "",
-        step: 1, // 1: 显示QR码, 2: 输入验证码
+        step: 1, // 1: 显示QR码, 2: 输入验证码, 3: 显示备份码
         secret: "",
         otpauthUrl: "",
+        backupCodes: [] as string[],
         verificationCode: "",
         error: "",
+        copied: false,
     });
 
     // 编辑用户对话框
@@ -187,8 +189,10 @@ export default function UserManagementTab() {
             step: 1,
             secret: "",
             otpauthUrl: "",
+            backupCodes: [],
             verificationCode: "",
             error: "",
+            copied: false,
         });
 
         // 生成2FA secret
@@ -200,6 +204,7 @@ export default function UserManagementTab() {
                     ...prev,
                     secret: result.payload.secret,
                     otpauthUrl: result.payload.otpauthUrl,
+                    backupCodes: result.payload.backupCodes || [],
                 }));
             } else {
                 setTwoFactorDialog(prev => ({
@@ -226,23 +231,13 @@ export default function UserManagementTab() {
             const result = await verifyAndEnableTwoFactor(userId, verificationCode);
 
             if (isSuccess(result)) {
-                setSnackbar({
-                    open: true,
-                    message: "2FA enabled successfully",
-                    severity: "success",
-                });
-                setTwoFactorDialog({
-                    open: false,
-                    userId: "",
-                    userName: "",
-                    step: 1,
-                    secret: "",
-                    otpauthUrl: "",
+                // 跳转到step 3显示备份码
+                setTwoFactorDialog(prev => ({
+                    ...prev,
+                    step: 3,
                     verificationCode: "",
                     error: "",
-                });
-                // 重新加载用户列表
-                await loadUsers();
+                }));
             } else {
                 setTwoFactorDialog(prev => ({
                     ...prev,
@@ -250,6 +245,40 @@ export default function UserManagementTab() {
                 }));
             }
         });
+    };
+
+    // 复制备份码到剪贴板
+    const handleCopyBackupCodes = () => {
+        const codes = twoFactorDialog.backupCodes.join('\n');
+        navigator.clipboard.writeText(codes).then(() => {
+            setTwoFactorDialog(prev => ({ ...prev, copied: true }));
+            setTimeout(() => {
+                setTwoFactorDialog(prev => ({ ...prev, copied: false }));
+            }, 2000);
+        });
+    };
+
+    // 完成2FA设置
+    const handleComplete2FA = async () => {
+        setSnackbar({
+            open: true,
+            message: "2FA enabled successfully",
+            severity: "success",
+        });
+        setTwoFactorDialog({
+            open: false,
+            userId: "",
+            userName: "",
+            step: 1,
+            secret: "",
+            otpauthUrl: "",
+            backupCodes: [],
+            verificationCode: "",
+            error: "",
+            copied: false,
+        });
+        // 重新加载用户列表
+        await loadUsers();
     };
 
     // 处理禁用2FA
@@ -1077,7 +1106,7 @@ export default function UserManagementTab() {
                                 </>
                             ) : null}
                         </Box>
-                    ) : (
+                    ) : twoFactorDialog.step === 2 ? (
                         // Step 2: 输入验证码
                         <Box sx={{ py: 2 }}>
                             <DialogContentText sx={{ mb: 2 }}>
@@ -1101,31 +1130,88 @@ export default function UserManagementTab() {
                                 disabled={isPending}
                             />
                         </Box>
+                    ) : (
+                        // Step 3: 显示备份码
+                        <Box sx={{ py: 2 }}>
+                            <Alert severity="warning" sx={{ mb: 2 }}>
+                                <strong>Important:</strong> Save these backup codes in a safe place. 
+                                Each code can only be used once and will help you regain access if you lose your authenticator device.
+                            </Alert>
+                            
+                            <DialogContentText sx={{ mb: 2, fontWeight: 600 }}>
+                                Your Backup Codes:
+                            </DialogContentText>
+                            
+                            <Paper 
+                                variant="outlined" 
+                                sx={{ 
+                                    p: 2, 
+                                    mb: 2,
+                                    bgcolor: 'background.default',
+                                    fontFamily: 'monospace',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                <Box sx={{ 
+                                    display: 'grid', 
+                                    gridTemplateColumns: '1fr 1fr', 
+                                    gap: 1 
+                                }}>
+                                    {twoFactorDialog.backupCodes.map((code, index) => (
+                                        <Box key={index}>
+                                            {index + 1}. {code}
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Paper>
+                            
+                            <Button
+                                variant="outlined"
+                                fullWidth
+                                onClick={handleCopyBackupCodes}
+                                startIcon={twoFactorDialog.copied ? <CheckCircleIcon /> : undefined}
+                                color={twoFactorDialog.copied ? "success" : "primary"}
+                            >
+                                {twoFactorDialog.copied ? "Copied!" : "Copy All Backup Codes"}
+                            </Button>
+                        </Box>
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={() => setTwoFactorDialog({ ...twoFactorDialog, open: false })}
-                        disabled={isPending}
-                    >
-                        Cancel
-                    </Button>
-                    {twoFactorDialog.step === 1 ? (
+                    {twoFactorDialog.step === 3 ? (
                         <Button
-                            onClick={() => setTwoFactorDialog({ ...twoFactorDialog, step: 2 })}
+                            onClick={handleComplete2FA}
                             variant="contained"
-                            disabled={isPending || !twoFactorDialog.otpauthUrl}
+                            fullWidth
                         >
-                            Next
+                            Complete
                         </Button>
                     ) : (
-                        <Button
-                            onClick={handleVerify2FA}
-                            variant="contained"
-                            disabled={isPending || twoFactorDialog.verificationCode.length !== 6}
-                        >
-                            {isPending ? <CircularProgress size={24} /> : "Verify & Enable"}
-                        </Button>
+                        <>
+                            <Button
+                                onClick={() => setTwoFactorDialog({ ...twoFactorDialog, open: false })}
+                                disabled={isPending}
+                            >
+                                Cancel
+                            </Button>
+                            {twoFactorDialog.step === 1 ? (
+                                <Button
+                                    onClick={() => setTwoFactorDialog({ ...twoFactorDialog, step: 2 })}
+                                    variant="contained"
+                                    disabled={isPending || !twoFactorDialog.otpauthUrl}
+                                >
+                                    Next
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={handleVerify2FA}
+                                    variant="contained"
+                                    disabled={isPending || twoFactorDialog.verificationCode.length !== 6}
+                                >
+                                    {isPending ? <CircularProgress size={24} /> : "Verify & Enable"}
+                                </Button>
+                            )}
+                        </>
                     )}
                 </DialogActions>
             </Dialog>

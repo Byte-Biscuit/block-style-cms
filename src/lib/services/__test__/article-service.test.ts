@@ -2,8 +2,6 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { describe, it, vi } from "vitest"
 
-// file:///D:/workspace/block-style-blog/src/lib/__test__/article-service.test.ts
-//console.log(import.meta.url);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -1,7 +1,7 @@
 import path from "path";
 import { betterAuth } from "better-auth";
 import { twoFactor } from "better-auth/plugins";
-import { passkey } from "@better-auth/passkey"
+//import { passkey } from "@better-auth/passkey";
 import Database from "better-sqlite3";
 import { systemConfigService } from "../services/system-config-service";
 import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE } from "@/constants";
@@ -61,8 +61,6 @@ export async function getAuth() {
     // D. Rebuild Instance (Only when timestamp differs or instance is null)
     console.log(`[Auth] ♻️ Config updated (Time: ${currentInitializedAt}). Rebuilding instance...`);
 
-    const allowedEmails = config?.authentication?.accessControl?.allowedEmails || [];
-
     const githubConfig = config?.authentication?.methods?.github;
     const googleConfig = config?.authentication?.methods?.google;
 
@@ -103,19 +101,26 @@ export async function getAuth() {
         // Plugins for additional authentication methods
         plugins: [
             // Two-Factor Authentication (TOTP/Authenticator)
-            twoFactor(),
+            // Configure backup codes to use encrypted storage
+            twoFactor({
+                backupCodeOptions: {
+                    // encrypted|plain
+                    storeBackupCodes: "plain"
+                }
+            }),
 
             // Passkey (WebAuthn) support
-            passkey(),
+            //passkey(),
         ],
         // Database hooks
         databaseHooks: {
             user: {
                 create: {
                     before: async (user, ctx) => {
+                        const syncAllowedEmails = systemConfigService.getAllowedEmails();
                         const email = user.email?.toLowerCase() || '';
                         // Enforce allowed emails if configured
-                        if (allowedEmails.length > 0 && !allowedEmails.includes(email)) {
+                        if (syncAllowedEmails.length > 0 && !syncAllowedEmails.includes(email)) {
                             console.error(`[Auth][Hook] Registration blocked for disallowed email: ${email}`);
                             return false;
                         }
@@ -128,10 +133,11 @@ export async function getAuth() {
                 create: {
                     before: async (session, ctx) => {
                         console.log("[Auth][Hook] Creating session:", session);
+                        const syncAllowedEmails = systemConfigService.getAllowedEmails();
                         const user = await authDatabase
                             .prepare("SELECT email FROM user WHERE id = ?")
                             .get(session.userId) as { email: string };
-                        if (user && !allowedEmails.includes(user.email)) {
+                        if (user && !syncAllowedEmails.includes(user.email)) {
                             console.warn(`[Auth] 🚫 Blocked login attempt: ${user.email}`);
                             return false;
                         }

@@ -58,6 +58,50 @@ export interface CreateUserData {
 export interface UpdateUserData {
     name?: string;
 }
+/**
+ * Options for generating backup codes
+ * From: better-auth/plugins/two-factor/backup-codes/index.ts
+ */
+export interface BackupCodeOptions {
+    /**
+     * The amount of backup codes to generate
+     *
+     * @default 10
+     */
+    amount?: number | undefined;
+    /**
+     * The length of the backup codes
+     *
+     * @default 10
+     */
+    length?: number | undefined;
+    /**
+     * An optional custom function to generate backup codes
+     */
+    customBackupCodesGenerate?: (() => string[]) | undefined;
+    /**
+     * How to store the backup codes in the database, whether encrypted or plain.
+     */
+    storeBackupCodes?:
+    | (
+        | "plain"
+        | "encrypted"
+        | {
+            encrypt: (token: string) => Promise<string>;
+            decrypt: (token: string) => Promise<string>;
+        }
+    )
+    | undefined;
+}
+interface TwoFactorPluginWithOptions {
+    id: string;
+    options?: {
+        backupCodeOptions?: {
+            storeBackupCodes?: BackupCodeOptions['storeBackupCodes'];
+        };
+    };
+}
+
 
 // ==================== User Management Service Class ====================
 
@@ -466,29 +510,48 @@ export class UserManagementService {
         }
     }
 
-    /**
-     * Generate backup codes (referencing better-auth implementation)
-     * Generates 10 backup codes in the format "XXXXX-XXXXX"
-     */
-    private static async generateBackupCodes(authSecret: string): Promise<{
-        encryptedBackupCodes: string;
-        backupCodes: string[];
-    }> {
-        // Generate 10 backup codes of 10 random characters each, format: XXXXX-XXXXX
-        const backupCodes = Array.from({ length: 10 })
+    private static generateBackupCodesFn(options?: BackupCodeOptions | undefined) {
+        return Array.from({ length: options?.amount ?? 10 })
             .fill(null)
-            .map(() => generateRandomString(10, "a-z", "0-9", "A-Z"))
+            .map(() => generateRandomString(options?.length ?? 10, "a-z", "0-9", "A-Z"))
             .map((code) => `${code.slice(0, 5)}-${code.slice(5)}`);
+    }
 
-        // Encrypt backup codes and store them in the database
-        const encryptedBackupCodes = await symmetricEncrypt({
-            key: authSecret,
-            data: JSON.stringify(backupCodes),
-        });
-
+    /**
+     * From: better-auth/plugins/two-factor/backup-codes/index.ts
+     * Generate backup codes
+     */
+    static async generateBackupCodes(
+        secret: string,
+        options?: BackupCodeOptions | undefined,
+    ) {
+        const backupCodes = options?.customBackupCodesGenerate
+            ? options.customBackupCodesGenerate()
+            : UserManagementService.generateBackupCodesFn(options);
+        if (options?.storeBackupCodes === "encrypted") {
+            const encCodes = await symmetricEncrypt({
+                data: JSON.stringify(backupCodes),
+                key: secret,
+            });
+            return {
+                backupCodes,
+                encryptedBackupCodes: encCodes,
+            };
+        }
+        if (
+            typeof options?.storeBackupCodes === "object" &&
+            "encrypt" in options?.storeBackupCodes
+        ) {
+            return {
+                backupCodes,
+                encryptedBackupCodes: await options?.storeBackupCodes.encrypt(
+                    JSON.stringify(backupCodes),
+                ),
+            };
+        }
         return {
-            encryptedBackupCodes,
             backupCodes,
+            encryptedBackupCodes: JSON.stringify(backupCodes),
         };
     }
 
@@ -527,7 +590,10 @@ export class UserManagementService {
             });
 
             // Generate backup codes (using internal method, referencing better-auth implementation)
-            const backupCodes = await this.generateBackupCodes(authSecret);
+            const twoFactorPlugin = auth.options.plugins?.find((p: any) => p.id === 'two-factor') as TwoFactorPluginWithOptions | undefined;
+            const storeBackupCodes = twoFactorPlugin?.options?.backupCodeOptions?.storeBackupCodes || "plain";
+            console.log('[UserManagementService] storeBackupCodes option:', storeBackupCodes);
+            const backupCodes = await UserManagementService.generateBackupCodes(authSecret, { storeBackupCodes });
 
             // Delete old 2FA record (if it exists)
             db.prepare("DELETE FROM twoFactor WHERE userId = ?").run(userId);

@@ -5,13 +5,6 @@ import { describe, it, expect, beforeEach, vi, beforeAll } from "vitest";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Set environment variables before importing modules
-beforeAll(() => {
-    process.env.NEXT_PUBLIC_ALGOLIA_APP_ID = "test-app-id";
-    process.env.ALGOLIA_ADMIN_API_KEY = "test-api-key";
-    process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME = "test-index";
-});
-
 // Mock config before importing modules
 vi.mock('@/config', () => ({
     ARTICLE_DIR: path.join(__dirname, "..", "..", "..", "data", "articles"),

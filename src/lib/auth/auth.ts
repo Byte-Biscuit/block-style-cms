@@ -105,7 +105,7 @@ export async function getAuth() {
             twoFactor({
                 backupCodeOptions: {
                     // encrypted|plain
-                    storeBackupCodes: "plain"
+                    storeBackupCodes: "encrypted"
                 }
             }),
 

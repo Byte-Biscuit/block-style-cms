@@ -135,6 +135,17 @@
                 "saveChanges": "儲存變更",
                 "backInstall": "← 返回",
                 "cancel": "取消"
+            },
+            "tab": {
+                "buttons": {
+                    "save": "儲存變更",
+                    "saving": "儲存中..."
+                },
+                "messages": {
+                    "saveSuccess": "身分驗證配置儲存成功！",
+                    "saveFailed": "儲存身分驗證配置失敗",
+                    "unexpectedError": "發生意外錯誤"
+                }
             }
         },
         "services": {
@@ -202,6 +213,86 @@
                 "backInstall": "← 返回",
                 "cancel": "取消",
                 "skip": "跳過"
+            },
+            "tab": {
+                "buttons": {
+                    "save": "儲存變更",
+                    "saving": "儲存中..."
+                },
+                "messages": {
+                    "saveSuccess": "外部服務配置儲存成功！",
+                    "saveFailed": "儲存外部服務配置失敗",
+                    "unexpectedError": "發生意外錯誤"
+                }
+            }
+        },
+        "settings": {
+            "page": {
+                "title": "系統設定",
+                "description": "配置您的網站、身份驗證和服務",
+                "error": {
+                    "title": "未找到配置",
+                    "description": "請先完成安裝過程。"
+                },
+                "metadata": {
+                    "title": "系統設定",
+                    "description": "配置系統設定和偏好"
+                }
+            },
+            "tabs": {
+                "basicConfig": "基礎配置",
+                "websiteInfo": "網站資訊",
+                "userManagement": "使用者管理",
+                "authentication": "身份驗證",
+                "externalServices": "外部服務",
+                "channelManagement": "頻道管理"
+            },
+            "basicConfig": {
+                "comment": {
+                    "title": "評論系統配置",
+                    "description": "配置評論系統的設定與限制",
+                    "enabled": "啟用評論系統",
+                    "maxTotal": "評論總數上限",
+                    "maxTotalHelper": "系統允許的最大評論數量",
+                    "limits": {
+                        "title": "內容限制",
+                        "minLength": "最小長度",
+                        "minLengthHelper": "最少字元數",
+                        "maxLength": "最大長度",
+                        "maxLengthHelper": "最多字元數",
+                        "maxLinks": "最大允許連結數",
+                        "maxLinksHelper": "評論中允許的最大連結數量"
+                    },
+                    "moderation": {
+                        "title": "審核設定",
+                        "requireApproval": "發布前需要人工審核"
+                    }
+                },
+                "suggestion": {
+                    "title": "建議系統配置",
+                    "description": "配置建議系統的設定與限制",
+                    "enabled": "啟用建議系統",
+                    "maxTotal": "建議總數上限",
+                    "maxTotalHelper": "系統允許的最大建議數量",
+                    "limits": {
+                        "title": "內容限制",
+                        "minLength": "最小長度",
+                        "minLengthHelper": "最少字元數",
+                        "maxLength": "最大長度",
+                        "maxLengthHelper": "最多字元數",
+                        "maxLinks": "最大允許連結數",
+                        "maxLinksHelper": "建議中允許的最大連結數量"
+                    }
+                },
+                "buttons": {
+                    "save": "儲存變更",
+                    "saving": "儲存中..."
+                },
+                "messages": {
+                    "saveSuccess": "配置儲存成功！",
+                    "saveFailed": "儲存配置失敗",
+                    "unexpectedError": "發生意外錯誤"
+                }
             }
         },
         "siteInfo": {
@@ -246,12 +337,176 @@
                 "saveChanges": "儲存變更",
                 "backInstall": "← 返回",
                 "cancel": "取消",
-                "uploadingLogo": "正在上傳 Logo..."
+                "uploadingLogo": "正在上傳 Logo...",
+                "saving": "儲存中..."
             },
             "messages": {
                 "pngOnly": "請上傳 PNG 格式的檔案。",
                 "uploadFailed": "上傳 Logo 失敗",
-                "uploadError": "上傳 Logo 時發生錯誤"
+                "uploadError": "上傳 Logo 時發生錯誤",
+                "saveSuccess": "設定儲存成功！",
+                "saveFailed": "儲存設定失敗",
+                "unexpectedError": "發生意外錯誤"
+            }
+        },
+        "channel": {
+            "title": "頻道配置",
+            "subtitle": "配置網站的導航頻道。基於標籤的頻道用於篩選文章，而頁面頻道連結到特定頁面。",
+            "info": {
+                "title": "標籤格式：",
+                "content": "推薦格式為 <code>_TAG_</code>（大寫加底線），但也支援自訂格式。"
+            },
+            "form": {
+                "id": "ID",
+                "idHelper": "唯一識別碼（也作為 i18n 鍵）",
+                "idErrorRequired": "ID 必填",
+                "idErrorUnique": "ID 必須唯一",
+                "icon": "圖示（可選）",
+                "iconHelper": "圖示識別碼（例如 Home, Article, 🏠 或自訂）",
+                "type": "類型",
+                "types": {
+                    "tag": "標籤（篩選文章）",
+                    "page": "頁面（連結到頁面）"
+                },
+                "tag": "標籤",
+                "tagHelper": "格式：_TAG_（推薦）",
+                "tagErrorRequired": "標籤類型必須填寫標籤",
+                "path": "路徑",
+                "pathHelperTag": "根據標籤自動產生",
+                "pathHelperPage": "例如 /tags 或 /about",
+                "pathErrorRequired": "路徑必填"
+            },
+            "actions": {
+                "add": "新增頻道",
+                "save": "儲存變更",
+                "saving": "儲存中...",
+                "remove": "移除頻道",
+                "moveUp": "上移",
+                "moveDown": "下移"
+            },
+            "messages": {
+                "saveSuccess": "頻道配置儲存成功！",
+                "saveFailed": "儲存頻道配置失敗",
+                "unexpectedError": "發生意外錯誤"
+            }
+        },
+        "userManagement": {
+            "page": {
+                "title": "使用者管理",
+                "subtitle": "管理使用者及其身分驗證方式"
+            },
+            "table": {
+                "columns": {
+                    "name": "姓名",
+                    "email": "信箱",
+                    "authMethods": "認證方式",
+                    "twoFactorStatus": "雙因素驗證",
+                    "emailVerified": "信箱驗證",
+                    "createdAt": "建立時間",
+                    "actions": "操作"
+                },
+                "empty": "未找到使用者",
+                "loading": "載入中...",
+                "twoFactor": {
+                    "enabled": "已啟用",
+                    "disabled": "未啟用",
+                    "notApplicable": "不適用"
+                },
+                "emailVerification": {
+                    "verified": "已驗證",
+                    "unverified": "未驗證"
+                }
+            },
+            "providers": {
+                "credential": "帳號密碼",
+                "github": "GitHub",
+                "google": "Google"
+            },
+            "buttons": {
+                "addUser": "新增使用者",
+                "editUser": "編輯使用者",
+                "deleteUser": "刪除使用者",
+                "save": "儲存變更",
+                "cancel": "取消",
+                "next": "下一步",
+                "complete": "完成",
+                "resetPassword": "重設密碼",
+                "cancelReset": "取消重設密碼",
+                "verifyEnable": "驗證並啟用",
+                "copyBackupCodes": "複製所有備用碼",
+                "copied": "已複製！",
+                "delete": "刪除"
+            },
+            "tooltips": {
+                "edit": "編輯使用者",
+                "delete": "刪除使用者",
+                "enable2FA": "啟用雙因素驗證",
+                "disable2FA": "停用雙因素驗證"
+            },
+            "deleteDialog": {
+                "title": "刪除使用者",
+                "message": "確定要刪除使用者 \"{userName}\" 嗎？此操作無法復原。"
+            },
+            "addDialog": {
+                "title": "新增使用者",
+                "fields": {
+                    "name": "姓名",
+                    "email": "信箱",
+                    "password": "密碼",
+                    "confirmPassword": "確認密碼"
+                },
+                "helpers": {
+                    "passwordMinLength": "至少 8 個字元"
+                }
+            },
+            "editDialog": {
+                "title": "編輯使用者",
+                "emailHelper": "信箱無法變更",
+                "fields": {
+                    "name": "姓名",
+                    "email": "信箱",
+                    "newPassword": "新密碼",
+                    "confirmPassword": "確認新密碼"
+                },
+                "helpers": {
+                    "passwordMinLength": "至少 8 個字元"
+                }
+            },
+            "twoFactorDialog": {
+                "title": "為 {userName} 啟用雙因素驗證",
+                "step1": {
+                    "instruction": "第 1 步：使用身分驗證器應用程式（如 Google Authenticator、Authy）掃描二維碼",
+                    "manualEntry": "或手動輸入此程式碼：",
+                    "nextStep": "第 2 步：掃描後，點選「下一步」輸入驗證碼"
+                },
+                "step2": {
+                    "instruction": "輸入您的身分驗證器應用程式中的 6 位驗證碼：",
+                    "label": "驗證碼"
+                },
+                "step3": {
+                    "warning": "⚠️ 重要：請將這些備用碼儲存在安全的地方。每個備用碼只能使用一次，在您遺失身分驗證器裝置時可以協助您重新獲得存取權限。",
+                    "title": "您的備用碼："
+                }
+            },
+            "validation": {
+                "nameRequired": "姓名為必填項目",
+                "emailRequired": "信箱為必填項目",
+                "emailInvalid": "信箱格式無效",
+                "passwordRequired": "密碼為必填項目",
+                "passwordMinLength": "密碼至少為 8 個字元",
+                "confirmPasswordRequired": "請確認密碼",
+                "passwordMismatch": "密碼不符",
+                "verificationCodeRequired": "請輸入 6 位驗證碼"
+            },
+            "messages": {
+                "deleteSuccess": "使用者刪除成功",
+                "createSuccess": "使用者建立成功",
+                "updateSuccess": "使用者更新成功",
+                "enable2FASuccess": "雙因素驗證啟用成功",
+                "disable2FASuccess": "雙因素驗證停用成功"
+            },
+            "confirm": {
+                "disable2FA": "確定要為使用者「{userName}」停用雙因素驗證嗎？"
             }
         }
     },

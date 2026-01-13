@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Tabs, Tab, Box } from "@mui/material";
 import {
     Language as LanguageIcon,
@@ -49,6 +50,7 @@ interface SettingsTabsProps {
  * Each tab is independent and has its own save functionality.
  */
 export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
+    const t = useTranslations("configuration.settings.tabs");
     const [activeTab, setActiveTab] = useState(0);
 
     const handleTabChange = (
@@ -76,42 +78,42 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                 <Tab
                     icon={<SettingsIcon />}
                     iconPosition="start"
-                    label="Basic Configuration"
+                    label={t("basicConfig")}
                     id="settings-tab-0"
                     aria-controls="settings-tabpanel-0"
                 />
                 <Tab
                     icon={<LanguageIcon />}
                     iconPosition="start"
-                    label="Website Info"
+                    label={t("websiteInfo")}
                     id="settings-tab-1"
                     aria-controls="settings-tabpanel-1"
                 />
                 <Tab
                     icon={<PeopleIcon />}
                     iconPosition="start"
-                    label="User Management"
+                    label={t("userManagement")}
                     id="settings-tab-2"
                     aria-controls="settings-tabpanel-2"
                 />
                 <Tab
                     icon={<SecurityIcon />}
                     iconPosition="start"
-                    label="Authentication"
+                    label={t("authentication")}
                     id="settings-tab-3"
                     aria-controls="settings-tabpanel-3"
                 />
                 <Tab
                     icon={<CloudIcon />}
                     iconPosition="start"
-                    label="External Services"
+                    label={t("externalServices")}
                     id="settings-tab-4"
                     aria-controls="settings-tabpanel-4"
                 />
                 <Tab
                     icon={<ViewListIcon />}
                     iconPosition="start"
-                    label="Channel Management"
+                    label={t("channelManagement")}
                     id="settings-tab-5"
                     aria-controls="settings-tabpanel-5"
                 />

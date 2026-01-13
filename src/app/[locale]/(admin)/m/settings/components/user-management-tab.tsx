@@ -3,16 +3,17 @@
 /**
  * User Management Tab
  *
- * 用户管理界面：
- * - 用户列表展示（基础 Table）
- * - 添加用户功能
- * - 编辑用户功能
- * - 删除用户功能
+ * User management UI:
+ * - Display user list (basic table)
+ * - Add user
+ * - Edit user
+ * - Delete user
  *
- * 所有登录用户都可以访问
+ * Accessible by authenticated users
  */
 
 import { useEffect, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import {
     Box,
     Button,
@@ -56,6 +57,7 @@ import { isSuccess } from "@/lib/response";
 import { EMAIL_REGEX } from "@/constants";
 
 export default function UserManagementTab() {
+    const t = useTranslations("configuration.userManagement");
     const [users, setUsers] = useState<UserWithProvider[]>([]);
     const [loading, setLoading] = useState(true);
     const [isPending, startTransition] = useTransition();
@@ -69,7 +71,7 @@ export default function UserManagementTab() {
         severity: "success",
     });
 
-    // 删除确认对话框
+    // Delete confirmation dialog
     const [deleteDialog, setDeleteDialog] = useState<{
         open: boolean;
         userId: string;
@@ -80,7 +82,7 @@ export default function UserManagementTab() {
         userName: "",
     });
 
-    // 添加用户对话框
+    // Add user dialog
     const [addDialog, setAddDialog] = useState({
         open: false,
         name: "",
@@ -95,12 +97,12 @@ export default function UserManagementTab() {
         },
     });
 
-    // 2FA设置对话框
+    // Two-factor authentication (2FA) dialog
     const [twoFactorDialog, setTwoFactorDialog] = useState({
         open: false,
         userId: "",
         userName: "",
-        step: 1, // 1: 显示QR码, 2: 输入验证码, 3: 显示备份码
+        step: 1, // 1: show QR code, 2: enter verification code, 3: show backup codes
         secret: "",
         otpauthUrl: "",
         backupCodes: [] as string[],
@@ -109,7 +111,7 @@ export default function UserManagementTab() {
         copied: false,
     });
 
-    // 编辑用户对话框
+    // Edit user dialog
     const [editDialog, setEditDialog] = useState({
         open: false,
         userId: "",
@@ -126,7 +128,7 @@ export default function UserManagementTab() {
         },
     });
 
-    // 加载用户列表
+    // Load user list
     const loadUsers = async () => {
         setLoading(true);
         const result = await getUsers();
@@ -147,7 +149,7 @@ export default function UserManagementTab() {
         loadUsers();
     }, []);
 
-    // 处理删除用户
+    // Handle delete user
     const handleDeleteClick = (userId: string, userName: string) => {
         setDeleteDialog({
             open: true,
@@ -163,10 +165,10 @@ export default function UserManagementTab() {
             if (isSuccess(result)) {
                 setSnackbar({
                     open: true,
-                    message: "User deleted successfully",
+                    message: t("messages.deleteSuccess"),
                     severity: "success",
                 });
-                // 重新加载用户列表
+                // Reload user list
                 await loadUsers();
             } else {
                 setSnackbar({
@@ -180,7 +182,7 @@ export default function UserManagementTab() {
         });
     };
 
-    // 处理启用2FA - 打开对话框并生成secret
+    // Enable 2FA: open dialog and generate secret
     const handleEnable2FA = async (userId: string, userName: string) => {
         setTwoFactorDialog({
             open: true,
@@ -195,19 +197,19 @@ export default function UserManagementTab() {
             copied: false,
         });
 
-        // 生成2FA secret
+        // Generate 2FA secret
         startTransition(async () => {
             const result = await generateTwoFactorSecret(userId);
 
             if (isSuccess(result)) {
-                setTwoFactorDialog(prev => ({
+                setTwoFactorDialog((prev) => ({
                     ...prev,
                     secret: result.payload.secret,
                     otpauthUrl: result.payload.otpauthUrl,
                     backupCodes: result.payload.backupCodes || [],
                 }));
             } else {
-                setTwoFactorDialog(prev => ({
+                setTwoFactorDialog((prev) => ({
                     ...prev,
                     error: result.message,
                 }));
@@ -215,31 +217,34 @@ export default function UserManagementTab() {
         });
     };
 
-    // 处理验证2FA代码
+    // Handle verify 2FA code
     const handleVerify2FA = () => {
         const { userId, verificationCode } = twoFactorDialog;
 
         if (!verificationCode || verificationCode.length !== 6) {
-            setTwoFactorDialog(prev => ({
+            setTwoFactorDialog((prev) => ({
                 ...prev,
-                error: "请输入6位验证码",
+                error: t("validation.verificationCodeRequired"),
             }));
             return;
         }
 
         startTransition(async () => {
-            const result = await verifyAndEnableTwoFactor(userId, verificationCode);
+            const result = await verifyAndEnableTwoFactor(
+                userId,
+                verificationCode
+            );
 
             if (isSuccess(result)) {
                 // 跳转到step 3显示备份码
-                setTwoFactorDialog(prev => ({
+                setTwoFactorDialog((prev) => ({
                     ...prev,
                     step: 3,
                     verificationCode: "",
                     error: "",
                 }));
             } else {
-                setTwoFactorDialog(prev => ({
+                setTwoFactorDialog((prev) => ({
                     ...prev,
                     error: result.message,
                 }));
@@ -247,22 +252,22 @@ export default function UserManagementTab() {
         });
     };
 
-    // 复制备份码到剪贴板
+    // Copy backup codes to clipboard
     const handleCopyBackupCodes = () => {
-        const codes = twoFactorDialog.backupCodes.join('\n');
+        const codes = twoFactorDialog.backupCodes.join("\n");
         navigator.clipboard.writeText(codes).then(() => {
-            setTwoFactorDialog(prev => ({ ...prev, copied: true }));
+            setTwoFactorDialog((prev) => ({ ...prev, copied: true }));
             setTimeout(() => {
-                setTwoFactorDialog(prev => ({ ...prev, copied: false }));
+                setTwoFactorDialog((prev) => ({ ...prev, copied: false }));
             }, 2000);
         });
     };
 
-    // 完成2FA设置
+    // Complete 2FA setup
     const handleComplete2FA = async () => {
         setSnackbar({
             open: true,
-            message: "2FA enabled successfully",
+            message: t("messages.enable2FASuccess"),
             severity: "success",
         });
         setTwoFactorDialog({
@@ -281,9 +286,9 @@ export default function UserManagementTab() {
         await loadUsers();
     };
 
-    // 处理禁用2FA
+    // Handle disable 2FA
     const handleDisable2FA = (userId: string, userName: string) => {
-        if (!confirm(`Are you sure you want to disable 2FA for user "${userName}"?`)) {
+        if (!confirm(t("confirm.disable2FA", { userName }))) {
             return;
         }
 
@@ -293,7 +298,7 @@ export default function UserManagementTab() {
             if (isSuccess(result)) {
                 setSnackbar({
                     open: true,
-                    message: "2FA disabled successfully",
+                    message: t("messages.disable2FASuccess"),
                     severity: "success",
                 });
                 // 重新加载用户列表
@@ -308,7 +313,7 @@ export default function UserManagementTab() {
         });
     };
 
-    // 渲染认证方式 Badges
+    // Render authentication provider badges
     const renderProviders = (providers: UserWithProvider["providers"]) => {
         return (
             <Box sx={{ display: "flex", gap: 0.5, flexWrap: "wrap" }}>
@@ -319,13 +324,13 @@ export default function UserManagementTab() {
 
                     if (provider.providerId === "credential") {
                         color = "primary";
-                        label = "Credential";
+                        label = t("providers.credential");
                     } else if (provider.providerId === "github") {
                         color = "secondary";
-                        label = "GitHub";
+                        label = t("providers.github");
                     } else if (provider.providerId === "google") {
                         color = "success";
-                        label = "Google";
+                        label = t("providers.google");
                     }
 
                     return (
@@ -341,7 +346,7 @@ export default function UserManagementTab() {
         );
     };
 
-    // 编辑用户
+    // Edit user
     const handleEditClick = (user: UserWithProvider) => {
         const hasCredentialAccount = user.providers.some(
             (p) => p.providerId === "credential"
@@ -363,7 +368,7 @@ export default function UserManagementTab() {
         });
     };
 
-    // 验证编辑用户表单
+    // Validate edit user form
     const validateEditForm = () => {
         const errors = {
             name: "",
@@ -372,21 +377,22 @@ export default function UserManagementTab() {
         };
 
         if (!editDialog.name.trim()) {
-            errors.name = "Name is required";
+            errors.name = t("validation.nameRequired");
         }
 
-        // 如果选择了重置密码
         if (editDialog.resetPassword) {
             if (!editDialog.newPassword) {
-                errors.newPassword = "Password is required";
+                errors.newPassword = t("validation.passwordRequired");
             } else if (editDialog.newPassword.length < 8) {
-                errors.newPassword = "Password must be at least 8 characters";
+                errors.newPassword = t("validation.passwordMinLength");
             }
 
             if (!editDialog.confirmPassword) {
-                errors.confirmPassword = "Please confirm password";
+                errors.confirmPassword = t(
+                    "validation.confirmPasswordRequired"
+                );
             } else if (editDialog.newPassword !== editDialog.confirmPassword) {
-                errors.confirmPassword = "Passwords do not match";
+                errors.confirmPassword = t("validation.passwordMismatch");
             }
         }
 
@@ -394,14 +400,13 @@ export default function UserManagementTab() {
         return !Object.values(errors).some((error) => error !== "");
     };
 
-    // 提交编辑用户
+    // Submit edit user
     const handleEditSubmit = () => {
         if (!validateEditForm()) {
             return;
         }
 
         startTransition(async () => {
-            // 更新用户信息
             const updateResult = await updateUser(editDialog.userId, {
                 name: editDialog.name.trim(),
             });
@@ -415,7 +420,6 @@ export default function UserManagementTab() {
                 return;
             }
 
-            // 如果需要重置密码
             if (editDialog.resetPassword) {
                 const resetResult = await resetUserPassword({
                     userId: editDialog.userId,
@@ -434,7 +438,7 @@ export default function UserManagementTab() {
 
             setSnackbar({
                 open: true,
-                message: "User updated successfully",
+                message: t("messages.updateSuccess"),
                 severity: "success",
             });
             setEditDialog({
@@ -448,12 +452,11 @@ export default function UserManagementTab() {
                 confirmPassword: "",
                 errors: { name: "", newPassword: "", confirmPassword: "" },
             });
-            // 重新加载用户列表
             await loadUsers();
         });
     };
 
-    // 验证添加用户表单
+    // Validate add user form
     const validateAddForm = () => {
         const errors = {
             name: "",
@@ -463,32 +466,32 @@ export default function UserManagementTab() {
         };
 
         if (!addDialog.name.trim()) {
-            errors.name = "Name is required";
+            errors.name = t("validation.nameRequired");
         }
 
         if (!addDialog.email.trim()) {
-            errors.email = "Email is required";
+            errors.email = t("validation.emailRequired");
         } else if (!EMAIL_REGEX.test(addDialog.email)) {
-            errors.email = "Invalid email format";
+            errors.email = t("validation.emailInvalid");
         }
 
         if (!addDialog.password) {
-            errors.password = "Password is required";
+            errors.password = t("validation.passwordRequired");
         } else if (addDialog.password.length < 8) {
-            errors.password = "Password must be at least 8 characters";
+            errors.password = t("validation.passwordMinLength");
         }
 
         if (!addDialog.confirmPassword) {
-            errors.confirmPassword = "Please confirm password";
+            errors.confirmPassword = t("validation.confirmPasswordRequired");
         } else if (addDialog.password !== addDialog.confirmPassword) {
-            errors.confirmPassword = "Passwords do not match";
+            errors.confirmPassword = t("validation.passwordMismatch");
         }
 
         setAddDialog({ ...addDialog, errors });
         return !Object.values(errors).some((error) => error !== "");
     };
 
-    // 打开添加用户对话框
+    // Open add user dialog
     const handleAddClick = () => {
         setAddDialog({
             open: true,
@@ -505,7 +508,7 @@ export default function UserManagementTab() {
         });
     };
 
-    // 提交添加用户
+    // Submit add user
     const handleAddSubmit = () => {
         if (!validateAddForm()) {
             return;
@@ -521,7 +524,7 @@ export default function UserManagementTab() {
             if (isSuccess(result)) {
                 setSnackbar({
                     open: true,
-                    message: "User created successfully",
+                    message: t("messages.createSuccess"),
                     severity: "success",
                 });
                 setAddDialog({
@@ -537,7 +540,7 @@ export default function UserManagementTab() {
                         confirmPassword: "",
                     },
                 });
-                // 重新加载用户列表
+                // Reload user list
                 await loadUsers();
             } else {
                 setSnackbar({
@@ -551,7 +554,7 @@ export default function UserManagementTab() {
 
     return (
         <Box sx={{ p: 3 }}>
-            {/* 顶部操作栏 */}
+            {/* Top action bar */}
             <Box
                 sx={{
                     display: "flex",
@@ -561,9 +564,9 @@ export default function UserManagementTab() {
                 }}
             >
                 <Box>
-                    <h2 style={{ margin: 0 }}>User Management</h2>
+                    <h2 style={{ margin: 0 }}>{t("page.title")}</h2>
                     <p style={{ margin: "8px 0 0 0", color: "#666" }}>
-                        Manage users and their authentication methods
+                        {t("page.subtitle")}
                     </p>
                 </Box>
                 <Button
@@ -572,22 +575,32 @@ export default function UserManagementTab() {
                     onClick={handleAddClick}
                     disabled={isPending}
                 >
-                    Add User
+                    {t("buttons.addUser")}
                 </Button>
             </Box>
 
-            {/* 用户列表 Table */}
+            {/* User list table */}
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Auth Methods</TableCell>
-                            <TableCell align="center">2FA Status</TableCell>
-                            <TableCell align="center">Email Verified</TableCell>
-                            <TableCell>Created At</TableCell>
-                            <TableCell align="center">Actions</TableCell>
+                            <TableCell>{t("table.columns.name")}</TableCell>
+                            <TableCell>{t("table.columns.email")}</TableCell>
+                            <TableCell>
+                                {t("table.columns.authMethods")}
+                            </TableCell>
+                            <TableCell align="center">
+                                {t("table.columns.twoFactorStatus")}
+                            </TableCell>
+                            <TableCell align="center">
+                                {t("table.columns.emailVerified")}
+                            </TableCell>
+                            <TableCell>
+                                {t("table.columns.createdAt")}
+                            </TableCell>
+                            <TableCell align="center">
+                                {t("table.columns.actions")}
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -600,7 +613,7 @@ export default function UserManagementTab() {
                         ) : users.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">
-                                    No users found
+                                    {t("table.empty")}
                                 </TableCell>
                             </TableRow>
                         ) : (
@@ -612,36 +625,53 @@ export default function UserManagementTab() {
                                         {renderProviders(user.providers)}
                                     </TableCell>
                                     <TableCell align="center">
-                                        {/* 2FA Status - 仅对credential用户显示 */}
-                                        {user.providers.some(p => p.providerId === "credential") ? (
+                                        {/* 2FA Status - shown only for credential users */}
+                                        {user.providers.some(
+                                            (p) => p.providerId === "credential"
+                                        ) ? (
                                             user.twoFactorEnabled ? (
                                                 <Chip
-                                                    label="Enabled"
+                                                    label={t(
+                                                        "table.twoFactor.enabled"
+                                                    )}
                                                     color="success"
                                                     size="small"
                                                     icon={<SecurityIcon />}
                                                 />
                                             ) : (
                                                 <Chip
-                                                    label="Disabled"
+                                                    label={t(
+                                                        "table.twoFactor.disabled"
+                                                    )}
                                                     color="default"
                                                     size="small"
                                                 />
                                             )
                                         ) : (
-                                            <span style={{ color: "#999" }}>N/A</span>
+                                            <span style={{ color: "#999" }}>
+                                                {t(
+                                                    "table.twoFactor.notApplicable"
+                                                )}
+                                            </span>
                                         )}
                                     </TableCell>
                                     <TableCell align="center">
                                         {user.emailVerified ? (
-                                            <CheckCircleIcon
+                                            <Chip
+                                                label={t(
+                                                    "table.emailVerification.verified"
+                                                )}
                                                 color="success"
-                                                fontSize="small"
+                                                size="small"
+                                                icon={<CheckCircleIcon />}
                                             />
                                         ) : (
-                                            <CancelIcon
-                                                color="disabled"
-                                                fontSize="small"
+                                            <Chip
+                                                label={t(
+                                                    "table.emailVerification.unverified"
+                                                )}
+                                                color="default"
+                                                size="small"
                                             />
                                         )}
                                     </TableCell>
@@ -657,19 +687,28 @@ export default function UserManagementTab() {
                                             onClick={() =>
                                                 handleEditClick(user)
                                             }
-                                            title="Edit User"
+                                            title={t("tooltips.edit")}
                                             disabled={isPending}
                                         >
                                             <EditIcon fontSize="small" />
                                         </IconButton>
-                                        {/* 2FA管理按钮 - 仅对credential用户显示 */}
-                                        {user.providers.some(p => p.providerId === "credential") && (
-                                            user.twoFactorEnabled ? (
+                                        {/* 2FA management buttons - shown only for credential users */}
+                                        {user.providers.some(
+                                            (p) => p.providerId === "credential"
+                                        ) &&
+                                            (user.twoFactorEnabled ? (
                                                 <IconButton
                                                     size="small"
                                                     color="warning"
-                                                    onClick={() => handleDisable2FA(user.id, user.name)}
-                                                    title="Disable 2FA"
+                                                    onClick={() =>
+                                                        handleDisable2FA(
+                                                            user.id,
+                                                            user.name
+                                                        )
+                                                    }
+                                                    title={t(
+                                                        "tooltips.disable2FA"
+                                                    )}
                                                     disabled={isPending}
                                                 >
                                                     <SecurityIcon fontSize="small" />
@@ -678,14 +717,20 @@ export default function UserManagementTab() {
                                                 <IconButton
                                                     size="small"
                                                     color="success"
-                                                    onClick={() => handleEnable2FA(user.id, user.name)}
-                                                    title="Enable 2FA"
+                                                    onClick={() =>
+                                                        handleEnable2FA(
+                                                            user.id,
+                                                            user.name
+                                                        )
+                                                    }
+                                                    title={t(
+                                                        "tooltips.enable2FA"
+                                                    )}
                                                     disabled={isPending}
                                                 >
                                                     <SecurityIcon fontSize="small" />
                                                 </IconButton>
-                                            )
-                                        )}
+                                            ))}
                                         <IconButton
                                             size="small"
                                             color="error"
@@ -695,7 +740,7 @@ export default function UserManagementTab() {
                                                     user.name
                                                 )
                                             }
-                                            title="Delete User"
+                                            title={t("tooltips.delete")}
                                             disabled={isPending}
                                         >
                                             <DeleteIcon fontSize="small" />
@@ -708,19 +753,19 @@ export default function UserManagementTab() {
                 </Table>
             </TableContainer>
 
-            {/* 删除确认对话框 */}
+            {/* Delete confirmation dialog */}
             <Dialog
                 open={deleteDialog.open}
                 onClose={() =>
                     setDeleteDialog({ open: false, userId: "", userName: "" })
                 }
             >
-                <DialogTitle>Delete User</DialogTitle>
+                <DialogTitle>{t("deleteDialog.title")}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Are you sure you want to delete user{" "}
-                        <strong>{deleteDialog.userName}</strong>? This action
-                        cannot be undone.
+                        {t("deleteDialog.message", {
+                            userName: deleteDialog.userName,
+                        })}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -734,7 +779,7 @@ export default function UserManagementTab() {
                         }
                         disabled={isPending}
                     >
-                        Cancel
+                        {t("buttons.cancel")}
                     </Button>
                     <Button
                         onClick={handleDeleteConfirm}
@@ -742,12 +787,12 @@ export default function UserManagementTab() {
                         variant="contained"
                         disabled={isPending}
                     >
-                        Delete
+                        {t("buttons.delete")}
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 添加用户对话框 */}
+            {/* Add user dialog */}
             <Dialog
                 open={addDialog.open}
                 onClose={() =>
@@ -765,7 +810,7 @@ export default function UserManagementTab() {
                 maxWidth="sm"
                 fullWidth
             >
-                <DialogTitle>Add New User</DialogTitle>
+                <DialogTitle>{t("addDialog.title")}</DialogTitle>
                 <DialogContent>
                     <Box
                         sx={{
@@ -776,7 +821,7 @@ export default function UserManagementTab() {
                         }}
                     >
                         <TextField
-                            label="Name"
+                            label={t("addDialog.fields.name")}
                             value={addDialog.name}
                             onChange={(e) =>
                                 setAddDialog({
@@ -792,7 +837,7 @@ export default function UserManagementTab() {
                             disabled={isPending}
                         />
                         <TextField
-                            label="Email"
+                            label={t("addDialog.fields.email")}
                             type="email"
                             value={addDialog.email}
                             onChange={(e) =>
@@ -809,7 +854,7 @@ export default function UserManagementTab() {
                             disabled={isPending}
                         />
                         <TextField
-                            label="Password"
+                            label={t("addDialog.fields.password")}
                             type="password"
                             value={addDialog.password}
                             onChange={(e) =>
@@ -825,14 +870,14 @@ export default function UserManagementTab() {
                             error={!!addDialog.errors.password}
                             helperText={
                                 addDialog.errors.password ||
-                                "Minimum 8 characters"
+                                t("addDialog.helpers.passwordMinLength")
                             }
                             fullWidth
                             required
                             disabled={isPending}
                         />
                         <TextField
-                            label="Confirm Password"
+                            label={t("addDialog.fields.confirmPassword")}
                             type="password"
                             value={addDialog.confirmPassword}
                             onChange={(e) =>
@@ -869,19 +914,19 @@ export default function UserManagementTab() {
                         }
                         disabled={isPending}
                     >
-                        Cancel
+                        {t("buttons.cancel")}
                     </Button>
                     <Button
                         onClick={handleAddSubmit}
                         variant="contained"
                         disabled={isPending}
                     >
-                        Add User
+                        {t("buttons.addUser")}
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 编辑用户对话框 */}
+            {/* Edit user dialog */}
             <Dialog
                 open={editDialog.open}
                 onClose={() =>
@@ -898,7 +943,7 @@ export default function UserManagementTab() {
                 maxWidth="sm"
                 fullWidth
             >
-                <DialogTitle>Edit User</DialogTitle>
+                <DialogTitle>{t("editDialog.title")}</DialogTitle>
                 <DialogContent>
                     <Box
                         sx={{
@@ -909,7 +954,7 @@ export default function UserManagementTab() {
                         }}
                     >
                         <TextField
-                            label="Name"
+                            label={t("editDialog.fields.name")}
                             value={editDialog.name}
                             onChange={(e) =>
                                 setEditDialog({
@@ -925,15 +970,15 @@ export default function UserManagementTab() {
                             disabled={isPending}
                         />
                         <TextField
-                            label="Email"
+                            label={t("editDialog.fields.email")}
                             type="email"
                             value={editDialog.email}
                             fullWidth
                             disabled
-                            helperText="Email cannot be changed"
+                            helperText={t("editDialog.emailHelper")}
                         />
 
-                        {/* 密码重置区域（仅对 credential 用户显示） */}
+                        {/* Password reset area (shown only for credential users) */}
                         {editDialog.hasCredentialAccount && (
                             <>
                                 <Box sx={{ mt: 1 }}>
@@ -957,15 +1002,17 @@ export default function UserManagementTab() {
                                         disabled={isPending}
                                     >
                                         {editDialog.resetPassword
-                                            ? "Cancel Password Reset"
-                                            : "Reset Password"}
+                                            ? t("buttons.cancelReset")
+                                            : t("buttons.resetPassword")}
                                     </Button>
                                 </Box>
 
                                 {editDialog.resetPassword && (
                                     <>
                                         <TextField
-                                            label="New Password"
+                                            label={t(
+                                                "editDialog.fields.newPassword"
+                                            )}
                                             type="password"
                                             value={editDialog.newPassword}
                                             onChange={(e) =>
@@ -983,14 +1030,18 @@ export default function UserManagementTab() {
                                             }
                                             helperText={
                                                 editDialog.errors.newPassword ||
-                                                "Minimum 8 characters"
+                                                t(
+                                                    "editDialog.helpers.passwordMinLength"
+                                                )
                                             }
                                             fullWidth
                                             required
                                             disabled={isPending}
                                         />
                                         <TextField
-                                            label="Confirm New Password"
+                                            label={t(
+                                                "editDialog.fields.confirmPassword"
+                                            )}
                                             type="password"
                                             value={editDialog.confirmPassword}
                                             onChange={(e) =>
@@ -1037,86 +1088,104 @@ export default function UserManagementTab() {
                         }
                         disabled={isPending}
                     >
-                        Cancel
+                        {t("buttons.cancel")}
                     </Button>
                     <Button
                         onClick={handleEditSubmit}
                         variant="contained"
                         disabled={isPending}
                     >
-                        Save Changes
+                        {t("buttons.save")}
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 2FA设置对话框 */}
+            {/* 2FA dialog */}
             <Dialog
                 open={twoFactorDialog.open}
-                onClose={() => setTwoFactorDialog({ ...twoFactorDialog, open: false })}
+                onClose={() =>
+                    setTwoFactorDialog({ ...twoFactorDialog, open: false })
+                }
                 maxWidth="sm"
                 fullWidth
             >
                 <DialogTitle>
-                    Enable 2FA for {twoFactorDialog.userName}
+                    {t("twoFactorDialog.title", {
+                        userName: twoFactorDialog.userName,
+                    })}
                 </DialogTitle>
                 <DialogContent>
                     {twoFactorDialog.step === 1 ? (
-                        // Step 1: 显示QR码
+                        // Step 1: show QR code
                         <Box sx={{ textAlign: "center", py: 2 }}>
                             {isPending ? (
                                 <CircularProgress />
                             ) : twoFactorDialog.error ? (
-                                <Alert severity="error">{twoFactorDialog.error}</Alert>
+                                <Alert severity="error">
+                                    {twoFactorDialog.error}
+                                </Alert>
                             ) : twoFactorDialog.otpauthUrl ? (
                                 <>
                                     <DialogContentText sx={{ mb: 2 }}>
-                                        Step 1: Scan the QR code with an authenticator app (e.g., Google Authenticator, Authy)
+                                        {t("twoFactorDialog.step1.instruction")}
                                     </DialogContentText>
-                                    
-                                    {/* QR码 */}
-                                    <Box sx={{ 
-                                        display: "flex", 
-                                        justifyContent: "center",
-                                        mb: 2 
-                                    }}>
+
+                                    {/* QR code */}
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            mb: 2,
+                                        }}
+                                    >
                                         <img
                                             src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(twoFactorDialog.otpauthUrl)}`}
                                             alt="2FA QR Code"
-                                            style={{ border: "1px solid #ddd", padding: "10px" }}
+                                            style={{
+                                                border: "1px solid #ddd",
+                                                padding: "10px",
+                                            }}
                                         />
                                     </Box>
 
                                     {/* Manual entry secret */}
-                                    <DialogContentText variant="body2" color="text.secondary">
-                                        Or enter this code manually:
+                                    <DialogContentText
+                                        variant="body2"
+                                        color="text.secondary"
+                                    >
+                                        {t("twoFactorDialog.step1.manualEntry")}
                                     </DialogContentText>
                                     <TextField
                                         value={twoFactorDialog.secret}
                                         fullWidth
-                                        InputProps={{
-                                            readOnly: true,
+                                        slotProps={{
+                                            input: {
+                                                readOnly: true,
+                                            },
                                         }}
                                         sx={{ mt: 1, mb: 2 }}
                                         size="small"
                                     />
 
                                     <DialogContentText sx={{ mt: 2 }}>
-                                        Step 2: After scanning, click "Next" to enter the verification code
+                                        {t("twoFactorDialog.step1.nextStep")}
                                     </DialogContentText>
                                 </>
                             ) : null}
                         </Box>
                     ) : twoFactorDialog.step === 2 ? (
-                        // Step 2: 输入验证码
+                        // Step 2: enter verification code
                         <Box sx={{ py: 2 }}>
                             <DialogContentText sx={{ mb: 2 }}>
-                                Enter the 6-digit verification code from your authenticator app:
+                                {t("twoFactorDialog.step2.instruction")}
                             </DialogContentText>
                             <TextField
-                                label="Verification Code"
+                                label={t("twoFactorDialog.step2.label")}
                                 value={twoFactorDialog.verificationCode}
                                 onChange={(e) => {
-                                    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+                                    const value = e.target.value
+                                        .replace(/\D/g, "")
+                                        .slice(0, 6);
                                     setTwoFactorDialog({
                                         ...twoFactorDialog,
                                         verificationCode: value,
@@ -1124,55 +1193,83 @@ export default function UserManagementTab() {
                                     });
                                 }}
                                 fullWidth
-                                inputProps={{ maxLength: 6, style: { textAlign: "center", fontSize: "24px", letterSpacing: "8px" } }}
+                                slotProps={{
+                                    htmlInput: {
+                                        maxLength: 6,
+                                        style: {
+                                            textAlign: "center",
+                                            fontSize: "24px",
+                                            letterSpacing: "8px",
+                                        },
+                                    },
+                                }}
                                 error={!!twoFactorDialog.error}
                                 helperText={twoFactorDialog.error}
                                 disabled={isPending}
                             />
                         </Box>
                     ) : (
-                        // Step 3: 显示备份码
+                        // Step 3: show backup codes
                         <Box sx={{ py: 2 }}>
                             <Alert severity="warning" sx={{ mb: 2 }}>
-                                <strong>Important:</strong> Save these backup codes in a safe place. 
-                                Each code can only be used once and will help you regain access if you lose your authenticator device.
+                                <span
+                                    dangerouslySetInnerHTML={{
+                                        __html: t(
+                                            "twoFactorDialog.step3.warning"
+                                        ),
+                                    }}
+                                />
                             </Alert>
-                            
+
                             <DialogContentText sx={{ mb: 2, fontWeight: 600 }}>
-                                Your Backup Codes:
+                                {t("twoFactorDialog.step3.title")}
                             </DialogContentText>
-                            
-                            <Paper 
-                                variant="outlined" 
-                                sx={{ 
-                                    p: 2, 
+
+                            <Paper
+                                variant="outlined"
+                                sx={{
+                                    p: 2,
                                     mb: 2,
-                                    bgcolor: 'background.default',
-                                    fontFamily: 'monospace',
-                                    fontSize: '14px'
+                                    bgcolor: "background.default",
+                                    fontFamily: "monospace",
+                                    fontSize: "14px",
                                 }}
                             >
-                                <Box sx={{ 
-                                    display: 'grid', 
-                                    gridTemplateColumns: '1fr 1fr', 
-                                    gap: 1 
-                                }}>
-                                    {twoFactorDialog.backupCodes.map((code, index) => (
-                                        <Box key={index}>
-                                            {index + 1}. {code}
-                                        </Box>
-                                    ))}
+                                <Box
+                                    sx={{
+                                        display: "grid",
+                                        gridTemplateColumns: "1fr 1fr",
+                                        gap: 1,
+                                    }}
+                                >
+                                    {twoFactorDialog.backupCodes.map(
+                                        (code, index) => (
+                                            <Box key={index}>
+                                                {index + 1}. {code}
+                                            </Box>
+                                        )
+                                    )}
                                 </Box>
                             </Paper>
-                            
+
                             <Button
                                 variant="outlined"
                                 fullWidth
                                 onClick={handleCopyBackupCodes}
-                                startIcon={twoFactorDialog.copied ? <CheckCircleIcon /> : undefined}
-                                color={twoFactorDialog.copied ? "success" : "primary"}
+                                startIcon={
+                                    twoFactorDialog.copied ? (
+                                        <CheckCircleIcon />
+                                    ) : undefined
+                                }
+                                color={
+                                    twoFactorDialog.copied
+                                        ? "success"
+                                        : "primary"
+                                }
                             >
-                                {twoFactorDialog.copied ? "Copied!" : "Copy All Backup Codes"}
+                                {twoFactorDialog.copied
+                                    ? t("buttons.copied")
+                                    : t("buttons.copyBackupCodes")}
                             </Button>
                         </Box>
                     )}
@@ -1184,31 +1281,51 @@ export default function UserManagementTab() {
                             variant="contained"
                             fullWidth
                         >
-                            Complete
+                            {t("buttons.complete")}
                         </Button>
                     ) : (
                         <>
                             <Button
-                                onClick={() => setTwoFactorDialog({ ...twoFactorDialog, open: false })}
+                                onClick={() =>
+                                    setTwoFactorDialog({
+                                        ...twoFactorDialog,
+                                        open: false,
+                                    })
+                                }
                                 disabled={isPending}
                             >
-                                Cancel
+                                {t("buttons.cancel")}
                             </Button>
                             {twoFactorDialog.step === 1 ? (
                                 <Button
-                                    onClick={() => setTwoFactorDialog({ ...twoFactorDialog, step: 2 })}
+                                    onClick={() =>
+                                        setTwoFactorDialog({
+                                            ...twoFactorDialog,
+                                            step: 2,
+                                        })
+                                    }
                                     variant="contained"
-                                    disabled={isPending || !twoFactorDialog.otpauthUrl}
+                                    disabled={
+                                        isPending || !twoFactorDialog.otpauthUrl
+                                    }
                                 >
-                                    Next
+                                    {t("buttons.next")}
                                 </Button>
                             ) : (
                                 <Button
                                     onClick={handleVerify2FA}
                                     variant="contained"
-                                    disabled={isPending || twoFactorDialog.verificationCode.length !== 6}
+                                    disabled={
+                                        isPending ||
+                                        twoFactorDialog.verificationCode
+                                            .length !== 6
+                                    }
                                 >
-                                    {isPending ? <CircularProgress size={24} /> : "Verify & Enable"}
+                                    {isPending ? (
+                                        <CircularProgress size={24} />
+                                    ) : (
+                                        t("buttons.verifyEnable")
+                                    )}
                                 </Button>
                             )}
                         </>
@@ -1216,7 +1333,7 @@ export default function UserManagementTab() {
                 </DialogActions>
             </Dialog>
 
-            {/* Snackbar 消息提示 */}
+            {/* Snackbar messages */}
             <Snackbar
                 open={snackbar.open}
                 autoHideDuration={6000}

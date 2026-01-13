@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
 import { AuthenticationForm, AuthFormData } from "@/components/configuration";
 import { updateAuthentication } from "@/app/actions/settings/authentication";
@@ -12,7 +13,6 @@ interface AuthenticationTabProps {
 
 /**
  * Authentication Tab Component
- * 认证配置Tab组件
  *
  * Provides interface for editing authentication configuration:
  * - GitHub OAuth (enabled, clientId, clientSecret)
@@ -26,6 +26,7 @@ interface AuthenticationTabProps {
 export default function AuthenticationTab({
     initialData,
 }: AuthenticationTabProps) {
+    const t = useTranslations("configuration.authentication.tab");
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{
         type: "success" | "error";
@@ -37,26 +38,25 @@ export default function AuthenticationTab({
             try {
                 const result = await updateAuthentication(data);
 
-                // 使用 isSuccess 辅助函数判断
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
                         text:
                             result.message ||
-                            "Authentication configuration saved successfully!",
+                            t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
                         text:
                             result.message ||
-                            "Failed to save authentication configuration",
+                            t("messages.saveFailed"),
                     });
                 }
             } catch (error) {
                 setMessage({
                     type: "error",
-                    text: "An unexpected error occurred",
+                    text: t("messages.unexpectedError"),
                 });
             }
         });
@@ -84,10 +84,10 @@ export default function AuthenticationTab({
                             }}
                         >
                             <CircularProgress size={16} color="inherit" />
-                            Saving...
+                            {t("buttons.saving")}
                         </Box>
                     ) : (
-                        "Save Changes"
+                        t("buttons.save")
                     )
                 }
             />

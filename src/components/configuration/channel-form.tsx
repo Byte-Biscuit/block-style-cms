@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import {
     Box,
     TextField,
@@ -73,6 +74,7 @@ export default function ChannelForm({
     isLoading = false,
     submitLabel = "Save",
 }: ChannelFormProps) {
+    const t = useTranslations("configuration.channel");
     const [channels, setChannels] = useState<ChannelItem[]>(
         initialData.length > 0
             ? initialData
@@ -193,21 +195,21 @@ export default function ChannelForm({
         channels.forEach((channel, index) => {
             // Validate ID
             if (!channel.id.trim()) {
-                newErrors[`${index}-id`] = "ID is required";
+                newErrors[`${index}-id`] = t("form.idErrorRequired");
             } else if (usedIds.has(channel.id)) {
-                newErrors[`${index}-id`] = "ID must be unique";
+                newErrors[`${index}-id`] = t("form.idErrorUnique");
             } else {
                 usedIds.add(channel.id);
             }
 
             // Validate href
             if (!channel.href.trim()) {
-                newErrors[`${index}-href`] = "Path is required";
+                newErrors[`${index}-href`] = t("form.pathErrorRequired");
             }
 
             // Validate tag for type=tag
             if (channel.type === "tag" && !channel.tag?.trim()) {
-                newErrors[`${index}-tag`] = "Tag is required for tag type";
+                newErrors[`${index}-tag`] = t("form.tagErrorRequired");
             }
         });
 
@@ -251,21 +253,20 @@ export default function ChannelForm({
             {/* Header */}
             <Box sx={{ mb: 3 }}>
                 <Typography variant="h6" gutterBottom>
-                    Channel Configuration
+                    {t("title")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Configure navigation channels for your website. Tag-based
-                    channels filter articles, while page channels link to
-                    specific pages.
+                    {t("subtitle")}
                 </Typography>
             </Box>
 
             {/* Info Alert */}
             <Alert severity="info" sx={{ mb: 3 }} icon={<InfoIcon />}>
                 <Typography variant="body2">
-                    <strong>Tag Format:</strong> Recommended format is{" "}
-                    <code>_TAG_</code> (uppercase with underscores), but custom
-                    formats are also supported.
+                    <strong>{t("info.title")}</strong>{" "}
+                    {t.rich("info.content", {
+                        code: (chunks) => <code>{chunks}</code>,
+                    })}
                 </Typography>
             </Alert>
 
@@ -297,7 +298,7 @@ export default function ChannelForm({
                                     pt: 1,
                                 }}
                             >
-                                <Tooltip title="Move up">
+                                <Tooltip title={t("actions.moveUp")}>
                                     <span>
                                         <IconButton
                                             size="small"
@@ -310,7 +311,7 @@ export default function ChannelForm({
                                         </IconButton>
                                     </span>
                                 </Tooltip>
-                                <Tooltip title="Move down">
+                                <Tooltip title={t("actions.moveDown")}>
                                     <span>
                                         <IconButton
                                             size="small"
@@ -340,7 +341,7 @@ export default function ChannelForm({
                                 >
                                     {/* ID */}
                                     <TextField
-                                        label="ID *"
+                                        label={t("form.id") + " *"}
                                         value={channel.id}
                                         onChange={(e) =>
                                             handleChannelChange(
@@ -352,7 +353,7 @@ export default function ChannelForm({
                                         error={!!errors[`${index}-id`]}
                                         helperText={
                                             errors[`${index}-id`] ||
-                                            "Unique identifier (also used as i18n key)"
+                                            t("form.idHelper")
                                         }
                                         size="small"
                                         fullWidth
@@ -360,7 +361,7 @@ export default function ChannelForm({
 
                                     {/* Icon Field */}
                                     <TextField
-                                        label="Icon (Optional)"
+                                        label={t("form.icon")}
                                         value={channel.icon || ""}
                                         onChange={(e) =>
                                             handleChannelChange(
@@ -369,10 +370,10 @@ export default function ChannelForm({
                                                 e.target.value
                                             )
                                         }
-                                        helperText="Icon identifier (e.g., Home, Article, 🏠, or custom)"
+                                        helperText={t("form.iconHelper")}
                                         size="small"
                                         fullWidth
-                                        placeholder="Icon name or identifier"
+                                        placeholder={t("form.icon")}
                                     />
                                 </Box>
 
@@ -382,7 +383,7 @@ export default function ChannelForm({
                                     sx={{ mb: 2 }}
                                 >
                                     <FormLabel component="legend">
-                                        Type
+                                        {t("form.type")}
                                     </FormLabel>
                                     <RadioGroup
                                         row
@@ -398,12 +399,12 @@ export default function ChannelForm({
                                         <FormControlLabel
                                             value="tag"
                                             control={<Radio size="small" />}
-                                            label="Tag (Filter articles)"
+                                            label={t("form.types.tag")}
                                         />
                                         <FormControlLabel
                                             value="page"
                                             control={<Radio size="small" />}
-                                            label="Page (Link to page)"
+                                            label={t("form.types.page")}
                                         />
                                     </RadioGroup>
                                 </FormControl>
@@ -438,15 +439,14 @@ export default function ChannelForm({
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
-                                                    label="Tag *"
+                                                    label={t("form.tag") + " *"}
                                                     error={
                                                         !!errors[`${index}-tag`]
                                                     }
                                                     helperText={
                                                         errors[
                                                             `${index}-tag`
-                                                        ] ||
-                                                        "Format: _TAG_ (recommended)"
+                                                        ] || t("form.tagHelper")
                                                     }
                                                     size="small"
                                                     slotProps={{
@@ -478,7 +478,7 @@ export default function ChannelForm({
 
                                     {/* Href Path */}
                                     <TextField
-                                        label="Path *"
+                                        label={t("form.path") + " *"}
                                         value={channel.href}
                                         onChange={(e) =>
                                             handleChannelChange(
@@ -491,8 +491,8 @@ export default function ChannelForm({
                                         helperText={
                                             errors[`${index}-href`] ||
                                             (channel.type === "tag"
-                                                ? "Auto-generated from tag"
-                                                : "e.g., /tags or /about")
+                                                ? t("form.pathHelperTag")
+                                                : t("form.pathHelperPage"))
                                         }
                                         size="small"
                                         fullWidth
@@ -502,7 +502,7 @@ export default function ChannelForm({
                             </Box>
 
                             {/* Delete Button */}
-                            <Tooltip title="Remove channel">
+                            <Tooltip title={t("actions.remove")}>
                                 <IconButton
                                     color="error"
                                     onClick={() => handleRemoveChannel(index)}
@@ -524,7 +524,7 @@ export default function ChannelForm({
                 onClick={handleAddChannel}
                 sx={{ mb: 3 }}
             >
-                Add Channel
+                {t("actions.add")}
             </Button>
 
             <Divider sx={{ my: 3 }} />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import {
     Box,
     Alert,
@@ -110,6 +111,7 @@ function mergeWithDefaults(initialData?: BasicConfig): BasicConfig {
  *
  */
 export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
+    const t = useTranslations("configuration.settings.basicConfig");
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{
         type: "success" | "error";
@@ -131,20 +133,18 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
-                        text:
-                            result.message ||
-                            "Configuration saved successfully!",
+                        text: result.message || t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
-                        text: result.message || "Failed to save configuration",
+                        text: result.message || t("messages.saveFailed"),
                     });
                 }
             } catch (error) {
                 setMessage({
                     type: "error",
-                    text: "An unexpected error occurred",
+                    text: t("messages.unexpectedError"),
                 });
             }
         });
@@ -160,14 +160,14 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                 {/* Comment System Configuration */}
                 <Paper sx={{ p: 3 }}>
                     <Typography variant="h6" gutterBottom>
-                        Comment System Configuration
+                        {t("comment.title")}
                     </Typography>
                     <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{ mb: 3 }}
                     >
-                        Configure comment system settings and limitations
+                        {t("comment.description")}
                     </Typography>
 
                     <Stack spacing={2}>
@@ -186,13 +186,13 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     }
                                 />
                             }
-                            label="Enable Comment System"
+                            label={t("comment.enabled")}
                         />
 
                         <TextField
                             fullWidth
                             type="number"
-                            label="Maximum Total Comments"
+                            label={t("comment.maxTotal")}
                             value={formData.comment.maxTotalComments}
                             onChange={(e) =>
                                 setFormData({
@@ -204,12 +204,12 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     },
                                 })
                             }
-                            helperText="Maximum number of comments allowed in the system"
+                            helperText={t("comment.maxTotalHelper")}
                         />
 
                         <Divider sx={{ my: 2 }} />
                         <Typography variant="subtitle2" gutterBottom>
-                            Content Limitations
+                            {t("comment.limits.title")}
                         </Typography>
 
                         <Box
@@ -225,7 +225,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Minimum Length"
+                                label={t("comment.limits.minLength")}
                                 value={formData.comment.limits.contentMinLength}
                                 onChange={(e) =>
                                     setFormData({
@@ -241,13 +241,13 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                         },
                                     })
                                 }
-                                helperText="Minimum characters"
+                                helperText={t("comment.limits.minLengthHelper")}
                             />
 
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Maximum Length"
+                                label={t("comment.limits.maxLength")}
                                 value={formData.comment.limits.contentMaxLength}
                                 onChange={(e) =>
                                     setFormData({
@@ -263,13 +263,13 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                         },
                                     })
                                 }
-                                helperText="Maximum characters"
+                                helperText={t("comment.limits.maxLengthHelper")}
                             />
 
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Max Links Allowed"
+                                label={t("comment.limits.maxLinks")}
                                 value={formData.comment.limits.maxLinksAllowed}
                                 onChange={(e) =>
                                     setFormData({
@@ -285,13 +285,13 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                         },
                                     })
                                 }
-                                helperText="Maximum links in comment"
+                                helperText={t("comment.limits.maxLinksHelper")}
                             />
                         </Box>
 
                         <Divider sx={{ my: 2 }} />
                         <Typography variant="subtitle2" gutterBottom>
-                            Moderation Settings
+                            {t("comment.moderation.title")}
                         </Typography>
 
                         <FormControlLabel
@@ -317,7 +317,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     }
                                 />
                             }
-                            label="Require Manual Approval Before Publishing"
+                            label={t("comment.moderation.requireApproval")}
                         />
                     </Stack>
                 </Paper>
@@ -325,14 +325,14 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                 {/* Suggestion System Configuration */}
                 <Paper sx={{ p: 3 }}>
                     <Typography variant="h6" gutterBottom>
-                        Suggestion System Configuration
+                        {t("suggestion.title")}
                     </Typography>
                     <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{ mb: 3 }}
                     >
-                        Configure suggestion system settings and limitations
+                        {t("suggestion.description")}
                     </Typography>
 
                     <Stack spacing={2}>
@@ -351,13 +351,13 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     }
                                 />
                             }
-                            label="Enable Suggestion System"
+                            label={t("suggestion.enabled")}
                         />
 
                         <TextField
                             fullWidth
                             type="number"
-                            label="Maximum Total Suggestions"
+                            label={t("suggestion.maxTotal")}
                             value={formData.suggestion.maxTotalSuggestions}
                             onChange={(e) =>
                                 setFormData({
@@ -369,12 +369,12 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                     },
                                 })
                             }
-                            helperText="Maximum number of suggestions allowed in the system"
+                            helperText={t("suggestion.maxTotalHelper")}
                         />
 
                         <Divider sx={{ my: 2 }} />
                         <Typography variant="subtitle2" gutterBottom>
-                            Content Limitations
+                            {t("suggestion.limits.title")}
                         </Typography>
 
                         <Box
@@ -390,7 +390,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Minimum Length"
+                                label={t("suggestion.limits.minLength")}
                                 value={
                                     formData.suggestion.limits.contentMinLength
                                 }
@@ -408,13 +408,15 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                         },
                                     })
                                 }
-                                helperText="Minimum characters"
+                                helperText={t(
+                                    "suggestion.limits.minLengthHelper"
+                                )}
                             />
 
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Maximum Length"
+                                label={t("suggestion.limits.maxLength")}
                                 value={
                                     formData.suggestion.limits.contentMaxLength
                                 }
@@ -432,13 +434,15 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                         },
                                     })
                                 }
-                                helperText="Maximum characters"
+                                helperText={t(
+                                    "suggestion.limits.maxLengthHelper"
+                                )}
                             />
 
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="Max Links Allowed"
+                                label={t("suggestion.limits.maxLinks")}
                                 value={
                                     formData.suggestion.limits.maxLinksAllowed
                                 }
@@ -456,7 +460,9 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                                         },
                                     })
                                 }
-                                helperText="Maximum links in suggestion"
+                                helperText={t(
+                                    "suggestion.limits.maxLinksHelper"
+                                )}
                             />
                         </Box>
                     </Stack>
@@ -479,7 +485,7 @@ export default function BasicConfigTab({ initialData }: BasicConfigTabProps) {
                             )
                         }
                     >
-                        {isPending ? "Saving..." : "Save Changes"}
+                        {isPending ? t("buttons.saving") : t("buttons.save")}
                     </Button>
                 </Box>
             </Stack>

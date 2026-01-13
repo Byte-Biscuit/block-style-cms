@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
 import { ServicesForm, ServicesFormData } from "@/components/configuration";
 import { updateServices } from "@/app/actions/settings/services";
@@ -12,7 +13,6 @@ interface ServicesTabProps {
 
 /**
  * External Services Tab Component
- * 外部服务配置Tab组件
  *
  * Provides interface for editing external services configuration:
  * - Algolia Search (enabled, appId, apiKey, searchKey, indexName)
@@ -23,6 +23,7 @@ interface ServicesTabProps {
  * Uses Server Action for saving changes.
  */
 export default function ServicesTab({ initialData }: ServicesTabProps) {
+    const t = useTranslations("configuration.services.tab");
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{
         type: "success" | "error";
@@ -34,26 +35,25 @@ export default function ServicesTab({ initialData }: ServicesTabProps) {
             try {
                 const result = await updateServices(data);
 
-                // 使用 isSuccess 辅助函数判断
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
                         text:
                             result.message ||
-                            "Services configuration saved successfully!",
+                            t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
                         text:
                             result.message ||
-                            "Failed to save services configuration",
+                            t("messages.saveFailed"),
                     });
                 }
             } catch (error) {
                 setMessage({
                     type: "error",
-                    text: "An unexpected error occurred",
+                    text: t("messages.unexpectedError"),
                 });
             }
         });
@@ -81,10 +81,10 @@ export default function ServicesTab({ initialData }: ServicesTabProps) {
                             }}
                         >
                             <CircularProgress size={16} color="inherit" />
-                            Saving...
+                            {t("buttons.saving")}
                         </Box>
                     ) : (
-                        "Save Changes"
+                        t("buttons.save")
                     )
                 }
             />

@@ -66,13 +66,13 @@ export default async function AdminDashboard() {
             color: "grey",
             href: "/m/settings",
         },
-        {
+        /*         {
             title: t("actions.mediaLibrary.title"),
             description: t("actions.mediaLibrary.description"),
             icon: <ImageIcon sx={{ fontSize: 40 }} />,
             color: "secondary",
             href: "#",
-        },
+        }, */
         {
             title: t("actions.backToFrontend.title"),
             description: t("actions.backToFrontend.description"),

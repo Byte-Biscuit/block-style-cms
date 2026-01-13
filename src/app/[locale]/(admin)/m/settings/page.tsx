@@ -13,7 +13,6 @@ import SettingsTabs from "./components/settings-tabs";
 
 /**
  * System Settings Page
- * 系统设置页面
  *
  * Provides a tabbed interface for managing various system configurations:
  * - Website information
@@ -22,7 +21,7 @@ import SettingsTabs from "./components/settings-tabs";
  * - Access control
  */
 export default async function SettingsPage() {
-    const t = await getTranslations("admin.settings");
+    const t = await getTranslations("configuration.settings.page");
 
     // Load current configuration
     const config = await systemConfigService.readConfig();
@@ -32,10 +31,10 @@ export default async function SettingsPage() {
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Paper sx={{ p: 4, textAlign: "center" }}>
                     <Typography variant="h5" color="error" gutterBottom>
-                        Configuration Not Found
+                        {t("error.title")}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                        Please complete the installation process first.
+                        {t("error.description")}
                     </Typography>
                 </Paper>
             </Container>
@@ -49,10 +48,10 @@ export default async function SettingsPage() {
                 <SettingsIcon sx={{ fontSize: 40, color: "primary.main" }} />
                 <Box>
                     <Typography variant="h4" component="h1" fontWeight="bold">
-                        System Settings
+                        {t("title")}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Configure your website, authentication, and services
+                        {t("description")}
                     </Typography>
                 </Box>
             </Box>
@@ -79,7 +78,10 @@ export default async function SettingsPage() {
     );
 }
 
-export const metadata = {
-    title: "System Settings",
-    description: "Configure system settings and preferences",
-};
+export async function generateMetadata() {
+    const t = await getTranslations("configuration.settings.page.metadata");
+    return {
+        title: t("title"),
+        description: t("description"),
+    };
+}

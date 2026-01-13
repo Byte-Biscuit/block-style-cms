@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
 import { SiteInfoForm } from "@/components/configuration";
 import { SiteInfoConfig } from "@/types/system-config";
@@ -13,12 +14,12 @@ interface SiteInfoTabProps {
 
 /**
  * Site Information Tab Component
- * 网站信息Tab组件
  *
  * Provides interface for editing website basic information.
  * Uses Server Action for saving changes.
  */
 export default function SiteInfoTab({ initialData }: SiteInfoTabProps) {
+    const t = useTranslations("configuration.siteInfo");
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{
         type: "success" | "error";
@@ -30,22 +31,21 @@ export default function SiteInfoTab({ initialData }: SiteInfoTabProps) {
             try {
                 const result = await updateSiteInfo(data);
 
-                // 使用 isSuccess 辅助函数判断
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
-                        text: result.message || "Settings saved successfully!",
+                        text: result.message || t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
-                        text: result.message || "Failed to save settings",
+                        text: result.message || t("messages.saveFailed"),
                     });
                 }
             } catch (error) {
                 setMessage({
                     type: "error",
-                    text: "An unexpected error occurred",
+                    text: t("messages.unexpectedError"),
                 });
             }
         });
@@ -65,12 +65,18 @@ export default function SiteInfoTab({ initialData }: SiteInfoTabProps) {
                 isLoading={isPending}
                 submitLabel={
                     isPending ? (
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                            }}
+                        >
                             <CircularProgress size={16} color="inherit" />
-                            Saving...
+                            {t("buttons.saving")}
                         </Box>
                     ) : (
-                        "Save Changes"
+                        t("buttons.saveChanges")
                     )
                 }
             />

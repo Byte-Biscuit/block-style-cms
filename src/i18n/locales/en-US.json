@@ -135,6 +135,17 @@
                 "saveChanges": "Save Changes",
                 "backInstall": "← Back",
                 "cancel": "Cancel"
+            },
+            "tab": {
+                "buttons": {
+                    "save": "Save Changes",
+                    "saving": "Saving..."
+                },
+                "messages": {
+                    "saveSuccess": "Authentication configuration saved successfully!",
+                    "saveFailed": "Failed to save authentication configuration",
+                    "unexpectedError": "An unexpected error occurred"
+                }
             }
         },
         "services": {
@@ -202,6 +213,86 @@
                 "backInstall": "← Back",
                 "cancel": "Cancel",
                 "skip": "Skip"
+            },
+            "tab": {
+                "buttons": {
+                    "save": "Save Changes",
+                    "saving": "Saving..."
+                },
+                "messages": {
+                    "saveSuccess": "Services configuration saved successfully!",
+                    "saveFailed": "Failed to save services configuration",
+                    "unexpectedError": "An unexpected error occurred"
+                }
+            }
+        },
+        "settings": {
+            "page": {
+                "title": "System Settings",
+                "description": "Configure your website, authentication, and services",
+                "error": {
+                    "title": "Configuration Not Found",
+                    "description": "Please complete the installation process first."
+                },
+                "metadata": {
+                    "title": "System Settings",
+                    "description": "Configure system settings and preferences"
+                }
+            },
+            "tabs": {
+                "basicConfig": "Basic Configuration",
+                "websiteInfo": "Website Info",
+                "userManagement": "User Management",
+                "authentication": "Authentication",
+                "externalServices": "External Services",
+                "channelManagement": "Channel Management"
+            },
+            "basicConfig": {
+                "comment": {
+                    "title": "Comment System Configuration",
+                    "description": "Configure comment system settings and limitations",
+                    "enabled": "Enable Comment System",
+                    "maxTotal": "Maximum Total Comments",
+                    "maxTotalHelper": "Maximum number of comments allowed in the system",
+                    "limits": {
+                        "title": "Content Limitations",
+                        "minLength": "Minimum Length",
+                        "minLengthHelper": "Minimum characters",
+                        "maxLength": "Maximum Length",
+                        "maxLengthHelper": "Maximum characters",
+                        "maxLinks": "Max Links Allowed",
+                        "maxLinksHelper": "Maximum links in comment"
+                    },
+                    "moderation": {
+                        "title": "Moderation Settings",
+                        "requireApproval": "Require Manual Approval Before Publishing"
+                    }
+                },
+                "suggestion": {
+                    "title": "Suggestion System Configuration",
+                    "description": "Configure suggestion system settings and limitations",
+                    "enabled": "Enable Suggestion System",
+                    "maxTotal": "Maximum Total Suggestions",
+                    "maxTotalHelper": "Maximum number of suggestions allowed in the system",
+                    "limits": {
+                        "title": "Content Limitations",
+                        "minLength": "Minimum Length",
+                        "minLengthHelper": "Minimum characters",
+                        "maxLength": "Maximum Length",
+                        "maxLengthHelper": "Maximum characters",
+                        "maxLinks": "Max Links Allowed",
+                        "maxLinksHelper": "Maximum links in suggestion"
+                    }
+                },
+                "buttons": {
+                    "save": "Save Changes",
+                    "saving": "Saving..."
+                },
+                "messages": {
+                    "saveSuccess": "Configuration saved successfully!",
+                    "saveFailed": "Failed to save configuration",
+                    "unexpectedError": "An unexpected error occurred"
+                }
             }
         },
         "siteInfo": {
@@ -246,12 +337,176 @@
                 "saveChanges": "Save Changes",
                 "backInstall": "← Back",
                 "cancel": "Cancel",
-                "uploadingLogo": "Uploading Logo..."
+                "uploadingLogo": "Uploading Logo...",
+                "saving": "Saving..."
             },
             "messages": {
                 "pngOnly": "Please upload a PNG file.",
                 "uploadFailed": "Failed to upload logo",
-                "uploadError": "An error occurred while uploading the logo"
+                "uploadError": "An error occurred while uploading the logo",
+                "saveSuccess": "Settings saved successfully!",
+                "saveFailed": "Failed to save settings",
+                "unexpectedError": "An unexpected error occurred"
+            }
+        },
+        "channel": {
+            "title": "Channel Configuration",
+            "subtitle": "Configure navigation channels for your website. Tag-based channels filter articles, while page channels link to specific pages.",
+            "info": {
+                "title": "Tag Format:",
+                "content": "Recommended format is <code>_TAG_</code> (uppercase with underscores), but custom formats are also supported."
+            },
+            "form": {
+                "id": "ID",
+                "idHelper": "Unique identifier (also used as i18n key)",
+                "idErrorRequired": "ID is required",
+                "idErrorUnique": "ID must be unique",
+                "icon": "Icon (Optional)",
+                "iconHelper": "Icon identifier (e.g., Home, Article, 🏠, or custom)",
+                "type": "Type",
+                "types": {
+                    "tag": "Tag (Filter articles)",
+                    "page": "Page (Link to page)"
+                },
+                "tag": "Tag",
+                "tagHelper": "Format: _TAG_ (recommended)",
+                "tagErrorRequired": "Tag is required for tag type",
+                "path": "Path",
+                "pathHelperTag": "Auto-generated from tag",
+                "pathHelperPage": "e.g., /tags or /about",
+                "pathErrorRequired": "Path is required"
+            },
+            "actions": {
+                "add": "Add Channel",
+                "save": "Save Changes",
+                "saving": "Saving...",
+                "remove": "Remove channel",
+                "moveUp": "Move up",
+                "moveDown": "Move down"
+            },
+            "messages": {
+                "saveSuccess": "Channel configuration saved successfully!",
+                "saveFailed": "Failed to save channel configuration",
+                "unexpectedError": "An unexpected error occurred"
+            }
+        },
+        "userManagement": {
+            "page": {
+                "title": "User Management",
+                "subtitle": "Manage users and their authentication methods"
+            },
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "email": "Email",
+                    "authMethods": "Auth Methods",
+                    "twoFactorStatus": "2FA Status",
+                    "emailVerified": "Email Verified",
+                    "createdAt": "Created At",
+                    "actions": "Actions"
+                },
+                "empty": "No users found",
+                "loading": "Loading...",
+                "twoFactor": {
+                    "enabled": "Enabled",
+                    "disabled": "Disabled",
+                    "notApplicable": "N/A"
+                },
+                "emailVerification": {
+                    "verified": "Verified",
+                    "unverified": "Unverified"
+                }
+            },
+            "providers": {
+                "credential": "Credential",
+                "github": "GitHub",
+                "google": "Google"
+            },
+            "buttons": {
+                "addUser": "Add User",
+                "editUser": "Edit User",
+                "deleteUser": "Delete User",
+                "save": "Save Changes",
+                "cancel": "Cancel",
+                "next": "Next",
+                "complete": "Complete",
+                "resetPassword": "Reset Password",
+                "cancelReset": "Cancel Password Reset",
+                "verifyEnable": "Verify & Enable",
+                "copyBackupCodes": "Copy All Backup Codes",
+                "copied": "Copied!",
+                "delete": "Delete"
+            },
+            "tooltips": {
+                "edit": "Edit User",
+                "delete": "Delete User",
+                "enable2FA": "Enable 2FA",
+                "disable2FA": "Disable 2FA"
+            },
+            "deleteDialog": {
+                "title": "Delete User",
+                "message": "Are you sure you want to delete user \"{userName}\"? This action cannot be undone."
+            },
+            "addDialog": {
+                "title": "Add New User",
+                "fields": {
+                    "name": "Name",
+                    "email": "Email",
+                    "password": "Password",
+                    "confirmPassword": "Confirm Password"
+                },
+                "helpers": {
+                    "passwordMinLength": "Minimum 8 characters"
+                }
+            },
+            "editDialog": {
+                "title": "Edit User",
+                "emailHelper": "Email cannot be changed",
+                "fields": {
+                    "name": "Name",
+                    "email": "Email",
+                    "newPassword": "New Password",
+                    "confirmPassword": "Confirm New Password"
+                },
+                "helpers": {
+                    "passwordMinLength": "Minimum 8 characters"
+                }
+            },
+            "twoFactorDialog": {
+                "title": "Enable 2FA for {userName}",
+                "step1": {
+                    "instruction": "Step 1: Scan the QR code with an authenticator app (e.g., Google Authenticator, Authy)",
+                    "manualEntry": "Or enter this code manually:",
+                    "nextStep": "Step 2: After scanning, click \"Next\" to enter the verification code"
+                },
+                "step2": {
+                    "instruction": "Enter the 6-digit verification code from your authenticator app:",
+                    "label": "Verification Code"
+                },
+                "step3": {
+                    "warning": "⚠️ Important: Save these backup codes in a safe place. Each code can only be used once and will help you regain access if you lose your authenticator device.",
+                    "title": "Your Backup Codes:"
+                }
+            },
+            "validation": {
+                "nameRequired": "Name is required",
+                "emailRequired": "Email is required",
+                "emailInvalid": "Invalid email format",
+                "passwordRequired": "Password is required",
+                "passwordMinLength": "Password must be at least 8 characters",
+                "confirmPasswordRequired": "Please confirm password",
+                "passwordMismatch": "Passwords do not match",
+                "verificationCodeRequired": "Please enter 6-digit verification code"
+            },
+            "messages": {
+                "deleteSuccess": "User deleted successfully",
+                "createSuccess": "User created successfully",
+                "updateSuccess": "User updated successfully",
+                "enable2FASuccess": "2FA enabled successfully",
+                "disable2FASuccess": "2FA disabled successfully"
+            },
+            "confirm": {
+                "disable2FA": "Are you sure you want to disable 2FA for user \"{userName}\"?"
             }
         }
     },

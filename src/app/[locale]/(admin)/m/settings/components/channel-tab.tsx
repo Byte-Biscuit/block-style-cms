@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
 import ChannelForm, {
     ChannelFormData,
@@ -14,7 +15,6 @@ interface ChannelTabProps {
 
 /**
  * Channel Configuration Tab Component
- * 频道配置Tab组件
  *
  * Provides interface for editing channel navigation configuration.
  * Channels can be tag-based filters or page links.
@@ -22,6 +22,7 @@ interface ChannelTabProps {
  * Uses Server Action for saving changes.
  */
 export default function ChannelTab({ initialData }: ChannelTabProps) {
+    const t = useTranslations("configuration.channel");
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<{
         type: "success" | "error";
@@ -36,22 +37,18 @@ export default function ChannelTab({ initialData }: ChannelTabProps) {
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
-                        text:
-                            result.message ||
-                            "Channel configuration saved successfully!",
+                        text: result.message || t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
-                        text:
-                            result.message ||
-                            "Failed to save channel configuration",
+                        text: result.message || t("messages.saveFailed"),
                     });
                 }
             } catch (error) {
                 setMessage({
                     type: "error",
-                    text: "An unexpected error occurred",
+                    text: t("messages.unexpectedError"),
                 });
             }
         });
@@ -78,10 +75,10 @@ export default function ChannelTab({ initialData }: ChannelTabProps) {
                             }}
                         >
                             <CircularProgress size={16} color="inherit" />
-                            Saving...
+                            {t("actions.saving")}
                         </Box>
                     ) : (
-                        "Save Changes"
+                        t("actions.save")
                     )
                 }
             />

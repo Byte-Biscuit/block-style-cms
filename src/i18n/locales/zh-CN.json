@@ -135,6 +135,17 @@
                 "saveChanges": "保存更改",
                 "backInstall": "← 返回",
                 "cancel": "取消"
+            },
+            "tab": {
+                "buttons": {
+                    "save": "保存更改",
+                    "saving": "保存中..."
+                },
+                "messages": {
+                    "saveSuccess": "身份验证配置保存成功！",
+                    "saveFailed": "保存身份验证配置失败",
+                    "unexpectedError": "发生意外错误"
+                }
             }
         },
         "services": {
@@ -202,6 +213,86 @@
                 "backInstall": "← 返回",
                 "cancel": "取消",
                 "skip": "跳过"
+            },
+            "tab": {
+                "buttons": {
+                    "save": "保存更改",
+                    "saving": "保存中..."
+                },
+                "messages": {
+                    "saveSuccess": "外部服务配置保存成功！",
+                    "saveFailed": "保存外部服务配置失败",
+                    "unexpectedError": "发生意外错误"
+                }
+            }
+        },
+        "settings": {
+            "page": {
+                "title": "系统设置",
+                "description": "配置您的网站、身份验证和服务",
+                "error": {
+                    "title": "未找到配置",
+                    "description": "请先完成安装过程。"
+                },
+                "metadata": {
+                    "title": "系统设置",
+                    "description": "配置系统设置和偏好"
+                }
+            },
+            "tabs": {
+                "basicConfig": "基础配置",
+                "websiteInfo": "网站信息",
+                "userManagement": "用户管理",
+                "authentication": "身份验证",
+                "externalServices": "外部服务",
+                "channelManagement": "频道管理"
+            },
+            "basicConfig": {
+                "comment": {
+                    "title": "评论系统配置",
+                    "description": "配置评论系统的设置与限制",
+                    "enabled": "启用评论系统",
+                    "maxTotal": "评论总数上限",
+                    "maxTotalHelper": "系统允许的最大评论数量",
+                    "limits": {
+                        "title": "内容限制",
+                        "minLength": "最小长度",
+                        "minLengthHelper": "最少字符数",
+                        "maxLength": "最大长度",
+                        "maxLengthHelper": "最多字符数",
+                        "maxLinks": "最大允许链接数",
+                        "maxLinksHelper": "评论中允许的最大链接数量"
+                    },
+                    "moderation": {
+                        "title": "审核设置",
+                        "requireApproval": "发布前需要人工审核"
+                    }
+                },
+                "suggestion": {
+                    "title": "建议系统配置",
+                    "description": "配置建议系统的设置与限制",
+                    "enabled": "启用建议系统",
+                    "maxTotal": "建议总数上限",
+                    "maxTotalHelper": "系统允许的最大建议数量",
+                    "limits": {
+                        "title": "内容限制",
+                        "minLength": "最小长度",
+                        "minLengthHelper": "最少字符数",
+                        "maxLength": "最大长度",
+                        "maxLengthHelper": "最多字符数",
+                        "maxLinks": "最大允许链接数",
+                        "maxLinksHelper": "建议中允许的最大链接数量"
+                    }
+                },
+                "buttons": {
+                    "save": "保存更改",
+                    "saving": "保存中..."
+                },
+                "messages": {
+                    "saveSuccess": "配置保存成功！",
+                    "saveFailed": "保存配置失败",
+                    "unexpectedError": "发生意外错误"
+                }
             }
         },
         "siteInfo": {
@@ -246,12 +337,176 @@
                 "saveChanges": "保存更改",
                 "backInstall": "← 返回",
                 "cancel": "取消",
-                "uploadingLogo": "正在上传 Logo..."
+                "uploadingLogo": "正在上传 Logo...",
+                "saving": "保存中..."
             },
             "messages": {
                 "pngOnly": "请上传 PNG 格式的文件。",
                 "uploadFailed": "上传 Logo 失败",
-                "uploadError": "上传 Logo 时发生错误"
+                "uploadError": "上传 Logo 时发生错误",
+                "saveSuccess": "设置保存成功！",
+                "saveFailed": "保存设置失败",
+                "unexpectedError": "发生意外错误"
+            }
+        },
+        "channel": {
+            "title": "频道配置",
+            "subtitle": "配置网站的导航频道。基于标签的频道用于筛选文章，而页面频道链接到特定页面。",
+            "info": {
+                "title": "标签格式：",
+                "content": "推荐格式为 <code>_TAG_</code>（大写加下划线），但也支持自定义格式。"
+            },
+            "form": {
+                "id": "ID",
+                "idHelper": "唯一标识符（也作为 i18n 键）",
+                "idErrorRequired": "ID 必填",
+                "idErrorUnique": "ID 必须唯一",
+                "icon": "图标（可选）",
+                "iconHelper": "图标标识符（例如 Home, Article, 🏠 或自定义）",
+                "type": "类型",
+                "types": {
+                    "tag": "标签（筛选文章）",
+                    "page": "页面（链接到页面）"
+                },
+                "tag": "标签",
+                "tagHelper": "格式：_TAG_（推荐）",
+                "tagErrorRequired": "标签类型必须填写标签",
+                "path": "路径",
+                "pathHelperTag": "根据标签自动生成",
+                "pathHelperPage": "例如 /tags 或 /about",
+                "pathErrorRequired": "路径必填"
+            },
+            "actions": {
+                "add": "添加频道",
+                "save": "保存更改",
+                "saving": "保存中...",
+                "remove": "移除频道",
+                "moveUp": "上移",
+                "moveDown": "下移"
+            },
+            "messages": {
+                "saveSuccess": "频道配置保存成功！",
+                "saveFailed": "保存频道配置失败",
+                "unexpectedError": "发生意外错误"
+            }
+        },
+        "userManagement": {
+            "page": {
+                "title": "用户管理",
+                "subtitle": "管理用户及其身份验证方式"
+            },
+            "table": {
+                "columns": {
+                    "name": "姓名",
+                    "email": "邮箱",
+                    "authMethods": "认证方式",
+                    "twoFactorStatus": "双因素认证",
+                    "emailVerified": "邮箱验证",
+                    "createdAt": "创建时间",
+                    "actions": "操作"
+                },
+                "empty": "未找到用户",
+                "loading": "加载中...",
+                "twoFactor": {
+                    "enabled": "已启用",
+                    "disabled": "未启用",
+                    "notApplicable": "不适用"
+                },
+                "emailVerification": {
+                    "verified": "已验证",
+                    "unverified": "未验证"
+                }
+            },
+            "providers": {
+                "credential": "账号密码",
+                "github": "GitHub",
+                "google": "Google"
+            },
+            "buttons": {
+                "addUser": "添加用户",
+                "editUser": "编辑用户",
+                "deleteUser": "删除用户",
+                "save": "保存更改",
+                "cancel": "取消",
+                "next": "下一步",
+                "complete": "完成",
+                "resetPassword": "重置密码",
+                "cancelReset": "取消重置密码",
+                "verifyEnable": "验证并启用",
+                "copyBackupCodes": "复制所有备用码",
+                "copied": "已复制！",
+                "delete": "删除"
+            },
+            "tooltips": {
+                "edit": "编辑用户",
+                "delete": "删除用户",
+                "enable2FA": "启用双因素认证",
+                "disable2FA": "禁用双因素认证"
+            },
+            "deleteDialog": {
+                "title": "删除用户",
+                "message": "确定要删除用户 {userName} 吗？此操作无法撤销。"
+            },
+            "addDialog": {
+                "title": "添加新用户",
+                "fields": {
+                    "name": "姓名",
+                    "email": "邮箱",
+                    "password": "密码",
+                    "confirmPassword": "确认密码"
+                },
+                "helpers": {
+                    "passwordMinLength": "至少 8 个字符"
+                }
+            },
+            "editDialog": {
+                "title": "编辑用户",
+                "emailHelper": "邮箱无法更改",
+                "fields": {
+                    "name": "姓名",
+                    "email": "邮箱",
+                    "newPassword": "新密码",
+                    "confirmPassword": "确认新密码"
+                },
+                "helpers": {
+                    "passwordMinLength": "至少 8 个字符"
+                }
+            },
+            "twoFactorDialog": {
+                "title": "为 {userName} 启用双因素认证",
+                "step1": {
+                    "instruction": "第 1 步：使用身份验证器应用（如 Google Authenticator、Authy）扫描二维码",
+                    "manualEntry": "或手动输入此代码：",
+                    "nextStep": "第 2 步：扫描后，点击\"下一步\"输入验证码"
+                },
+                "step2": {
+                    "instruction": "输入您的身份验证器应用中的 6 位验证码：",
+                    "label": "验证码"
+                },
+                "step3": {
+                    "warning": "⚠️ 重要：请将这些备用码保存在安全的地方。每个备用码只能使用一次，在您丢失身份验证器设备时可以帮助您重新获得访问权限。",
+                    "title": "您的备用码："
+                }
+            },
+            "validation": {
+                "nameRequired": "姓名为必填项",
+                "emailRequired": "邮箱为必填项",
+                "emailInvalid": "邮箱格式无效",
+                "passwordRequired": "密码为必填项",
+                "passwordMinLength": "密码至少为 8 个字符",
+                "confirmPasswordRequired": "请确认密码",
+                "passwordMismatch": "密码不匹配",
+                "verificationCodeRequired": "请输入 6 位验证码"
+            },
+            "messages": {
+                "deleteSuccess": "用户删除成功",
+                "createSuccess": "用户创建成功",
+                "updateSuccess": "用户更新成功",
+                "enable2FASuccess": "双因素认证启用成功",
+                "disable2FASuccess": "双因素认证禁用成功"
+            },
+            "confirm": {
+                "disable2FA": "确定要为用户\"{userName}\"禁用双因素认证吗？"
             }
         }
     },

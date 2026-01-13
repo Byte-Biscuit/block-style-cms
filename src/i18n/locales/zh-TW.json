@@ -1,4 +1,260 @@
 {
+    "configuration": {
+        "meta": {
+            "title": "系統安裝 - Block Style CMS",
+            "description": "Block Style CMS 系統安裝嚮導。配置您的資料庫、管理員帳戶及外部服務。"
+        },
+        "page": {
+            "title": "系統安裝 - Block Style CMS",
+            "loading": "正在載入安裝程式..."
+        },
+        "wizard": {
+            "steps": {
+                "welcome": "歡迎",
+                "environment": "環境檢查",
+                "siteInfo": "站點資訊",
+                "adminAccount": "管理帳戶",
+                "authMethods": "身份認證",
+                "services": "服務配置",
+                "complete": "安裝完成"
+            },
+            "error": "安裝失敗",
+            "complete": {
+                "title": "安裝完成！",
+                "description": "您的 Block Style CMS 現在可以使用了。",
+                "button": "前往登入 →"
+            }
+        },
+        "welcome": {
+            "title": "歡迎使用 Block Style CMS! 🎉",
+            "subtitle": "只需幾個簡單的步驟，即可完成您的內容管理系統安裝。",
+            "stepListTitle": "安裝步驟：",
+            "step1": "環境檢查 - 驗證系統要求",
+            "step2": "創建管理帳戶 - 設置您的第一個管理員用戶",
+            "step3": "配置認證方式 - 選擇登錄方式",
+            "step4": "設置外部服務 (可選) - 連接外部工具",
+            "step5": "完成安裝 - 開始使用您的 CMS",
+            "button": "開始安裝 →"
+        },
+        "environment": {
+            "title": "環境檢查",
+            "subtitle": "正在驗證您的系統配置和權限...",
+            "checking": "正在運行檢查...",
+            "error": "執行環境檢查失敗",
+            "retryButton": "重試檢查",
+            "backButton": "← 上一步",
+            "nextButton": "繼續 →",
+            "checks": {
+                "dataPath": "數據目錄訪問",
+                "database": "數據庫連接",
+                "writePermission": "寫入權限",
+                "readPermission": "讀取權限"
+            },
+            "status": {
+                "allPassed": "所有環境檢查均已通過！可以繼續安裝。",
+                "someFailed": "部分檢查未通過。請在繼續之前修復相關問題。",
+                "rerun": "重新運行檢查"
+            }
+        },
+        "admin": {
+            "title": "創建管理帳戶",
+            "subtitle": "設置您的管理員帳戶，以便訪問 CMS 管理面板。",
+            "labels": {
+                "name": "管理員姓名",
+                "nameHelper": "此名稱僅用於顯示，不用於登錄。",
+                "email": "管理員郵箱",
+                "password": "密碼",
+                "confirmPassword": "確認密碼",
+                "secret": "Better Auth 金鑰",
+                "secretHelper": "此金鑰用於會話加密。請務必妥善保管！"
+            },
+            "placeholders": {
+                "name": "管理員",
+                "email": "admin@example.com",
+                "password": "至少 8 個字元",
+                "confirmPassword": "再次輸入密碼",
+                "secret": "自動生成的 64 位十六進位字串"
+            },
+            "validation": {
+                "nameRequired": "姓名是必填項",
+                "emailRequired": "郵箱是必填項",
+                "emailInvalid": "郵箱格式無效",
+                "passwordRequired": "密碼是必填項",
+                "passwordTooShort": "密碼長度至少為 8 個字元",
+                "passwordsNotMatch": "兩次輸入的密碼不一致",
+                "secretInvalid": "金鑰必須是 64 位十六進制字串"
+            },
+            "buttons": {
+                "regenerateSecret": "重新生成",
+                "regenerateSecretTitle": "生成新密鑰",
+                "next": "下一步",
+                "back": "返回"
+            },
+            "helpers": {
+                "secretWarning": "⚠️ 請安全保存此密鑰。一旦丟失無法恢復。"
+            }
+        },
+        "authentication": {
+            "title": "身份認證方式",
+            "subtitle": "配置 OAuth 提供商和管理員存取控制。",
+            "github": {
+                "title": "GitHub OAuth",
+                "description": "使用 GitHub 帳戶登入",
+                "clientId": "Client ID",
+                "clientSecret": "Client Secret",
+                "placeholders": {
+                    "clientId": "GitHub Client ID",
+                    "clientSecret": "GitHub Client Secret"
+                }
+            },
+            "google": {
+                "title": "Google OAuth",
+                "description": "使用 Google 帳戶登入",
+                "clientId": "Client ID",
+                "clientSecret": "Client Secret",
+                "placeholders": {
+                    "clientId": "Google Client ID",
+                    "clientSecret": "Google Client Secret"
+                }
+            },
+            "adminEmails": {
+                "label": "管理員郵箱白名單",
+                "helper": "只有這些郵箱可以存取管理後台（逗號分隔）",
+                "placeholder": "admin@example.com, editor@example.com"
+            },
+            "validation": {
+                "githubClientIdRequired": "GitHub Client ID 為必填項",
+                "githubClientSecretRequired": "GitHub Client Secret 為必填項",
+                "googleClientIdRequired": "Google Client ID 為必填項",
+                "googleClientSecretRequired": "Google Client Secret 為必填項",
+                "emailsRequired": "至少需要一個管理員郵箱",
+                "invalidEmailFormat": "郵箱格式無效：{email}"
+            },
+            "buttons": {
+                "continueInstall": "繼續 →",
+                "saveChanges": "儲存變更",
+                "backInstall": "← 返回",
+                "cancel": "取消"
+            }
+        },
+        "services": {
+            "title": "外部服務（可選）",
+            "subtitle": "啟用可選服務以增強您的 CMS 功能。您可以稍後在設定中配置這些服務。",
+            "tip": "💡 提示：您可以跳過此步驟，稍後在管理設定面板中配置這些服務。",
+            "algolia": {
+                "title": "Algolia 搜尋",
+                "description": "快速、容錯的搜尋引擎",
+                "appId": "應用程式 ID",
+                "adminApiKey": "管理 API 金鑰",
+                "searchApiKey": "搜尋 API 金鑰",
+                "indexName": "索引名稱",
+                "placeholders": {
+                    "appId": "例如：ABC123XYZ",
+                    "indexName": "articles"
+                }
+            },
+            "umami": {
+                "title": "Umami 分析",
+                "description": "注重隱私的網站分析",
+                "websiteId": "網站 ID",
+                "scriptSource": "指令碼源 URL",
+                "placeholders": {
+                    "websiteId": "例如：550e8400-e29b-41d4-a716-446655440000",
+                    "scriptSource": "https://cloud.umami.is/script.js"
+                }
+            },
+            "ai": {
+                "title": "AI 服務",
+                "description": "AI 驅動的內容生成和輔助",
+                "provider": "AI 提供商",
+                "openai": "OpenAI",
+                "gemini": "Google Gemini",
+                "apiKey": "API 金鑰",
+                "baseUrl": "基礎 URL",
+                "model": "模型",
+                "openaiApiKey": "OpenAI API 金鑰",
+                "geminiApiKey": "Gemini API 金鑰",
+                "placeholders": {
+                    "openaiBaseUrl": "https://api.openai.com/v1",
+                    "openaiModel": "gpt-4o-mini",
+                    "geminiBaseUrl": "https://generativelanguage.googleapis.com/v1beta",
+                    "geminiModel": "gemini-2.0-flash"
+                }
+            },
+            "pexels": {
+                "title": "Pexels",
+                "description": "免費圖庫整合",
+                "apiKey": "API 金鑰"
+            },
+            "validation": {
+                "algoliaAppIdRequired": "Algolia 應用程式 ID 為必填項",
+                "algoliaAdminApiKeyRequired": "Algolia 管理 API 金鑰為必填項",
+                "algoliaSearchApiKeyRequired": "Algolia 搜尋 API 金鑰為必填項",
+                "umamiWebsiteIdRequired": "Umami 網站 ID 為必填項",
+                "umamiScriptSourceRequired": "Umami 指令碼源為必填項",
+                "openaiApiKeyRequired": "OpenAI API 金鑰為必填項",
+                "geminiApiKeyRequired": "Gemini API 金鑰為必填項",
+                "pexelsApiKeyRequired": "Pexels API 金鑰為必填項"
+            },
+            "buttons": {
+                "completeSetup": "完成設定 →",
+                "saveChanges": "儲存變更",
+                "backInstall": "← 返回",
+                "cancel": "取消",
+                "skip": "跳過"
+            }
+        },
+        "siteInfo": {
+            "title": "網站資訊",
+            "subtitle": "配置基本的網站資訊和聯絡方式。這些資訊將顯示在您的網站上。",
+            "notice": {
+                "title": "注意：",
+                "content": "網站標題、副標題和描述通過國際化 (i18n) 檔案管理，位於"
+            },
+            "logo": {
+                "title": "網站 Logo",
+                "preview": "Logo 預覽",
+                "changeButton": "更換 Logo",
+                "requirements": "僅支援 PNG 格式。推薦尺寸：512x512px。此 Logo 也將用作網站圖示。"
+            },
+            "contact": {
+                "title": "聯絡方式（可選）",
+                "subtitle": "新增聯絡方式，方便使用者與您聯絡。所有欄位均為可選。",
+                "labels": {
+                    "email": "📧 電子郵箱",
+                    "wechat": "💬 微信 ID",
+                    "x": "𝕏 X (Twitter)",
+                    "telegram": "✈️ Telegram",
+                    "discord": "🎮 Discord",
+                    "whatsapp": "📱 WhatsApp",
+                    "linkedin": "💼 LinkedIn",
+                    "github": "🐙 GitHub"
+                },
+                "placeholders": {
+                    "email": "contact@example.com",
+                    "wechat": "your-wechat-id",
+                    "x": "@username",
+                    "telegram": "@username",
+                    "discord": "username#1234 或邀請連結",
+                    "whatsapp": "+1234567890",
+                    "linkedin": "linkedin.com/in/username",
+                    "github": "github.com/username"
+                }
+            },
+            "buttons": {
+                "continueInstall": "繼續 →",
+                "saveChanges": "儲存變更",
+                "backInstall": "← 返回",
+                "cancel": "取消",
+                "uploadingLogo": "正在上傳 Logo..."
+            },
+            "messages": {
+                "pngOnly": "請上傳 PNG 格式的檔案。",
+                "uploadFailed": "上傳 Logo 失敗",
+                "uploadError": "上傳 Logo 時發生錯誤"
+            }
+        }
+    },
     "admin": {
         "dashboard": {
             "title": "管理儀表板",

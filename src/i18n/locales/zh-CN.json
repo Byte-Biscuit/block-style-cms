@@ -1,4 +1,260 @@
 {
+    "configuration": {
+        "meta": {
+            "title": "系统安装 - Block Style CMS",
+            "description": "Block Style CMS 系统安装向导。配置您的数据库、管理员账户及外部服务。"
+        },
+        "page": {
+            "title": "系统安装 - Block Style CMS",
+            "loading": "正在加载安装程序..."
+        },
+        "wizard": {
+            "steps": {
+                "welcome": "欢迎",
+                "environment": "环境检查",
+                "siteInfo": "站点信息",
+                "adminAccount": "管理账户",
+                "authMethods": "身份认证",
+                "services": "服务配置",
+                "complete": "安装完成"
+            },
+            "error": "安装失败",
+            "complete": {
+                "title": "安装完成！",
+                "description": "您的 Block Style CMS 现在可以使用了。",
+                "button": "前往登录 →"
+            }
+        },
+        "welcome": {
+            "title": "欢迎使用 Block Style CMS! 🎉",
+            "subtitle": "只需几个简单的步骤，即可完成您的内容管理系统安装。",
+            "stepListTitle": "安装步骤：",
+            "step1": "环境检查 - 验证系统要求",
+            "step2": "创建管理账户 - 设置您的第一个管理员用户",
+            "step3": "配置认证方式 - 选择登录方式",
+            "step4": "设置外部服务 (可选) - 连接外部工具",
+            "step5": "完成安装 - 开始使用您的 CMS",
+            "button": "开始安装 →"
+        },
+        "environment": {
+            "title": "环境检查",
+            "subtitle": "正在验证您的系统配置和权限...",
+            "checking": "正在运行检查...",
+            "error": "执行环境检查失败",
+            "retryButton": "重试检查",
+            "backButton": "← 上一步",
+            "nextButton": "继续 →",
+            "checks": {
+                "dataPath": "数据目录访问",
+                "database": "数据库连接",
+                "writePermission": "写入权限",
+                "readPermission": "读取权限"
+            },
+            "status": {
+                "allPassed": "所有环境检查均已通过！可以继续安装。",
+                "someFailed": "部分检查未通过。请在继续之前修复相关问题。",
+                "rerun": "重新运行检查"
+            }
+        },
+        "admin": {
+            "title": "创建管理账户",
+            "subtitle": "设置您的管理员账户，以便访问 CMS 管理面板。",
+            "labels": {
+                "name": "管理员姓名",
+                "nameHelper": "此名称仅用于显示，不用于登录。",
+                "email": "管理员邮箱",
+                "password": "密码",
+                "confirmPassword": "确认密码",
+                "secret": "Better Auth 密钥",
+                "secretHelper": "此密钥用于会话加密。请务必妥善保管！"
+            },
+            "placeholders": {
+                "name": "管理员",
+                "email": "admin@example.com",
+                "password": "至少 8 个字符",
+                "confirmPassword": "再次输入密码",
+                "secret": "自动生成的 64 位十六进制字符串"
+            },
+            "validation": {
+                "nameRequired": "姓名是必填项",
+                "emailRequired": "邮箱是必填项",
+                "emailInvalid": "邮箱格式无效",
+                "passwordRequired": "密码是必填项",
+                "passwordTooShort": "密码长度至少为 8 个字符",
+                "passwordsNotMatch": "两次输入的密码不一致",
+                "secretInvalid": "密钥必须是 64 位十六进制字符串"
+            },
+            "buttons": {
+                "regenerateSecret": "重新生成",
+                "regenerateSecretTitle": "生成新密钥",
+                "next": "下一步",
+                "back": "返回"
+            },
+            "helpers": {
+                "secretWarning": "⚠️ 请安全保存此密钥。一旦丢失无法恢复。"
+            }
+        },
+        "authentication": {
+            "title": "身份认证方式",
+            "subtitle": "配置 OAuth 提供商和管理员访问控制。",
+            "github": {
+                "title": "GitHub OAuth",
+                "description": "使用 GitHub 账户登录",
+                "clientId": "Client ID",
+                "clientSecret": "Client Secret",
+                "placeholders": {
+                    "clientId": "GitHub Client ID",
+                    "clientSecret": "GitHub Client Secret"
+                }
+            },
+            "google": {
+                "title": "Google OAuth",
+                "description": "使用 Google 账户登录",
+                "clientId": "Client ID",
+                "clientSecret": "Client Secret",
+                "placeholders": {
+                    "clientId": "Google Client ID",
+                    "clientSecret": "Google Client Secret"
+                }
+            },
+            "adminEmails": {
+                "label": "管理员邮箱白名单",
+                "helper": "只有这些邮箱可以访问管理后台（逗号分隔）",
+                "placeholder": "admin@example.com, editor@example.com"
+            },
+            "validation": {
+                "githubClientIdRequired": "GitHub Client ID 为必填项",
+                "githubClientSecretRequired": "GitHub Client Secret 为必填项",
+                "googleClientIdRequired": "Google Client ID 为必填项",
+                "googleClientSecretRequired": "Google Client Secret 为必填项",
+                "emailsRequired": "至少需要一个管理员邮箱",
+                "invalidEmailFormat": "邮箱格式无效：{email}"
+            },
+            "buttons": {
+                "continueInstall": "继续 →",
+                "saveChanges": "保存更改",
+                "backInstall": "← 返回",
+                "cancel": "取消"
+            }
+        },
+        "services": {
+            "title": "外部服务（可选）",
+            "subtitle": "启用可选服务以增强您的 CMS 功能。您可以稍后在设置中配置这些服务。",
+            "tip": "💡 提示：您可以跳过此步骤，稍后在管理设置面板中配置这些服务。",
+            "algolia": {
+                "title": "Algolia 搜索",
+                "description": "快速、容错的搜索引擎",
+                "appId": "应用程序 ID",
+                "adminApiKey": "管理 API 密钥",
+                "searchApiKey": "搜索 API 密钥",
+                "indexName": "索引名称",
+                "placeholders": {
+                    "appId": "例如：ABC123XYZ",
+                    "indexName": "articles"
+                }
+            },
+            "umami": {
+                "title": "Umami 分析",
+                "description": "注重隐私的网站分析",
+                "websiteId": "网站 ID",
+                "scriptSource": "脚本源 URL",
+                "placeholders": {
+                    "websiteId": "例如：550e8400-e29b-41d4-a716-446655440000",
+                    "scriptSource": "https://cloud.umami.is/script.js"
+                }
+            },
+            "ai": {
+                "title": "AI 服务",
+                "description": "AI 驱动的内容生成和辅助",
+                "provider": "AI 提供商",
+                "openai": "OpenAI",
+                "gemini": "Google Gemini",
+                "apiKey": "API 密钥",
+                "baseUrl": "基础 URL",
+                "model": "模型",
+                "openaiApiKey": "OpenAI API 密钥",
+                "geminiApiKey": "Gemini API 密钥",
+                "placeholders": {
+                    "openaiBaseUrl": "https://api.openai.com/v1",
+                    "openaiModel": "gpt-4o-mini",
+                    "geminiBaseUrl": "https://generativelanguage.googleapis.com/v1beta",
+                    "geminiModel": "gemini-2.0-flash"
+                }
+            },
+            "pexels": {
+                "title": "Pexels",
+                "description": "免费图库集成",
+                "apiKey": "API 密钥"
+            },
+            "validation": {
+                "algoliaAppIdRequired": "Algolia 应用程序 ID 为必填项",
+                "algoliaAdminApiKeyRequired": "Algolia 管理 API 密钥为必填项",
+                "algoliaSearchApiKeyRequired": "Algolia 搜索 API 密钥为必填项",
+                "umamiWebsiteIdRequired": "Umami 网站 ID 为必填项",
+                "umamiScriptSourceRequired": "Umami 脚本源为必填项",
+                "openaiApiKeyRequired": "OpenAI API 密钥为必填项",
+                "geminiApiKeyRequired": "Gemini API 密钥为必填项",
+                "pexelsApiKeyRequired": "Pexels API 密钥为必填项"
+            },
+            "buttons": {
+                "completeSetup": "完成设置 →",
+                "saveChanges": "保存更改",
+                "backInstall": "← 返回",
+                "cancel": "取消",
+                "skip": "跳过"
+            }
+        },
+        "siteInfo": {
+            "title": "网站信息",
+            "subtitle": "配置基本的网站信息和联系方式。这些信息将显示在您的网站上。",
+            "notice": {
+                "title": "注意：",
+                "content": "网站标题、副标题和描述通过国际化 (i18n) 文件管理，位于"
+            },
+            "logo": {
+                "title": "网站 Logo",
+                "preview": "Logo 预览",
+                "changeButton": "更换 Logo",
+                "requirements": "仅支持 PNG 格式。推荐尺寸：512x512px。此 Logo 也将用作网站图标。"
+            },
+            "contact": {
+                "title": "联系方式（可选）",
+                "subtitle": "添加联系方式，方便用户与您联系。所有字段均为可选。",
+                "labels": {
+                    "email": "📧 电子邮箱",
+                    "wechat": "💬 微信 ID",
+                    "x": "𝕏 X (Twitter)",
+                    "telegram": "✈️ Telegram",
+                    "discord": "🎮 Discord",
+                    "whatsapp": "📱 WhatsApp",
+                    "linkedin": "💼 LinkedIn",
+                    "github": "🐙 GitHub"
+                },
+                "placeholders": {
+                    "email": "contact@example.com",
+                    "wechat": "your-wechat-id",
+                    "x": "@username",
+                    "telegram": "@username",
+                    "discord": "username#1234 或邀请链接",
+                    "whatsapp": "+1234567890",
+                    "linkedin": "linkedin.com/in/username",
+                    "github": "github.com/username"
+                }
+            },
+            "buttons": {
+                "continueInstall": "继续 →",
+                "saveChanges": "保存更改",
+                "backInstall": "← 返回",
+                "cancel": "取消",
+                "uploadingLogo": "正在上传 Logo..."
+            },
+            "messages": {
+                "pngOnly": "请上传 PNG 格式的文件。",
+                "uploadFailed": "上传 Logo 失败",
+                "uploadError": "上传 Logo 时发生错误"
+            }
+        }
+    },
     "admin": {
         "dashboard": {
             "title": "管理仪表板",

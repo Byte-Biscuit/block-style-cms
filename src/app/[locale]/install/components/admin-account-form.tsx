@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AdminCredentials } from "@/types/system-config";
 import { EMAIL_REGEX } from "@/constants";
 
@@ -16,12 +17,13 @@ interface AdminAccountFormProps {
 function generateSecret(): string {
     const array = new Uint8Array(32);
     crypto.getRandomValues(array);
-    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
+        ""
+    );
 }
 
 /**
  * Admin Account Form Component
- * 管理员账户表单组件
  *
  * Creates the initial admin account with:
  * - Email address
@@ -35,6 +37,7 @@ export default function AdminAccountForm({
     onNext,
     onBack,
 }: AdminAccountFormProps) {
+    const t = useTranslations("configuration.admin");
     const [formData, setFormData] = useState({
         name: "Administrator",
         email: "",
@@ -48,27 +51,27 @@ export default function AdminAccountForm({
         const newErrors: Record<string, string> = {};
 
         if (!formData.name.trim()) {
-            newErrors.name = "Name is required";
+            newErrors.name = t("validation.nameRequired");
         }
 
         if (!formData.email) {
-            newErrors.email = "Email is required";
+            newErrors.email = t("validation.emailRequired");
         } else if (!EMAIL_REGEX.test(formData.email)) {
-            newErrors.email = "Invalid email format";
+            newErrors.email = t("validation.emailInvalid");
         }
 
         if (!formData.password) {
-            newErrors.password = "Password is required";
+            newErrors.password = t("validation.passwordRequired");
         } else if (formData.password.length < 8) {
-            newErrors.password = "Password must be at least 8 characters";
+            newErrors.password = t("validation.passwordTooShort");
         }
 
         if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = "Passwords do not match";
+            newErrors.confirmPassword = t("validation.passwordsNotMatch");
         }
 
         if (!formData.secret || formData.secret.length !== 64) {
-            newErrors.secret = "Secret must be a 64-character hex string";
+            newErrors.secret = t("validation.secretInvalid");
         }
 
         setErrors(newErrors);
@@ -95,21 +98,21 @@ export default function AdminAccountForm({
     return (
         <form onSubmit={handleSubmit}>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Create Admin Account
+                {t("title")}
             </h2>
             <p className="mt-2 text-gray-600 dark:text-gray-300">
-                Set up your administrator account to access the CMS management
-                panel.
+                {t("subtitle")}
             </p>
 
             <div className="mt-6 space-y-4">
                 {/* Name Input */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Admin Name <span className="text-red-500">*</span>
+                        {t("labels.name")}{" "}
+                        <span className="text-red-500">*</span>
                     </label>
                     <p className="mb-1 text-xs text-gray-500 dark:text-gray-400">
-                        This name is for display purposes only, not for login.
+                        {t("labels.nameHelper")}
                     </p>
                     <input
                         type="text"
@@ -122,7 +125,7 @@ export default function AdminAccountForm({
                                 ? "border-red-500"
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                        placeholder="Administrator"
+                        placeholder={t("placeholders.name")}
                     />
                     {errors.name && (
                         <p className="mt-1 text-sm text-red-500">
@@ -134,7 +137,8 @@ export default function AdminAccountForm({
                 {/* Email Input */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Admin Email <span className="text-red-500">*</span>
+                        {t("labels.email")}{" "}
+                        <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="email"
@@ -147,7 +151,7 @@ export default function AdminAccountForm({
                                 ? "border-red-500"
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                        placeholder="admin@example.com"
+                        placeholder={t("placeholders.email")}
                     />
                     {errors.email && (
                         <p className="mt-1 text-sm text-red-500">
@@ -159,7 +163,8 @@ export default function AdminAccountForm({
                 {/* Password Input */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Password <span className="text-red-500">*</span>
+                        {t("labels.password")}{" "}
+                        <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="password"
@@ -175,7 +180,7 @@ export default function AdminAccountForm({
                                 ? "border-red-500"
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                        placeholder="Minimum 8 characters"
+                        placeholder={t("placeholders.password")}
                     />
                     {errors.password && (
                         <p className="mt-1 text-sm text-red-500">
@@ -187,7 +192,8 @@ export default function AdminAccountForm({
                 {/* Confirm Password Input */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Confirm Password <span className="text-red-500">*</span>
+                        {t("labels.confirmPassword")}{" "}
+                        <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="password"
@@ -203,7 +209,7 @@ export default function AdminAccountForm({
                                 ? "border-red-500"
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                        placeholder="Re-enter password"
+                        placeholder={t("placeholders.confirmPassword")}
                     />
                     {errors.confirmPassword && (
                         <p className="mt-1 text-sm text-red-500">
@@ -215,10 +221,11 @@ export default function AdminAccountForm({
                 {/* Better Auth Secret */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Authentication Secret <span className="text-red-500">*</span>
+                        {t("labels.secret")}{" "}
+                        <span className="text-red-500">*</span>
                     </label>
                     <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
-                        A 64-character secret used for encrypting authentication data (e.g., 2FA keys).
+                        {t("labels.secretHelper")}
                     </p>
                     <div className="flex gap-2">
                         <input
@@ -235,14 +242,14 @@ export default function AdminAccountForm({
                                     ? "border-red-500"
                                     : "border-gray-300 dark:border-gray-600"
                             } bg-white px-4 py-2 font-mono text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                            placeholder="Auto-generated 64-character hex string"
+                            placeholder={t("placeholders.secret")}
                             readOnly
                         />
                         <button
                             type="button"
                             onClick={handleRegenerateSecret}
-                            className="rounded-lg border border-blue-500 bg-blue-500 px-4 py-2 font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            title="Generate new secret"
+                            className="rounded-lg border border-blue-500 bg-blue-500 px-4 py-2 font-medium text-white transition hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            title={t("buttons.regenerateSecretTitle")}
                         >
                             <svg
                                 className="h-5 w-5"
@@ -265,36 +272,8 @@ export default function AdminAccountForm({
                         </p>
                     )}
                     <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                        ⚠️ Save this secret securely. It cannot be recovered if lost.
+                        {t("helpers.secretWarning")}
                     </p>
-                </div>
-
-                {/* 2FA Info Box */}
-                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950">
-                    <div className="flex items-start gap-3">
-                        <svg
-                            className="mt-0.5 h-5 w-5 text-blue-600 dark:text-blue-400"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                        <div>
-                            <h3 className="font-semibold text-blue-900 dark:text-blue-100">
-                                Two-Factor Authentication (2FA)
-                            </h3>
-                            <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
-                                You can enable 2FA later in Settings → Security
-                                for enhanced account protection.
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -305,13 +284,13 @@ export default function AdminAccountForm({
                     onClick={onBack}
                     className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                 >
-                    ← Back
+                    {t("buttons.back")}
                 </button>
                 <button
                     type="submit"
                     className="rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600"
                 >
-                    Continue →
+                    {t("buttons.next")}
                 </button>
             </div>
         </form>

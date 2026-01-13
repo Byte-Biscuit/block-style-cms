@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 interface EnvironmentCheckFormProps {
     onNext: () => void;
@@ -21,7 +22,6 @@ interface EnvironmentChecks {
 
 /**
  * Environment Check Form Component
- * 环境检查表单组件
  *
  * Performs comprehensive system environment validation:
  * - Data directory accessibility
@@ -32,6 +32,7 @@ export default function EnvironmentCheckForm({
     onNext,
     onBack,
 }: EnvironmentCheckFormProps) {
+    const t = useTranslations("configuration.environment");
     const [isChecking, setIsChecking] = useState(false);
     const [checks, setChecks] = useState<EnvironmentChecks | null>(null);
     const [allPassed, setAllPassed] = useState(false);
@@ -47,20 +48,16 @@ export default function EnvironmentCheckForm({
 
         try {
             const response = await fetch("/api/install/check-environment");
-            
+
             if (!response.ok) {
-                throw new Error("Environment check failed");
+                throw new Error(t("error"));
             }
 
             const data = await response.json();
             setChecks(data.checks);
             setAllPassed(data.allPassed);
         } catch (err) {
-            setError(
-                err instanceof Error
-                    ? err.message
-                    : "Failed to perform environment checks"
-            );
+            setError(err instanceof Error ? err.message : t("error"));
         } finally {
             setIsChecking(false);
         }
@@ -78,17 +75,13 @@ export default function EnvironmentCheckForm({
 
     return (
         <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-                Environment Check
-            </h2>
-            <p className="mt-2 text-gray-600">
-                Verifying your system configuration and permissions...
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900">{t("title")}</h2>
+            <p className="mt-2 text-gray-600">{t("subtitle")}</p>
 
             {isChecking && (
                 <div className="mt-6 text-center">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
-                    <p className="mt-4 text-gray-600">Running checks...</p>
+                    <p className="mt-4 text-gray-600">{t("checking")}</p>
                 </div>
             )}
 
@@ -99,7 +92,7 @@ export default function EnvironmentCheckForm({
                         onClick={performChecks}
                         className="mt-3 rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
                     >
-                        Retry Checks
+                        {t("retryButton")}
                     </button>
                 </div>
             )}
@@ -117,7 +110,7 @@ export default function EnvironmentCheckForm({
                         </span>
                         <div className="flex-1">
                             <h3 className="font-semibold">
-                                Data Directory Access
+                                {t("checks.dataPath")}
                             </h3>
                             <p className="mt-1 text-sm">
                                 {checks.dataPath.message}
@@ -136,7 +129,7 @@ export default function EnvironmentCheckForm({
                         </span>
                         <div className="flex-1">
                             <h3 className="font-semibold">
-                                Database Connectivity
+                                {t("checks.database")}
                             </h3>
                             <p className="mt-1 text-sm">
                                 {checks.database.message}
@@ -154,7 +147,9 @@ export default function EnvironmentCheckForm({
                             {getCheckIcon(checks.writePermission.passed)}
                         </span>
                         <div className="flex-1">
-                            <h3 className="font-semibold">Write Permissions</h3>
+                            <h3 className="font-semibold">
+                                {t("checks.writePermission")}
+                            </h3>
                             <p className="mt-1 text-sm">
                                 {checks.writePermission.message}
                             </p>
@@ -171,7 +166,9 @@ export default function EnvironmentCheckForm({
                             {getCheckIcon(checks.readPermission.passed)}
                         </span>
                         <div className="flex-1">
-                            <h3 className="font-semibold">Read Permissions</h3>
+                            <h3 className="font-semibold">
+                                {t("checks.readPermission")}
+                            </h3>
                             <p className="mt-1 text-sm">
                                 {checks.readPermission.message}
                             </p>
@@ -182,8 +179,7 @@ export default function EnvironmentCheckForm({
                     {allPassed && (
                         <div className="rounded-lg border border-green-200 bg-green-50 p-4">
                             <p className="font-semibold text-green-900">
-                                ✅ All environment checks passed! Ready to
-                                continue.
+                                ✅ {t("status.allPassed")}
                             </p>
                         </div>
                     )}
@@ -191,14 +187,13 @@ export default function EnvironmentCheckForm({
                     {!allPassed && (
                         <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
                             <p className="font-semibold text-yellow-900">
-                                ⚠️ Some checks failed. Please fix the issues
-                                before continuing.
+                                ⚠️ {t("status.someFailed")}
                             </p>
                             <button
                                 onClick={performChecks}
                                 className="mt-3 rounded bg-yellow-600 px-4 py-2 text-sm text-white hover:bg-yellow-700"
                             >
-                                Re-run Checks
+                                {t("status.rerun")}
                             </button>
                         </div>
                     )}
@@ -212,7 +207,7 @@ export default function EnvironmentCheckForm({
                     onClick={onBack}
                     className="rounded-lg border border-gray-300 px-6 py-2 font-medium text-gray-700 transition hover:bg-gray-50"
                 >
-                    ← Back
+                    {t("backButton")}
                 </button>
                 <button
                     type="button"
@@ -220,7 +215,7 @@ export default function EnvironmentCheckForm({
                     disabled={!allPassed || isChecking}
                     className="rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    Continue →
+                    {t("nextButton")}
                 </button>
             </div>
         </div>

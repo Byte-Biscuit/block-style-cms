@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import * as fsSync from "fs";
 import path from "path";
 import Database from "better-sqlite3";
+import { BETTER_AUTH_DATABASE } from "@/constants";
 
 /**
  * GET /api/install/check-environment
@@ -45,7 +46,7 @@ export async function GET() {
         }
 
         // Check 2: Test Database Connection with Better Auth
-        const dbPath = path.join(dataPath, "better-auth.db");
+        const dbPath = path.join(dataPath, BETTER_AUTH_DATABASE);
         try {
             // Open database
             const db = new Database(dbPath);

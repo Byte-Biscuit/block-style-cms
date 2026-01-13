@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 /**
  * Services Form Data Structure
- * 服务配置表单数据结构
  */
 export interface ServicesFormData {
     algolia: {
@@ -62,7 +62,6 @@ interface ServicesFormProps {
 
 /**
  * Services Configuration Form Component
- * 服务配置表单组件
  *
  * Reusable form for configuring external services:
  * 1. Algolia Search (search engine)
@@ -102,6 +101,7 @@ export default function ServicesForm({
     cancelLabel,
     skipLabel,
 }: ServicesFormProps) {
+    const t = useTranslations("configuration.services");
     const [formData, setFormData] = useState<ServicesFormData>({
         algolia: {
             enabled: initialData?.algolia?.enabled ?? false,
@@ -147,24 +147,29 @@ export default function ServicesForm({
         // Validate Algolia if enabled
         if (formData.algolia.enabled) {
             if (!formData.algolia.appId?.trim()) {
-                newErrors.algoliaAppId = "Algolia App ID is required";
+                newErrors.algoliaAppId = t("validation.algoliaAppIdRequired");
             }
             if (!formData.algolia.apiKey?.trim()) {
-                newErrors.algoliaApiKey = "Algolia Admin API Key is required";
+                newErrors.algoliaApiKey = t(
+                    "validation.algoliaAdminApiKeyRequired"
+                );
             }
             if (!formData.algolia.searchKey?.trim()) {
-                newErrors.algoliaSearchKey =
-                    "Algolia Search API Key is required";
+                newErrors.algoliaSearchKey = t(
+                    "validation.algoliaSearchApiKeyRequired"
+                );
             }
         }
 
         // Validate Umami if enabled
         if (formData.umami.enabled) {
             if (!formData.umami.websiteId?.trim()) {
-                newErrors.umamiWebsiteId = "Umami Website ID is required";
+                newErrors.umamiWebsiteId = t(
+                    "validation.umamiWebsiteIdRequired"
+                );
             }
             if (!formData.umami.src?.trim()) {
-                newErrors.umamiSrc = "Umami Script Source is required";
+                newErrors.umamiSrc = t("validation.umamiScriptSourceRequired");
             }
         }
 
@@ -172,11 +177,15 @@ export default function ServicesForm({
         if (formData.ai.enabled) {
             if (formData.ai.provider === "openai") {
                 if (!formData.ai.openai.apiKey?.trim()) {
-                    newErrors.openaiApiKey = "OpenAI API Key is required";
+                    newErrors.openaiApiKey = t(
+                        "validation.openaiApiKeyRequired"
+                    );
                 }
             } else if (formData.ai.provider === "gemini") {
                 if (!formData.ai.gemini.apiKey?.trim()) {
-                    newErrors.geminiApiKey = "Gemini API Key is required";
+                    newErrors.geminiApiKey = t(
+                        "validation.geminiApiKeyRequired"
+                    );
                 }
             }
         }
@@ -184,7 +193,7 @@ export default function ServicesForm({
         // Validate Pexels if enabled
         if (formData.pexels.enabled) {
             if (!formData.pexels.apiKey?.trim()) {
-                newErrors.pexelsApiKey = "Pexels API Key is required";
+                newErrors.pexelsApiKey = t("validation.pexelsApiKeyRequired");
             }
         }
 
@@ -201,9 +210,12 @@ export default function ServicesForm({
 
     // Determine button labels based on mode
     const defaultSubmitLabel =
-        mode === "install" ? "Complete Setup →" : "Save Changes";
-    const defaultCancelLabel = mode === "install" ? "← Back" : "Cancel";
-    const defaultSkipLabel = "Skip";
+        mode === "install"
+            ? t("buttons.completeSetup")
+            : t("buttons.saveChanges");
+    const defaultCancelLabel =
+        mode === "install" ? t("buttons.backInstall") : t("buttons.cancel");
+    const defaultSkipLabel = t("buttons.skip");
     const finalSubmitLabel = submitLabel || defaultSubmitLabel;
     const finalCancelLabel = cancelLabel || defaultCancelLabel;
     const finalSkipLabel = skipLabel || defaultSkipLabel;
@@ -213,12 +225,10 @@ export default function ServicesForm({
             {mode === "install" && (
                 <>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        External Services (Optional)
+                        {t("title")}
                     </h2>
                     <p className="mt-2 text-gray-600 dark:text-gray-300">
-                        Enable optional services to enhance your CMS
-                        functionality. You can configure these later in
-                        settings.
+                        {t("subtitle")}
                     </p>
                 </>
             )}
@@ -247,17 +257,17 @@ export default function ServicesForm({
                             />
                             <div className="ml-3 flex-1">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    Algolia Search
+                                    {t("algolia.title")}
                                 </h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Fast, typo-tolerant search engine
+                                    {t("algolia.description")}
                                 </p>
 
                                 {formData.algolia.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Application ID
+                                                {t("algolia.appId")}
                                             </label>
                                             <input
                                                 type="text"
@@ -278,7 +288,9 @@ export default function ServicesForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="e.g. ABC123XYZ"
+                                                placeholder={t(
+                                                    "algolia.placeholders.appId"
+                                                )}
                                             />
                                             {errors.algoliaAppId && (
                                                 <p className="mt-1 text-xs text-red-500">
@@ -288,7 +300,7 @@ export default function ServicesForm({
                                         </div>
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Admin API Key
+                                                {t("algolia.adminApiKey")}
                                             </label>
                                             <input
                                                 type="password"
@@ -319,7 +331,7 @@ export default function ServicesForm({
                                         </div>
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Search-Only API Key
+                                                {t("algolia.searchApiKey")}
                                             </label>
                                             <input
                                                 type="text"
@@ -352,7 +364,7 @@ export default function ServicesForm({
                                         </div>
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Index Name
+                                                {t("algolia.indexName")}
                                             </label>
                                             <input
                                                 type="text"
@@ -371,7 +383,9 @@ export default function ServicesForm({
                                                 }
                                                 disabled={isLoading}
                                                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                                placeholder="e.g. articles"
+                                                placeholder={t(
+                                                    "algolia.placeholders.indexName"
+                                                )}
                                             />
                                         </div>
                                     </div>
@@ -402,17 +416,17 @@ export default function ServicesForm({
                             />
                             <div className="ml-3 flex-1">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    Umami Analytics
+                                    {t("umami.title")}
                                 </h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Privacy-focused website analytics
+                                    {t("umami.description")}
                                 </p>
 
                                 {formData.umami.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Website ID
+                                                {t("umami.websiteId")}
                                             </label>
                                             <input
                                                 type="text"
@@ -433,7 +447,9 @@ export default function ServicesForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
+                                                placeholder={t(
+                                                    "umami.placeholders.websiteId"
+                                                )}
                                             />
                                             {errors.umamiWebsiteId && (
                                                 <p className="mt-1 text-xs text-red-500">
@@ -443,7 +459,7 @@ export default function ServicesForm({
                                         </div>
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Script Source URL
+                                                {t("umami.scriptSource")}
                                             </label>
                                             <input
                                                 type="text"
@@ -463,7 +479,9 @@ export default function ServicesForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="https://cloud.umami.is/script.js"
+                                                placeholder={t(
+                                                    "umami.placeholders.scriptSource"
+                                                )}
                                             />
                                             {errors.umamiSrc && (
                                                 <p className="mt-1 text-xs text-red-500">
@@ -499,17 +517,17 @@ export default function ServicesForm({
                             />
                             <div className="ml-3 flex-1">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    AI Services
+                                    {t("ai.title")}
                                 </h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    AI-powered content generation and assistance
+                                    {t("ai.description")}
                                 </p>
 
                                 {formData.ai.enabled && (
                                     <div className="mt-3 max-w-lg space-y-4">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                AI Provider
+                                                {t("ai.provider")}
                                             </label>
                                             <div className="mt-2 flex space-x-4">
                                                 <label className="flex items-center">
@@ -536,7 +554,7 @@ export default function ServicesForm({
                                                         className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                                                     />
                                                     <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                                                        OpenAI
+                                                        {t("ai.openai")}
                                                     </span>
                                                 </label>
                                                 <label className="flex items-center">
@@ -563,7 +581,7 @@ export default function ServicesForm({
                                                         className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
                                                     />
                                                     <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                                                        Google Gemini
+                                                        {t("ai.gemini")}
                                                     </span>
                                                 </label>
                                             </div>
@@ -573,7 +591,7 @@ export default function ServicesForm({
                                             <div className="space-y-3 border-t border-gray-100 pt-3 dark:border-gray-700">
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                        OpenAI API Key
+                                                        {t("ai.openaiApiKey")}
                                                     </label>
                                                     <input
                                                         type="password"
@@ -615,7 +633,7 @@ export default function ServicesForm({
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                        API Base URL
+                                                        {t("ai.baseUrl")}
                                                     </label>
                                                     <input
                                                         type="text"
@@ -642,12 +660,14 @@ export default function ServicesForm({
                                                         }
                                                         disabled={isLoading}
                                                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                                        placeholder="https://api.openai.com/v1"
+                                                        placeholder={t(
+                                                            "ai.placeholders.openaiBaseUrl"
+                                                        )}
                                                     />
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                        Model Name
+                                                        {t("ai.model")}
                                                     </label>
                                                     <input
                                                         type="text"
@@ -673,7 +693,9 @@ export default function ServicesForm({
                                                         }
                                                         disabled={isLoading}
                                                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                                        placeholder="gpt-4o-mini"
+                                                        placeholder={t(
+                                                            "ai.placeholders.openaiModel"
+                                                        )}
                                                     />
                                                 </div>
                                             </div>
@@ -681,7 +703,7 @@ export default function ServicesForm({
                                             <div className="space-y-3 border-t border-gray-100 pt-3 dark:border-gray-700">
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                        Gemini API Key
+                                                        {t("ai.geminiApiKey")}
                                                     </label>
                                                     <input
                                                         type="password"
@@ -723,7 +745,7 @@ export default function ServicesForm({
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                        API Base URL
+                                                        {t("ai.baseUrl")}
                                                     </label>
                                                     <input
                                                         type="text"
@@ -750,12 +772,14 @@ export default function ServicesForm({
                                                         }
                                                         disabled={isLoading}
                                                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                                        placeholder="https://generativelanguage.googleapis.com/v1beta"
+                                                        placeholder={t(
+                                                            "ai.placeholders.geminiBaseUrl"
+                                                        )}
                                                     />
                                                 </div>
                                                 <div>
                                                     <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                        Model Name
+                                                        {t("ai.model")}
                                                     </label>
                                                     <input
                                                         type="text"
@@ -781,7 +805,9 @@ export default function ServicesForm({
                                                         }
                                                         disabled={isLoading}
                                                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                                                        placeholder="gemini-2.0-flash"
+                                                        placeholder={t(
+                                                            "ai.placeholders.geminiModel"
+                                                        )}
                                                     />
                                                 </div>
                                             </div>
@@ -814,17 +840,17 @@ export default function ServicesForm({
                             />
                             <div className="ml-3 flex-1">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    Pexels Stock Photos
+                                    {t("pexels.title")}
                                 </h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Free stock photos integration
+                                    {t("pexels.description")}
                                 </p>
 
                                 {formData.pexels.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Pexels API Key
+                                                {t("pexels.apiKey")}
                                             </label>
                                             <input
                                                 type="password"
@@ -864,8 +890,7 @@ export default function ServicesForm({
             {mode === "install" && (
                 <div className="mt-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-900 dark:bg-yellow-900/20">
                     <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                        💡 Tip: You can skip this step and configure these
-                        services later in the admin settings panel.
+                        {t("tip")}
                     </p>
                 </div>
             )}

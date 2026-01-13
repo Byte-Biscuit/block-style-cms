@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useLocale } from "next-intl";
+import { useState, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
     InstallStep,
     AdminCredentials,
@@ -19,7 +19,6 @@ import {
     ServicesForm,
     ServicesFormData,
 } from "@/components/configuration";
-import { useEffect } from "react";
 
 interface InstallWizardProps {
     onComplete: () => void;
@@ -40,6 +39,7 @@ interface InstallWizardProps {
 
 export default function InstallWizard({ onComplete }: InstallWizardProps) {
     const locale = useLocale();
+    const t = useTranslations("configuration.wizard");
     const [currentStep, setCurrentStep] = useState<InstallStep>(
         InstallStep.Welcome
     );
@@ -54,17 +54,25 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
     const [error, setError] = useState<string>("");
 
     const steps = [
-        { key: InstallStep.Welcome, title: "Welcome", icon: "🎉" },
+        { key: InstallStep.Welcome, title: t("steps.welcome"), icon: "🎉" },
         {
             key: InstallStep.Environment,
-            title: "Environment Check",
+            title: t("steps.environment"),
             icon: "🔍",
         },
-        { key: InstallStep.SiteInfo, title: "Website Info", icon: "🌐" },
-        { key: InstallStep.AdminAccount, title: "Admin Account", icon: "👤" },
-        { key: InstallStep.AuthMethods, title: "Authentication", icon: "🔐" },
-        { key: InstallStep.Services, title: "Services", icon: "🔌" },
-        { key: InstallStep.Complete, title: "Complete", icon: "✅" },
+        { key: InstallStep.SiteInfo, title: t("steps.siteInfo"), icon: "🌐" },
+        {
+            key: InstallStep.AdminAccount,
+            title: t("steps.adminAccount"),
+            icon: "👤",
+        },
+        {
+            key: InstallStep.AuthMethods,
+            title: t("steps.authMethods"),
+            icon: "🔐",
+        },
+        { key: InstallStep.Services, title: t("steps.services"), icon: "🔌" },
+        { key: InstallStep.Complete, title: t("steps.complete"), icon: "✅" },
     ];
 
     const currentStepIndex = steps.findIndex((s) => s.key === currentStep);
@@ -85,7 +93,6 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
 
     /**
      * Effect to handle installation submission when data is complete
-     * 当数据收集完成时，触发安装提交的副作用
      */
     useEffect(() => {
         const submitData = async () => {
@@ -107,16 +114,14 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error || "Installation failed");
+                    throw new Error(errorData.error || t("error"));
                 }
 
                 console.log("[Install] Installation successful");
                 setCurrentStep(InstallStep.Complete);
             } catch (err) {
                 console.error("[Install] Error during installation:", err);
-                setError(
-                    err instanceof Error ? err.message : "Installation failed"
-                );
+                setError(err instanceof Error ? err.message : t("error"));
                 // Reset states to allow retry
                 setInstallData((prev) => ({ ...prev, isComplete: false }));
                 setIsLoading(false);
@@ -219,8 +224,16 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                     <AuthenticationForm
                         mode="install"
                         initialData={{
-                            github: { enabled: false, clientId: "", clientSecret: "" },
-                            google: { enabled: false, clientId: "", clientSecret: "" },
+                            github: {
+                                enabled: false,
+                                clientId: "",
+                                clientSecret: "",
+                            },
+                            google: {
+                                enabled: false,
+                                clientId: "",
+                                clientSecret: "",
+                            },
                             allowedEmails: [installData.admin?.email || ""],
                         }}
                         onSubmit={(data: AuthFormData) => {
@@ -304,7 +317,8 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                                         enabled: false,
                                         provider: "openai",
                                         openai: {
-                                            baseUrl: "https://api.openai.com/v1",
+                                            baseUrl:
+                                                "https://api.openai.com/v1",
                                             model: "gpt-4o-mini",
                                         },
                                         gemini: {
@@ -329,16 +343,16 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                             <span className="text-5xl">🎉</span>
                         </div>
                         <h2 className="mt-6 text-3xl font-bold text-gray-900">
-                            Installation Complete!
+                            {t("complete.title")}
                         </h2>
                         <p className="mt-4 text-lg text-gray-600">
-                            Your Block Style CMS is now ready to use.
+                            {t("complete.description")}
                         </p>
                         <button
                             onClick={onComplete}
                             className="mt-8 rounded-lg bg-blue-500 px-8 py-3 font-semibold text-white shadow-lg transition hover:bg-blue-600"
                         >
-                            Go to Login →
+                            {t("complete.button")}
                         </button>
                     </div>
                 )}

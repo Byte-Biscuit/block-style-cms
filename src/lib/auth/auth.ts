@@ -4,7 +4,7 @@ import { twoFactor } from "better-auth/plugins";
 //import { passkey } from "@better-auth/passkey";
 import Database from "better-sqlite3";
 import { systemConfigService } from "../services/system-config-service";
-import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE } from "@/constants";
+import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE, BETTER_AUTH_DATABASE } from "@/constants";
 
 /**
  * Better Auth Configuration
@@ -19,7 +19,7 @@ import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE } from "@/constants";
  * Method enablement is controlled by CMS_DATA_PATH/settings.json
  */
 
-const databasePath = path.join(process.env.CMS_DATA_PATH || "./data", 'better-auth.db');
+const databasePath = path.join(process.env.CMS_DATA_PATH || "./data", BETTER_AUTH_DATABASE);
 
 /**
  * Global store to persist DB connection and Auth instance across HMR reloads in development.
@@ -63,7 +63,7 @@ export async function getAuth() {
 
     const githubConfig = config?.authentication?.methods?.github;
     const googleConfig = config?.authentication?.methods?.google;
-    
+
     // Get Better Auth Secret from settings.json (required)
     const authSecret = systemConfigService.getAuthSecret();
 

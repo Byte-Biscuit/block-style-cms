@@ -1,49 +1,37 @@
-"use client";
+import { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import InstallPageClient from "./components/install-page-client";
 
-import { useEffect, useState } from "react";
-import { useLocale } from "next-intl";
-import InstallWizard from "./components/install-wizard";
+type Props = {
+    params: Promise<{ locale: string }>;
+};
 
 /**
- * Installation Page
- * 初始化安装页面
+ * Generate Metadata for the Installation Page
+ */
+export async function generateMetadata({
+    params,
+}: Props): Promise<Metadata> {
+    const { locale } = await params;
+    const t = await getTranslations({ locale, namespace: "configuration.meta" });
+
+    return {
+        title: t("title"),
+        description: t("description"),
+    };
+}
+
+/**
+ * Installation Page (Server Component)
  *
  * This page is only accessible when the system has not been initialized.
- * After successful initialization, users will be redirected to the login page.
+ * Handles metadata and initializes the client-side installation wizard.
  */
-export default function InstallPage() {
-    const [isClient, setIsClient] = useState(false);
-    const locale = useLocale();
+export default async function InstallPage({ params }: Props) {
+    const { locale } = await params;
+    
+    // Enable static rendering support for this locale
+    setRequestLocale(locale);
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    if (!isClient) {
-        return (
-            <div className="flex min-h-screen items-center justify-center">
-                <div className="text-center">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-                    <p className="mt-4 text-gray-600 dark:text-gray-400">
-                        Loading...
-                    </p>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-            <InstallWizard
-                onComplete={() => {
-                    console.log(
-                        "[Install] Installation complete, redirecting to sign-in"
-                    );
-                    // Use window.location.href to force a full page reload
-                    // This ensures the layout re-checks isInitialized() with fresh data
-                    window.location.href = `/${locale}/auth/sign-in`;
-                }}
-            />
-        </div>
-    );
+    return <InstallPageClient />;
 }

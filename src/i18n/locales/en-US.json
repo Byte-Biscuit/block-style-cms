@@ -1,4 +1,260 @@
 {
+    "configuration": {
+        "meta": {
+            "title": "System Installation - Block Style CMS",
+            "description": "Block Style CMS installation wizard. Configure your database, admin account, and external services."
+        },
+        "page": {
+            "title": "System Installation - Block Style CMS",
+            "loading": "Loading installation guide..."
+        },
+        "wizard": {
+            "steps": {
+                "welcome": "Welcome",
+                "environment": "Environment Check",
+                "siteInfo": "Site Info",
+                "adminAccount": "Admin Account",
+                "authMethods": "Authentication",
+                "services": "Service Config",
+                "complete": "Installation Complete"
+            },
+            "error": "Installation failed",
+            "complete": {
+                "title": "Installation Complete!",
+                "description": "Your Block Style CMS is now ready to use.",
+                "button": "Go to Login →"
+            }
+        },
+        "welcome": {
+            "title": "Welcome to Block Style CMS! 🎉",
+            "subtitle": "Let's get your content management system up and running in just a few steps.",
+            "stepListTitle": "Installation Steps:",
+            "step1": "Environment check - Verify system requirements",
+            "step2": "Create admin account - Set up your first user",
+            "step3": "Configure authentication - Choose login methods",
+            "step4": "Set up services (optional) - Connect external tools",
+            "step5": "Complete installation - Start using your CMS",
+            "button": "Get Started →"
+        },
+        "environment": {
+            "title": "Environment Check",
+            "subtitle": "Verifying your system configuration and permissions...",
+            "checking": "Running checks...",
+            "error": "Failed to perform environment checks",
+            "retryButton": "Retry Checks",
+            "backButton": "← Back",
+            "nextButton": "Continue →",
+            "checks": {
+                "dataPath": "Data Directory Access",
+                "database": "Database Connectivity",
+                "writePermission": "Write Permissions",
+                "readPermission": "Read Permissions"
+            },
+            "status": {
+                "allPassed": "All environment checks passed! Ready to continue.",
+                "someFailed": "Some checks failed. Please fix the issues before continuing.",
+                "rerun": "Re-run Checks"
+            }
+        },
+        "admin": {
+            "title": "Create Admin Account",
+            "subtitle": "Set up your administrator account to access the CMS management panel.",
+            "labels": {
+                "name": "Admin Name",
+                "nameHelper": "This name is for display purposes only, not for login.",
+                "email": "Admin Email",
+                "password": "Password",
+                "confirmPassword": "Confirm Password",
+                "secret": "Better Auth Secret",
+                "secretHelper": "This secret is used for session encryption. Keep it safe!"
+            },
+            "placeholders": {
+                "name": "Administrator",
+                "email": "admin@example.com",
+                "password": "Minimum 8 characters",
+                "confirmPassword": "Re-enter password",
+                "secret": "Auto-generated 64-character hex string"
+            },
+            "validation": {
+                "nameRequired": "Name is required",
+                "emailRequired": "Email is required",
+                "emailInvalid": "Invalid email format",
+                "passwordRequired": "Password is required",
+                "passwordTooShort": "Password must be at least 8 characters",
+                "passwordsNotMatch": "Passwords do not match",
+                "secretInvalid": "Secret must be a 64-character hex string"
+            },
+            "buttons": {
+                "regenerateSecret": "Regenerate",
+                "regenerateSecretTitle": "Generate new secret",
+                "next": "Next Step",
+                "back": "Back"
+            },
+            "helpers": {
+                "secretWarning": "⚠️ Save this secret securely. It cannot be recovered if lost."
+            }
+        },
+        "authentication": {
+            "title": "Authentication Methods",
+            "subtitle": "Configure OAuth providers and admin access control.",
+            "github": {
+                "title": "GitHub OAuth",
+                "description": "Sign in with GitHub account",
+                "clientId": "Client ID",
+                "clientSecret": "Client Secret",
+                "placeholders": {
+                    "clientId": "GitHub Client ID",
+                    "clientSecret": "GitHub Client Secret"
+                }
+            },
+            "google": {
+                "title": "Google OAuth",
+                "description": "Sign in with Google account",
+                "clientId": "Client ID",
+                "clientSecret": "Client Secret",
+                "placeholders": {
+                    "clientId": "Google Client ID",
+                    "clientSecret": "Google Client Secret"
+                }
+            },
+            "adminEmails": {
+                "label": "Admin Email Whitelist",
+                "helper": "Only these emails can access the admin panel (comma-separated)",
+                "placeholder": "admin@example.com, editor@example.com"
+            },
+            "validation": {
+                "githubClientIdRequired": "GitHub Client ID is required",
+                "githubClientSecretRequired": "GitHub Client Secret is required",
+                "googleClientIdRequired": "Google Client ID is required",
+                "googleClientSecretRequired": "Google Client Secret is required",
+                "emailsRequired": "At least one admin email is required",
+                "invalidEmailFormat": "Invalid email format: {email}"
+            },
+            "buttons": {
+                "continueInstall": "Continue →",
+                "saveChanges": "Save Changes",
+                "backInstall": "← Back",
+                "cancel": "Cancel"
+            }
+        },
+        "services": {
+            "title": "External Services (Optional)",
+            "subtitle": "Enable optional services to enhance your CMS functionality. You can configure these later in settings.",
+            "tip": "💡 Tip: You can skip this step and configure these services later in the admin settings panel.",
+            "algolia": {
+                "title": "Algolia Search",
+                "description": "Fast, typo-tolerant search engine",
+                "appId": "Application ID",
+                "adminApiKey": "Admin API Key",
+                "searchApiKey": "Search API Key",
+                "indexName": "Index Name",
+                "placeholders": {
+                    "appId": "e.g. ABC123XYZ",
+                    "indexName": "articles"
+                }
+            },
+            "umami": {
+                "title": "Umami Analytics",
+                "description": "Privacy-focused website analytics",
+                "websiteId": "Website ID",
+                "scriptSource": "Script Source URL",
+                "placeholders": {
+                    "websiteId": "e.g. 550e8400-e29b-41d4-a716-446655440000",
+                    "scriptSource": "https://cloud.umami.is/script.js"
+                }
+            },
+            "ai": {
+                "title": "AI Services",
+                "description": "AI-powered content generation and assistance",
+                "provider": "AI Provider",
+                "openai": "OpenAI",
+                "gemini": "Google Gemini",
+                "apiKey": "API Key",
+                "baseUrl": "Base URL",
+                "model": "Model",
+                "openaiApiKey": "OpenAI API Key",
+                "geminiApiKey": "Gemini API Key",
+                "placeholders": {
+                    "openaiBaseUrl": "https://api.openai.com/v1",
+                    "openaiModel": "gpt-4o-mini",
+                    "geminiBaseUrl": "https://generativelanguage.googleapis.com/v1beta",
+                    "geminiModel": "gemini-2.0-flash"
+                }
+            },
+            "pexels": {
+                "title": "Pexels",
+                "description": "Free stock photos integration",
+                "apiKey": "API Key"
+            },
+            "validation": {
+                "algoliaAppIdRequired": "Algolia App ID is required",
+                "algoliaAdminApiKeyRequired": "Algolia Admin API Key is required",
+                "algoliaSearchApiKeyRequired": "Algolia Search API Key is required",
+                "umamiWebsiteIdRequired": "Umami Website ID is required",
+                "umamiScriptSourceRequired": "Umami Script Source is required",
+                "openaiApiKeyRequired": "OpenAI API Key is required",
+                "geminiApiKeyRequired": "Gemini API Key is required",
+                "pexelsApiKeyRequired": "Pexels API Key is required"
+            },
+            "buttons": {
+                "completeSetup": "Complete Setup →",
+                "saveChanges": "Save Changes",
+                "backInstall": "← Back",
+                "cancel": "Cancel",
+                "skip": "Skip"
+            }
+        },
+        "siteInfo": {
+            "title": "Website Information",
+            "subtitle": "Configure basic website information and contact methods. These will be displayed on your website.",
+            "notice": {
+                "title": "Note:",
+                "content": "Website title, sub-title, and description are managed through internationalization (i18n) files in"
+            },
+            "logo": {
+                "title": "Website Logo",
+                "preview": "Logo Preview",
+                "changeButton": "Change Logo",
+                "requirements": "PNG only. Recommended size: 512x512px. This logo will also be used as the website favicon."
+            },
+            "contact": {
+                "title": "Contact Information (Optional)",
+                "subtitle": "Add contact methods for users to reach you. All fields are optional.",
+                "labels": {
+                    "email": "📧 Email",
+                    "wechat": "💬 WeChat ID",
+                    "x": "𝕏 X (Twitter)",
+                    "telegram": "✈️ Telegram",
+                    "discord": "🎮 Discord",
+                    "whatsapp": "📱 WhatsApp",
+                    "linkedin": "💼 LinkedIn",
+                    "github": "🐙 GitHub"
+                },
+                "placeholders": {
+                    "email": "contact@example.com",
+                    "wechat": "your-wechat-id",
+                    "x": "@username",
+                    "telegram": "@username",
+                    "discord": "username#1234 or invite link",
+                    "whatsapp": "+1234567890",
+                    "linkedin": "linkedin.com/in/username",
+                    "github": "github.com/username"
+                }
+            },
+            "buttons": {
+                "continueInstall": "Continue →",
+                "saveChanges": "Save Changes",
+                "backInstall": "← Back",
+                "cancel": "Cancel",
+                "uploadingLogo": "Uploading Logo..."
+            },
+            "messages": {
+                "pngOnly": "Please upload a PNG file.",
+                "uploadFailed": "Failed to upload logo",
+                "uploadError": "An error occurred while uploading the logo"
+            }
+        }
+    },
     "admin": {
         "dashboard": {
             "title": "Management Dashboard",

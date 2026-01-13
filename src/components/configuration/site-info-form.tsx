@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { SiteInfoConfig } from "@/types/system-config";
 import { uploadLogo } from "@/app/actions/settings/site-info";
 import { isSuccess } from "@/lib/response";
@@ -38,6 +39,7 @@ export default function SiteInfoForm({
     submitLabel,
     cancelLabel,
 }: SiteInfoFormProps) {
+    const t = useTranslations("configuration.siteInfo");
     const [formData, setFormData] = useState<SiteInfoConfig>(
         initialData || {
             contact: {
@@ -62,7 +64,7 @@ export default function SiteInfoForm({
         if (!file) return;
 
         if (file.type !== "image/png") {
-            alert("Please upload a PNG file.");
+            alert(t("messages.pngOnly"));
             return;
         }
 
@@ -85,12 +87,12 @@ export default function SiteInfoForm({
             try {
                 const result = await uploadLogo(logoFormData);
                 if (!isSuccess(result)) {
-                    alert(result.message || "Failed to upload logo");
+                    alert(result.message || t("messages.uploadFailed"));
                     setIsUploadingLogo(false);
                     return;
                 }
             } catch (error) {
-                alert("An error occurred while uploading the logo");
+                alert(t("messages.uploadError"));
                 setIsUploadingLogo(false);
                 return;
             }
@@ -102,27 +104,27 @@ export default function SiteInfoForm({
 
     // Determine button labels based on mode
     const defaultSubmitLabel =
-        mode === "install" ? "Continue →" : "Save Changes";
-    const defaultCancelLabel = mode === "install" ? "← Back" : "Cancel";
+        mode === "install"
+            ? t("buttons.continueInstall")
+            : t("buttons.saveChanges");
+    const defaultCancelLabel =
+        mode === "install" ? t("buttons.backInstall") : t("buttons.cancel");
     const finalSubmitLabel = submitLabel || defaultSubmitLabel;
     const finalCancelLabel = cancelLabel || defaultCancelLabel;
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold text-gray-900">
-                Website Information
-            </h2>
-            <p className="mt-2 text-gray-600">
-                Configure basic website information and contact methods. These
-                will be displayed on your website.
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900">{t("title")}</h2>
+            <p className="mt-2 text-gray-600">{t("subtitle")}</p>
 
             <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
-                <p className="font-semibold">Note:</p>
+                <p className="font-semibold">{t("notice.title")}</p>
                 <p className="mt-1">
-                    Website title, sub-title, and description are managed
-                    through internationalization (i18n) files in{" "}
-                    <code>CMS_DATA_PATH/locales/</code>.
+                    {t("notice.content")}{" "}
+                    <code className="rounded bg-blue-100 px-1 py-0.5 font-mono text-xs">
+                        CMS_DATA_PATH/locales/
+                    </code>
+                    .
                 </p>
             </div>
 
@@ -130,13 +132,13 @@ export default function SiteInfoForm({
                 {/* Logo Upload */}
                 <div>
                     <h3 className="mb-3 font-semibold text-gray-900">
-                        Website Logo
+                        {t("logo.title")}
                     </h3>
                     <div className="flex items-center space-x-8">
                         <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
                             <img
                                 src={logoPreview}
-                                alt="Logo Preview"
+                                alt={t("logo.preview")}
                                 className="h-full w-full object-contain"
                                 onError={(e) => {
                                     (e.target as HTMLImageElement).src =
@@ -157,11 +159,10 @@ export default function SiteInfoForm({
                                 onClick={() => fileInputRef.current?.click()}
                                 className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                             >
-                                Change Logo
+                                {t("logo.changeButton")}
                             </button>
                             <p className="mt-2 text-xs text-gray-500">
-                                PNG only. Recommended size: 512x512px. This logo
-                                will also be used as the website favicon.
+                                {t("logo.requirements")}
                             </p>
                         </div>
                     </div>
@@ -170,16 +171,15 @@ export default function SiteInfoForm({
                 {/* Contact Information */}
                 <div>
                     <h3 className="mb-3 font-semibold text-gray-900">
-                        Contact Information (Optional)
+                        {t("contact.title")}
                     </h3>
                     <p className="mb-4 text-sm text-gray-600">
-                        Add contact methods for users to reach you. All fields
-                        are optional.
+                        {t("contact.subtitle")}
                     </p>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                📧 Email
+                                {t("contact.labels.email")}
                             </label>
                             <input
                                 type="email"
@@ -193,13 +193,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="contact@example.com"
+                                placeholder={t("contact.placeholders.email")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                💬 WeChat ID
+                                {t("contact.labels.wechat")}
                             </label>
                             <input
                                 type="text"
@@ -213,13 +213,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="your-wechat-id"
+                                placeholder={t("contact.placeholders.wechat")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                𝕏 X (Twitter)
+                                {t("contact.labels.x")}
                             </label>
                             <input
                                 type="text"
@@ -233,13 +233,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="@username"
+                                placeholder={t("contact.placeholders.x")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                ✈️ Telegram
+                                {t("contact.labels.telegram")}
                             </label>
                             <input
                                 type="text"
@@ -253,13 +253,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="@username"
+                                placeholder={t("contact.placeholders.telegram")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                🎮 Discord
+                                {t("contact.labels.discord")}
                             </label>
                             <input
                                 type="text"
@@ -273,13 +273,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="username#1234 or invite link"
+                                placeholder={t("contact.placeholders.discord")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                📱 WhatsApp
+                                {t("contact.labels.whatsapp")}
                             </label>
                             <input
                                 type="text"
@@ -293,13 +293,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="+1234567890"
+                                placeholder={t("contact.placeholders.whatsapp")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                💼 LinkedIn
+                                {t("contact.labels.linkedin")}
                             </label>
                             <input
                                 type="text"
@@ -313,13 +313,13 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="linkedin.com/in/username"
+                                placeholder={t("contact.placeholders.linkedin")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">
-                                🐙 GitHub
+                                {t("contact.labels.github")}
                             </label>
                             <input
                                 type="text"
@@ -333,7 +333,7 @@ export default function SiteInfoForm({
                                         },
                                     })
                                 }
-                                placeholder="github.com/username"
+                                placeholder={t("contact.placeholders.github")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>
@@ -358,7 +358,9 @@ export default function SiteInfoForm({
                     disabled={isLoading || isUploadingLogo}
                     className="ml-auto rounded-lg bg-blue-500 px-6 py-2 font-semibold text-white shadow transition hover:bg-blue-600 disabled:opacity-50"
                 >
-                    {isUploadingLogo ? "Uploading Logo..." : finalSubmitLabel}
+                    {isUploadingLogo
+                        ? t("buttons.uploadingLogo")
+                        : finalSubmitLabel}
                 </button>
             </div>
         </form>

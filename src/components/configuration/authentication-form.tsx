@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { EMAIL_REGEX } from "@/constants";
 
 /**
  * Authentication Form Data Structure
- * 认证表单数据结构
  */
 export interface AuthFormData {
     github: {
@@ -44,7 +44,6 @@ interface AuthenticationFormProps {
 
 /**
  * Authentication Form Component
- * 认证配置表单组件
  *
  * Reusable form for configuring:
  * 1. GitHub OAuth (enabled, clientId, clientSecret)
@@ -81,6 +80,7 @@ export default function AuthenticationForm({
     submitLabel,
     cancelLabel,
 }: AuthenticationFormProps) {
+    const t = useTranslations("configuration.authentication");
     const [formData, setFormData] = useState({
         github: {
             enabled: initialData?.github?.enabled ?? false,
@@ -102,28 +102,34 @@ export default function AuthenticationForm({
         // Validate GitHub credentials if enabled
         if (formData.github.enabled) {
             if (!formData.github.clientId.trim()) {
-                newErrors.githubClientId = "GitHub Client ID is required";
+                newErrors.githubClientId = t(
+                    "validation.githubClientIdRequired"
+                );
             }
             if (!formData.github.clientSecret.trim()) {
-                newErrors.githubClientSecret =
-                    "GitHub Client Secret is required";
+                newErrors.githubClientSecret = t(
+                    "validation.githubClientSecretRequired"
+                );
             }
         }
 
         // Validate Google credentials if enabled
         if (formData.google.enabled) {
             if (!formData.google.clientId.trim()) {
-                newErrors.googleClientId = "Google Client ID is required";
+                newErrors.googleClientId = t(
+                    "validation.googleClientIdRequired"
+                );
             }
             if (!formData.google.clientSecret.trim()) {
-                newErrors.googleClientSecret =
-                    "Google Client Secret is required";
+                newErrors.googleClientSecret = t(
+                    "validation.googleClientSecretRequired"
+                );
             }
         }
 
         // Validate allowed emails
         if (!formData.allowedEmails.trim()) {
-            newErrors.allowedEmails = "At least one admin email is required";
+            newErrors.allowedEmails = t("validation.emailsRequired");
         } else {
             const emails = formData.allowedEmails
                 .split(",")
@@ -131,7 +137,10 @@ export default function AuthenticationForm({
                 .filter(Boolean);
             for (const email of emails) {
                 if (!EMAIL_REGEX.test(email)) {
-                    newErrors.allowedEmails = `Invalid email format: ${email}`;
+                    newErrors.allowedEmails = t(
+                        "validation.invalidEmailFormat",
+                        { email }
+                    );
                     break;
                 }
             }
@@ -167,8 +176,11 @@ export default function AuthenticationForm({
 
     // Determine button labels based on mode
     const defaultSubmitLabel =
-        mode === "install" ? "Continue →" : "Save Changes";
-    const defaultCancelLabel = mode === "install" ? "← Back" : "Cancel";
+        mode === "install"
+            ? t("buttons.continueInstall")
+            : t("buttons.saveChanges");
+    const defaultCancelLabel =
+        mode === "install" ? t("buttons.backInstall") : t("buttons.cancel");
     const finalSubmitLabel = submitLabel || defaultSubmitLabel;
     const finalCancelLabel = cancelLabel || defaultCancelLabel;
 
@@ -177,10 +189,10 @@ export default function AuthenticationForm({
             {mode === "install" && (
                 <>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        Authentication Methods
+                        {t("title")}
                     </h2>
                     <p className="mt-2 text-gray-600 dark:text-gray-300">
-                        Configure OAuth providers and admin access control.
+                        {t("subtitle")}
                     </p>
                 </>
             )}
@@ -209,16 +221,16 @@ export default function AuthenticationForm({
                             />
                             <div className="ml-3 flex-1">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    GitHub OAuth
+                                    {t("github.title")}
                                 </h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Sign in with GitHub account
+                                    {t("github.description")}
                                 </p>
                                 {formData.github.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Client ID
+                                                {t("github.clientId")}
                                             </label>
                                             <input
                                                 type="text"
@@ -239,7 +251,9 @@ export default function AuthenticationForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } bg-white px-3 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="GitHub Client ID"
+                                                placeholder={t(
+                                                    "github.placeholders.clientId"
+                                                )}
                                             />
                                             {errors.githubClientId && (
                                                 <p className="mt-1 text-[10px] text-red-500">
@@ -249,7 +263,7 @@ export default function AuthenticationForm({
                                         </div>
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Client Secret
+                                                {t("github.clientSecret")}
                                             </label>
                                             <input
                                                 type="password"
@@ -272,7 +286,9 @@ export default function AuthenticationForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } bg-white px-3 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="GitHub Client Secret"
+                                                placeholder={t(
+                                                    "github.placeholders.clientSecret"
+                                                )}
                                             />
                                             {errors.githubClientSecret && (
                                                 <p className="mt-1 text-[10px] text-red-500">
@@ -308,16 +324,16 @@ export default function AuthenticationForm({
                             />
                             <div className="ml-3 flex-1">
                                 <h3 className="font-semibold text-gray-900 dark:text-white">
-                                    Google OAuth
+                                    {t("google.title")}
                                 </h3>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Sign in with Google account
+                                    {t("google.description")}
                                 </p>
                                 {formData.google.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Client ID
+                                                {t("google.clientId")}
                                             </label>
                                             <input
                                                 type="text"
@@ -338,7 +354,9 @@ export default function AuthenticationForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } bg-white px-3 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="Google Client ID"
+                                                placeholder={t(
+                                                    "google.placeholders.clientId"
+                                                )}
                                             />
                                             {errors.googleClientId && (
                                                 <p className="mt-1 text-[10px] text-red-500">
@@ -348,7 +366,7 @@ export default function AuthenticationForm({
                                         </div>
                                         <div>
                                             <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                Client Secret
+                                                {t("google.clientSecret")}
                                             </label>
                                             <input
                                                 type="password"
@@ -371,7 +389,9 @@ export default function AuthenticationForm({
                                                         ? "border-red-500"
                                                         : "border-gray-300 dark:border-gray-600"
                                                 } bg-white px-3 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
-                                                placeholder="Google Client Secret"
+                                                placeholder={t(
+                                                    "google.placeholders.clientSecret"
+                                                )}
                                             />
                                             {errors.googleClientSecret && (
                                                 <p className="mt-1 text-[10px] text-red-500">
@@ -389,12 +409,11 @@ export default function AuthenticationForm({
                 {/* Admin Email Whitelist */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Admin Email Whitelist{" "}
+                        {t("adminEmails.label")}{" "}
                         <span className="text-red-500">*</span>
                     </label>
                     <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
-                        Only these emails can access the admin panel
-                        (comma-separated)
+                        {t("adminEmails.helper")}
                     </p>
                     <textarea
                         value={formData.allowedEmails}
@@ -411,7 +430,7 @@ export default function AuthenticationForm({
                                 : "border-gray-300 dark:border-gray-600"
                         } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
                         rows={3}
-                        placeholder="admin@example.com, editor@example.com"
+                        placeholder={t("adminEmails.placeholder")}
                     />
                     {errors.allowedEmails && (
                         <p className="mt-1 text-sm text-red-500">

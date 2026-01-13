@@ -63,10 +63,14 @@ export async function getAuth() {
 
     const githubConfig = config?.authentication?.methods?.github;
     const googleConfig = config?.authentication?.methods?.google;
+    
+    // Get Better Auth Secret from settings.json (required)
+    const authSecret = systemConfigService.getAuthSecret();
 
     const newInstance = betterAuth({
         appName: "Block Style CMS",
         database: authDatabase,
+        secret: authSecret,
 
         // Custom pages for authentication
         pages: {

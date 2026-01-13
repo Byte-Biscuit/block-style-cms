@@ -227,6 +227,7 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                             // Convert AuthFormData to InstallAuthMethodsConfig
                             // Note: emailPassword and twoFactor are enabled by default
                             const authConfig: InstallAuthMethodsConfig = {
+                                secret: installData.admin?.secret || "",
                                 github: data.github.enabled,
                                 githubClientId: data.github.clientId,
                                 githubClientSecret: data.github.clientSecret,

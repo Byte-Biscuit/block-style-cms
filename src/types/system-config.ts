@@ -92,6 +92,8 @@ export interface AccessControlConfig {
  * Authentication Configuration
  */
 export interface AuthenticationConfig {
+    /** Better Auth Secret for encryption (64-character hex string) */
+    secret: string;
     methods: AuthenticationMethodsConfig;
     accessControl: AccessControlConfig;
 }
@@ -259,6 +261,8 @@ export interface AdminCredentials {
     password: string;
     /** Admin name (optional) */
     name?: string;
+    /** Better Auth Secret for encryption (64-character hex string) */
+    secret: string;
 }
 
 /**
@@ -267,6 +271,8 @@ export interface AdminCredentials {
  * Note: Email/Password and 2FA are enabled by default and not configurable during installation.
  */
 export interface InstallAuthMethodsConfig {
+    /** Better Auth Secret for encryption (64-character hex string) */
+    secret: string;
     github: boolean;
     githubClientId?: string;
     githubClientSecret?: string;
@@ -345,6 +351,7 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> 
         },
     },
     authentication: {
+        secret: '',
         methods: {
             github: {
                 enabled: true,

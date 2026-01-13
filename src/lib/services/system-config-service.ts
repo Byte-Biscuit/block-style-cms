@@ -201,6 +201,26 @@ class SystemConfigService {
     }
 
     /**
+     * Get Better Auth Secret from configuration
+     * 
+     * @throws Error if secret is not configured
+     * @returns Better Auth secret string
+     */
+    public getAuthSecret(): string {
+        const config = this.readConfigSync();
+        const secret = config?.authentication?.secret;
+        
+        if (!secret) {
+            throw new Error(
+                'Better Auth secret is not configured. ' +
+                'Please ensure the application is properly initialized with a secret in settings.json'
+            );
+        }
+        
+        return secret;
+    }
+
+    /**
      * Get channel configuration
      * 
      * @returns Channel configuration array

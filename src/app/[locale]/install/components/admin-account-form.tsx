@@ -10,12 +10,23 @@ interface AdminAccountFormProps {
 }
 
 /**
+ * Generate a secure random secret for Better Auth
+ * Uses Web Crypto API to generate 64-character hex string
+ */
+function generateSecret(): string {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+/**
  * Admin Account Form Component
  * 管理员账户表单组件
  *
  * Creates the initial admin account with:
  * - Email address
  * - Password (minimum 8 characters)
+ * - Better Auth Secret (auto-generated)
  *
  * Note: 2FA setup has been moved to backend settings (/m/settings/security)
  * for better security and user experience
@@ -29,6 +40,7 @@ export default function AdminAccountForm({
         email: "",
         password: "",
         confirmPassword: "",
+        secret: generateSecret(), // Auto-generate on mount
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -55,6 +67,10 @@ export default function AdminAccountForm({
             newErrors.confirmPassword = "Passwords do not match";
         }
 
+        if (!formData.secret || formData.secret.length !== 64) {
+            newErrors.secret = "Secret must be a 64-character hex string";
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -67,8 +83,13 @@ export default function AdminAccountForm({
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
+                secret: formData.secret,
             });
         }
+    };
+
+    const handleRegenerateSecret = () => {
+        setFormData({ ...formData, secret: generateSecret() });
     };
 
     return (
@@ -189,6 +210,63 @@ export default function AdminAccountForm({
                             {errors.confirmPassword}
                         </p>
                     )}
+                </div>
+
+                {/* Better Auth Secret */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Authentication Secret <span className="text-red-500">*</span>
+                    </label>
+                    <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+                        A 64-character secret used for encrypting authentication data (e.g., 2FA keys).
+                    </p>
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={formData.secret}
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    secret: e.target.value,
+                                })
+                            }
+                            className={`flex-1 rounded-lg border ${
+                                errors.secret
+                                    ? "border-red-500"
+                                    : "border-gray-300 dark:border-gray-600"
+                            } bg-white px-4 py-2 font-mono text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
+                            placeholder="Auto-generated 64-character hex string"
+                            readOnly
+                        />
+                        <button
+                            type="button"
+                            onClick={handleRegenerateSecret}
+                            className="rounded-lg border border-blue-500 bg-blue-500 px-4 py-2 font-medium text-white transition hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            title="Generate new secret"
+                        >
+                            <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                    {errors.secret && (
+                        <p className="mt-1 text-sm text-red-500">
+                            {errors.secret}
+                        </p>
+                    )}
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        ⚠️ Save this secret securely. It cannot be recovered if lost.
+                    </p>
                 </div>
 
                 {/* 2FA Info Box */}

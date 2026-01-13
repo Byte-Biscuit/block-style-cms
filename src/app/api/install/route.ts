@@ -7,12 +7,12 @@ import { EMAIL_REGEX } from "@/constants";
  * POST /api/install
  * 
  * Initialize the CMS system:
- * 1. Create admin user account with email/password
- * 2. Save authentication methods configuration
- * 3. Save services configuration
- * 4. Create settings.json with initializedAt timestamp
+ * 1. Save authentication configuration (including secret) to settings.json
+ * 2. Create admin user account with email/password
+ * 3. Return success response
  * 
- * Note: 2FA setup is moved to backend settings for better security and UX
+ * Note: Configuration must be saved BEFORE creating user account,
+ * because Better Auth needs to read the secret from settings.json
  */
 export async function POST(request: NextRequest) {
     try {
@@ -43,37 +43,11 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Step 1: Create admin user account using Better Auth
-        try {
-            // Better Auth will automatically hash the password
-            const auth = await getAuth();
-            const signUpResponse = await auth.api.signUpEmail({
-                body: {
-                    email: admin.email,
-                    password: admin.password,
-                    name: admin.name || "Administrator",
-                },
-            });
-            const { user } = signUpResponse;
-
-            if (!user) {
-                throw new Error("Failed to create admin user");
-            }
-
-            console.log("Admin user created successfully:", user.email);
-
-        } catch (error) {
-            console.error("Error creating admin user:", error);
-            return NextResponse.json(
-                { error: "Failed to create admin account: " + (error instanceof Error ? error.message : String(error)) },
-                { status: 500 }
-            );
-        }
-
-        // Step 3: Initialize system configuration
+        // Step 1: Initialize system configuration (must save secret before creating user)
+        let config;
         try {
             // Create base config with siteInfo, authentication methods, and services
-            const config = await systemConfigService.initializeConfig({
+            config = await systemConfigService.initializeConfig({
                 siteInfo: {
                     contact: {
                         email: siteInfo?.contact?.email || "",
@@ -87,6 +61,7 @@ export async function POST(request: NextRequest) {
                     },
                 },
                 authentication: {
+                    secret: authMethods?.secret || '',
                     methods: {
                         github: {
                             enabled: authMethods?.github || false,
@@ -140,14 +115,8 @@ export async function POST(request: NextRequest) {
                 },
             });
 
-            console.log("[Install API] Installation completed successfully");
+            console.log("[Install API] Configuration saved successfully");
             console.log("[Install API] Config initialized at:", config.initializedAt);
-
-            return NextResponse.json({
-                success: true,
-                message: "Installation completed successfully",
-                config,
-            });
 
         } catch (error) {
             console.error("Error initializing configuration:", error);
@@ -156,6 +125,40 @@ export async function POST(request: NextRequest) {
                 { status: 500 }
             );
         }
+
+        // Step 2: Create admin user account using Better Auth
+        try {
+            // Better Auth will automatically hash the password
+            const auth = await getAuth();
+            const signUpResponse = await auth.api.signUpEmail({
+                body: {
+                    email: admin.email,
+                    password: admin.password,
+                    name: admin.name || "Administrator",
+                },
+            });
+            const { user } = signUpResponse;
+
+            if (!user) {
+                throw new Error("Failed to create admin user");
+            }
+
+            console.log("[Install API] Admin user created successfully:", user.email);
+
+        } catch (error) {
+            console.error("Error creating admin user:", error);
+            return NextResponse.json(
+                { error: "Failed to create admin account: " + (error instanceof Error ? error.message : String(error)) },
+                { status: 500 }
+            );
+        }
+
+        // Step 3: Return success response
+        return NextResponse.json({
+            success: true,
+            message: "Installation completed successfully",
+            config,
+        });
 
     } catch (error) {
         console.error("Installation error:", error);

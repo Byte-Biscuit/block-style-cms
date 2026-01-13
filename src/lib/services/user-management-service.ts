@@ -14,6 +14,7 @@ import { getAuth } from "@/lib/auth/auth";
 import { hashPassword, verifyPassword, symmetricEncrypt, symmetricDecrypt, generateRandomString } from "better-auth/crypto";
 import { createOTP } from "@better-auth/utils/otp";
 import crypto from "crypto";
+import { systemConfigService } from "./system-config-service";
 
 // ==================== Type Definitions ====================
 
@@ -577,11 +578,8 @@ export class UserManagementService {
             // Generate a 32-character random secret using the better-auth standard method
             const secret = generateRandomString(32);
 
-            // Get the better-auth secret for encryption (from environment variables or configuration)
-            const authSecret = process.env.BETTER_AUTH_SECRET;
-            if (!authSecret) {
-                throw new Error("BETTER_AUTH_SECRET not configured");
-            }
+            // Get the better-auth secret for encryption (from settings.json)
+            const authSecret = systemConfigService.getAuthSecret();
 
             // Store the secret using better-auth's symmetric encryption (AES-256-GCM)
             const encryptedSecret = await symmetricEncrypt({
@@ -641,11 +639,8 @@ export class UserManagementService {
                 throw new Error("No 2FA setup found for this user");
             }
 
-            // Get the better-auth secret for decryption
-            const authSecret = process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET;
-            if (!authSecret) {
-                throw new Error("BETTER_AUTH_SECRET not configured");
-            }
+            // Get the better-auth secret for decryption (from settings.json)
+            const authSecret = systemConfigService.getAuthSecret();
 
             // Decrypt the encrypted secret stored in the database
             const decryptedSecret = await symmetricDecrypt({

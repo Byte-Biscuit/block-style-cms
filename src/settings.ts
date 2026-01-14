@@ -45,15 +45,6 @@ export const ADMIN_PAGE_PREFIX = "/m";
 export const ADMIN_API_PREFIX = "/api/m";
 
 // ================================
-// Client-accessible Environment Variables (NEXT_PUBLIC_)
-// ================================
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
-export const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || 'http://localhost:3000/images';
-export const VIDEO_BASE_URL = process.env.NEXT_PUBLIC_VIDEO_BASE_URL || 'http://localhost:3000/videos';
-export const AUDIO_BASE_URL = process.env.NEXT_PUBLIC_AUDIO_BASE_URL || 'http://localhost:3000/audios';
-export const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL || 'http://localhost:3000/files';
-
-// ================================
 // File Type and Size Limit Configuration
 // ================================
 export const ALLOWED_IMAGE_MIME_TYPES = [

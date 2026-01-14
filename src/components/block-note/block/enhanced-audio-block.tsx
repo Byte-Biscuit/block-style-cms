@@ -34,7 +34,7 @@ import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
 import { BlockNoteEditor } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
-import { ADMIN_API_PREFIX, AUDIO_BASE_URL } from "@/settings";
+import { ADMIN_API_PREFIX } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedAudioIcon from "./icons/enhanced-audio-icon";
 import EnhancedAudio, {
@@ -94,7 +94,7 @@ function AudioSelectionDialog({
 
             if (response.ok && resp?.code === 200) {
                 const data = resp.payload;
-                const audioUrl = `${AUDIO_BASE_URL}/${data.filename}`;
+                const audioUrl = `/audios/${data.filename}`;
                 setSelectedAudioUrl(audioUrl);
                 setEditableUrl(audioUrl);
                 setPlatform("upload");

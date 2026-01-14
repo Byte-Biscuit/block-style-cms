@@ -3,13 +3,12 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import { VIDEO_BASE_URL } from "@/settings";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 export default function EmbedVideoPage() {
     const { filename } = useParams<{ filename: string }>();
-    const videoUrl = `${VIDEO_BASE_URL}/${filename}`;
+    const videoUrl = `/videos/${filename}`;
 
     return (
         <ReactPlayer

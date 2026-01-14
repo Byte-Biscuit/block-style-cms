@@ -29,12 +29,7 @@ import {
     OpenInNew as OpenInNewIcon,
 } from "@mui/icons-material";
 import dynamic from "next/dynamic";
-import {
-    ALLOWED_IMAGE_MIME_TYPES,
-    MAX_FILE_SIZE,
-    IMAGE_BASE_URL,
-    API_BASE_URL,
-} from "@/settings";
+import { ALLOWED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/settings";
 import { useTranslations } from "next-intl";
 
 const ImagePreviewDialog = dynamic(
@@ -129,7 +124,7 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
 
             console.log("Uploading image:", file.name, "size:", file.size);
 
-            const response = await fetch(`${API_BASE_URL}/m/images`, {
+            const response = await fetch(`/api/m/images`, {
                 method: "POST",
                 body: formDataToUpload,
             });
@@ -146,7 +141,7 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
 
             if (result && result.code === 200) {
                 const { filename } = result.payload;
-                const newImageUrl = `${IMAGE_BASE_URL}/images/${filename}`;
+                const newImageUrl = `/images/${filename}`;
                 console.log("Generated image URL:", newImageUrl);
                 onImageChange(newImageUrl);
                 setImageMenuAnchor(null);
@@ -660,7 +655,7 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                         autoFocus
                         sx={{ borderRadius: 2 }}
                     >
-                        {imageUrl?.startsWith(`${IMAGE_BASE_URL}/images/`)
+                        {imageUrl?.startsWith(`/images/`)
                             ? t("buttons.delete")
                             : t("buttons.remove")}
                     </Button>

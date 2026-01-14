@@ -37,7 +37,7 @@ import { BlockNoteEditor } from "@blocknote/core";
 import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import { schema } from "@/block-note/schema";
 import PexelsImagePicker from "@/admin/m/components/pexels-image-picker";
-import { ADMIN_API_PREFIX, IMAGE_BASE_URL } from "@/settings";
+import { ADMIN_API_PREFIX } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedImageIcon from "./icons/enhanced-image-icon";
 import EnhancedImage, {
@@ -107,7 +107,7 @@ function ImageSelectionDialog({
                 const resp = await response.json();
                 if (resp?.code === 200) {
                     const data = resp.payload;
-                    const imageUrl = `${IMAGE_BASE_URL}/${data.filename}`;
+                    const imageUrl = `/images/${data.filename}`;
                     setSelectedImageUrl(imageUrl);
                     setEditableUrl(imageUrl);
                     setAltInput(altInput || data.altText || "");
@@ -144,11 +144,7 @@ function ImageSelectionDialog({
                 src: editableUrl.trim(),
                 alt: altInput || "Image",
                 caption: captionInput || "",
-                source: selectedImageUrl.includes("pexels.com")
-                    ? "pexels"
-                    : selectedImageUrl.includes(IMAGE_BASE_URL)
-                      ? "upload"
-                      : "url",
+                source: "url",
                 alignment: alignment,
                 width: imageWidth,
                 height: imageHeight,

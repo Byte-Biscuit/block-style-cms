@@ -20,7 +20,6 @@ import VirtualizedMasonry from "@/components/virtualized-masonry";
 import type { MasonryImage } from "@/types/masonry";
 import { optimizePexelsImageWithPreset } from "@/lib/pexels-utils";
 import { getBlockEditorContainer } from "@/block-note/block-editor-utils";
-import { API_BASE_URL } from "@/settings";
 import { useTranslations } from "next-intl";
 
 interface PexelsImage {
@@ -125,7 +124,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
             try {
                 // This needs to be replaced with actual Pexels API call
                 // Since this is frontend code, it should actually call Pexels through backend API
-                const response = await fetch(`${API_BASE_URL}/pexels/search`, {
+                const response = await fetch(`/api/pexels/search`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

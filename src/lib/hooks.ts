@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Comment } from '@/types/comment';
-import { API_BASE_URL } from "@/settings";
 
 /**
  * Generic debounce hook
@@ -31,7 +30,7 @@ export function useComments(articleId: string) {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`${API_BASE_URL}/comments?articleId=${articleId}`);
+            const response = await fetch(`/api/comments?articleId=${articleId}`);
             const data = await response.json();
 
             if (data.code === 200) {
@@ -114,7 +113,7 @@ export function useCommentSubmission() {
             setSubmitting(true);
             setSubmitError(null);
 
-            const response = await fetch(`${API_BASE_URL}/comments`, {
+            const response = await fetch(`/api/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -10,6 +10,7 @@ import type { Suggestion, SuggestionSubmissionData } from '@/types/suggestion';
 import type { SuggestionConfig } from '@/types/system-config';
 import { v4 as uuidv4 } from 'uuid';
 import { systemConfigService } from './system-config-service';
+import { coerceNumber } from '@/lib/utils';
 
 /**
  * Default suggestion configuration (fallback)
@@ -83,7 +84,7 @@ class SuggestionService {
         const suggestions = await this.getAllSuggestions();
 
         // Check total suggestion limit
-        if (suggestions.length >= config.maxTotalSuggestions) {
+        if (suggestions.length >= coerceNumber(config.maxTotalSuggestions, 0)) {
             throw new Error(
                 `Suggestion limit reached (${config.maxTotalSuggestions})`
             );
@@ -136,13 +137,13 @@ class SuggestionService {
             config.limits;
 
         // Check length
-        if (content.length < contentMinLength) {
+        if (content.length < coerceNumber(contentMinLength, 0)) {
             throw new Error(
                 `Suggestion too short (minimum ${contentMinLength} characters)`
             );
         }
 
-        if (content.length > contentMaxLength) {
+        if (content.length > coerceNumber(contentMaxLength, 0)) {
             throw new Error(
                 `Suggestion too long (maximum ${contentMaxLength} characters)`
             );
@@ -152,7 +153,7 @@ class SuggestionService {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const links = content.match(urlRegex) || [];
 
-        if (links.length > maxLinksAllowed) {
+        if (links.length > coerceNumber(maxLinksAllowed, 0)) {
             throw new Error(`Too many links (maximum ${maxLinksAllowed} allowed)`);
         }
     }

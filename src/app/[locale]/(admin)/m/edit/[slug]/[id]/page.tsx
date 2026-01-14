@@ -14,7 +14,7 @@ import {
     Alert,
 } from "@mui/material";
 import { type Article, createArticleSchemas } from "@/types/article";
-import type { Result } from "@/types/response";
+import type { Result } from "@/lib/response";
 import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
 import { LOCALE_PARAM_NAME } from "@/constants";
 import { useTranslations } from "next-intl";

@@ -38,3 +38,13 @@ export function mergeDeep<T extends Record<string, any>>(
 
     return result;
 }
+/**
+ * Coerce a value to a number, or return a fallback if invalid
+ * @param value 
+ * @param fallback 
+ * @returns 
+ */
+export function coerceNumber(value: unknown, fallback: number) {
+    const parsed = typeof value === "number" ? value : Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+}

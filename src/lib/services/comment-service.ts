@@ -10,6 +10,7 @@ import type { Comment, CommentSubmissionData } from '@/types/comment';
 import type { CommentConfig } from '@/types/system-config';
 import { v4 as uuidv4 } from 'uuid';
 import { systemConfigService } from './system-config-service';
+import { coerceNumber } from '@/lib/utils';
 
 /**
  * Default comment configuration (fallback)
@@ -97,7 +98,7 @@ class CommentService {
         const comments = await this.getAllComments();
 
         // Check total comment limit
-        if (comments.length >= config.maxTotalComments) {
+        if (comments.length >= coerceNumber(config.maxTotalComments, 0)) {
             throw new Error(`Comment limit reached (${config.maxTotalComments})`);
         }
 
@@ -190,11 +191,11 @@ class CommentService {
         const { contentMinLength, contentMaxLength, maxLinksAllowed } = config.limits;
 
         // Check length
-        if (content.length < contentMinLength) {
+        if (content.length < coerceNumber(contentMinLength, 0)) {
             throw new Error(`Comment too short (minimum ${contentMinLength} characters)`);
         }
 
-        if (content.length > contentMaxLength) {
+        if (content.length > coerceNumber(contentMaxLength, 0)) {
             throw new Error(`Comment too long (maximum ${contentMaxLength} characters)`);
         }
 
@@ -202,7 +203,7 @@ class CommentService {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
         const links = content.match(urlRegex) || [];
 
-        if (links.length > maxLinksAllowed) {
+        if (links.length > coerceNumber(maxLinksAllowed, 0)) {
             throw new Error(`Too many links (maximum ${maxLinksAllowed} allowed)`);
         }
     }

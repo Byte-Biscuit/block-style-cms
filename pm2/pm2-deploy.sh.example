@@ -21,15 +21,7 @@ echo "📂 Working directory (example): $APP_DIR"
 cd "$APP_DIR"
 
 # 4. Dependency installation strategy (Core optimization)
-# If package-lock.json exists, use npm ci for a "clean install".
-# This ensures precise dependency version locking and automatically cleans up garbage in node_modules.
-if [ -f "package-lock.json" ]; then
-    echo "📦 Lock file detected, executing strict installation (npm ci)..."
-    npm ci
-else
-    echo "⚠️ No lock file detected, executing normal installation (npm install)..."
-    npm install
-fi
+npm install
 
 # 5. Clean Next.js cache (Solve potential build cache issues)
 # Note: This increases build time but guarantees a pristine build artifact,

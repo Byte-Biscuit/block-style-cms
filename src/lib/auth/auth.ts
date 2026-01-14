@@ -64,13 +64,15 @@ export async function getAuth() {
     const githubConfig = config?.authentication?.methods?.github;
     const googleConfig = config?.authentication?.methods?.google;
 
-    // Get Better Auth Secret from settings.json (required)
+    // Get Better Auth Secret and Base URL from settings.json (required)
     const authSecret = systemConfigService.getAuthSecret();
+    const authBaseURL = config?.authentication?.baseURL || '';
 
     const newInstance = betterAuth({
         appName: "Block Style CMS",
         database: authDatabase,
         secret: authSecret,
+        baseURL: authBaseURL,
 
         // Custom pages for authentication
         pages: {
@@ -91,14 +93,14 @@ export async function getAuth() {
                 clientId: githubConfig?.clientId || '',
                 clientSecret: githubConfig?.clientSecret || '',
                 // Use double negation to ensure boolean type
-                enabled: !!(githubConfig?.enabled && githubConfig?.clientId && githubConfig?.clientSecret),
+                enabled: !!githubConfig?.enabled,
             },
             google: {
                 // https://console.cloud.google.com/auth/clients
                 prompt: "select_account",
                 clientId: googleConfig?.clientId || '',
                 clientSecret: googleConfig?.clientSecret || '',
-                enabled: !!(googleConfig?.enabled && googleConfig?.clientId && googleConfig?.clientSecret),
+                enabled: !!googleConfig?.enabled,
             }
         },
 

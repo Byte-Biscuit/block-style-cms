@@ -44,6 +44,7 @@ export default function AdminAccountForm({
         password: "",
         confirmPassword: "",
         secret: generateSecret(), // Auto-generate on mount
+        baseURL: typeof window !== "undefined" ? window.location.origin : "",
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -74,6 +75,16 @@ export default function AdminAccountForm({
             newErrors.secret = t("validation.secretInvalid");
         }
 
+        if (!formData.baseURL) {
+            newErrors.baseURL = t("validation.baseURLRequired");
+        } else {
+            try {
+                new URL(formData.baseURL);
+            } catch {
+                newErrors.baseURL = t("validation.baseURLInvalid");
+            }
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -87,6 +98,7 @@ export default function AdminAccountForm({
                 email: formData.email,
                 password: formData.password,
                 secret: formData.secret,
+                baseURL: formData.baseURL,
             });
         }
     };
@@ -273,6 +285,41 @@ export default function AdminAccountForm({
                     )}
                     <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                         {t("helpers.secretWarning")}
+                    </p>
+                </div>
+
+                {/* Base URL Input */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {t("labels.baseURL")}{" "}
+                        <span className="text-red-500">*</span>
+                    </label>
+                    <p className="mb-1 text-xs text-gray-500 dark:text-gray-400">
+                        {t("labels.baseURLHelper")}
+                    </p>
+                    <input
+                        type="url"
+                        value={formData.baseURL}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                baseURL: e.target.value,
+                            })
+                        }
+                        className={`mt-1 w-full rounded-lg border ${
+                            errors.baseURL
+                                ? "border-red-500"
+                                : "border-gray-300 dark:border-gray-600"
+                        } bg-white px-4 py-2 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
+                        placeholder={t("placeholders.baseURL")}
+                    />
+                    {errors.baseURL && (
+                        <p className="mt-1 text-sm text-red-500">
+                            {errors.baseURL}
+                        </p>
+                    )}
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                        {t("helpers.baseURLWarning")}
                     </p>
                 </div>
             </div>

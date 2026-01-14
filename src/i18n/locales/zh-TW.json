@@ -66,14 +66,17 @@
                 "password": "密碼",
                 "confirmPassword": "確認密碼",
                 "secret": "Better Auth 金鑰",
-                "secretHelper": "此金鑰用於會話加密。請務必妥善保管！"
+                "secretHelper": "此金鑰用於會話加密。請務必妥善保管！",
+                "baseURL": "基礎 URL",
+                "baseURLHelper": "應用伺服器的根 URL 地址"
             },
             "placeholders": {
                 "name": "管理員",
                 "email": "admin@example.com",
                 "password": "至少 8 個字元",
                 "confirmPassword": "再次輸入密碼",
-                "secret": "自動生成的 64 位十六進位字串"
+                "secret": "自動生成的 64 位十六進位字串",
+                "baseURL": "例如：http://localhost:3000 或 https://yourdomain.com"
             },
             "validation": {
                 "nameRequired": "姓名是必填項",
@@ -82,7 +85,9 @@
                 "passwordRequired": "密碼是必填項",
                 "passwordTooShort": "密碼長度至少為 8 個字元",
                 "passwordsNotMatch": "兩次輸入的密碼不一致",
-                "secretInvalid": "金鑰必須是 64 位十六進制字串"
+                "secretInvalid": "金鑰必須是 64 位十六進制字串",
+                "baseURLRequired": "基礎 URL 是必填項",
+                "baseURLInvalid": "請輸入有效的 URL 地址"
             },
             "buttons": {
                 "regenerateSecret": "重新生成",
@@ -91,7 +96,8 @@
                 "back": "返回"
             },
             "helpers": {
-                "secretWarning": "⚠️ 請安全保存此密鑰。一旦丟失無法恢復。"
+                "secretWarning": "⚠️ 請安全保存此密鑰。一旦丟失無法恢復。",
+                "baseURLWarning": "⚠️ 此 URL 用於構建認證連結。請確保它與生產環境的部署 URL 一致。"
             }
         },
         "authentication": {

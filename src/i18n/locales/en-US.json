@@ -66,14 +66,17 @@
                 "password": "Password",
                 "confirmPassword": "Confirm Password",
                 "secret": "Better Auth Secret",
-                "secretHelper": "This secret is used for session encryption. Keep it safe!"
+                "secretHelper": "This secret is used for session encryption. Keep it safe!",
+                "baseURL": "Base URL",
+                "baseURLHelper": "The root URL where your application server is hosted"
             },
             "placeholders": {
                 "name": "Administrator",
                 "email": "admin@example.com",
                 "password": "Minimum 8 characters",
                 "confirmPassword": "Re-enter password",
-                "secret": "Auto-generated 64-character hex string"
+                "secret": "Auto-generated 64-character hex string",
+                "baseURL": "e.g., http://localhost:3000 or https://yourdomain.com"
             },
             "validation": {
                 "nameRequired": "Name is required",
@@ -82,7 +85,9 @@
                 "passwordRequired": "Password is required",
                 "passwordTooShort": "Password must be at least 8 characters",
                 "passwordsNotMatch": "Passwords do not match",
-                "secretInvalid": "Secret must be a 64-character hex string"
+                "secretInvalid": "Secret must be a 64-character hex string",
+                "baseURLRequired": "Base URL is required",
+                "baseURLInvalid": "Please enter a valid URL"
             },
             "buttons": {
                 "regenerateSecret": "Regenerate",
@@ -91,7 +96,8 @@
                 "back": "Back"
             },
             "helpers": {
-                "secretWarning": "⚠️ Save this secret securely. It cannot be recovered if lost."
+                "secretWarning": "⚠️ Save this secret securely. It cannot be recovered if lost.",
+                "baseURLWarning": "⚠️ This URL is used for building authentication links. Make sure it matches your deployment URL in production."
             }
         },
         "authentication": {

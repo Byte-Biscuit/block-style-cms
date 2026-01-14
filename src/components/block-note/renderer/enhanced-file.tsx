@@ -54,7 +54,7 @@ export const EnhancedFile: React.FC<EnhancedFileProps> = ({
             <div
                 className={`group flex items-center rounded-lg border p-4 transition-all duration-200 hover:shadow-md ${getFileTypeColor(fileExt)}`}
             >
-                <div className="mr-3 flex-shrink-0">
+                <div className="mr-3 shrink-0">
                     <FileIcon category={getFileCategory(fileExt)} />
                 </div>
 
@@ -73,7 +73,7 @@ export const EnhancedFile: React.FC<EnhancedFileProps> = ({
                     </div>
                 </div>
 
-                <div className="ml-3 flex-shrink-0">
+                <div className="ml-3 shrink-0">
                     <Link
                         href={`/files/${filename}`}
                         target="_blank"

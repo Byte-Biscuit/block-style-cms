@@ -62,6 +62,7 @@ export async function POST(request: NextRequest) {
                 },
                 authentication: {
                     secret: authMethods?.secret || '',
+                    baseURL: authMethods?.baseURL || '',
                     methods: {
                         github: {
                             enabled: authMethods?.github || false,

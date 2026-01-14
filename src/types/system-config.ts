@@ -94,6 +94,8 @@ export interface AccessControlConfig {
 export interface AuthenticationConfig {
     /** Better Auth Secret for encryption (64-character hex string) */
     secret: string;
+    /** Better Auth Base URL (e.g., http://localhost:3000 or https://yourdomain.com) */
+    baseURL: string;
     methods: AuthenticationMethodsConfig;
     accessControl: AccessControlConfig;
 }
@@ -263,6 +265,8 @@ export interface AdminCredentials {
     name?: string;
     /** Better Auth Secret for encryption (64-character hex string) */
     secret: string;
+    /** Better Auth Base URL */
+    baseURL: string;
 }
 
 /**
@@ -273,6 +277,8 @@ export interface AdminCredentials {
 export interface InstallAuthMethodsConfig {
     /** Better Auth Secret for encryption (64-character hex string) */
     secret: string;
+    /** Better Auth Base URL */
+    baseURL: string;
     github: boolean;
     githubClientId?: string;
     githubClientSecret?: string;
@@ -352,6 +358,7 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> 
     },
     authentication: {
         secret: '',
+        baseURL: '',
         methods: {
             github: {
                 enabled: true,

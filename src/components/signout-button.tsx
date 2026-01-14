@@ -50,9 +50,9 @@ export default function SignOutButton({
         >
             <Avatar
                 sx={{
-                    width: 28,
-                    height: 28,
-                    fontSize: "0.875rem",
+                    width: 24,
+                    height: 24,
+                    fontSize: "0.75rem",
                     bgcolor: "white",
                     color: "primary.main",
                     fontWeight: "bold",
@@ -64,7 +64,7 @@ export default function SignOutButton({
             <Typography
                 variant="body2"
                 sx={{
-                    fontWeight: 700,
+                    fontWeight: 500,
                     display: { xs: "none", sm: "block" },
                     color: "white",
                     opacity: 0.9,

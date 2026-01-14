@@ -15,7 +15,11 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { locales, localeMap } from "@/i18n/config";
 import { button } from "@/lib/style-classes";
 
-export function LanguageToggle() {
+type LanguageToggleProps = {
+    className?: string;
+};
+
+export function LanguageToggle({ className = "" }: LanguageToggleProps) {
     const [mounted, setMounted] = useState(false);
     const locale = useLocale();
     const t = useTranslations("web");
@@ -68,7 +72,7 @@ export function LanguageToggle() {
                 <IconButton
                     onClick={handleClick}
                     color="inherit"
-                    className={button.icon}
+                    className={`${className} ${button.icon} `}
                 >
                     {mounted ? (
                         <span className="min-w-6 text-center text-base leading-6 font-medium">
@@ -85,6 +89,7 @@ export function LanguageToggle() {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                disableScrollLock
                 anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left",

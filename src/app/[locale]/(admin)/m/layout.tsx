@@ -8,6 +8,7 @@ import Link from "@/components/link";
 import Footer from "./components/layout/footer";
 import { getTranslations } from "next-intl/server";
 import SignOutButton from "@/components/signout-button";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export default async function AdminLayout({
     children,
@@ -54,7 +55,10 @@ export default async function AdminLayout({
                             {t("web.title")}
                         </Typography>
                     </Link>
-                    <SignOutButton />
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <LanguageToggle className="h-8 w-8 rounded-full text-white hover:bg-white/10" />
+                        <SignOutButton />
+                    </Box>
                 </Toolbar>
             </AppBar>
 

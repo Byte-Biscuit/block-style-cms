@@ -18,7 +18,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@langchain/core": "^1.1.5",
-        "@langchain/google-genai": "^2.0.3",
+        "@langchain/google-genai": "^2.1.10",
         "@langchain/openai": "^1.2.0",
         "@monaco-editor/react": "^4.7.0",
         "@mui/icons-material": "^7.3.2",

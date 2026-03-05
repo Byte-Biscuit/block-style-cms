@@ -52,6 +52,8 @@ export interface ContactInfo {
  * Website Basic Information Configuration
  */
 export interface SiteInfoConfig {
+    /** Website base URL */
+    baseUrl: string;
     /** Contact information */
     contact: ContactInfo;
 }
@@ -345,6 +347,7 @@ export enum InstallStep {
  */
 export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> = {
     siteInfo: {
+        baseUrl: '',
         contact: {
             email: 'biscuit_zhou@outlook.com',
             wechat: '',

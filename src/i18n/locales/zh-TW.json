@@ -304,6 +304,11 @@
         "siteInfo": {
             "title": "網站資訊",
             "subtitle": "配置基本的網站資訊和聯絡方式。這些資訊將顯示在您的網站上。",
+            "baseUrl": {
+                "label": "網站根地址 (Base URL)",
+                "placeholder": "https://example.com",
+                "helperText": "用於生成完整的連結、SEO 元數據以及身份驗證回調。請包含協議 (http/https)。"
+            },
             "notice": {
                 "title": "注意：",
                 "content": "網站標題、副標題和描述通過國際化 (i18n) 檔案管理，位於"

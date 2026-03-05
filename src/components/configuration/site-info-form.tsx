@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { SiteInfoConfig } from "@/types/system-config";
 import { uploadLogo } from "@/app/actions/settings/site-info";
@@ -42,6 +42,7 @@ export default function SiteInfoForm({
     const t = useTranslations("configuration.siteInfo");
     const [formData, setFormData] = useState<SiteInfoConfig>(
         initialData || {
+            baseUrl: "",
             contact: {
                 email: "",
                 wechat: "",
@@ -54,6 +55,13 @@ export default function SiteInfoForm({
             },
         }
     );
+
+    useEffect(() => {
+        if (!formData.baseUrl && typeof window !== "undefined") {
+            const currentBaseUrl = `${window.location.protocol}//${window.location.host}`;
+            setFormData((prev) => ({ ...prev, baseUrl: currentBaseUrl }));
+        }
+    }, [formData.baseUrl]);
 
     const [logoPreview, setLogoPreview] = useState<string>("/api/logo");
     const [isUploadingLogo, setIsUploadingLogo] = useState(false);
@@ -129,6 +137,29 @@ export default function SiteInfoForm({
             </div>
 
             <div className="mt-6 space-y-6">
+                {/* Base URL */}
+                <div>
+                    <label className="mb-3 font-semibold text-gray-900">
+                        {t("baseUrl.label")}
+                    </label>
+                    <input
+                        type="url"
+                        value={formData.baseUrl}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                baseUrl: e.target.value,
+                            })
+                        }
+                        placeholder={t("baseUrl.placeholder")}
+                        required
+                        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                    />
+                    <p className="mt-2 text-xs text-gray-500">
+                        {t("baseUrl.helperText")}
+                    </p>
+                </div>
+
                 {/* Logo Upload */}
                 <div>
                     <h3 className="mb-3 font-semibold text-gray-900">

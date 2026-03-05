@@ -304,6 +304,11 @@
         "siteInfo": {
             "title": "Website Information",
             "subtitle": "Configure basic website information and contact methods. These will be displayed on your website.",
+            "baseUrl": {
+                "label": "Base URL",
+                "placeholder": "https://example.com",
+                "helperText": "Used for generating absolute links, SEO metadata, and authentication callbacks. Please include the protocol (http/https)."
+            },
             "notice": {
                 "title": "Note:",
                 "content": "Website title, sub-title, and description are managed through internationalization (i18n) files in"

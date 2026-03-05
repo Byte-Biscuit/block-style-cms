@@ -304,6 +304,11 @@
         "siteInfo": {
             "title": "网站信息",
             "subtitle": "配置基本的网站信息和联系方式。这些信息将显示在您的网站上。",
+            "baseUrl": {
+                "label": "网站根地址 (Base URL)",
+                "placeholder": "https://example.com",
+                "helperText": "用于生成完整的链接、SEO 元数据以及身份验证回调。请包含协议 (http/https)。"
+            },
             "notice": {
                 "title": "注意：",
                 "content": "网站标题、副标题和描述通过国际化 (i18n) 文件管理，位于"

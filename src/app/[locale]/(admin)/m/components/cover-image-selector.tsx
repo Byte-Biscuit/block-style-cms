@@ -140,10 +140,9 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
             console.log("Upload response:", result);
 
             if (result && result.code === 200) {
-                const { filename } = result.payload;
-                const newImageUrl = `/images/${filename}`;
-                console.log("Generated image URL:", newImageUrl);
-                onImageChange(newImageUrl);
+                const { fullUrl } = result.payload;
+                console.log("Generated image URL:", fullUrl);
+                onImageChange(fullUrl);
                 setImageMenuAnchor(null);
                 showMessage(t("messages.uploadSuccess"), "success");
             } else {

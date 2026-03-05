@@ -56,7 +56,7 @@ export const POST = withTiming(async (request: NextRequest) => {
             }
         }
 
-        // 上传并处理图片
+        // Upload and process image
         const imageInfo: ImageMetaInfo = await ImageService.uploadImage(file, {
             originalName: file.name,
             ...options

@@ -13,12 +13,18 @@ import { ALLOWED_IMAGE_MIME_TYPES } from '@/settings';
 import { IMAGE_DIR, META_DIR } from '@/settings';
 import { ImageOptions } from '@/types/image';
 import { optimizePexelsImageUrl } from '@/lib/pexels-utils'
+import { systemConfigService } from "@/lib/services/system-config-service";
+
 
 /**
  * 图片处理工具类
  */
 export class ImageService {
     private static readonly MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+    private static async getSystemConfig() {
+        return await systemConfigService.readConfig();
+    }
 
     static getMetadataFile(): string {
         return path.join(META_DIR, 'image_metadata.json');
@@ -171,13 +177,15 @@ export class ImageService {
             }
         }
 
+        const systemConfig = await this.getSystemConfig();
         const imageInfo: ImageMetaInfo = {
             filename,
             originalName,
+            fullUrl: `${systemConfig?.siteInfo?.baseUrl}/images/${filename}`,
             size: outputInfo.size,
             width: finalMetadata.width || 0,
             height: finalMetadata.height || 0,
-            mimeType: `image/${outputFormat}`,
+            mimeType: `image / ${outputFormat} `,
             uploadedAt: new Date().toISOString()
         };
         await this.saveMetadata(imageInfo);
@@ -283,8 +291,8 @@ export class ImageService {
             await this.deleteFileWithRetry(filePath, filename);
 
         } catch (error) {
-            console.error(`删除图片失败: ${filename}`, error);
-            throw new Error(`删除图片失败: ${error instanceof Error ? error.message : '未知错误'}`);
+            console.error(`删除图片失败: ${filename} `, error);
+            throw new Error(`删除图片失败: ${error instanceof Error ? error.message : '未知错误'} `);
         }
     }
 
@@ -305,7 +313,7 @@ export class ImageService {
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
                 await fs.unlink(filePath);
-                console.log(`图片删除成功: ${filename}`);
+                console.log(`图片删除成功: ${filename} `);
                 return;
             } catch (error: unknown) {
                 if (error && typeof error === 'object' && 'code' in error) {
@@ -313,12 +321,12 @@ export class ImageService {
 
                     if (fsError.code === 'ENOENT') {
                         // 文件不存在，认为删除成功
-                        console.log(`图片文件不存在，视为删除成功: ${filename}`);
+                        console.log(`图片文件不存在，视为删除成功: ${filename} `);
                         return;
                     }
 
                     if (fsError.code === 'EBUSY' && attempt < maxRetries) {
-                        console.warn(`文件被占用，第 ${attempt} 次重试删除: ${filename}`);
+                        console.warn(`文件被占用，第 ${attempt} 次重试删除: ${filename} `);
 
                         // 尝试强制垃圾回收
                         if (global.gc) {
@@ -338,12 +346,12 @@ export class ImageService {
                             await this.markFileForDeletion(filePath, filename);
                             return;
                         } else {
-                            throw new Error(`删除文件失败: ${fsError.message}`);
+                            throw new Error(`删除文件失败: ${fsError.message} `);
                         }
                     }
                 } else {
                     // 未知错误类型
-                    throw new Error(`删除文件失败: ${error}`);
+                    throw new Error(`删除文件失败: ${error} `);
                 }
             }
         }
@@ -368,8 +376,8 @@ export class ImageService {
                 }
             }, 5000); // 5秒后尝试删除
         } catch (error) {
-            console.error(`标记文件为待删除失败: ${filename}`, error);
-            throw new Error(`无法删除文件，请手动删除: ${filename}`);
+            console.error(`标记文件为待删除失败: ${filename} `, error);
+            throw new Error(`无法删除文件，请手动删除: ${filename} `);
         }
     }
 

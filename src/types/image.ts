@@ -81,6 +81,7 @@ export interface ImageMetaInfo {
     tags?: string[];
     /** 替代文本 */
     altText?: string;
+    fullUrl?: string;
 }
 
 export interface ImageServeOptions {

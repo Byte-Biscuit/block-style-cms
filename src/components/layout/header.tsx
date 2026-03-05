@@ -1,6 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import Link from "@/components/link";
-import GitHubIconButton from "@/components/github";
+import { GitHubIconButton, MediumIconButton } from "@/components/contact";
 import SearchIconButton from "@/components/search";
 import ManageIconButton from "@/components/manage";
 import SmallScreenNavButton from "@/components/layout/small-screen-nav";
@@ -50,6 +50,7 @@ const Header = async () => {
             <div className="flex items-center space-x-1 sm:space-x-2">
                 <SearchIconButton algoliaConfig={algoliaConfig} />
                 <GitHubIconButton />
+                <MediumIconButton />
                 <ThemeToggle />
                 <LanguageToggle />
                 <SmallScreenNavButton channels={channels} />

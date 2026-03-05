@@ -330,7 +330,8 @@
                     "discord": "🎮 Discord",
                     "whatsapp": "📱 WhatsApp",
                     "linkedin": "💼 LinkedIn",
-                    "github": "🐙 GitHub"
+                    "github": "🐙 GitHub",
+                    "medium": "📝 Medium"
                 },
                 "placeholders": {
                     "email": "contact@example.com",
@@ -340,7 +341,8 @@
                     "discord": "username#1234 or invite link",
                     "whatsapp": "+1234567890",
                     "linkedin": "linkedin.com/in/username",
-                    "github": "github.com/username"
+                    "github": "github.com/username",
+                    "medium": "medium.com/@username"
                 }
             },
             "buttons": {

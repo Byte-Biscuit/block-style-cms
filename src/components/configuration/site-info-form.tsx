@@ -52,6 +52,7 @@ export default function SiteInfoForm({
                 whatsapp: "",
                 linkedin: "",
                 github: "",
+                medium: "",
             },
         }
     );
@@ -365,6 +366,26 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.github")}
+                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                {t("contact.labels.medium")}
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.contact.medium}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        contact: {
+                                            ...formData.contact,
+                                            medium: e.target.value,
+                                        },
+                                    })
+                                }
+                                placeholder={t("contact.placeholders.medium")}
                                 className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                             />
                         </div>

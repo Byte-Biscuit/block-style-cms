@@ -46,6 +46,8 @@ export interface ContactInfo {
     linkedin?: string;
     /** GitHub username */
     github?: string;
+    /** Medium personal homepage URL */
+    medium?: string;
 }
 
 /**
@@ -357,6 +359,7 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> 
             whatsapp: '',
             linkedin: '',
             github: 'https://github.com/Byte-Biscuit/block-style-cms',
+            medium: '',
         },
     },
     authentication: {

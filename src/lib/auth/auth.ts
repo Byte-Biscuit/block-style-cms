@@ -1,7 +1,7 @@
 import path from "path";
 import { betterAuth } from "better-auth";
+
 import { twoFactor } from "better-auth/plugins";
-//import { passkey } from "@better-auth/passkey";
 import Database from "better-sqlite3";
 import { systemConfigService } from "../services/system-config-service";
 import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE, BETTER_AUTH_DATABASE } from "@/constants";
@@ -26,7 +26,8 @@ const databasePath = path.join(process.env.CMS_DATA_PATH || "./data", BETTER_AUT
  */
 const globalStore = global as unknown as {
     _betterAuthDb?: Database.Database;
-    _betterAuthInstance?: ReturnType<typeof betterAuth>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    _betterAuthInstance?: any;
     _lastAuthInitializedAt?: string | number;
 };
 
@@ -157,7 +158,7 @@ export async function getAuth() {
     // E. Automatic Database Schema Synchronization (Auto-Migration)
     // This runs only when the configuration changes (instance is rebuilt).
     try {
-        const { getMigrations } = await import("better-auth/db");
+        const { getMigrations } = await import("better-auth/db/migration");
 
         // Generate required SQL migrations (e.g., CREATE TABLE "two_factor"...)
         const { toBeCreated, toBeAdded, runMigrations } = await getMigrations(newInstance.options);

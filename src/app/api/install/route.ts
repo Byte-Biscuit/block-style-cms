@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
             // Create base config with siteInfo, authentication methods, and services
             config = await systemConfigService.initializeConfig({
                 siteInfo: {
+                    baseUrl: siteInfo?.baseUrl || "",
                     contact: {
                         email: siteInfo?.contact?.email || "",
                         wechat: siteInfo?.contact?.wechat || "",

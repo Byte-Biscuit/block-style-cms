@@ -5,8 +5,6 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { systemConfigService } from "./services/system-config-service";
 
-type LLMProvider = "openai" | "claude" | "gemini";
-
 type GenType = "slug" | "summary" | "keywords" | "suggestion" | "batch";
 
 interface BatchResult {
@@ -23,9 +21,16 @@ const promptMap: Record<GenType, string> = {
     batch: "Analyze the following content and provide a JSON response with summary, keywords, and suggestion:\nContent: {input}\nPlease respond in language: {lang}\n\nReturn a valid JSON object with this exact structure:\n{\n  \"summary\": \"One sentence summary within 200 characters\",\n  \"keywords\": \"3-15 keywords separated by commas\",\n  \"suggestion\": \"One optimization suggestion\"\n}",
 };
 
-function getLLM(provider: LLMProvider) {
+function getLLM() {
     const config = systemConfigService.readConfigSync();
     const aiConfig = config?.services?.ai;
+    if (!aiConfig?.enabled) {
+        throw new Error('AI features are not enabled in settings.json');
+    }
+    const provider = aiConfig?.provider;
+    if (!provider) {
+        throw new Error(`LLM provider ${provider} is not configured in settings.json`);
+    }
 
     switch (provider) {
         case "openai": {
@@ -51,7 +56,7 @@ function getLLM(provider: LLMProvider) {
             }
             return new ChatGoogleGenerativeAI({
                 apiKey,
-                model: geminiConfig?.model || "gemini-1.5-flash",
+                model: geminiConfig?.model || "gemini-flash-latest",
                 temperature: 0.15,
             });
         }
@@ -63,10 +68,10 @@ function getLLM(provider: LLMProvider) {
 export async function generate(
     type: GenType,
     input: Record<string, unknown>,
-    llmProvider: LLMProvider = "openai"
 ): Promise<string> {
+    let llm = null;
     try {
-        const llm = getLLM(llmProvider);
+        llm = getLLM();
         const prompt = PromptTemplate.fromTemplate(promptMap[type]);
         const chain = RunnableSequence.from([
             prompt,
@@ -79,17 +84,16 @@ export async function generate(
         }
         return result;
     } catch (error) {
-        console.error(`AI generation failed for type: ${type}, provider: ${llmProvider}`, error);
+        console.error(`AI generation failed for type: ${type}, provider: ${llm}`, error);
         return '';
     }
 }
 
 export async function generateBatch(
     input: Record<string, unknown>,
-    llmProvider: LLMProvider = "openai"
 ): Promise<BatchResult | null> {
     try {
-        const result = await generate("batch", input, llmProvider);
+        const result = await generate("batch", input);
         if (!result) {
             return null;
         }

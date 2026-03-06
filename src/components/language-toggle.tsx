@@ -75,7 +75,7 @@ export function LanguageToggle({ className = "" }: LanguageToggleProps) {
                     className={`${className} ${button.icon} `}
                 >
                     {mounted ? (
-                        <span className="min-w-6 text-center text-base leading-6 font-medium">
+                        <span className="min-w-6 text-center text-base leading-none font-medium">
                             {localeMap[locale as keyof typeof localeMap]
                                 ?.flag || "EN"}
                         </span>

@@ -712,6 +712,7 @@
                 "tag": "輸入標籤後按 Enter 或點擊新增"
             },
             "helper": {
+                "contentTip": "💡 提示：支援直接貼上 Markdown 內容；點擊編輯器右上角圖示可開啟全螢幕沉浸式編輯。",
                 "slugEditingDisabled": "編輯模式下不可修改 Slug，以保持連結穩定性",
                 "slugUse": "將用作文章的 URL 路徑",
                 "noKeywords": "尚無關鍵字，請手動新增或使用 AI 生成",
@@ -798,8 +799,13 @@
 
         "block_note_editor": {
             "fullscreen": {
-                "browser": "瀏覽器全螢幕",
-                "monitor": "螢幕全螢幕"
+                "browser": "全螢幕模式",
+                "monitor": "沉浸模式"
+            },
+            "actions": {
+                "paste": "貼上 Markdown",
+                "clear": "清空內容",
+                "confirmClear": "確定要清空所有內容嗎？此操作不可撤銷。"
             },
             "errors": {
                 "enableFullscreen": "啟用全螢幕時出錯",

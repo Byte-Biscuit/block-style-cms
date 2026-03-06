@@ -16,6 +16,7 @@ import EnhanceSlashMenu, {
 import EnhancedFormattingToolbar from "@/block-note/toolbar/enhanced-formatting-toolbar";
 import { useTranslations } from "next-intl";
 import { schema } from "@/block-note/schema";
+import EditorActionToolbar from "./editor-action-toolbar";
 import "@blocknote/core/style.css";
 import "@blocknote/mantine/style.css";
 import "@/admin/m/components/block-note-editor.css";
@@ -138,56 +139,13 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                 isBrowserFullscreen ? "browser-fullscreen" : ""
             } ${isMonitorFullscreen ? "monitor-fullscreen" : ""}`}
         >
-            {/* Fullscreen control buttons */}
-            <div className="fullscreen-controls">
-                <button
-                    onClick={toggleBrowserFullscreen}
-                    className={`fullscreen-btn ${
-                        isBrowserFullscreen ? "active" : ""
-                    }`}
-                    title={t("fullscreen.browser")}
-                    type="button"
-                >
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                    >
-                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                    </svg>
-                </button>
-                <button
-                    onClick={toggleMonitorFullscreen}
-                    className={`fullscreen-btn ${
-                        isMonitorFullscreen ? "active" : ""
-                    }`}
-                    title={t("fullscreen.monitor")}
-                    type="button"
-                >
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                    >
-                        <rect
-                            x="2"
-                            y="3"
-                            width="20"
-                            height="14"
-                            rx="2"
-                            ry="2"
-                        />
-                        <line x1="8" y1="21" x2="16" y2="21" />
-                        <line x1="12" y1="17" x2="12" y2="21" />
-                    </svg>
-                </button>
-            </div>
+            <EditorActionToolbar
+                editor={editor}
+                isBrowserFullscreen={isBrowserFullscreen}
+                isMonitorFullscreen={isMonitorFullscreen}
+                onToggleBrowserFullscreen={toggleBrowserFullscreen}
+                onToggleMonitorFullscreen={toggleMonitorFullscreen}
+            />
 
             <BlockNoteView
                 editor={editor}

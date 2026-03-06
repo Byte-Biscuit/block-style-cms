@@ -712,6 +712,7 @@
                 "tag": "输入标签后按回车或点击添加"
             },
             "helper": {
+                "contentTip": "💡 提示：支持直接粘贴 Markdown 内容；点击编辑器右上角图标可开启全屏沉浸式编辑。",
                 "slugEditingDisabled": "编辑模式下不可修改 Slug，以保持链接稳定性",
                 "slugUse": "将用作文章的 URL 路径",
                 "noKeywords": "暂无关键词，请手动添加或使用 AI 生成",
@@ -798,8 +799,13 @@
 
         "block_note_editor": {
             "fullscreen": {
-                "browser": "浏览器全屏",
-                "monitor": "显示器全屏"
+                "browser": "全屏模式",
+                "monitor": "沉浸模式"
+            },
+            "actions": {
+                "paste": "粘贴 Markdown",
+                "clear": "清空内容",
+                "confirmClear": "确定要清空所有内容吗？此操作不可撤销。"
             },
             "errors": {
                 "enableFullscreen": "启用全屏时出错",

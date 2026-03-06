@@ -469,20 +469,27 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             />
             {/* Post content */}
             <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 600,
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <PsychologyIcon color="action" />
-                    {t("sections.content")}
-                </Typography>
+                <Box sx={{ mb: 2 }}>
+                    <Typography
+                        variant="subtitle1"
+                        sx={{
+                            fontWeight: 600,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                        }}
+                    >
+                        <PsychologyIcon color="action" />
+                        {t("sections.content")}
+                    </Typography>
+                    <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: "block", mt: 0.5, ml: 4 }}
+                    >
+                        {t("helper.contentTip")}
+                    </Typography>
+                </Box>
                 <Card
                     variant="outlined"
                     sx={{

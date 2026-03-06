@@ -712,6 +712,7 @@
                 "tag": "Type a tag and press Enter or click Add"
             },
             "helper": {
+                "contentTip": "💡 Tip: Supports direct pasting of Markdown content; click the icon in the top-right corner of the editor for full-screen immersive editing.",
                 "slugEditingDisabled": "Slug cannot be changed in edit mode to keep the link stable",
                 "slugUse": "Will be used as the article's URL path",
                 "noKeywords": "No keywords yet — add manually or generate with AI",
@@ -798,12 +799,17 @@
 
         "block_note_editor": {
             "fullscreen": {
-                "browser": "Browser Fullscreen",
-                "monitor": "Monitor Fullscreen"
+                "browser": "Fullscreen Mode",
+                "monitor": "Immersive Mode"
+            },
+            "actions": {
+                "paste": "Paste Markdown",
+                "clear": "Clear Content",
+                "confirmClear": "Are you sure you want to clear all content? This action cannot be undone."
             },
             "errors": {
-                "enableFullscreen": "Error attempting to enable fullscreen",
-                "exitFullscreen": "Error attempting to exit fullscreen"
+                "enableFullscreen": "Error enabling fullscreen",
+                "exitFullscreen": "Error exiting fullscreen"
             }
         },
         "validation": {

@@ -211,9 +211,10 @@ export default async function ArticleDetailPage({
                     />
                 </article>
                 {toc.length > 0 && (
-                    <aside className="hidden lg:block">
-                        <div className="sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
+                    <aside className="hidden lg:block sticky top-4 self-start">
+                        <div className="flex max-h-[calc(100vh-2rem)] flex-col">
                             <TableOfContents
+                                className="min-h-0 flex-1"
                                 articleTitle={article.title}
                                 items={toc}
                             />

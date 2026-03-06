@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import type { TocItem } from "@/lib/toc-utils";
 import { useTranslations } from "next-intl";
 
@@ -19,6 +19,15 @@ export default function TableOfContents({
 }: TableOfContentsProps) {
     const [activeId, setActiveId] = useState<string>("");
     const t = useTranslations("web");
+    const activeButtonRef = useRef<HTMLButtonElement>(null);
+
+    // When the active entry changes, scroll it into the visible area of the TOC list.
+    useEffect(() => {
+        activeButtonRef.current?.scrollIntoView({
+            block: "nearest",
+            behavior: "smooth",
+        });
+    }, [activeId]);
 
     const fullTocItems = useMemo(() => {
         const result: TocItem[] = [];
@@ -72,16 +81,17 @@ export default function TableOfContents({
     };
 
     return (
-        <nav className={`space-y-1 ${className}`}>
+        <nav className={`flex flex-col space-y-1 ${className}`}>
             {showTitle && (
-                <h3 className="mb-3 text-sm font-semibold tracking-wide text-gray-900 uppercase dark:text-gray-100">
+                <h3 className="mb-3 shrink-0 text-sm font-semibold tracking-wide text-gray-900 uppercase dark:text-gray-100">
                     {t("toc.title")}
                 </h3>
             )}
-            <ul className="space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
+            <ul className="min-h-0 flex-1 space-y-1 overflow-y-auto border-l-2 border-gray-200 dark:border-gray-700">
                 {fullTocItems.map((item) => (
                     <li key={item.id}>
                         <button
+                            ref={activeId === item.id ? activeButtonRef : null}
                             onClick={() => handleClick(item.id)}
                             title={item.text}
                             className={`block w-full truncate text-left transition-colors ${getLevelPadding(item.level)} ${

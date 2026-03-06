@@ -173,12 +173,12 @@ export const getDefaultHeadingClasses = (level: number): string => {
     const baseClasses = "font-extrabold text-gray-900 dark:text-gray-100";
 
     const headingClasses = {
-        1: `${baseClasses} text-3xl leading-normal sm:text-4xl sm:leading-normal md:text-5xl md:leading-normal`,
-        2: `${baseClasses.replace('extrabold', 'bold')} text-2xl leading-normal sm:text-3xl sm:leading-normal md:text-4xl md:leading-normal`,
-        3: `${baseClasses.replace('extrabold', 'bold')} text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal`,
-        4: `${baseClasses.replace('extrabold', 'semibold')} text-lg leading-relaxed sm:text-xl sm:leading-relaxed md:text-2xl md:leading-relaxed`,
-        5: `${baseClasses.replace('extrabold', 'semibold')} text-base leading-relaxed sm:text-lg sm:leading-relaxed md:text-xl md:leading-relaxed`,
-        6: `${baseClasses.replace('extrabold', 'medium')} text-base leading-relaxed`,
+        1: `${baseClasses} text-2xl leading-normal sm:text-3xl sm:leading-normal md:text-4xl md:leading-normal`,
+        2: `${baseClasses.replace('extrabold', 'bold')} text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal`,
+        3: `${baseClasses.replace('extrabold', 'bold')} text-lg leading-normal sm:text-xl sm:leading-normal md:text-2xl md:leading-normal`,
+        4: `${baseClasses.replace('extrabold', 'semibold')} text-base leading-relaxed sm:text-lg sm:leading-relaxed md:text-xl md:leading-relaxed`,
+        5: `${baseClasses.replace('extrabold', 'semibold')} text-sm leading-relaxed sm:text-base sm:leading-relaxed md:text-lg md:leading-relaxed`,
+        6: `${baseClasses.replace('extrabold', 'medium')} text-sm leading-relaxed`,
     };
 
     return (

@@ -729,6 +729,9 @@
                 "generateKeywords": "AI 生成關鍵字",
                 "add": "新增",
                 "submitCreate": "建立文章",
+                "saveDraft": "儲存草稿",
+                "saveChanges": "儲存變更",
+                "publishArticle": "發佈文章",
                 "creating": "建立中...",
                 "cancel": "取消"
             },

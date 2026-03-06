@@ -729,6 +729,9 @@
                 "generateKeywords": "AI 生成关键词",
                 "add": "添加",
                 "submitCreate": "创建文章",
+                "saveDraft": "保存草稿",
+                "saveChanges": "保存修改",
+                "publishArticle": "发布文章",
                 "creating": "创建中...",
                 "cancel": "取消"
             },

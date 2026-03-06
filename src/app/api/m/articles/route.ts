@@ -72,8 +72,9 @@ export const POST = withTiming(async (request) => {
         const requestBody = await request.json();
         const locale = requestBody[LOCALE_PARAM_NAME] || defaultLocale
         const t = await getTranslations({ locale: locale });
-        const { articleSchema } = createArticleSchemas(t);
-        const validation = articleSchema.safeParse(requestBody);
+        const { articleSchema, draftArticleSchema } = createArticleSchemas(t);
+        const schema = requestBody.published ? articleSchema : draftArticleSchema;
+        const validation = schema.safeParse(requestBody);
         if (!validation.success) {
             return failure('Data validation failed.', validation.error);
         }
@@ -112,8 +113,9 @@ export const PUT = withTiming(async (request) => {
         const requestBody = await request.json();
         const locale = requestBody[LOCALE_PARAM_NAME] || defaultLocale
         const t = await getTranslations({ locale: locale });
-        const { updateArticleSchema } = createArticleSchemas(t);
-        const validation = updateArticleSchema.safeParse(requestBody);
+        const { updateArticleSchema, draftUpdateArticleSchema } = createArticleSchemas(t);
+        const schema = requestBody.published ? updateArticleSchema : draftUpdateArticleSchema;
+        const validation = schema.safeParse(requestBody);
         if (!validation.success) {
             return failure('Data validation failed.', validation.error);
         }

@@ -729,6 +729,9 @@
                 "generateKeywords": "AI generate keywords",
                 "add": "Add",
                 "submitCreate": "Create article",
+                "saveDraft": "Save draft",
+                "saveChanges": "Save changes",
+                "publishArticle": "Publish article",
                 "creating": "Creating...",
                 "cancel": "Cancel"
             },

@@ -65,6 +65,14 @@ export function createArticleSchemas(t: TranslationFunction) {
         published: z.boolean().optional(),
     });
 
+    // Draft schema: only title + slug required, other fields can be empty
+    const draftArticleSchema = baseArticleSchema.extend({
+        tags: z.array(tagSchema).max(10, t('admin.validation.article.tags.max', { max: 10 })),
+        keywords: z.array(keywordSchema).max(20, t('admin.validation.article.keywords.max', { max: 20 })),
+        summary: z.string().max(500, t('admin.validation.article.summary.max', { max: 500 })).trim(),
+        content: z.array(z.any()),
+    });
+
     const articleSchema = z.object({
         ...baseArticleSchema.shape,
         createdAt: z.coerce.date({ message: t('admin.validation.article.createdAt.format') }).optional(),
@@ -74,12 +82,18 @@ export function createArticleSchemas(t: TranslationFunction) {
     const updateArticleSchema = baseArticleSchema.extend({
         id: articleIdSchema
     });
+    // Draft update: id required but other fields are loose
+    const draftUpdateArticleSchema = draftArticleSchema.extend({
+        id: articleIdSchema
+    });
     // Omit content when only metadata is needed
     const articleMetadataSchema = articleSchema.omit({ content: true });
 
     return {
         articleSchema,
+        draftArticleSchema,
         updateArticleSchema,
+        draftUpdateArticleSchema,
         articleMetadataSchema,
     };
 }

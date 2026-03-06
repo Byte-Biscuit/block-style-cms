@@ -556,7 +556,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                         }
                         multiline
                         rows={4}
-                        required
+                        required={formData.published}
                         fullWidth
                         sx={{ flex: 1 }}
                         variant="outlined"
@@ -757,6 +757,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                         startIcon={
                             loading ? (
                                 <CircularProgress size={20} color="inherit" />
+                            ) : formData.published ? (
+                                <RocketLaunchIcon />
                             ) : (
                                 <SaveIcon />
                             )
@@ -770,10 +772,12 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                         }}
                     >
                         {loading
-                            ? submitText
-                                ? `${t("buttons.creating")} ${submitText}`
-                                : t("buttons.creating")
-                            : submitText || t("buttons.submitCreate")}
+                            ? t("buttons.creating")
+                            : formData.published
+                              ? t("buttons.publishArticle")
+                                : isEditing
+                                    ? t("buttons.saveChanges")
+                                    : t("buttons.saveDraft")}
                     </Button>
 
                     <Button

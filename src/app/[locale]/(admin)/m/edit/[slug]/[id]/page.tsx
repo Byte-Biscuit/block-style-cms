@@ -142,15 +142,14 @@ export default function EditPostPage() {
                 <ArticleForm
                     isEditing={true}
                     initialData={article}
-                    submitText={t(`${translationPrefix}actions.update`)}
                     onSubmit={async (formData) => {
                         setError(null);
                         setSuccess(null);
-                        // Validate form data
+                        // Use strict validation for publish, loose validation for draft
                         const requestBody = { ...formData, id: article.id };
-                        const { updateArticleSchema } = createArticleSchemas(t);
-                        const validation =
-                            updateArticleSchema.safeParse(requestBody);
+                        const { updateArticleSchema, draftUpdateArticleSchema } = createArticleSchemas(t);
+                        const schema = formData.published ? updateArticleSchema : draftUpdateArticleSchema;
+                        const validation = schema.safeParse(requestBody);
                         if (!validation.success) {
                             setError(validation.error);
                             return;

@@ -35,9 +35,10 @@ export default function NewArticlePage() {
     const handleSubmit = async (formData: Article) => {
         setError(null);
         setSuccess(null);
-        // Validate form data
-        const { articleSchema } = createArticleSchemas(t);
-        const validation = articleSchema.safeParse(formData);
+        // Use strict validation for publish, loose validation for draft
+        const { articleSchema, draftArticleSchema } = createArticleSchemas(t);
+        const schema = formData.published ? articleSchema : draftArticleSchema;
+        const validation = schema.safeParse(formData);
         if (!validation.success) {
             setError(validation.error);
             return;

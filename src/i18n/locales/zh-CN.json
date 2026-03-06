@@ -1032,7 +1032,14 @@
         },
         "mermaid": {
             "button": {
-                "close": "关闭"
+                "close": "关闭",
+                "zoomIn": "放大",
+                "zoomOut": "缩小",
+                "fitToWindow": "适应窗口"
+            },
+            "hint": {
+                "drag": "拖拽以平移",
+                "scroll": "滚轮缩放"
             },
             "loading": {
                 "renderingMermaid": "正在渲染 Mermaid 图表..."

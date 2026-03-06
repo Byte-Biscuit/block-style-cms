@@ -1031,7 +1031,14 @@
         },
         "mermaid": {
             "button": {
-                "close": "Close"
+                "close": "Close",
+                "zoomIn": "Zoom In",
+                "zoomOut": "Zoom Out",
+                "fitToWindow": "Fit to Window"
+            },
+            "hint": {
+                "drag": "Drag to pan",
+                "scroll": "Scroll to zoom"
             },
             "loading": {
                 "renderingMermaid": "Rendering Mermaid diagram..."

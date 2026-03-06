@@ -110,7 +110,12 @@ function MermaidRenderer({
                     suppressErrorRendering: false,
                     startOnLoad: false,
                     theme: theme === "dark" ? "dark" : "default",
-                    themeVariables: {},
+                    themeVariables: {
+                        background: "#ffffff",
+                        mainBkg: "#ffffff",
+                        secondBkg: "#f4f4f4",
+                        tertiaryBkg: "#f0f0f0",
+                    },
                     fontFamily: "arial",
                     fontSize: 16,
                     flowchart: { useMaxWidth: true, htmlLabels: true },

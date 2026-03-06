@@ -475,10 +475,10 @@ export default function PostListPage() {
                                                 hover
                                             >
                                                 <TableCell>
-                                                    <Box>
+                                                    <Box sx={{ maxWidth: { xs: 200, sm: 300, md: 500 } }}>
                                                         <Tooltip
                                                             title={
-                                                                article.summary
+                                                                article.title
                                                             }
                                                             arrow
                                                             placement="top"
@@ -488,6 +488,8 @@ export default function PostListPage() {
                                                                 noWrap
                                                                 sx={{
                                                                     fontWeight: 500,
+                                                                    overflow: "hidden",
+                                                                    textOverflow: "ellipsis",
                                                                 }}
                                                             >
                                                                 [
@@ -502,6 +504,10 @@ export default function PostListPage() {
                                                             variant="body2"
                                                             color="text.secondary"
                                                             noWrap
+                                                            sx={{
+                                                                overflow: "hidden",
+                                                                textOverflow: "ellipsis",
+                                                            }}
                                                         >
                                                             {article.slug}
                                                         </Typography>

@@ -18,7 +18,7 @@ interface BatchResult {
 const promptMap: Record<GenType, string> = {
     slug: "Generate a concise, readable slug containing only English letters and numbers (hyphen-separated, max 100 characters) for the following title:\nTitle: {input}",
     summary: "Summarize the following content in one sentence, within 200 characters:\nContent: {input}\nPlease respond in language: {lang}",
-    keywords: "Extract 3-15 keywords from the following content, separated by English commas:\nContent: {input}\nPlease respond in language: {lang}",
+    keywords: "Extract 3-5 keywords from the following content, separated by English commas:\nContent: {input}\nPlease respond in language: {lang}",
     suggestion: "Provide one optimization suggestion for the following content:\nContent: {input}\nPlease respond in language: {lang}",
     batch: "Analyze the following content and provide a JSON response with summary, keywords, and suggestion:\nContent: {input}\nPlease respond in language: {lang}\n\nReturn a valid JSON object with this exact structure:\n{\n  \"summary\": \"One sentence summary within 200 characters\",\n  \"keywords\": \"3-15 keywords separated by commas\",\n  \"suggestion\": \"One optimization suggestion\"\n}",
 };

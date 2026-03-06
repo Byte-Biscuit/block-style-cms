@@ -28,10 +28,6 @@ type Props = {
     searchParams?: Promise<PageSearchParams>;
 };
 
-/**
- * 检查是否为预览请求
- * 只有明确传入 preview=true/1/yes 时才允许查看未发布的文章
- */
 const isPreviewMode = (preview?: string | string[]): boolean => {
     if (!preview) return false;
     const value = Array.isArray(preview) ? preview[0] : preview;
@@ -145,73 +141,86 @@ export default async function ArticleDetailPage({
                     items={toc}
                 />
             )}
-            <article className="w-full">
-                <header className="space-y-2 pt-4 pb-4 md:space-y-5">
-                    <h1
-                        className={getDefaultHeadingClasses(1)}
-                        id="h1-article-title"
-                    >
-                        {article.title}
-                    </h1>
-                    <I18NLocaleTime
-                        date={article.updatedAt || article.createdAt!}
-                        locale={locale}
-                        className="text-base leading-6 font-medium"
-                    />
-                </header>
-                {article.image && (
-                    <section className="mb-6 md:mb-8">
-                        <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-md">
-                            <Image
-                                src={article.image}
-                                alt={article.title || "Article cover"}
-                                fill
-                                className="object-cover transition-transform duration-300 hover:scale-105"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
-                                priority
-                            />
-                        </div>
-                    </section>
-                )}
-                <section className="space-y-2 pb-4 md:space-y-5">
-                    <h2
-                        className={getDefaultHeadingClasses(2)}
-                        id="h2-article-summary"
-                    >
-                        {t("web.article.summary")}
-                    </h2>
-                    <p
-                        role="note"
-                        className="mt-2 rounded-md border-l-4 border-indigo-500/80 bg-gray-50 px-4 py-3 text-lg text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                    >
-                        {article.summary}
-                    </p>
-                </section>
-
-                <section className="space-y-4">
-                    {Array.isArray(article.content) &&
-                    article.content.length > 0 ? (
-                        <BlockListRenderer
-                            blocks={article.content as Block[]}
+            <div
+                className={
+                    toc.length > 0
+                        ? "lg:grid lg:grid-cols-[1fr_16rem] lg:gap-8"
+                        : ""
+                }
+            >
+                <article className="min-w-0">
+                    <header className="space-y-2 pt-4 pb-4 md:space-y-5">
+                        <h1
+                            className={getDefaultHeadingClasses(1)}
+                            id="h1-article-title"
+                        >
+                            {article.title}
+                        </h1>
+                        <I18NLocaleTime
+                            date={article.updatedAt || article.createdAt!}
+                            locale={locale}
+                            className="text-base leading-6 font-medium"
                         />
-                    ) : (
-                        <section className="text-gray-500 italic">
-                            No content available
+                    </header>
+                    {article.image && (
+                        <section className="mb-6 md:mb-8">
+                            <div className="relative aspect-video max-h-90 w-full overflow-hidden rounded-lg shadow-md">
+                                <Image
+                                    src={article.image}
+                                    alt={article.title || "Article cover"}
+                                    fill
+                                    className="object-cover transition-transform duration-300 hover:scale-105"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
+                                    priority
+                                />
+                            </div>
                         </section>
                     )}
-                </section>
+                    <section className="space-y-2 pb-4 md:space-y-5">
+                        <h2
+                            className={getDefaultHeadingClasses(2)}
+                            id="h2-article-summary"
+                        >
+                            {t("web.article.summary")}
+                        </h2>
+                        <p
+                            role="note"
+                            className="mt-2 rounded-md border-l-4 border-indigo-500/80 bg-gray-50 px-4 py-3 text-lg text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                        >
+                            {article.summary}
+                        </p>
+                    </section>
 
-                {/* Comment Section */}
-                <CommentSection
-                    articleId={article.id!}
-                    articleTitle={article.title}
-                />
-            </article>
-            {toc.length > 0 && (
-                <aside className="fixed top-24 right-8 hidden max-h-[calc(100vh-200px)] w-64 overflow-y-auto 2xl:block">
-                    <TableOfContents articleTitle={article.title} items={toc} />
-                </aside>
-            )}
+                    <section className="space-y-4">
+                        {Array.isArray(article.content) &&
+                        article.content.length > 0 ? (
+                            <BlockListRenderer
+                                blocks={article.content as Block[]}
+                            />
+                        ) : (
+                            <section className="text-gray-500 italic">
+                                No content available
+                            </section>
+                        )}
+                    </section>
+
+                    {/* Comment Section */}
+                    <CommentSection
+                        articleId={article.id!}
+                        articleTitle={article.title}
+                    />
+                </article>
+                {toc.length > 0 && (
+                    <aside className="hidden lg:block">
+                        <div className="sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
+                            <TableOfContents
+                                articleTitle={article.title}
+                                items={toc}
+                            />
+                        </div>
+                    </aside>
+                )}
+            </div>
         </>
     );
 }

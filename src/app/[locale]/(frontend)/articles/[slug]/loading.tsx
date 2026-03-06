@@ -91,23 +91,6 @@ export default function ArticleLoading() {
                     </div>
                 </section>
             </article>
-
-            {/* Desktop TOC Skeleton */}
-            <aside className="fixed top-24 right-8 hidden max-h-[calc(100vh-200px)] w-64 lg:block">
-                <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    {/* TOC Title */}
-                    <div className="h-6 w-32 animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                    {/* TOC Items */}
-                    <div className="space-y-2">
-                        <div className="h-4 w-full animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                        <div className="ml-4 h-4 w-5/6 animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                        <div className="ml-4 h-4 w-4/5 animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                        <div className="h-4 w-full animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                        <div className="ml-4 h-4 w-3/4 animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                        <div className="h-4 w-5/6 animate-pulse rounded bg-gray-300 dark:bg-gray-700" />
-                    </div>
-                </div>
-            </aside>
         </>
     );
 }

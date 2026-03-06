@@ -8,12 +8,14 @@ interface TableOfContentsProps {
     articleTitle: string;
     items: TocItem[];
     className?: string;
+    showTitle?: boolean;
 }
 
 export default function TableOfContents({
     articleTitle,
     items,
     className = "",
+    showTitle = true,
 }: TableOfContentsProps) {
     const [activeId, setActiveId] = useState<string>("");
     const t = useTranslations("web");
@@ -71,9 +73,11 @@ export default function TableOfContents({
 
     return (
         <nav className={`space-y-1 ${className}`}>
-            <h3 className="mb-3 text-sm font-semibold tracking-wide text-gray-900 uppercase dark:text-gray-100">
-                {t("toc.title")}
-            </h3>
+            {showTitle && (
+                <h3 className="mb-3 text-sm font-semibold tracking-wide text-gray-900 uppercase dark:text-gray-100">
+                    {t("toc.title")}
+                </h3>
+            )}
             <ul className="space-y-1 border-l-2 border-gray-200 dark:border-gray-700">
                 {fullTocItems.map((item) => (
                     <li key={item.id}>

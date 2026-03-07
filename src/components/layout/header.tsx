@@ -5,9 +5,9 @@ import SearchIconButton from "@/components/search";
 import ManageIconButton from "@/components/manage";
 import SmallScreenNavButton from "@/components/layout/small-screen-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { container } from "@/lib/style-classes";
 import { LanguageToggle } from "@/components/language-toggle";
 import ChannelNav from "@/components/layout/channel-nav";
+import MoreMenu from "@/components/layout/more-menu";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import Image from "next/image";
 
@@ -25,36 +25,57 @@ const Header = async () => {
           }
         : undefined;
 
+    const githubUrl = config?.siteInfo.contact.github;
+    const mediumUrl = config?.siteInfo.contact.medium;
+
     return (
-        <header className={`${container.header}`}>
-            <nav className="flex items-center space-x-4">
-                <Link
-                    href={`/${locale}`}
-                    aria-label={t("title")}
-                    className="flex items-center gap-2"
-                >
-                    <Image
-                        src="/api/logo"
-                        alt={t("title")}
-                        width={32}
-                        height={32}
-                        className="h-8 w-8"
-                        priority
-                    />
-                    <span className="hidden text-xl leading-none font-semibold text-gray-900 sm:inline-block lg:text-2xl dark:text-white">
-                        {t("title")}
-                    </span>
-                </Link>
+        <header className="mx-auto grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-2 px-4 py-4 xl:max-w-7xl">
+            {/* Col-1: Logo + Title */}
+            <Link
+                href={`/${locale}`}
+                aria-label={t("title")}
+                className="flex shrink-0 items-center gap-2"
+            >
+                <Image
+                    src="/api/logo"
+                    alt={t("title")}
+                    width={32}
+                    height={32}
+                    className="h-8 w-8"
+                    priority
+                />
+                <span className="hidden text-xl leading-none font-semibold text-gray-900 sm:inline-block lg:text-2xl dark:text-white">
+                    {t("title")}
+                </span>
+            </Link>
+
+            {/* Col-2: Channel Nav (sm+: horizontal list / sm-: hamburger menu) */}
+            <div className="flex min-w-0 items-center overflow-hidden">
                 <ChannelNav maxVisibleItems={5} />
-            </nav>
-            <div className="flex items-center space-x-1 sm:space-x-2">
+                <SmallScreenNavButton channels={channels} />
+            </div>
+
+            {/* Col-3: Tool icons (right-aligned) */}
+            <div className="flex shrink-0 items-center gap-x-1">
+                {/* Always visible */}
                 <SearchIconButton algoliaConfig={algoliaConfig} />
-                <GitHubIconButton />
-                <MediumIconButton />
                 <ThemeToggle />
                 <LanguageToggle />
-                <SmallScreenNavButton channels={channels} />
-                <ManageIconButton />
+                {/* Inline on sm+ */}
+                <div className="hidden items-center gap-x-1 sm:flex">
+                    {githubUrl && <GitHubIconButton />}
+                    {mediumUrl && <MediumIconButton />}
+                    <ManageIconButton />
+                </div>
+                {/* Collapsed into More menu on sm- */}
+                <div className="flex sm:hidden">
+                    <MoreMenu
+                        githubUrl={githubUrl}
+                        mediumUrl={mediumUrl}
+                        manageHref={`/${locale}/m`}
+                        manageLabel={t("manage")}
+                    />
+                </div>
             </div>
         </header>
     );

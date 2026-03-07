@@ -33,7 +33,7 @@ interface MoreMenuProps {
 }
 
 const itemCls =
-    "hover:bg-primary-600 block hover:text-white dark:bg-gray-800 dark:text-white";
+    "hover:bg-primary-600 block text-gray-900 hover:text-white dark:bg-gray-800 dark:text-white";
 
 export default function MoreMenu({
     githubUrl,
@@ -75,7 +75,7 @@ export default function MoreMenu({
                 {githubUrl && (
                     <Link href={githubUrl} className={itemCls}>
                         <MenuItem onClick={handleClose}>
-                            <ListItemIcon>
+                            <ListItemIcon sx={{ color: "inherit" }}>
                                 <GitHub fontSize="small" />
                             </ListItemIcon>
                             <ListItemText>GitHub</ListItemText>
@@ -86,7 +86,7 @@ export default function MoreMenu({
                 {mediumUrl && (
                     <Link href={mediumUrl} className={itemCls}>
                         <MenuItem onClick={handleClose}>
-                            <ListItemIcon>
+                            <ListItemIcon sx={{ color: "inherit" }}>
                                 <MediumIcon />
                             </ListItemIcon>
                             <ListItemText>Medium</ListItemText>
@@ -96,7 +96,7 @@ export default function MoreMenu({
 
                 <Link href={manageHref} className={itemCls}>
                     <MenuItem onClick={handleClose}>
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ color: "inherit" }}>
                             <Login fontSize="small" />
                         </ListItemIcon>
                         <ListItemText>{manageLabel}</ListItemText>

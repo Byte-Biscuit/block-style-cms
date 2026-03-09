@@ -22,6 +22,8 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    Menu,
+    ListItemText,
     Pagination,
     Alert,
     CircularProgress,
@@ -40,11 +42,13 @@ import {
     Search as SearchIcon,
     FilterList as FilterIcon,
     Clear as ClearIcon,
+    Translate as TranslateIcon,
 } from "@mui/icons-material";
 import { useTranslations, useLocale } from "next-intl";
 import type { Article } from "@/types/article";
 import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
 import { localeMap, locales, getLanguageDisplayName } from "@/i18n/config";
+import { createLocaleVariant, getLocalesForSlug } from "@/app/actions/article";
 import { formatDateI18n } from "@/i18n/util";
 import ErrorDisplay from "@/admin/m/components/error-display";
 import Link from "@/components/link";
@@ -134,6 +138,75 @@ export default function PostListPage() {
         publishedFilter,
     ]);
 
+    // Locale variant menu state
+    const [localeMenuAnchor, setLocaleMenuAnchor] =
+        useState<null | HTMLElement>(null);
+    const [localeMenuArticle, setLocaleMenuArticle] = useState<Article | null>(
+        null
+    );
+    const [localeMenuLoading, setLocaleMenuLoading] = useState(false);
+    // Per-button fetching spinner (while loading existing locales)
+    const [localeMenuFetchingId, setLocaleMenuFetchingId] = useState<string | null>(null);
+    // Locales that already exist for the current slug (including drafts)
+    const [localeMenuExistingLocales, setLocaleMenuExistingLocales] = useState<string[]>([]);
+
+    const handleOpenLocaleMenu = async (
+        event: React.MouseEvent<HTMLElement>,
+        article: Article
+    ) => {
+        // Capture anchor before async gap
+        const anchor = event.currentTarget;
+        // Reset existing locales before fetching (not on close, to avoid flash during close animation)
+        setLocaleMenuExistingLocales([]);
+        setLocaleMenuFetchingId(article.id ?? null);
+        try {
+            const result = await getLocalesForSlug({ slug: article.slug });
+            setLocaleMenuExistingLocales(
+                result.code === 200 ? result.payload.locales : [article.locale]
+            );
+        } catch {
+            // Fallback: treat only current article's locale as existing
+            setLocaleMenuExistingLocales([article.locale]);
+        } finally {
+            setLocaleMenuFetchingId(null);
+        }
+        setLocaleMenuArticle(article);
+        setLocaleMenuAnchor(anchor);
+    };
+
+    const handleCloseLocaleMenu = () => {
+        setLocaleMenuAnchor(null);
+        setLocaleMenuArticle(null);
+        // Do NOT reset localeMenuExistingLocales here — MUI Menu has a close animation,
+        // resetting during animation causes all options to flash before disappearing.
+        // It is reset at the start of handleOpenLocaleMenu instead.
+    };
+
+    const handleLocaleVariant = async (targetLocale: string) => {
+        if (!localeMenuArticle?.id) return;
+        setLocaleMenuLoading(true);
+        handleCloseLocaleMenu();
+        try {
+            const result = await createLocaleVariant({
+                sourceId: localeMenuArticle.id,
+                slug: localeMenuArticle.slug,
+                targetLocale,
+            });
+            if (result.code !== 200 && result.code !== 201) {
+                throw new Error(result.message);
+            }
+            router.push(
+                `${ADMIN_PAGE_PREFIX}/edit/${localeMenuArticle.slug}/${result.payload.id}`
+            );
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : t("messages.fetchError")
+            );
+        } finally {
+            setLocaleMenuLoading(false);
+        }
+    };
+
     // Delete confirmation dialog related state
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [deleteTarget, setDeleteTarget] = useState<{
@@ -183,7 +256,14 @@ export default function PostListPage() {
 
     return (
         <Container maxWidth="xl" sx={{ py: 2, px: { xs: 2, sm: 4, md: 6 } }}>
-            <Paper elevation={3} sx={{ pt: { xs: 2, sm: 2 }, pb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 4 } }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    pt: { xs: 2, sm: 2 },
+                    pb: { xs: 2, sm: 4 },
+                    px: { xs: 2, sm: 4 },
+                }}
+            >
                 <Box
                     sx={{
                         display: "flex",
@@ -309,6 +389,7 @@ export default function PostListPage() {
                                             | (typeof locales)[number]
                                     )
                                 }
+                                MenuProps={{ disableScrollLock: true }}
                             >
                                 <MenuItem value="all">
                                     {t("filters.all")}
@@ -334,6 +415,7 @@ export default function PostListPage() {
                                             | "draft"
                                     )
                                 }
+                                MenuProps={{ disableScrollLock: true }}
                             >
                                 <MenuItem value="all">
                                     {t("filters.all")}
@@ -475,7 +557,15 @@ export default function PostListPage() {
                                                 hover
                                             >
                                                 <TableCell>
-                                                    <Box sx={{ maxWidth: { xs: 200, sm: 300, md: 500 } }}>
+                                                    <Box
+                                                        sx={{
+                                                            maxWidth: {
+                                                                xs: 200,
+                                                                sm: 300,
+                                                                md: 500,
+                                                            },
+                                                        }}
+                                                    >
                                                         <Tooltip
                                                             title={
                                                                 article.title
@@ -488,8 +578,10 @@ export default function PostListPage() {
                                                                 noWrap
                                                                 sx={{
                                                                     fontWeight: 500,
-                                                                    overflow: "hidden",
-                                                                    textOverflow: "ellipsis",
+                                                                    overflow:
+                                                                        "hidden",
+                                                                    textOverflow:
+                                                                        "ellipsis",
                                                                 }}
                                                             >
                                                                 [
@@ -505,8 +597,10 @@ export default function PostListPage() {
                                                             color="text.secondary"
                                                             noWrap
                                                             sx={{
-                                                                overflow: "hidden",
-                                                                textOverflow: "ellipsis",
+                                                                overflow:
+                                                                    "hidden",
+                                                                textOverflow:
+                                                                    "ellipsis",
                                                             }}
                                                         >
                                                             {article.slug}
@@ -653,6 +747,48 @@ export default function PostListPage() {
                                                         </Tooltip>
                                                         <Tooltip
                                                             title={t(
+                                                                "actions.addLocale"
+                                                            )}
+                                                        >
+                                                            <span
+                                                                style={{
+                                                                    display:
+                                                                        "inline-flex",
+                                                                    alignItems:
+                                                                        "center",
+                                                                }}
+                                                            >
+                                                                <IconButton
+                                                                    size="small"
+                                                                    onClick={(
+                                                                        e
+                                                                    ) =>
+                                                                        handleOpenLocaleMenu(
+                                                                            e,
+                                                                            article
+                                                                        )
+                                                                    }
+                                                                    color="default"
+                                                                    disabled={
+                                                                        localeMenuLoading ||
+                                                                        localeMenuFetchingId === article.id
+                                                                    }
+                                                                >
+                                                                    {(localeMenuLoading && localeMenuArticle?.id === article.id) ||
+                                                                    localeMenuFetchingId === article.id ? (
+                                                                        <CircularProgress
+                                                                            size={
+                                                                                18
+                                                                            }
+                                                                        />
+                                                                    ) : (
+                                                                        <TranslateIcon fontSize="small" />
+                                                                    )}
+                                                                </IconButton>
+                                                            </span>
+                                                        </Tooltip>
+                                                        <Tooltip
+                                                            title={t(
                                                                 "actions.delete"
                                                             )}
                                                         >
@@ -737,6 +873,40 @@ export default function PostListPage() {
                     </>
                 )}
             </Paper>
+
+            {/* Locale variant menu */}
+            <Menu
+                anchorEl={localeMenuAnchor}
+                open={Boolean(localeMenuAnchor)}
+                onClose={handleCloseLocaleMenu}
+                disableScrollLock
+            >
+                {(() => {
+                    const available = locales.filter(
+                        (loc) => !localeMenuExistingLocales.includes(loc)
+                    );
+                    if (available.length === 0) {
+                        return (
+                            <MenuItem disabled>
+                                <ListItemText
+                                    primary={t("actions.allLocalesExist")}
+                                />
+                            </MenuItem>
+                        );
+                    }
+                    return available.map((loc) => (
+                        <MenuItem
+                            key={loc}
+                            onClick={() => handleLocaleVariant(loc)}
+                        >
+                            <ListItemText
+                                primary={localeMap[loc].nativeName}
+                                secondary={localeMap[loc].englishName}
+                            />
+                        </MenuItem>
+                    ));
+                })()}
+            </Menu>
 
             {/* Delete confirmation dialog */}
             <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>

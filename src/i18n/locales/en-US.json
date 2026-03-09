@@ -625,6 +625,8 @@
                     "clearTagFilter": "Clear tag filter",
                     "view": "View article",
                     "edit": "Edit article",
+                    "addLocale": "Add language version",
+                    "allLocalesExist": "All language versions already exist",
                     "delete": "Delete article"
                 },
                 "search": {

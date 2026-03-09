@@ -625,6 +625,8 @@
                     "clearTagFilter": "清空標籤篩選",
                     "view": "查看文章",
                     "edit": "編輯文章",
+                    "addLocale": "建立語言版本",
+                    "allLocalesExist": "全部語言版本已存在",
                     "delete": "刪除文章"
                 },
                 "search": {

@@ -86,11 +86,10 @@ const EditorActionToolbar: React.FC<EditorActionToolbarProps> = ({
                 gap: 0.5,
                 ...(isBrowserFullscreen || isMonitorFullscreen
                     ? {
-                          position: "sticky",
-                          float: "right",
-                          mr: 1,
-                          mt: 1,
-                          right: "auto", // Reset right when using float in sticky
+                          position: "fixed",
+                          top: 16,
+                          right: 24,
+                          float: "none",
                       }
                     : {}),
             }}

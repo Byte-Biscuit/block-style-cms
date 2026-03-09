@@ -691,6 +691,7 @@
             "sections": {
                 "basic": "基本信息",
                 "content": "文章内容 *",
+                "cover": "封面",
                 "summary": "文章简介 *",
                 "keywords": "关键词",
                 "tags": "标签",

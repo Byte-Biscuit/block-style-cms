@@ -15,6 +15,9 @@ import {
     Chip,
     CircularProgress,
     Card,
+    Tabs,
+    Tab,
+    Tooltip,
 } from "@mui/material";
 import {
     Add as AddIcon,
@@ -24,7 +27,7 @@ import {
     Summarize as SummarizeIcon,
     Key as KeyIcon,
     RocketLaunch as RocketLaunchIcon,
-    LibraryBooks as LibraryBooksIcon,
+    InsertPhoto as InsertPhotoIcon,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -107,6 +110,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     });
 
     const [keywordInput, setKeywordInput] = useState("");
+    const [sidebarTab, setSidebarTab] = useState(0);
 
     const [blockNoteDictionary, setBlockNoteDictionary] =
         useState<Dictionary | null>(null);
@@ -356,447 +360,569 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 backgroundColor: "background.default",
             }}
         >
-            {/* basic info */}
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 600,
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <LibraryBooksIcon /> {t("sections.basic")}
-                </Typography>
-                <FormControl fullWidth sx={{ mb: 3 }}>
-                    <InputLabel>{t("labels.language")}</InputLabel>
-                    <Select
-                        value={formData.locale}
-                        label={t("labels.language")}
-                        size="small"
-                        onChange={(e) =>
-                            setFormData((prev) => ({
-                                ...prev,
-                                locale: e.target.value,
-                            }))
-                        }
-                        sx={{ borderRadius: 2 }}
-                    >
-                        {Object.values(LANGUAGE_OPTIONS).map((lang) => (
-                            <MenuItem key={lang.code} value={lang.code}>
-                                {lang.nativeName}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <TextField
-                    label={t("labels.title")}
-                    size="small"
-                    value={formData.title}
-                    onChange={(e) => handleChange("title", e.target.value)}
-                    required
-                    fullWidth
-                    sx={{
-                        mb: 3,
-                        "& .MuiOutlinedInput-root": { borderRadius: 2 },
-                    }}
-                    placeholder={t("placeholders.title")}
-                />
-
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "flex-start",
+                    flexDirection: { xs: "column", lg: "row" },
+                }}
+            >
+                {/* LEFT: Language + Slug + Title + Editor */}
                 <Box
                     sx={{
+                        flex: "1 1 0",
+                        minWidth: 0,
                         display: "flex",
-                        gap: 2,
-                        flexDirection: { xs: "column", md: "row" },
+                        flexDirection: "column",
+                        height: { lg: "calc(100vh - 200px)" },
+                        minHeight: { lg: 650 },
                     }}
                 >
-                    <TextField
-                        label={t("labels.slug")}
-                        size="small"
-                        value={formData.slug}
-                        onChange={(e) => handleChange("slug", e.target.value)}
-                        required
-                        fullWidth
-                        disabled={isEditing} // Disabled in edit mode
-                        helperText={
-                            isEditing
-                                ? t("helper.slugEditingDisabled")
-                                : t("helper.slugUse")
-                        }
-                        sx={{
-                            flex: 1,
-                            "& .MuiOutlinedInput-root": { borderRadius: 2 },
-                        }}
-                    />
-                    {!isEditing && ( // Show generate button only in create mode
-                        <Button
-                            variant="contained"
-                            startIcon={
-                                aiLoading.slug ? (
-                                    <CircularProgress
-                                        size={16}
-                                        color="inherit"
-                                    />
-                                ) : (
-                                    <PsychologyIcon />
-                                )
-                            }
-                            onClick={generateSlug}
-                            sx={{
-                                minWidth: 160,
-                                height: "fit-content",
-                                borderRadius: 2,
-                                mt: { xs: 1, md: 0 },
-                            }}
-                            disabled={!formData.title.trim() || aiLoading.slug}
-                        >
-                            {aiLoading.slug
-                                ? t("buttons.generating")
-                                : t("buttons.generateSlug")}
-                        </Button>
-                    )}
-                </Box>
-            </Card>
-
-            {/* Cover image selector */}
-            <CoverImageSelector
-                imageUrl={formData.image || ""}
-                onImageChange={(imageUrl) => handleChange("image", imageUrl)}
-            />
-            {/* Post content */}
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Box sx={{ mb: 2 }}>
-                    <Typography
-                        variant="subtitle1"
-                        sx={{
-                            fontWeight: 600,
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                        }}
-                    >
-                        <PsychologyIcon color="action" />
-                        {t("sections.content")}
-                    </Typography>
-                    <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ display: "block", mt: 0.5, ml: 4 }}
-                    >
-                        {t("helper.contentTip")}
-                    </Typography>
-                </Box>
-                <Card
-                    variant="outlined"
-                    sx={{
-                        borderRadius: 2,
-                        overflow: "hidden",
-                        "& .bn-container": {
-                            borderRadius: 0,
-                            border: "none",
-                        },
-                    }}
-                >
+                    {/* Row 1: Language + Title */}
                     <Box
                         sx={{
-                            minHeight: "400px",
-                            "& .bn-container": {
-                                borderRadius: 0,
-                            },
+                            display: "flex",
+                            gap: 1.5,
+                            mb: 2,
+                            alignItems: "flex-start",
                         }}
                     >
-                        {blockNoteDictionary != null ? (
-                            <BlockNoteEditor
-                                value={formData.content}
-                                dictionary={blockNoteDictionary}
-                                onChange={(content) =>
-                                    handleChange("content", content)
+                        <FormControl sx={{ flex: "0 0 140px" }}>
+                            <InputLabel>{t("labels.language")}</InputLabel>
+                            <Select
+                                value={formData.locale}
+                                label={t("labels.language")}
+                                size="small"
+                                onChange={(e) =>
+                                    setFormData((prev) => ({
+                                        ...prev,
+                                        locale: e.target.value,
+                                    }))
                                 }
-                            />
-                        ) : (
-                            <div className="p-4">Loading...</div>
+                                sx={{ borderRadius: 2 }}
+                            >
+                                {Object.values(LANGUAGE_OPTIONS).map((lang) => (
+                                    <MenuItem key={lang.code} value={lang.code}>
+                                        {lang.nativeName}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            label={t("labels.title")}
+                            size="small"
+                            value={formData.title}
+                            onChange={(e) =>
+                                handleChange("title", e.target.value)
+                            }
+                            required
+                            fullWidth
+                            sx={{
+                                flex: 1,
+                                "& .MuiOutlinedInput-root": { borderRadius: 2 },
+                            }}
+                            placeholder={t("placeholders.title")}
+                        />
+                    </Box>
+                    {/* Row 2: Slug + AI button */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 1.5,
+                            mb: 2,
+                            alignItems: "flex-start",
+                        }}
+                    >
+                        <TextField
+                            label={t("labels.slug")}
+                            size="small"
+                            value={formData.slug}
+                            onChange={(e) =>
+                                handleChange("slug", e.target.value)
+                            }
+                            required
+                            fullWidth
+                            disabled={isEditing}
+                            helperText={
+                                isEditing
+                                    ? t("helper.slugEditingDisabled")
+                                    : t("helper.slugUse")
+                            }
+                            sx={{
+                                flex: 1,
+                                "& .MuiOutlinedInput-root": { borderRadius: 2 },
+                            }}
+                        />
+                        {!isEditing && (
+                            <Button
+                                variant="contained"
+                                startIcon={
+                                    aiLoading.slug ? (
+                                        <CircularProgress
+                                            size={16}
+                                            color="inherit"
+                                        />
+                                    ) : (
+                                        <PsychologyIcon />
+                                    )
+                                }
+                                onClick={generateSlug}
+                                sx={{
+                                    flexShrink: 0,
+                                    height: 40,
+                                    borderRadius: 2,
+                                    whiteSpace: "nowrap",
+                                }}
+                                disabled={
+                                    !formData.title.trim() || aiLoading.slug
+                                }
+                            >
+                                {aiLoading.slug
+                                    ? t("buttons.generating")
+                                    : t("buttons.generateSlug")}
+                            </Button>
                         )}
                     </Box>
-                </Card>
-            </Card>
-            {/* Post summary */}
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 600,
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <SummarizeIcon color="action" />
-                    {t("sections.summary")}
-                </Typography>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 2,
-                        flexDirection: { xs: "column", md: "row" },
-                    }}
-                >
-                    <TextField
-                        label={t("labels.summary")}
-                        placeholder={t("placeholders.summary")}
-                        value={formData.summary}
-                        onChange={(e) =>
-                            handleChange("summary", e.target.value)
-                        }
-                        multiline
-                        rows={4}
-                        required={formData.published}
-                        fullWidth
-                        sx={{ flex: 1 }}
-                        variant="outlined"
-                    />
-                    <Button
-                        variant="contained"
-                        size="large"
-                        startIcon={
-                            aiLoading.summary ? (
-                                <CircularProgress size={16} color="inherit" />
-                            ) : (
-                                <PsychologyIcon />
-                            )
-                        }
-                        onClick={handleGenerateSummary}
+                    {/* Post content */}
+                    <Card
                         sx={{
-                            minWidth: 140,
-                            height: "fit-content",
-                            borderRadius: 2,
-                            mt: { xs: 1, md: 0 },
+                            flex: 1,
+                            mb: 2,
+                            p: 0,
+                            boxShadow: "none",
+                            display: "flex",
+                            flexDirection: "column",
                         }}
-                        disabled={
-                            !formData.title.trim() ||
-                            !formData.content ||
-                            formData.content.length === 0 ||
-                            aiLoading.summary
-                        }
                     >
-                        {aiLoading.summary
-                            ? t("buttons.generating")
-                            : t("buttons.generateSummary")}
-                    </Button>
-                </Box>
-            </Card>
-            {/* Keywords */}
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 600,
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <KeyIcon />
-                    {t("sections.keywords")}
-                </Typography>
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 1.5,
-                        mb: 2,
-                        flexDirection: { xs: "column", sm: "row" },
-                    }}
-                >
-                    <TextField
-                        label={t("labels.addKeyword")}
-                        value={keywordInput}
-                        onChange={(e) => setKeywordInput(e.target.value)}
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            (e.preventDefault(), addKeyword())
-                        }
-                        size="small"
-                        sx={{ flex: 1 }}
-                        placeholder={t("placeholders.keyword")}
-                    />
-                    <Button
-                        variant="outlined"
-                        onClick={addKeyword}
-                        startIcon={<AddIcon />}
-                        disabled={!keywordInput.trim()}
-                        sx={{ borderRadius: 2, minWidth: 100 }}
-                    >
-                        {t("buttons.add")}
-                    </Button>
-                    <Button
-                        variant="contained"
-                        onClick={handleGenerateKeywords}
-                        startIcon={
-                            aiLoading.keywords ? (
-                                <CircularProgress size={16} color="inherit" />
-                            ) : (
-                                <PsychologyIcon />
-                            )
-                        }
-                        disabled={
-                            !formData.title.trim() ||
-                            !formData.content ||
-                            formData.content.length === 0 ||
-                            aiLoading.keywords
-                        }
-                        sx={{ borderRadius: 2, minWidth: 140 }}
-                    >
-                        {aiLoading.keywords
-                            ? t("buttons.generating")
-                            : t("buttons.generateKeywords")}
-                    </Button>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 1,
-                        minHeight: 40,
-                    }}
-                >
-                    {formData.keywords.length > 0 ? (
-                        formData.keywords.map((kw) => (
-                            <Chip
-                                key={kw}
-                                label={kw}
-                                onDelete={() => removeKeyword(kw)}
-                                color="secondary"
-                                variant="filled"
-                                sx={{ borderRadius: 2 }}
-                            />
-                        ))
-                    ) : (
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ py: 1 }}
-                        >
-                            {t("helper.noKeywords")}
-                        </Typography>
-                    )}
-                </Box>
-            </Card>
-            {/* Tags */}
-            <ArticleFormTags
-                tags={formData.tags}
-                locale={formData.locale || locale}
-                onTagsChange={(newTags) => handleChange("tags", newTags)}
-            />
-            {/* Publish settings and submit */}
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
-                <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 600,
-                        mb: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <RocketLaunchIcon /> {t("sections.publish")}
-                </Typography>
-
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={formData.published}
-                            onChange={(e) =>
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    published: e.target.checked,
-                                }))
-                            }
-                            color="primary"
-                        />
-                    }
-                    label={
-                        <Box>
-                            <Typography variant="body1" fontWeight={500}>
-                                {t("labels.publishNow")}
+                        <Box sx={{ mb: 2 }}>
+                            <Typography
+                                variant="subtitle1"
+                                sx={{
+                                    fontWeight: 600,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                }}
+                            >
+                                <PsychologyIcon color="action" />
+                                {t("sections.content")}
                             </Typography>
                             <Typography
                                 variant="caption"
                                 color="text.secondary"
+                                sx={{ display: "block", mt: 0.5, ml: 4 }}
                             >
-                                {formData.published
-                                    ? t("helper.publish.published")
-                                    : t("helper.publish.draft")}
+                                {t("helper.contentTip")}
                             </Typography>
                         </Box>
-                    }
-                    sx={{ mb: 3 }}
-                />
-            </Card>
-            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
+                        <Card
+                            sx={{
+                                flex: 1,
+                                minHeight: 0,
+                                borderRadius: 2,
+                                overflow: "hidden",
+                                display: "flex",
+                                flexDirection: "column",
+                                "& .bn-container": {
+                                    borderRadius: 0,
+                                    border: "none",
+                                },
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                    minHeight: 0,
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    "& .bn-container": {
+                                        borderRadius: 0,
+                                    },
+                                }}
+                            >
+                                {blockNoteDictionary != null ? (
+                                    <BlockNoteEditor
+                                        value={formData.content}
+                                        dictionary={blockNoteDictionary}
+                                        onChange={(content) =>
+                                            handleChange("content", content)
+                                        }
+                                    />
+                                ) : (
+                                    <div className="p-4">Loading...</div>
+                                )}
+                            </Box>
+                        </Card>
+                    </Card>
+                </Box>
+
+                {/* RIGHT: sidebar */}
                 <Box
                     sx={{
+                        width: { xs: "100%", lg: 360 },
+                        flexShrink: 0,
+                        height: { lg: "calc(100vh - 200px)" },
+                        minHeight: { lg: 650 },
                         display: "flex",
-                        gap: 4,
-                        flexDirection: { xs: "column", sm: "row" },
+                        flexDirection: "column",
                     }}
                 >
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        size="large"
-                        startIcon={
-                            loading ? (
-                                <CircularProgress size={20} color="inherit" />
-                            ) : formData.published ? (
-                                <RocketLaunchIcon />
-                            ) : (
-                                <SaveIcon />
-                            )
-                        }
-                        disabled={loading}
+                    {/* Tab navigation */}
+                    <Tabs
+                        value={sidebarTab}
+                        onChange={(_, v) => setSidebarTab(v)}
+                        variant="fullWidth"
                         sx={{
-                            minHeight: 48,
-                            borderRadius: 2,
-                            flex: { xs: 1, sm: "0 1 auto" },
-                            minWidth: 160,
+                            borderBottom: 1,
+                            borderColor: "divider",
+                            flexShrink: 0,
                         }}
                     >
-                        {loading
-                            ? t("buttons.creating")
-                            : formData.published
-                              ? t("buttons.publishArticle")
-                                : isEditing
-                                    ? t("buttons.saveChanges")
-                                    : t("buttons.saveDraft")}
-                    </Button>
+                        <Tooltip title={t("sections.cover")} placement="bottom">
+                            <Tab
+                                icon={<InsertPhotoIcon />}
+                                sx={{ minHeight: 48 }}
+                            />
+                        </Tooltip>
+                        <Tooltip
+                            title={t("sections.summary").replace(" *", "")}
+                            placement="bottom"
+                        >
+                            <Tab
+                                icon={<SummarizeIcon />}
+                                sx={{ minHeight: 48 }}
+                            />
+                        </Tooltip>
+                        <Tooltip title="SEO" placement="bottom">
+                            <Tab icon={<KeyIcon />} sx={{ minHeight: 48 }} />
+                        </Tooltip>
+                        <Tooltip
+                            title={t("sections.publish")}
+                            placement="bottom"
+                        >
+                            <Tab
+                                icon={<RocketLaunchIcon />}
+                                sx={{ minHeight: 48 }}
+                            />
+                        </Tooltip>
+                    </Tabs>
 
-                    <Button
-                        variant="outlined"
-                        size="large"
-                        onClick={() => router.push("/m/list")}
-                        disabled={loading}
-                        startIcon={<CloseIcon />}
+                    {/* Scrollable tab content area */}
+                    <Box
+                        sx={{ flex: 1, overflowY: "auto", minHeight: 0, py: 2 }}
+                    >
+                        {/* Tab 0: Cover image only */}
+                        {sidebarTab === 0 && (
+                            <CoverImageSelector
+                                imageUrl={formData.image || ""}
+                                onImageChange={(imageUrl) =>
+                                    handleChange("image", imageUrl)
+                                }
+                            />
+                        )}
+
+                        {/* Tab 1: Summary */}
+                        {sidebarTab === 1 && (
+                            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
+                                <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                    sx={{
+                                        fontWeight: 600,
+                                        mb: 2,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                    }}
+                                >
+                                    <SummarizeIcon color="action" />
+                                    {t("sections.summary")}
+                                </Typography>
+                                <TextField
+                                    label={t("labels.summary")}
+                                    placeholder={t("placeholders.summary")}
+                                    value={formData.summary}
+                                    onChange={(e) =>
+                                        handleChange("summary", e.target.value)
+                                    }
+                                    multiline
+                                    rows={6}
+                                    required={formData.published}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    variant="outlined"
+                                />
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    startIcon={
+                                        aiLoading.summary ? (
+                                            <CircularProgress
+                                                size={16}
+                                                color="inherit"
+                                            />
+                                        ) : (
+                                            <PsychologyIcon />
+                                        )
+                                    }
+                                    onClick={handleGenerateSummary}
+                                    sx={{
+                                        height: "fit-content",
+                                        borderRadius: 2,
+                                    }}
+                                    disabled={
+                                        !formData.title.trim() ||
+                                        !formData.content ||
+                                        formData.content.length === 0 ||
+                                        aiLoading.summary
+                                    }
+                                >
+                                    {aiLoading.summary
+                                        ? t("buttons.generating")
+                                        : t("buttons.generateSummary")}
+                                </Button>
+                            </Card>
+                        )}
+
+                        {/* Tab 2: SEO — Keywords + Tags */}
+                        {sidebarTab === 2 && (
+                            <>
+                                <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
+                                    <Typography
+                                        variant="subtitle1"
+                                        gutterBottom
+                                        sx={{
+                                            fontWeight: 600,
+                                            mb: 2,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <KeyIcon />
+                                        {t("sections.keywords")}
+                                    </Typography>
+                                    <Box
+                                        sx={{ display: "flex", gap: 1, mb: 2 }}
+                                    >
+                                        <TextField
+                                            label={t("labels.addKeyword")}
+                                            value={keywordInput}
+                                            onChange={(e) =>
+                                                setKeywordInput(e.target.value)
+                                            }
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter" &&
+                                                (e.preventDefault(),
+                                                addKeyword())
+                                            }
+                                            size="small"
+                                            sx={{ flex: 1 }}
+                                            placeholder={t(
+                                                "placeholders.keyword"
+                                            )}
+                                        />
+                                        <Button
+                                            variant="outlined"
+                                            onClick={addKeyword}
+                                            startIcon={<AddIcon />}
+                                            disabled={!keywordInput.trim()}
+                                            sx={{ borderRadius: 2 }}
+                                        >
+                                            {t("buttons.add")}
+                                        </Button>
+                                    </Box>
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        onClick={handleGenerateKeywords}
+                                        startIcon={
+                                            aiLoading.keywords ? (
+                                                <CircularProgress
+                                                    size={16}
+                                                    color="inherit"
+                                                />
+                                            ) : (
+                                                <PsychologyIcon />
+                                            )
+                                        }
+                                        disabled={
+                                            !formData.title.trim() ||
+                                            !formData.content ||
+                                            formData.content.length === 0 ||
+                                            aiLoading.keywords
+                                        }
+                                        sx={{ borderRadius: 2, mb: 2 }}
+                                    >
+                                        {aiLoading.keywords
+                                            ? t("buttons.generating")
+                                            : t("buttons.generateKeywords")}
+                                    </Button>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            gap: 1,
+                                            minHeight: 40,
+                                        }}
+                                    >
+                                        {formData.keywords.length > 0 ? (
+                                            formData.keywords.map((kw) => (
+                                                <Chip
+                                                    key={kw}
+                                                    label={kw}
+                                                    onDelete={() =>
+                                                        removeKeyword(kw)
+                                                    }
+                                                    color="secondary"
+                                                    variant="filled"
+                                                    sx={{ borderRadius: 2 }}
+                                                />
+                                            ))
+                                        ) : (
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                                sx={{ py: 1 }}
+                                            >
+                                                {t("helper.noKeywords")}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                </Card>
+                                <ArticleFormTags
+                                    tags={formData.tags}
+                                    locale={formData.locale || locale}
+                                    onTagsChange={(newTags) =>
+                                        handleChange("tags", newTags)
+                                    }
+                                />
+                            </>
+                        )}
+
+                        {/* Tab 3: Publish settings */}
+                        {sidebarTab === 3 && (
+                            <Card sx={{ mb: 2, p: 0, boxShadow: "none" }}>
+                                <Typography
+                                    variant="subtitle1"
+                                    gutterBottom
+                                    sx={{
+                                        fontWeight: 600,
+                                        mb: 2,
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1,
+                                    }}
+                                >
+                                    <RocketLaunchIcon /> {t("sections.publish")}
+                                </Typography>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={formData.published}
+                                            onChange={(e) =>
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    published: e.target.checked,
+                                                }))
+                                            }
+                                            color="primary"
+                                        />
+                                    }
+                                    label={
+                                        <Box>
+                                            <Typography
+                                                variant="body1"
+                                                fontWeight={500}
+                                            >
+                                                {t("labels.publishNow")}
+                                            </Typography>
+                                            <Typography
+                                                variant="caption"
+                                                color="text.secondary"
+                                            >
+                                                {formData.published
+                                                    ? t(
+                                                          "helper.publish.published"
+                                                      )
+                                                    : t("helper.publish.draft")}
+                                            </Typography>
+                                        </Box>
+                                    }
+                                    sx={{ mb: 3 }}
+                                />
+                            </Card>
+                        )}
+                    </Box>
+
+                    {/* Submit buttons — always visible at the bottom */}
+                    <Card
                         sx={{
-                            minHeight: 48,
-                            borderRadius: 2,
-                            flex: { xs: 1, sm: "0 1 auto" },
-                            minWidth: 120,
+                            flexShrink: 0,
+                            p: 0,
+                            pt: 1,
+                            boxShadow: "none",
+                            borderTop: 1,
+                            borderColor: "divider",
                         }}
                     >
-                        {t("buttons.cancel")}
-                    </Button>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: 1.5,
+                                flexDirection: "row",
+                            }}
+                        >
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                fullWidth
+                                startIcon={
+                                    loading ? (
+                                        <CircularProgress
+                                            size={20}
+                                            color="inherit"
+                                        />
+                                    ) : formData.published ? (
+                                        <RocketLaunchIcon />
+                                    ) : (
+                                        <SaveIcon />
+                                    )
+                                }
+                                disabled={loading}
+                                sx={{
+                                    minHeight: 48,
+                                    borderRadius: 2,
+                                }}
+                            >
+                                {loading
+                                    ? t("buttons.creating")
+                                    : formData.published
+                                      ? t("buttons.publishArticle")
+                                      : isEditing
+                                        ? t("buttons.saveChanges")
+                                        : t("buttons.saveDraft")}
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="large"
+                                fullWidth
+                                onClick={() => router.push("/m/list")}
+                                disabled={loading}
+                                startIcon={<CloseIcon />}
+                                sx={{
+                                    minHeight: 48,
+                                    borderRadius: 2,
+                                }}
+                            >
+                                {t("buttons.cancel")}
+                            </Button>
+                        </Box>
+                    </Card>
                 </Box>
-            </Card>
+            </Box>
         </Box>
     );
 };

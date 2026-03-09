@@ -691,6 +691,7 @@
             "sections": {
                 "basic": "Basic Information",
                 "content": "Article Content *",
+                "cover": "Cover",
                 "summary": "Summary *",
                 "keywords": "Keywords",
                 "tags": "Tags",

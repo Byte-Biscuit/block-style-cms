@@ -26,7 +26,7 @@ import {
     Visibility as VisibilityIcon,
     Delete as DeleteIcon,
     Warning as WarningIcon,
-    OpenInNew as OpenInNewIcon,
+    ZoomIn as ZoomInIcon,
 } from "@mui/icons-material";
 import dynamic from "next/dynamic";
 import { ALLOWED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/settings";
@@ -314,34 +314,6 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                             : t("buttons.select")}
                     </Button>
                 </Box>
-
-                {/* Quick buttons */}
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: 1,
-                        mt: 2,
-                        flexWrap: "wrap",
-                    }}
-                >
-                    <Button
-                        variant="text"
-                        size="small"
-                        startIcon={<CloudUploadIcon />}
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={uploading}
-                    >
-                        {t("buttons.uploadLocal")}
-                    </Button>
-                    <Button
-                        variant="text"
-                        size="small"
-                        startIcon={<PhotoLibraryIcon />}
-                        onClick={() => setPexelsOpen(true)}
-                    >
-                        {t("buttons.fromPexels")}
-                    </Button>
-                </Box>
             </Card>
 
             {/* Image preview area */}
@@ -349,7 +321,7 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                 <Card
                     variant="outlined"
                     sx={{
-                        p: 3,
+                        p: 1.5,
                         backgroundColor: "background.paper",
                         border: "2px solid",
                         borderColor: "success.light",
@@ -360,7 +332,7 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                         variant="body2"
                         color="success.main"
                         sx={{
-                            mb: 2.5,
+                            mb: 1.5,
                             fontWeight: 500,
                             display: "flex",
                             alignItems: "center",
@@ -371,134 +343,93 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                         {t("notes.preview")}
                     </Typography>
 
+                    {/* Full-width image with zoom overlay on hover */}
                     <Box
+                        onClick={handleImagePreview}
                         sx={{
-                            display: "flex",
-                            alignItems: "center", // Vertically centered
-                            gap: 3,
-                            flexDirection: { xs: "column", sm: "row" },
+                            position: "relative",
+                            width: "100%",
+                            height: 160,
+                            borderRadius: 1.5,
+                            overflow: "hidden",
+                            cursor: "pointer",
+                            mb: 1.5,
+                            backgroundColor: "grey.100",
+                            "&:hover .zoom-overlay": { opacity: 1 },
                         }}
                     >
-                        {/* Thumbnail */}
-                        <Card
-                            elevation={3}
+                        <CardMedia
+                            component="img"
+                            image={imageUrl}
+                            alt={t("notes.preview")}
                             sx={{
-                                width: { xs: "100%", sm: 200 },
-                                height: 150,
-                                cursor: "pointer",
-                                transition: "all 0.3s ease",
-                                "&:hover": {
-                                    transform: "scale(1.03)",
-                                    boxShadow: 6,
-                                },
-                                flexShrink: 0,
-                                borderRadius: 2,
-                                overflow: "hidden",
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                display: "block",
+                            }}
+                            onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = "none";
+                            }}
+                        />
+                        {/* Hover overlay with zoom icon */}
+                        <Box
+                            className="zoom-overlay"
+                            sx={{
+                                position: "absolute",
+                                inset: 0,
+                                backgroundColor: "rgba(0,0,0,0.45)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                backgroundColor: "grey.50",
+                                opacity: 0,
+                                transition: "opacity 0.2s ease",
                             }}
-                            onClick={handleImagePreview}
                         >
-                            <CardMedia
-                                component="img"
-                                image={imageUrl}
-                                alt={t("notes.preview")}
-                                sx={{
-                                    maxWidth: "100%",
-                                    maxHeight: "100%",
-                                    width: "auto",
-                                    height: "auto",
-                                    objectFit: "contain", // Maintain aspect ratio and fully display the image
-                                    display: "block",
-                                }}
-                                onError={(e) => {
-                                    console.error(
-                                        "Image failed to load:",
-                                        imageUrl
-                                    );
-                                    const target = e.target as HTMLImageElement;
-                                    target.style.display = "none";
-                                }}
-                                onLoad={() => {
-                                    console.log(
-                                        "Image loaded successfully:",
-                                        imageUrl
-                                    );
-                                }}
-                            />
-                        </Card>
-                        {/* Image info and action buttons */}{" "}
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                            <Box sx={{ mb: 3 }}>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ mb: 1 }}
-                                >
-                                    <strong>{t("notes.imageUrlLabel")}</strong>
-                                </Typography>
-                                <Box
-                                    component="div"
-                                    sx={{
-                                        wordBreak: "break-all",
-                                        fontSize: "0.8rem",
-                                        fontFamily:
-                                            "Monaco, 'Consolas', monospace",
-                                        backgroundColor: "grey.100",
-                                        border: "1px solid",
-                                        borderColor: "grey.300",
-                                        px: 1.5,
-                                        py: 1,
-                                        borderRadius: 1,
-                                        lineHeight: 1.4,
-                                    }}
-                                >
-                                    {imageUrl}
-                                </Box>
-                            </Box>
-
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    gap: 1.5,
-                                    flexWrap: "wrap",
-                                }}
-                            >
-                                <Button
-                                    variant="contained"
-                                    size="small"
-                                    startIcon={<VisibilityIcon />}
-                                    onClick={handleImagePreview}
-                                    sx={{ borderRadius: 2 }}
-                                >
-                                    {t("buttons.viewLarge")}
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    size="small"
-                                    startIcon={<OpenInNewIcon />}
-                                    onClick={() => {
-                                        window.open(imageUrl, "_blank");
-                                    }}
-                                    sx={{ borderRadius: 2 }}
-                                >
-                                    {t("buttons.openNewWindow")}
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    size="small"
-                                    color="error"
-                                    onClick={handleImageRemoveClick}
-                                    startIcon={<DeleteIcon />}
-                                    sx={{ borderRadius: 2 }}
-                                >
-                                    {t("buttons.remove")}
-                                </Button>
-                            </Box>
+                            <ZoomInIcon sx={{ color: "white", fontSize: 48 }} />
                         </Box>
                     </Box>
+
+                    {/* URL display */}
+                    <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: "block", mb: 0.5 }}
+                    >
+                        {t("notes.imageUrlLabel")}
+                    </Typography>
+                    <Box
+                        component="div"
+                        sx={{
+                            wordBreak: "break-all",
+                            fontSize: "0.75rem",
+                            fontFamily: "Monaco, 'Consolas', monospace",
+                            backgroundColor: "grey.100",
+                            border: "1px solid",
+                            borderColor: "grey.300",
+                            px: 1.5,
+                            py: 0.75,
+                            borderRadius: 1,
+                            lineHeight: 1.5,
+                            mb: 1.5,
+                        }}
+                    >
+                        {imageUrl}
+                    </Box>
+
+                    {/* Delete button */}
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        fullWidth
+                        size="small"
+                        startIcon={<DeleteIcon />}
+                        onClick={handleImageRemoveClick}
+                        sx={{ borderRadius: 2 }}
+                    >
+                        {t("buttons.remove")}
+                    </Button>
                 </Card>
             )}
 
@@ -507,6 +438,7 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                 anchorEl={imageMenuAnchor}
                 open={Boolean(imageMenuAnchor)}
                 onClose={handleImageMenuClose}
+                disableScrollLock
                 slotProps={{
                     paper: {
                         sx: {

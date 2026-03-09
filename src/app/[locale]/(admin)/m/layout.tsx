@@ -1,7 +1,15 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { headers } from "next/headers";
-import { Box, Typography, AppBar, Toolbar } from "@mui/material";
+import {
+    Box,
+    Typography,
+    AppBar,
+    Toolbar,
+    IconButton,
+    Tooltip,
+} from "@mui/material";
+import { Dashboard as DashboardIcon } from "@mui/icons-material";
 import { getAuth } from "@/lib/auth/auth";
 import { BETTER_AUTH_SIGN_IN } from "@/constants";
 import Link from "@/components/link";
@@ -55,7 +63,16 @@ export default async function AdminLayout({
                             {t("web.title")}
                         </Typography>
                     </Link>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                    >
+                        <Tooltip title={t("admin.dashboard.title")}>
+                            <Link href="/m">
+                                <IconButton color="inherit" size="small">
+                                    <DashboardIcon />
+                                </IconButton>
+                            </Link>
+                        </Tooltip>
                         <LanguageToggle className="h-8 w-8 rounded-full text-white hover:bg-white/10" />
                         <SignOutButton />
                     </Box>

@@ -879,7 +879,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                         <Box
                             sx={{
                                 display: "flex",
-                                gap: 1.5,
+                                gap: 1,
                                 flexDirection: "row",
                             }}
                         >
@@ -904,6 +904,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                                 sx={{
                                     minHeight: 48,
                                     borderRadius: 2,
+                                    px: 1,
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
                                 }}
                             >
                                 {loading
@@ -924,6 +928,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                                 sx={{
                                     minHeight: 48,
                                     borderRadius: 2,
+                                    px: 1,
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
                                 }}
                             >
                                 {t("buttons.cancel")}

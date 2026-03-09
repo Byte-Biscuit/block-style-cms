@@ -79,7 +79,7 @@ export default function NewArticlePage() {
 
     return (
         <Container maxWidth="xl" sx={{ py: 2, px: { xs: 2, sm: 4, md: 6 } }}>
-            <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 } }}>
+            <Paper elevation={3} sx={{ pt: { xs: 2, sm: 2 }, pb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 4 } }}>
                 <Typography
                     variant="h4"
                     component="h1"

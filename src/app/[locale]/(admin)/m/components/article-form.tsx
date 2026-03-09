@@ -375,8 +375,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                         minWidth: 0,
                         display: "flex",
                         flexDirection: "column",
-                        height: { lg: "calc(100vh - 200px)" },
-                        minHeight: { lg: 650 },
+                        height: { lg: "calc(100vh - 260px)" },
+                        minHeight: { lg: 580 },
                     }}
                 >
                     {/* Row 1: Language + Title */}
@@ -401,6 +401,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                                     }))
                                 }
                                 sx={{ borderRadius: 2 }}
+                                MenuProps={{ disableScrollLock: true }}
                             >
                                 {Object.values(LANGUAGE_OPTIONS).map((lang) => (
                                     <MenuItem key={lang.code} value={lang.code}>
@@ -536,7 +537,15 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                                     minHeight: 0,
                                     display: "flex",
                                     flexDirection: "column",
+                                    "& .editor-container": {
+                                        flex: 1,
+                                        minHeight: 0,
+                                    },
                                     "& .bn-container": {
+                                        flex: 1,
+                                        minHeight: 0,
+                                        display: "flex",
+                                        flexDirection: "column",
                                         borderRadius: 0,
                                     },
                                 }}
@@ -562,8 +571,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                     sx={{
                         width: { xs: "100%", lg: 360 },
                         flexShrink: 0,
-                        height: { lg: "calc(100vh - 200px)" },
-                        minHeight: { lg: 650 },
+                        height: { lg: "calc(100vh - 260px)" },
+                        minHeight: { lg: 580 },
                         display: "flex",
                         flexDirection: "column",
                     }}

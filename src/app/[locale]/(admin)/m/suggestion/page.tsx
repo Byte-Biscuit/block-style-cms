@@ -177,7 +177,7 @@ export default function SuggestionManagementPage() {
     }
 
     return (
-        <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Container maxWidth="xl" sx={{ pt: 2, pb: 4 }}>
             <Typography variant="h4" component="h1" gutterBottom>
                 {t("title")}
             </Typography>

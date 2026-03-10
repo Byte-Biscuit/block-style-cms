@@ -55,7 +55,7 @@ export default function ArticleItem({
                 className={`flex ${aspect_h} overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-gray-900 dark:shadow-gray-800/10`}
             >
                 <div
-                    className={`relative hidden aspect-video sm:block ${aspect_w} flex-shrink-0 bg-gradient-to-br ${gradientClass}`}
+                    className={`relative hidden aspect-video sm:block ${aspect_w} shrink-0 bg-linear-to-br ${gradientClass}`}
                 >
                     {imageUrl && (
                         <div className="absolute inset-0 opacity-40">
@@ -93,7 +93,9 @@ export default function ArticleItem({
                         title={title}
                         className="mb-2 line-clamp-1 text-xl leading-tight font-bold text-gray-900 group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400"
                     >
-                        {title}
+                        <span className="heading-underline-animate">
+                            {title}
+                        </span>
                     </h2>
 
                     {summary && (
@@ -123,7 +125,7 @@ export function ArticleItemSkeleton() {
             className={`${aspect_h} flex overflow-hidden rounded-lg bg-white shadow-sm dark:bg-gray-900`}
         >
             <div
-                className={`${aspect_w} flex-shrink-0 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800`}
+                className={`${aspect_w} shrink-0 bg-linear-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800`}
             ></div>
             <div className="flex min-w-0 flex-1 flex-col px-6 py-2">
                 {/* Tags */}

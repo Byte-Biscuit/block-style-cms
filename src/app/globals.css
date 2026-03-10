@@ -83,50 +83,52 @@
     }
 }
 
-@layer utilities {
-    .prose {
-        & a {
-            color: var(--color-primary-500);
-            &:hover {
-                color: var(--color-primary-600);
-            }
-            & code {
-                color: var(--color-primary-400);
-            }
-        }
-        & :where(h1, h2) {
-            font-weight: 700;
-            letter-spacing: var(--tracking-tight);
-        }
-        & h3 {
-            font-weight: 600;
-        }
-        & :where(code):not(pre code) {
-            color: var(--color-indigo-500);
-        }
+@utility list-decimal-paren {
+    list-style: decimal-paren;
+}
+
+@utility list-dash {
+    list-style: dash;
+}
+
+/* Article list title styles*/
+@utility heading-underline-animate {
+    background: linear-gradient(
+            to right,
+            var(--color-primary-600),
+            var(--color-primary-400)
+        )
+        no-repeat;
+    background-size: 0 2px;
+    background-position: right bottom;
+    transition: background-size 1.3s;
+
+    &:hover {
+        background-size: 100% 2px;
+        background-position: left bottom;
     }
 
-    .prose-invert {
-        & a {
-            color: var(--color-primary-500);
-            &:hover {
-                color: var(--color-primary-400);
-            }
-            & code {
-                color: var(--color-primary-400);
-            }
-        }
-        & :where(h1, h2, h3, h4, h5, h6) {
-            color: var(--color-gray-100);
-        }
+    @dark {
+        background-image: linear-gradient(
+            to right,
+            var(--color-primary-400),
+            var(--color-primary-300)
+        );
     }
+}
+/* Contact input styles */
+@utility contact-input-style {
+    margin-top: calc(var(--spacing) * 1);
+    width: 100%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-gray-300);
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+    color: var(--color-gray-900);
 
-    .list-decimal-paren {
-        list-style: decimal-paren;
-    }
-
-    .list-dash {
-        list-style: dash;
+    &:focus {
+        border-color: var(--color-blue-500);
+        box-shadow: 0 0 0 1px var(--color-blue-500);
+        outline: none;
     }
 }
 

@@ -139,7 +139,7 @@ export default function SiteInfoForm({
 
             <div className="mt-6 space-y-6">
                 {/* Base URL */}
-                <div>
+                <div key="baseUrl">
                     <label className="mb-3 font-semibold text-gray-900">
                         {t("baseUrl.label")}
                     </label>
@@ -162,12 +162,15 @@ export default function SiteInfoForm({
                 </div>
 
                 {/* Logo Upload */}
-                <div>
+                <div key="logo">
                     <h3 className="mb-3 font-semibold text-gray-900">
                         {t("logo.title")}
                     </h3>
                     <div className="flex items-center space-x-8">
-                        <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                        <div
+                            key="logo-preview"
+                            className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-gray-50"
+                        >
                             <img
                                 src={logoPreview}
                                 alt={t("logo.preview")}
@@ -178,7 +181,7 @@ export default function SiteInfoForm({
                                 }}
                             />
                         </div>
-                        <div>
+                        <div key="logo-file">
                             <input
                                 type="file"
                                 accept="image/png"
@@ -209,7 +212,7 @@ export default function SiteInfoForm({
                         {t("contact.subtitle")}
                     </p>
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <div>
+                        <div key="contact-email">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.email")}
                             </label>
@@ -226,10 +229,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.email")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-wechat">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.wechat")}
                             </label>
@@ -246,10 +249,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.wechat")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-x">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.x")}
                             </label>
@@ -266,10 +269,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.x")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-telegram">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.telegram")}
                             </label>
@@ -286,10 +289,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.telegram")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-discord">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.discord")}
                             </label>
@@ -306,10 +309,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.discord")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-whatsapp">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.whatsapp")}
                             </label>
@@ -326,10 +329,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.whatsapp")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-linkedin">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.linkedin")}
                             </label>
@@ -346,10 +349,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.linkedin")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-github">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.github")}
                             </label>
@@ -366,10 +369,10 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.github")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
-                        <div>
+                        <div key="contact-medium">
                             <label className="block text-sm font-medium text-gray-700">
                                 {t("contact.labels.medium")}
                             </label>
@@ -386,7 +389,7 @@ export default function SiteInfoForm({
                                     })
                                 }
                                 placeholder={t("contact.placeholders.medium")}
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                className="contact-input-style"
                             />
                         </div>
                     </div>

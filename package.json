@@ -65,7 +65,7 @@
         "@types/react-syntax-highlighter": "^15.5.13",
         "@vitejs/plugin-react": "^5.0.4",
         "cross-env": "^10.1.0",
-        "eslint": "^9",
+        "eslint": "^10",
         "eslint-config-next": "16.0.7",
         "jsdom": "^27.0.0",
         "prettier": "^3.6.2",

@@ -108,7 +108,7 @@
         background-position: left bottom;
     }
 
-    @dark {
+    @variant dark {
         background-image: linear-gradient(
             to right,
             var(--color-primary-400),

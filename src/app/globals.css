@@ -5,11 +5,22 @@
 /*From:https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/css/tailwind.css*/
 /* Core theme configuration */
 @theme {
-    /* Font families */
+    /* 1. 重新定义全局无衬线字体 (替代 Inter 和 Noto Sans SC) */
     --font-sans:
-        var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
+        /* 苹果/Windows 系统英文字体 */
+        system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, /* 苹果系统简繁中文 (苹方) */ "PingFang SC",
+        "PingFang TC", /* Windows 系统中文 (微软雅黑) */ "Microsoft YaHei",
+        /* 安卓/Linux 系统中文 (思源黑体) */ "Noto Sans SC", "Noto Sans TC",
+        /* 兜底及 Emoji */ sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol", "Noto Color Emoji";
+
+    /* 2. 新增全局等宽/代码字体 (替代 JetBrains Mono) */
+    --font-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New",
+        /* 搭配中文字体，防止代码块里的中文乱码 */ "PingFang SC",
+        "Microsoft YaHei", monospace;
 
     /* Colors */
     /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
@@ -60,6 +71,14 @@
 @layer base {
     html {
         scrollbar-gutter: stable;
+    }
+
+    body {
+        font-family: var(--font-sans);
+    }
+    code,
+    pre {
+        font-family: var(--font-mono);
     }
 
     *,

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Inter, JetBrains_Mono, Noto_Sans_SC } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations, getMessages } from "next-intl/server";
@@ -9,21 +8,6 @@ import { systemConfigService } from "@/lib/services/system-config-service";
 import { X_PATH_HEADER_KEY } from "@/constants";
 import "./globals.css";
 
-const inter = Inter({
-    variable: "--font-inter",
-    subsets: ["latin"],
-});
-
-const jetBrainsMono = JetBrains_Mono({
-    variable: "--font-jetbrains-mono",
-    subsets: ["latin"],
-});
-
-const notoSansSC = Noto_Sans_SC({
-    variable: "--font-noto-sans-sc",
-    subsets: ["latin"],
-    weight: ["300", "400", "500", "700"],
-});
 async function isEmbedPage(): Promise<boolean> {
     const headersList = await headers();
     const pathname = headersList.get(X_PATH_HEADER_KEY) || "";
@@ -79,9 +63,7 @@ export default async function RootLayout({
 
     return (
         <html lang={locale} suppressHydrationWarning>
-            <body
-                className={`${inter.variable} ${jetBrainsMono.variable} ${notoSansSC.variable}`}
-            >
+            <body>
                 {isEmbed ? (
                     children
                 ) : (

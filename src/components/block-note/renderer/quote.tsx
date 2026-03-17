@@ -9,10 +9,13 @@ export const Quote: React.FC<{
     block: QuoteBlock;
     className?: string;
 }> = ({ block, className }) => {
-    const { props,content } = block;
-    const classes=getBlockClasses(props,
-        "rounded-lg border-l-4 border-gray-300 bg-gray-50 py-2 pr-2 pl-4 text-gray-700 italic",
-        "dark:border-gray-600 dark:bg-gray-800/50 dark:text-gray-300",className)
+    const { props, content } = block;
+    const classes = getBlockClasses(
+        props,
+        "rounded-lg border-l-4 whitespace-pre-wrap border-gray-300 bg-gray-50 py-2 pr-2 pl-4 text-gray-700 italic",
+        "dark:border-gray-600 dark:bg-gray-800/50 dark:text-gray-300",
+        className
+    );
     return (
         <blockquote className={classes}>
             <Content items={content} />

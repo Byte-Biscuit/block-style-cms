@@ -12,14 +12,14 @@
         "typecheck": "tsc --build"
     },
     "dependencies": {
-        "@blocknote/core": "^0.47.1",
-        "@blocknote/mantine": "^0.47.1",
-        "@blocknote/react": "^0.47.1",
+        "@blocknote/core": "^0.52.1",
+        "@blocknote/mantine": "^0.52.1",
+        "@blocknote/react": "^0.52.1",
         "@emotion/cache": "^11.14.0",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
-        "@langchain/core": "^1.1.5",
-        "@langchain/google-genai": "^2.1.22",
+        "@langchain/core": "^1.2.4",
+        "@langchain/google-genai": "^2.2.0",
         "@langchain/openai": "^1.2.0",
         "@monaco-editor/react": "^4.7.0",
         "@mui/icons-material": "^7.3.2",
@@ -27,16 +27,16 @@
         "@mui/material-nextjs": "^7.3.2",
         "@types/qrcode": "^1.5.6",
         "algoliasearch": "^5.46.0",
-        "better-auth": "^1.4.10",
+        "better-auth": "^1.6.22",
         "better-sqlite3": "^12.4.1",
         "clsx": "^2.1.1",
-        "dompurify": "^3.3.3",
+        "dompurify": "^3.4.12",
         "hi-base32": "^0.5.1",
         "lru-cache": "^11.2.2",
-        "mermaid": "^11.12.3",
+        "mermaid": "^11.15.0",
         "monaco-editor": "^0.55.1",
-        "next": "16.1.7",
-        "next-intl": "^4.6.1",
+        "next": "16.3.0",
+        "next-intl": "^4.9.2",
         "next-themes": "^0.4.6",
         "node-html-parser": "^7.0.1",
         "qrcode": "^1.5.4",
@@ -45,10 +45,10 @@
         "react-instantsearch": "^7.22.1",
         "react-player": "^3.3.3",
         "react-syntax-highlighter": "^16.1.0",
-        "sharp": "^0.34.4",
+        "sharp": "^0.35.0",
         "slugify": "^1.6.6",
-        "systeminformation": "^5.27.15",
-        "uuid": "^13.0.0",
+        "systeminformation": "^5.31.7",
+        "uuid": "^14.0.1",
         "zod": "^4.1.11"
     },
     "devDependencies": {
@@ -73,6 +73,6 @@
         "tailwindcss": "^4",
         "typescript": "^5",
         "vite-tsconfig-paths": "^6.1.1",
-        "vitest": "^4.0.15"
+        "vitest": "^4.1.10"
     }
 }

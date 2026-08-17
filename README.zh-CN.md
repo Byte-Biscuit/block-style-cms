@@ -20,6 +20,7 @@
 | 国际化   | next-intl                | 多语言 + 动态翻译                                          |
 | 校验     | zod                      | Schema 驱动的类型与后端请求验证                            |
 | 测试     | Vitest + Testing Library | 单元 / 组件测试                                            |
+| 代码规范 | Biome                    | Lint + Format（替代 ESLint / Prettier）                    |
 | 部署     | PM2 / Nginx (可选)       | 进程守护 + 反向代理                                        |
 | 其他     | Mermaid / 媒体处理       | 图表、音视频、文件、图片管理                               |
 
@@ -105,7 +106,8 @@ http://localhost:3000
 | `npm run build` | 生成生产构建                               |
 | `npm start`     | 使用 Next.js 内建生产启动（非 standalone） |
 | `npm test`      | 运行 Vitest 测试                           |
-| `npm run lint`  | 代码质量检查                               |
+| `npm run lint`  | Biome 检查（lint + 格式）                  |
+| `npm run format` | 使用 Biome 格式化                         |
 
 ## 🚀 生产部署（示例：PM2）
 

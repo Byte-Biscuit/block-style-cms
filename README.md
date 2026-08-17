@@ -22,6 +22,7 @@
 | i18n       | next-intl                | Multi-language & dynamic translation                                                          |
 | Validation | zod                      | Schema-driven validation & typing                                                             |
 | Testing    | Vitest + Testing Library | Unit & component tests                                                                        |
+| Lint/Format | Biome                   | Lint and format (replaces ESLint / Prettier)                                                  |
 | Deployment | PM2 / Nginx (optional)   | Process management + reverse proxy                                                            |
 | Others     | Mermaid / Media handling | Diagrams, images, audio, video, files                                                         |
 
@@ -104,7 +105,8 @@ npm run dev
 | `npm run build` | Production build                     |
 | `npm start`     | Start in production (non-standalone) |
 | `npm test`      | Run Vitest suite                     |
-| `npm run lint`  | Lint code                            |
+| `npm run lint`  | Biome check (lint + format)          |
+| `npm run format` | Format with Biome                   |
 
 ## 🚀 Deployment (PM2 Example)
 

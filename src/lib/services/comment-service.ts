@@ -56,10 +56,17 @@ class CommentService {
      */
     async getAllComments(): Promise<Comment[]> {
         try {
-            const data = await fs.readFile(this.commentsFile, 'utf-8');
+            const data = await fs.readFile(this.commentsFile, "utf-8");
             return JSON.parse(data);
         } catch (error) {
-            console.error('Failed to read comments file:', error);
+            if (
+                error instanceof Error &&
+                "code" in error &&
+                error.code === "ENOENT"
+            ) {
+                return [];
+            }
+            console.error("Failed to read comments file:", error);
             return [];
         }
     }

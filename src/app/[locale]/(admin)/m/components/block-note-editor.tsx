@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
-import { BlockNoteView } from "@blocknote/mantine";
-import {
-    SuggestionMenuController,
-    useCreateBlockNote,
-    FormattingToolbarController,
-} from "@blocknote/react";
 import type { Dictionary } from "@blocknote/core";
 import { filterSuggestionItems } from "@blocknote/core/extensions";
-import { type LocalBlock as Block } from "@/block-note/schema";
+import { BlockNoteView } from "@blocknote/mantine";
+import {
+    FormattingToolbarController,
+    SuggestionMenuController,
+    useCreateBlockNote,
+} from "@blocknote/react";
+import { flip, offset, shift, size } from "@floating-ui/react";
+import { useTranslations } from "next-intl";
+import React, { useCallback, useRef, useState } from "react";
+import { type LocalBlock as Block, schema } from "@/block-note/schema";
 import EnhanceSlashMenu, {
     getSlashMenuItems,
 } from "@/block-note/slash-menu/enhanced-slash-menu";
 import EnhancedFormattingToolbar from "@/block-note/toolbar/enhanced-formatting-toolbar";
-import { useTranslations } from "next-intl";
-import { schema } from "@/block-note/schema";
 import EditorActionToolbar from "./editor-action-toolbar";
 import "@blocknote/core/style.css";
 import "@blocknote/mantine/style.css";
@@ -37,6 +37,11 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
     const t = useTranslations("admin.block_note_editor");
     const [isBrowserFullscreen, setIsBrowserFullscreen] = useState(false);
     const [isMonitorFullscreen, setIsMonitorFullscreen] = useState(false);
+    // `null` tells BlockNote to portal onto document.body. An HTMLElement is
+    // only needed when the editor is in native fullscreen (body is not visible).
+    const [slashMenuPortal, setSlashMenuPortal] = useState<HTMLElement | null>(
+        null
+    );
     const editorContainerRef = useRef<HTMLDivElement>(null);
 
     const initialContent: Block[] =
@@ -114,19 +119,24 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
         }
     }, [isMonitorFullscreen, t]);
 
-    // Listen for fullscreen state changes
+    // Native fullscreen hides anything portaled to document.body, so retarget
+    // the slash menu to the fullscreen element. Otherwise keep `null` (body).
     React.useEffect(() => {
-        const handleFullscreenChange = () => {
-            if (!document.fullscreenElement) {
+        const syncPortalAndFullscreen = () => {
+            const fullscreenEl =
+                document.fullscreenElement as HTMLElement | null;
+            setSlashMenuPortal(fullscreenEl);
+            if (!fullscreenEl) {
                 setIsMonitorFullscreen(false);
             }
         };
 
-        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        syncPortalAndFullscreen();
+        document.addEventListener("fullscreenchange", syncPortalAndFullscreen);
         return () => {
             document.removeEventListener(
                 "fullscreenchange",
-                handleFullscreenChange
+                syncPortalAndFullscreen
             );
         };
     }, []);
@@ -169,6 +179,32 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                         );
                     }}
                     suggestionMenuComponent={EnhanceSlashMenu}
+                    portalElement={slashMenuPortal}
+                    floatingUIOptions={{
+                        useFloatingOptions: {
+                            strategy: "fixed",
+                            middleware: [
+                                offset(10),
+                                flip({
+                                    fallbackPlacements: ["top-start"],
+                                    padding: 10,
+                                }),
+                                shift({ padding: 10 }),
+                                size({
+                                    padding: 10,
+                                    apply({ availableHeight, elements }) {
+                                        Object.assign(elements.floating.style, {
+                                            maxHeight: `${Math.max(120, availableHeight)}px`,
+                                            overflow: "hidden",
+                                        });
+                                    },
+                                }),
+                            ],
+                        },
+                        elementProps: {
+                            style: { zIndex: 1300 },
+                        },
+                    }}
                 />
             </BlockNoteView>
         </div>

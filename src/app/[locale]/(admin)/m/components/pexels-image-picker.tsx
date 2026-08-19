@@ -1,26 +1,27 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import { Close as CloseIcon, Search as SearchIcon } from "@mui/icons-material";
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Button,
     Box,
-    Typography,
+    Button,
     CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     IconButton,
-    useTheme,
+    TextField,
+    Typography,
     useMediaQuery,
+    useTheme,
 } from "@mui/material";
-import { Search as SearchIcon, Close as CloseIcon } from "@mui/icons-material";
-import VirtualizedMasonry from "@/components/virtualized-masonry";
-import type { MasonryImage } from "@/types/masonry";
-import { optimizePexelsImageWithPreset } from "@/lib/pexels-utils";
-import { getBlockEditorContainer } from "@/block-note/block-editor-utils";
 import { useTranslations } from "next-intl";
+import type React from "react";
+import { useCallback, useState } from "react";
+import { getBlockEditorContainer } from "@/block-note/block-editor-utils";
+import VirtualizedMasonry from "@/components/virtualized-masonry";
+import { optimizePexelsImageWithPreset } from "@/lib/pexels-utils";
+import type { MasonryImage } from "@/types/masonry";
 
 interface PexelsImage {
     id: number;
@@ -51,7 +52,27 @@ interface PexelsResponse {
 interface PexelsImagePickerProps {
     open: boolean;
     onClose: () => void;
-    onSelect: (imageUrl: string) => void;
+    onSelect: (imageUrl: string, alt?: string) => void;
+}
+
+function convertPexelsToMasonryImage(pexelsImage: PexelsImage): MasonryImage {
+    return {
+        id: pexelsImage.id,
+        url: pexelsImage.src.original,
+        photographer: pexelsImage.photographer,
+        width: pexelsImage.width,
+        height: pexelsImage.height,
+        alt: pexelsImage.alt || `Photo by ${pexelsImage.photographer}`,
+        metadata: {
+            pexels: {
+                original: pexelsImage.src.original,
+                large: pexelsImage.src.large,
+                medium: pexelsImage.src.medium,
+                small: pexelsImage.src.small,
+                tiny: pexelsImage.src.tiny,
+            },
+        },
+    };
 }
 
 const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
@@ -76,6 +97,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
     const [loading, setLoading] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedAlt, setSelectedAlt] = useState("");
     const [selectedImageId, setSelectedImageId] = useState<
         number | string | null
     >(null);
@@ -83,28 +105,6 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
     const [hasMore, setHasMore] = useState(true);
     const [hasSearched, setHasSearched] = useState(false);
 
-    // Convert Pexels API data to general MasonryImage format
-    const convertPexelsToMasonryImage = (
-        pexelsImage: PexelsImage
-    ): MasonryImage => ({
-        id: pexelsImage.id,
-        url: pexelsImage.src.original,
-        photographer: pexelsImage.photographer,
-        width: pexelsImage.width,
-        height: pexelsImage.height,
-        alt: pexelsImage.alt || `Photo by ${pexelsImage.photographer}`,
-        metadata: {
-            pexels: {
-                original: pexelsImage.src.original,
-                large: pexelsImage.src.large,
-                medium: pexelsImage.src.medium,
-                small: pexelsImage.src.small,
-                tiny: pexelsImage.src.tiny,
-            },
-        },
-    });
-
-    // Create waterfall layout data grouping - simplified version, as we handle grouping in VirtualizedMasonry
     const columnCount = getColumnCount();
 
     const searchImages = useCallback(
@@ -195,6 +195,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
         const originalUrl = pexelsData?.original || image.url;
         setSelectedImage(originalUrl);
         setSelectedImageId(image.id);
+        setSelectedAlt(image.alt || "");
     };
 
     // Wrap optimizePexelsImageWithPreset to match VirtualizedMasonry's type
@@ -207,12 +208,13 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
 
     const handleConfirm = () => {
         if (selectedImage) {
-            onSelect(selectedImage);
+            onSelect(selectedImage, selectedAlt);
             onClose();
             // Reset state
             setSearchTerm("");
             setImages([]);
             setSelectedImage(null);
+            setSelectedAlt("");
             setSelectedImageId(null);
             setPage(1);
             setHasMore(true);
@@ -226,6 +228,7 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
         setSearchTerm("");
         setImages([]);
         setSelectedImage(null);
+        setSelectedAlt("");
         setSelectedImageId(null);
         setPage(1);
         setHasMore(true);

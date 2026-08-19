@@ -151,7 +151,7 @@ export const zhTW = {
             maxWidth: "最大寬度",
         },
         placeholder: {
-            clickToAdd: "點擊新增圖片",
+            clickToAdd: "新增圖片",
             supportText: "支援本機上傳、URL 或 Pexels 圖片",
         },
         edit: {
@@ -320,4 +320,4 @@ export const zhTW = {
         text_color: "文字顏色",
         background_color: "背景顏色 (醒目提示)",
     },
-}
+};

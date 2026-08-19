@@ -79,10 +79,12 @@ export const en = {
             subtitle: "Select audio file",
             dialogTitle: "Upload Audio File",
             clickToSelect: "Click to select file",
-            supportedFormats: "Supports MP3, WAV, OGG, AAC, M4A, FLAC, WEBM formats",
+            supportedFormats:
+                "Supports MP3, WAV, OGG, AAC, M4A, FLAC, WEBM formats",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
-            networkError: "Network error, please check connection and try again",
+            networkError:
+                "Network error, please check connection and try again",
         },
         embed: {
             title: "Embed Audio",
@@ -124,7 +126,8 @@ export const en = {
             supportedFormats: "Supports JPG, PNG, GIF, WEBP formats",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
-            networkError: "Network error, please check connection and try again",
+            networkError:
+                "Network error, please check connection and try again",
         },
         embed: {
             title: "Embed Image",
@@ -151,7 +154,7 @@ export const en = {
             maxWidth: "Max Width",
         },
         placeholder: {
-            clickToAdd: "Click to add image",
+            clickToAdd: "Add image",
             supportText: "Supports local upload, URL, or Pexels images",
         },
         edit: {
@@ -175,7 +178,8 @@ export const en = {
             supportedFormats: "Supports MP4, WEBM, AVI, MOV formats",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
-            networkError: "Network error, please check connection and try again",
+            networkError:
+                "Network error, please check connection and try again",
         },
         embed: {
             title: "Embed Video",
@@ -217,12 +221,16 @@ export const en = {
             subtitle: "Select file",
             dialogTitle: "Upload File",
             clickToSelect: "Click to select file",
-            supportedFormats: "Supports Office documents, PDF, archives and other formats",
+            supportedFormats:
+                "Supports Office documents, PDF, archives and other formats",
             uploading: "Uploading...",
             uploadError: "File upload failed",
-            networkError: "Network error, please check network connection and try again",
-            unsupportedFormat: "Unsupported file format, please upload supported file types",
-            fileTooLarge: "File size exceeds limit, please select a smaller file",
+            networkError:
+                "Network error, please check network connection and try again",
+            unsupportedFormat:
+                "Unsupported file format, please upload supported file types",
+            fileTooLarge:
+                "File size exceeds limit, please select a smaller file",
         },
         form: {
             fileContent: "File Content",
@@ -234,7 +242,8 @@ export const en = {
         },
         placeholder: {
             clickToAdd: "Click to add file",
-            supportText: "Supports Office documents, PDF, archives and other formats",
+            supportText:
+                "Supports Office documents, PDF, archives and other formats",
         },
         edit: {
             editButton: "Edit",
@@ -309,7 +318,8 @@ export const en = {
         },
         placeholder: {
             clickToAdd: "Click to add Mermaid diagram",
-            supportText: "Supports flowcharts, sequence diagrams, state diagrams and more",
+            supportText:
+                "Supports flowcharts, sequence diagrams, state diagrams and more",
         },
         edit: {
             editButton: "Edit",
@@ -320,4 +330,4 @@ export const en = {
         text_color: "Text Color",
         background_color: "Background Color",
     },
-}
+};

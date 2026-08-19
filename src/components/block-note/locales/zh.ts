@@ -151,7 +151,7 @@ export const zh = {
             maxWidth: "最大宽度",
         },
         placeholder: {
-            clickToAdd: "点击添加图片",
+            clickToAdd: "添加图片",
             supportText: "支持本地上传、URL 或 Pexels 图片",
         },
         edit: {
@@ -320,4 +320,4 @@ export const zh = {
         text_color: "文字颜色",
         background_color: "背景颜色 (高亮)",
     },
-}
+};

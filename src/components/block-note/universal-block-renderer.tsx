@@ -1,28 +1,31 @@
-import React from "react";
-
-import Heading from "./renderer/heading";
-import Paragraph from "./renderer/paragraph";
-import BulletListItem from "./renderer/bullet-list-item";
+import type React from "react";
+import { resolveCodeLanguage } from "@/block-note/code-block-languages";
+import type { LocalBlock as Block } from "@/block-note/schema";
+import BulletListItem, {
+    type BulletListItemBlock,
+} from "./renderer/bullet-list-item";
 import CodeBlock from "./renderer/code-block";
-import { type LocalBlock as Block } from "@/block-note/schema";
-import EnhancedFile, { EnhancedFileBlockData } from "./renderer/enhanced-file";
+import Divider from "./renderer/divider";
+import EnhancedAudio, {
+    type EnhancedAudioBlockData,
+} from "./renderer/enhanced-audio";
+import EnhancedFile, {
+    type EnhancedFileBlockData,
+} from "./renderer/enhanced-file";
 import EnhancedImage, {
-    EnhancedImageBlockData,
+    type EnhancedImageBlockData,
 } from "./renderer/enhanced-image";
 import EnhancedVideo, {
-    EnhancedVideoBlockData,
+    type EnhancedVideoBlockData,
 } from "./renderer/enhanced-video";
-import EnhancedAudio, {
-    EnhancedAudioBlockData,
-} from "./renderer/enhanced-audio";
-import Mermaid, { MermaidBlockData } from "./renderer/mermaid";
+import Heading from "./renderer/heading";
+import Mermaid, { type MermaidBlockData } from "./renderer/mermaid";
 import NumberedListItem, {
     type NumberedListBlock,
 } from "./renderer/numbered-list-item";
-import { type BulletListItemBlock } from "./renderer/bullet-list-item";
+import Paragraph from "./renderer/paragraph";
 import Quote from "./renderer/quote";
 import TableRender from "./renderer/table";
-import Divider from "./renderer/divider";
 
 // Bullet list style mapping: level 0 -> disc, 1 -> circle, 2 -> square
 const BULLET_STYLES = [
@@ -75,12 +78,8 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
                 ?.map((item) => (item.type === "text" ? item.text : ""))
                 .filter(Boolean) || [];
         if (codes.length === 0) return null;
-        const lang =
-            language === "ts"
-                ? "typescript"
-                : language === "js"
-                  ? "javascript"
-                  : language;
+
+        const lang = resolveCodeLanguage(language);
         return <CodeBlock language={lang} code={codes.join("")} />;
     }
     // enhanced-file

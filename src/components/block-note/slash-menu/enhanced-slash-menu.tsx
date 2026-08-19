@@ -1,36 +1,31 @@
 "use client";
-import React from "react";
-import { BlockNoteEditor } from "@blocknote/core";
-import type { 
-    BlockSchemaFromSpecs
-} from "@blocknote/core";
+import type { BlockNoteEditor, BlockSchemaFromSpecs } from "@blocknote/core";
 import {
-    SuggestionMenuProps,
-    DefaultReactSuggestionItem,
+    type DefaultReactSuggestionItem,
     getDefaultReactSlashMenuItems,
+    type SuggestionMenuProps,
 } from "@blocknote/react";
+import { AddCircleOutline as DefaultIcon } from "@mui/icons-material";
 import {
-    Paper,
+    Box,
+    Chip,
+    Divider,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
+    Paper,
     Typography,
-    Box,
-    Divider,
-    Chip,
 } from "@mui/material";
-import {
-    AddCircleOutline as DefaultIcon,
-} from "@mui/icons-material";
-import { schema } from "@/block-note/schema";
+import React from "react";
 import {
     getEnhancedAudioSlashMenuItem,
     getEnhancedFileSlashMenuItem,
     getEnhancedImageSlashMenuItem,
     getEnhancedVideoSlashMenuItem,
-    getMermaidSlashMenuItem
+    getMermaidSlashMenuItem,
 } from "@/block-note/block";
+import type { schema } from "@/block-note/schema";
 
 // Extended DefaultReactSuggestionItem interface including group and other fields
 interface ExtendedSuggestionItem extends DefaultReactSuggestionItem {
@@ -98,7 +93,9 @@ const groupItems = (items: ExtendedSuggestionItem[]) => {
     return { groups, groupOrder };
 };
 
-export const getSlashMenuItems=(editor: BlockNoteEditor<BlockSchemaFromSpecs<typeof schema.blockSpecs>>)=>{
+export const getSlashMenuItems = (
+    editor: BlockNoteEditor<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
+) => {
     const slashMenuItems = getDefaultReactSlashMenuItems(editor);
     slashMenuItems.push(getEnhancedAudioSlashMenuItem(editor));
     slashMenuItems.push(getEnhancedImageSlashMenuItem(editor));
@@ -106,7 +103,7 @@ export const getSlashMenuItems=(editor: BlockNoteEditor<BlockSchemaFromSpecs<typ
     slashMenuItems.push(getEnhancedFileSlashMenuItem(editor));
     slashMenuItems.push(getMermaidSlashMenuItem(editor));
     return slashMenuItems;
-}
+};
 
 const EnhancedSlashMenu = (
     props: SuggestionMenuProps<DefaultReactSuggestionItem>
@@ -133,11 +130,15 @@ const EnhancedSlashMenu = (
         <Paper
             elevation={8}
             sx={{
-                position: "absolute",
-                top: 0,
-                left: 0,
+                // Stay in-flow inside BlockNote's floating wrapper so the
+                // wrapper's maxHeight actually constrains this panel.
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
                 width: 400,
-                maxHeight: 400,
+                maxWidth: "min(400px, calc(100vw - 16px))",
+                maxHeight: "100%",
+                minHeight: 0,
                 overflow: "hidden",
                 borderRadius: "8px",
                 border: "1px solid #e5e7eb",
@@ -151,8 +152,9 @@ const EnhancedSlashMenu = (
                     py: 1,
                     px: 0,
                     width: "100%",
-                    maxHeight: 400,
-                    overflow: "auto",
+                    flex: 1,
+                    minHeight: 0,
+                    overflowY: "auto",
                     overflowX: "hidden",
                     "& .MuiListItem-root": {
                         px: 1,
@@ -169,9 +171,7 @@ const EnhancedSlashMenu = (
 
                     return (
                         <React.Fragment
-                            key={`${groupName}-${
-                                item.key || item.title
-                            }-${index}`}
+                            key={`${groupName}-${item.key || item.title}`}
                         >
                             {isGroupStart && (
                                 <>

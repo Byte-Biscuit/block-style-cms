@@ -3,14 +3,14 @@
  * Handles all suggestion-related operations with in-memory cache and file persistence
  */
 
-import fs from 'fs/promises';
-import path from 'path';
-import { SUGGESTION_DIR } from '@/settings';
-import type { Suggestion, SuggestionSubmissionData } from '@/types/suggestion';
-import type { SuggestionConfig } from '@/types/system-config';
-import { v4 as uuidv4 } from 'uuid';
-import { systemConfigService } from './system-config-service';
-import { coerceNumber } from '@/lib/utils';
+import fs from "node:fs/promises";
+import path from "node:path";
+import { v4 as uuidv4 } from "uuid";
+import { coerceNumber } from "@/lib/utils";
+import { SUGGESTION_DIR } from "@/settings";
+import type { Suggestion, SuggestionSubmissionData } from "@/types/suggestion";
+import type { SuggestionConfig } from "@/types/system-config";
+import { systemConfigService } from "./system-config-service";
 
 /**
  * Default suggestion configuration (fallback)
@@ -32,7 +32,7 @@ class SuggestionService {
     private suggestionsFile: string;
 
     constructor() {
-        this.suggestionsFile = path.join(SUGGESTION_DIR, 'suggestions.json');
+        this.suggestionsFile = path.join(SUGGESTION_DIR, "suggestions.json");
     }
 
     /**
@@ -43,7 +43,10 @@ class SuggestionService {
             const systemConfig = await systemConfigService.readConfig();
             return systemConfig?.basic?.suggestion || DEFAULT_SUGGESTION_CONFIG;
         } catch (error) {
-            console.error('Failed to read suggestion config, using defaults:', error);
+            console.error(
+                "Failed to read suggestion config, using defaults:",
+                error
+            );
             return DEFAULT_SUGGESTION_CONFIG;
         }
     }
@@ -53,10 +56,17 @@ class SuggestionService {
      */
     async getAllSuggestions(): Promise<Suggestion[]> {
         try {
-            const data = await fs.readFile(this.suggestionsFile, 'utf-8');
+            const data = await fs.readFile(this.suggestionsFile, "utf-8");
             return JSON.parse(data);
         } catch (error) {
-            console.error('Failed to read suggestions file:', error);
+            if (
+                error instanceof Error &&
+                "code" in error &&
+                error.code === "ENOENT"
+            ) {
+                return [];
+            }
+            console.error("Failed to read suggestions file:", error);
             return [];
         }
     }
@@ -64,11 +74,13 @@ class SuggestionService {
     /**
      * Write all suggestions to file
      */
-    private async writeAllSuggestions(suggestions: Suggestion[]): Promise<void> {
+    private async writeAllSuggestions(
+        suggestions: Suggestion[]
+    ): Promise<void> {
         await fs.writeFile(
             this.suggestionsFile,
             JSON.stringify(suggestions, null, 2),
-            'utf-8'
+            "utf-8"
         );
     }
 
@@ -115,7 +127,9 @@ class SuggestionService {
     async deleteSuggestion(suggestionId: string): Promise<void> {
         const suggestions = await this.getAllSuggestions();
 
-        const suggestionIndex = suggestions.findIndex(s => s.id === suggestionId);
+        const suggestionIndex = suggestions.findIndex(
+            (s) => s.id === suggestionId
+        );
         if (suggestionIndex === -1) {
             throw new Error(`Suggestion ${suggestionId} not found`);
         }
@@ -154,7 +168,9 @@ class SuggestionService {
         const links = content.match(urlRegex) || [];
 
         if (links.length > coerceNumber(maxLinksAllowed, 0)) {
-            throw new Error(`Too many links (maximum ${maxLinksAllowed} allowed)`);
+            throw new Error(
+                `Too many links (maximum ${maxLinksAllowed} allowed)`
+            );
         }
     }
 

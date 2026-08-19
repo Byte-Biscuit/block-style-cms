@@ -1,11 +1,22 @@
-import { BlockNoteSchema, defaultBlockSpecs } from "@blocknote/core";
 import {
-    EnhancedAudioBlockSpec, ENHANCED_AUDIO_BLOCK_TYPE,
-    EnhancedFileBlockSpec, ENHANCED_FILE_BLOCK_TYPE,
-    EnhancedVideoBlockSpec, ENHANCED_VIDEO_BLOCK_TYPE,
-    EnhancedImageBlockSpec, ENHANCED_IMAGE_BLOCK_TYPE,
-    MermaidBlockSpec, MERMAID_BLOCK_TYPE
+    BlockNoteSchema,
+    createCodeBlockSpec,
+    defaultBlockSpecs,
+} from "@blocknote/core";
+import {
+    ENHANCED_AUDIO_BLOCK_TYPE,
+    ENHANCED_FILE_BLOCK_TYPE,
+    ENHANCED_IMAGE_BLOCK_TYPE,
+    ENHANCED_VIDEO_BLOCK_TYPE,
+    EnhancedAudioBlockSpec,
+    EnhancedFileBlockSpec,
+    EnhancedImageBlockSpec,
+    EnhancedVideoBlockSpec,
+    MERMAID_BLOCK_TYPE,
+    MermaidBlockSpec,
 } from "@/block-note/block";
+import { CODE_BLOCK_SUPPORTED_LANGUAGES } from "@/block-note/code-block-languages";
+import { syntaxHighlighter } from "@/block-note/syntax-highlighter";
 
 // Exclude the default media blocks and use custom enhanced versions instead
 const {
@@ -20,9 +31,18 @@ const {
     ...restDefaultBlockSpecs
 } = defaultBlockSpecs;
 
+export const extensions = [syntaxHighlighter];
+
 export const schema = BlockNoteSchema.create({
     blockSpecs: {
         ...restDefaultBlockSpecs,
+        codeBlock: createCodeBlockSpec({
+            indentLineWithTab: true,
+            // Keep current behavior: when no language is set, render as plain
+            // text (no syntax highlighting from Prism/React).
+            defaultLanguage: "text",
+            supportedLanguages: CODE_BLOCK_SUPPORTED_LANGUAGES,
+        }),
         // Local custom block specs
         [ENHANCED_AUDIO_BLOCK_TYPE]: EnhancedAudioBlockSpec,
         [ENHANCED_FILE_BLOCK_TYPE]: EnhancedFileBlockSpec,

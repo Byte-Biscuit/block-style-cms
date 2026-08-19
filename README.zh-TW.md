@@ -22,6 +22,7 @@
 | 多語   | next-intl                | 多語系與動態翻譯                                              |
 | 驗證   | zod                      | Schema 驅動驗證與型別                                         |
 | 測試   | Vitest + Testing Library | 單元 / 元件測試                                               |
+| 程式碼規範 | Biome                | Lint + Format（取代 ESLint / Prettier）                       |
 | 部署   | PM2 / Nginx（選用）      | 行程守護 + 反向代理                                           |
 | 其他   | Mermaid / 媒體處理       | 圖表、影音、檔案管理                                          |
 
@@ -104,7 +105,8 @@ npm run dev
 | `npm run build` | 建立正式版本              |
 | `npm start`     | 正式啟動（非 standalone） |
 | `npm test`      | 執行測試                  |
-| `npm run lint`  | 程式碼檢查                |
+| `npm run lint`  | Biome 檢查（lint + 格式） |
+| `npm run format` | 使用 Biome 格式化        |
 
 ## 🚀 部署（PM2 範例）
 

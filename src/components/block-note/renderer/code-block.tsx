@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
-import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useTheme } from "next-themes";
+import { useState } from "react";
+import {
+    dracula,
+    solarizedlight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 import CodeLoading from "@/components/code-loading";
 
 /**
@@ -52,7 +54,7 @@ export default function CodeBlock({
             <div className="absolute top-2 right-2 z-10 flex items-center gap-2">
                 {language && language.trim().length > 0 && (
                     <span
-                        className="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                        className="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 font-medium text-gray-700 text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                         aria-hidden="true"
                     >
                         {language?.toUpperCase()}
@@ -60,7 +62,7 @@ export default function CodeBlock({
                 )}
                 <button
                     onClick={handleCopy}
-                    className="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+                    className="rounded-md bg-gray-700 px-3 py-1 text-white text-xs transition hover:bg-gray-600"
                     aria-label={`Copy ${language} code`}
                     type="button"
                 >

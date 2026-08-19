@@ -11,7 +11,12 @@ import {
 import { flip, offset, shift, size } from "@floating-ui/react";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useRef, useState } from "react";
-import { type LocalBlock as Block, schema } from "@/block-note/schema";
+import { CodeLanguagePickerOverlay } from "@/block-note/code-language-picker";
+import {
+    type LocalBlock as Block,
+    extensions,
+    schema,
+} from "@/block-note/schema";
 import EnhanceSlashMenu, {
     getSlashMenuItems,
 } from "@/block-note/slash-menu/enhanced-slash-menu";
@@ -62,6 +67,7 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
               ];
 
     const editor = useCreateBlockNote({
+        extensions,
         schema,
         initialContent,
         dictionary: dictionary as Dictionary,
@@ -167,6 +173,7 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                 }}
                 formattingToolbar={false}
             >
+                <CodeLanguagePickerOverlay />
                 <FormattingToolbarController
                     formattingToolbar={() => <EnhancedFormattingToolbar />}
                 />

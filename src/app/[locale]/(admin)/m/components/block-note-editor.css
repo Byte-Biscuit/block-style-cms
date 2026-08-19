@@ -139,6 +139,79 @@
     color: #eb5757;
 }
 
+/* Official codeBlock language <select> is replaced by CodeLanguagePickerOverlay. */
+.bn-block-content[data-content-type="codeBlock"] > div > select {
+    display: none;
+}
+
+.bn-code-language-picker-trigger {
+    position: absolute;
+    top: 8px;
+    left: 18px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    padding: 2px 6px 2px 8px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+.bn-block-content[data-content-type="codeBlock"]:hover
+    .bn-code-language-picker-trigger,
+.bn-code-language-picker-trigger:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.bn-code-language-picker-trigger:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.bn-code-language-picker-search {
+    box-sizing: border-box;
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #fff;
+    color: #111827;
+    font-size: 13px;
+    outline: none;
+}
+
+.bn-code-language-picker-search:focus {
+    border-color: #1976d2;
+}
+
+.bn-code-language-picker-item {
+    display: block;
+    width: calc(100% - 8px);
+    margin: 0 4px;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #111827;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.bn-code-language-picker-item:hover,
+.bn-code-language-picker-item.is-active {
+    background: #f3f4f6;
+}
+
 .notion-like-editor[data-theme="dark"] .bn-inline-content code,
 [data-color-scheme="dark"] .bn-inline-content code {
     background-color: rgba(255, 255, 255, 0.1);

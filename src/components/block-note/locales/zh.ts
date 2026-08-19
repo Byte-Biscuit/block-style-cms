@@ -79,7 +79,7 @@ export const zh = {
             subtitle: "选择音频文件",
             dialogTitle: "上传音频文件",
             clickToSelect: "点击选择文件",
-            supportedFormats: "支持 MP3, WAV, OGG, AAC, M4A, FLAC, WEBM 格式",
+            supportedFormats: "支持 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM、Opus，最大 50MB",
             uploading: "上传中...",
             uploadError: "上传失败，请重试",
             networkError: "网络错误，请检查连接后重试",
@@ -101,7 +101,7 @@ export const zh = {
             alignRight: "右对齐",
         },
         placeholder: {
-            clickToAdd: "点击添加音频",
+            clickToAdd: "添加音频",
             supportText: "支持本地上传或 URL 嵌入",
         },
         edit: {
@@ -172,7 +172,7 @@ export const zh = {
             subtitle: "选择视频文件",
             dialogTitle: "上传视频文件",
             clickToSelect: "点击选择文件",
-            supportedFormats: "支持 MP4, WEBM, AVI, MOV 格式",
+            supportedFormats: "支持 MP4、WEBM、MOV、MKV、AVI，最大 100MB",
             uploading: "上传中...",
             uploadError: "上传失败，请重试",
             networkError: "网络错误，请检查连接后重试",
@@ -196,7 +196,7 @@ export const zh = {
             height: "高度 (px)",
         },
         placeholder: {
-            clickToAdd: "点击添加视频",
+            clickToAdd: "添加视频",
             supportText: "支持本地上传或 iframe 嵌入",
         },
         edit: {

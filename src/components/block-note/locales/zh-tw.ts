@@ -79,7 +79,7 @@ export const zhTW = {
             subtitle: "選擇音訊檔案",
             dialogTitle: "上傳音訊檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM 格式",
+            supportedFormats: "支援 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM、Opus，最大 50MB",
             uploading: "上傳中...",
             uploadError: "上傳失敗，請重試",
             networkError: "網路錯誤，請檢查連線後重試",
@@ -101,7 +101,7 @@ export const zhTW = {
             alignRight: "靠右對齊",
         },
         placeholder: {
-            clickToAdd: "點擊新增音訊",
+            clickToAdd: "新增音訊",
             supportText: "支援本機上傳或 URL 嵌入",
         },
         edit: {
@@ -172,7 +172,7 @@ export const zhTW = {
             subtitle: "選擇影片檔案",
             dialogTitle: "上傳影片檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 MP4、WEBM、AVI、MOV 格式",
+            supportedFormats: "支援 MP4、WEBM、MOV、MKV、AVI，最大 100MB",
             uploading: "上傳中...",
             uploadError: "上傳失敗，請重試",
             networkError: "網路錯誤，請檢查連線後重試",
@@ -196,7 +196,7 @@ export const zhTW = {
             height: "高度 (px)",
         },
         placeholder: {
-            clickToAdd: "點擊新增影片",
+            clickToAdd: "新增影片",
             supportText: "支援本機上傳或 iframe 嵌入",
         },
         edit: {

@@ -101,12 +101,17 @@ export function getFileMimeType(
         ".aac": "audio/aac",
         ".flac": "audio/flac",
         ".webm": "audio/webm",
+        ".opus": "audio/opus",
 
         // Video
         ".mp4": "video/mp4",
         ".avi": "video/x-msvideo",
         ".mov": "video/quicktime",
         ".wmv": "video/x-ms-wmv",
+        ".mkv": "video/x-matroska",
+        ".mpeg": "video/mpeg",
+        ".mpg": "video/mpeg",
+        ".3gp": "video/3gpp",
 
         // Documents
         ".pdf": "application/pdf",
@@ -238,7 +243,7 @@ export const formatBytes = (bytes: number): string => {
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / k ** i).toFixed(2)) + " " + sizes[i];
+    return `${parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 };
 
 /**

@@ -66,6 +66,9 @@ export const ALLOWED_VIDEO_MIME_TYPES = [
     "video/x-msvideo",
     "video/3gpp",
     "video/x-ms-wmv",
+    "video/x-matroska",
+    "video/mpeg",
+    "video/ogg",
 ] as const;
 
 export const ALLOWED_AUDIO_MIME_TYPES = [
@@ -78,9 +81,11 @@ export const ALLOWED_AUDIO_MIME_TYPES = [
     "audio/aac",
     "audio/m4a",
     "audio/x-m4a",
+    "audio/mp4",
     "audio/flac",
     "audio/x-flac",
     "audio/webm",
+    "audio/opus",
 ] as const;
 
 // File size limits
@@ -103,8 +108,28 @@ export const FILE_EXTENSIONS = {
         ".bmp",
         ".ico",
     ]),
-    AUDIO: new Set([".mp3", ".wav", ".ogg", ".m4a", ".aac", ".flac", ".webm"]),
-    VIDEO: new Set([".mp4", ".avi", ".mov", ".wmv", ".webm"]),
+    AUDIO: new Set([
+        ".mp3",
+        ".wav",
+        ".ogg",
+        ".m4a",
+        ".aac",
+        ".flac",
+        ".webm",
+        ".opus",
+    ]),
+    VIDEO: new Set([
+        ".mp4",
+        ".avi",
+        ".mov",
+        ".wmv",
+        ".webm",
+        ".mkv",
+        ".mpeg",
+        ".mpg",
+        ".3gp",
+        ".ogg",
+    ]),
     FILES: new Set([
         ".pdf",
         ".doc",

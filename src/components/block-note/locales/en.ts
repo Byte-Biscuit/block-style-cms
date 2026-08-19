@@ -80,7 +80,7 @@ export const en = {
             dialogTitle: "Upload Audio File",
             clickToSelect: "Click to select file",
             supportedFormats:
-                "Supports MP3, WAV, OGG, AAC, M4A, FLAC, WEBM formats",
+                "MP3, WAV, OGG, AAC, M4A, FLAC, WEBM, Opus — max 50MB",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
             networkError:
@@ -103,7 +103,7 @@ export const en = {
             alignRight: "Right",
         },
         placeholder: {
-            clickToAdd: "Click to add audio",
+            clickToAdd: "Add audio",
             supportText: "Supports local upload or URL embed",
         },
         edit: {
@@ -175,7 +175,7 @@ export const en = {
             subtitle: "Select video file",
             dialogTitle: "Upload Video File",
             clickToSelect: "Click to select file",
-            supportedFormats: "Supports MP4, WEBM, AVI, MOV formats",
+            supportedFormats: "MP4, WebM, MOV, MKV, AVI — max 100MB",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
             networkError:
@@ -200,7 +200,7 @@ export const en = {
             height: "Height (px)",
         },
         placeholder: {
-            clickToAdd: "Click to add video",
+            clickToAdd: "Add video",
             supportText: "Supports local upload or iframe embed",
         },
         edit: {

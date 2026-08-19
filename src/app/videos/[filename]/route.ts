@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import { createReadStream } from 'fs';
 import path from 'path';
-import { VideoService } from '@/lib/services/video-service';
+import { getVideoInfo } from '@/lib/services/video-service';
 import { VIDEO_DIR } from '@/settings';
 import { validateFileSecurity } from '@/lib/file-utils';
 import type { VideoServeOptions } from '@/types/video';
@@ -65,7 +65,7 @@ export async function GET(
         }
 
         // 获取视频元信息
-        const videoInfo = await VideoService.getVideoInfo(filename);
+        const videoInfo = await getVideoInfo(filename);
         if (!videoInfo) {
             return NextResponse.json(
                 { error: '视频不存在' },
@@ -284,7 +284,7 @@ export async function HEAD(
         }
 
         // 获取视频元信息
-        const videoInfo = await VideoService.getVideoInfo(filename);
+        const videoInfo = await getVideoInfo(filename);
         if (!videoInfo) {
             return new NextResponse(null, { status: 404 });
         }

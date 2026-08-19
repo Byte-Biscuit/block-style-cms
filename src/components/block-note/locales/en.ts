@@ -222,7 +222,7 @@ export const en = {
             dialogTitle: "Upload File",
             clickToSelect: "Click to select file",
             supportedFormats:
-                "Supports Office documents, PDF, archives and other formats",
+                "Office, PDF, Markdown, archives, code — max 50MB",
             uploading: "Uploading...",
             uploadError: "File upload failed",
             networkError:
@@ -241,7 +241,7 @@ export const en = {
             alignRight: "Right",
         },
         placeholder: {
-            clickToAdd: "Click to add file",
+            clickToAdd: "Add file",
             supportText:
                 "Supports Office documents, PDF, archives and other formats",
         },

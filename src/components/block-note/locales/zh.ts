@@ -217,7 +217,8 @@ export const zh = {
             subtitle: "选择文件",
             dialogTitle: "上传文件",
             clickToSelect: "点击选择文件",
-            supportedFormats: "支持 Office 文档、PDF、压缩包等格式",
+            supportedFormats:
+                "支持 Office、PDF、Markdown、压缩包、代码等，最大 50MB",
             uploading: "上传中...",
             uploadError: "文件上传失败",
             networkError: "网络错误，请检查网络连接后重试",
@@ -233,7 +234,7 @@ export const zh = {
             alignRight: "右对齐",
         },
         placeholder: {
-            clickToAdd: "点击添加文件",
+            clickToAdd: "添加文件",
             supportText: "支持 Office 文档、PDF、压缩包等格式",
         },
         edit: {

@@ -217,7 +217,8 @@ export const zhTW = {
             subtitle: "選擇檔案",
             dialogTitle: "上傳檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 Office 文件、PDF、壓縮檔等格式",
+            supportedFormats:
+                "支援 Office、PDF、Markdown、壓縮檔、程式碼等，最大 50MB",
             uploading: "上傳中...",
             uploadError: "檔案上傳失敗",
             networkError: "網路錯誤，請檢查網路連線後重試",
@@ -233,7 +234,7 @@ export const zhTW = {
             alignRight: "靠右對齊",
         },
         placeholder: {
-            clickToAdd: "點擊新增檔案",
+            clickToAdd: "新增檔案",
             supportText: "支援 Office 文件、PDF、壓縮檔等格式",
         },
         edit: {

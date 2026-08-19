@@ -1,281 +1,217 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import slugify from 'slugify';
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import slugify from "slugify";
+import { v4 as uuidv4 } from "uuid";
+import { FILE_DIR, MAX_ATTACHMENT_SIZE, META_DIR } from "@/settings";
 import type {
-    FileMetadata,
-    FileUploadOptions,
     FileListOptions,
     FileListResult,
-} from '@/types/file';
-import { FILE_DIR, META_DIR, MAX_FILE_SIZE } from '@/settings';
-import { ALLOWED_FILE_MIME_TYPES, isSupportedFileType, getFileCategory } from '../file-utils';
+    FileMetadata,
+    FileUploadOptions,
+} from "@/types/file";
+import {
+    ALLOWED_FILE_MIME_TYPES,
+    getFileCategory,
+    getFileMimeType,
+    isSupportedFileType,
+} from "../file-utils";
 
+function metadataPath(): string {
+    return path.join(META_DIR, "file_metadata.json");
+}
 
-/**
- * 文件处理工具类
- */
-export class FileService {
-    private static readonly MAX_FILE_SIZE = MAX_FILE_SIZE;
-
-    static getMetadataFile(): string {
-        return path.join(META_DIR, 'file_metadata.json');
+async function getMetadataMap(): Promise<Record<string, FileMetadata>> {
+    try {
+        const content = await fs.readFile(metadataPath(), "utf-8");
+        return JSON.parse(content);
+    } catch {
+        return {};
     }
+}
 
-    /**
-     * 获取文件元数据映射
-     */
-    static async getMetadataMap(): Promise<Record<string, FileMetadata>> {
-        const metadataFile = this.getMetadataFile();
-        let metadataMap: Record<string, FileMetadata> = {};
-        try {
-            const content = await fs.readFile(metadataFile, 'utf-8');
-            metadataMap = JSON.parse(content);
-        } catch {
-            metadataMap = {};
-        }
-        return metadataMap;
-    }
+async function saveMetadata(
+    metadataMap: Record<string, FileMetadata>
+): Promise<void> {
+    await fs.writeFile(
+        metadataPath(),
+        JSON.stringify(metadataMap, null, 2),
+        "utf-8"
+    );
+}
 
-    /**
-     * 获取指定文件的元信息
-     */
-    static async getFileInfo(filename: string): Promise<FileMetadata | null> {
-        const metadataMap = await this.getMetadataMap();
-        return metadataMap[filename] || null;
-    }
-
-    /**
-     * 保存文件元数据
-     */
-    private static async saveMetadata(metadataMap: Record<string, FileMetadata>): Promise<void> {
-        const metadataFile = this.getMetadataFile();
-        await fs.writeFile(metadataFile, JSON.stringify(metadataMap, null, 2), 'utf-8');
-    }
-
-    private static generateSEOFriendlyFilename(
-        originalName: string,
-        extension: string
-    ): string {
-        try {
-            const nameWithoutExt = path.parse(originalName).name;
-            const seoName = slugify(nameWithoutExt, {
-                lower: true,
-                strict: true,
-                locale: 'zh',
-                replacement: '-'
-            });
-            if (seoName.length < 3) {
-                return `${uuidv4()}${extension}`;
-            }
-            const maxLength = 50;
-            const truncatedName = seoName.length > maxLength
-                ? seoName.substring(0, maxLength)
-                : seoName;
-            const timestamp = Date.now().toString().slice(-6);
-            return `${truncatedName}-${timestamp}${extension}`;
-
-        } catch (error) {
-            console.warn('生成SEO文件名失败，使用UUID:', error);
+function generateSEOFriendlyFilename(
+    originalName: string,
+    extension: string
+): string {
+    try {
+        const nameWithoutExt = path.parse(originalName).name;
+        const seoName = slugify(nameWithoutExt, {
+            lower: true,
+            strict: true,
+            locale: "zh",
+            replacement: "-",
+        });
+        if (seoName.length < 3) {
             return `${uuidv4()}${extension}`;
         }
+        const maxLength = 50;
+        const truncatedName =
+            seoName.length > maxLength
+                ? seoName.substring(0, maxLength)
+                : seoName;
+        const timestamp = Date.now().toString().slice(-6);
+        return `${truncatedName}-${timestamp}${extension}`;
+    } catch (error) {
+        console.warn("SEO filename failed, falling back to UUID:", error);
+        return `${uuidv4()}${extension}`;
+    }
+}
+
+function validateFile(file: File): void {
+    if (
+        !ALLOWED_FILE_MIME_TYPES.includes(file.type) &&
+        !isSupportedFileType(file.name)
+    ) {
+        throw new Error(
+            `Unsupported file type: ${file.type}. Allowed types include Office documents, PDF, archives, and Markdown.`
+        );
     }
 
-    /**
-     * 验证文件类型和大小
-     */
-    private static validateFile(file: File): void {
-        if (!ALLOWED_FILE_MIME_TYPES.includes(file.type) && !isSupportedFileType(file.name)) {
-            throw new Error(`不支持的文件类型: ${file.type}。支持的类型包括 Office 文档、PDF、压缩文件等`);
-        }
+    if (file.size > MAX_ATTACHMENT_SIZE) {
+        const maxSizeMB = Math.round(MAX_ATTACHMENT_SIZE / (1024 * 1024));
+        throw new Error(`File too large. Maximum size is ${maxSizeMB}MB`);
+    }
+}
 
-        if (file.size > this.MAX_FILE_SIZE) {
-            const maxSizeMB = Math.round(this.MAX_FILE_SIZE / (1024 * 1024));
-            throw new Error(`文件过大。最大支持 ${maxSizeMB}MB`);
-        }
+export async function getFileInfo(
+    filename: string
+): Promise<FileMetadata | null> {
+    const metadataMap = await getMetadataMap();
+    return metadataMap[filename] || null;
+}
+
+export async function uploadFile(
+    file: File,
+    options: FileUploadOptions = {}
+): Promise<FileMetadata> {
+    validateFile(file);
+
+    const originalName = options.originalName || file.name;
+    const extension = path.extname(originalName).toLowerCase();
+
+    let filename = generateSEOFriendlyFilename(originalName, extension);
+    const metadataMap = await getMetadataMap();
+
+    while (metadataMap[filename]) {
+        const baseName = path.parse(filename).name;
+        const suffix = uuidv4().substring(0, 8);
+        filename = `${baseName}-${suffix}${extension}`;
     }
 
-    /**
-     * 获取 MIME 类型
-     */
-    private static getMimeType(filename: string): string {
-        const ext = path.extname(filename).toLowerCase();
-        const mimeTypes: Record<string, string> = {
-            // Office
-            ".doc": "application/msword",
-            ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            ".xls": "application/vnd.ms-excel",
-            ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            ".ppt": "application/vnd.ms-powerpoint",
-            ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            // PDF
-            ".pdf": "application/pdf",
-            // 压缩文件
-            ".zip": "application/zip",
-            ".rar": "application/x-rar-compressed",
-            ".7z": "application/x-7z-compressed",
-            ".tar": "application/x-tar",
-            ".gz": "application/gzip",
-            // 文本
-            ".txt": "text/plain",
-            ".rtf": "application/rtf",
-            ".csv": "text/csv",
-            // 代码
-            ".js": "text/javascript",
-            ".ts": "text/typescript",
-            ".jsx": "text/javascript",
-            ".tsx": "text/typescript",
-            ".css": "text/css",
-            ".html": "text/html",
-            ".json": "application/json",
-            ".xml": "application/xml",
-            ".sql": "application/sql",
-            // 其他
-            ".epub": "application/epub+zip",
-            ".mobi": "application/x-mobipocket-ebook"
-        };
+    const filePath = path.join(FILE_DIR, filename);
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await fs.writeFile(filePath, buffer);
 
-        return mimeTypes[ext] || "application/octet-stream";
+    const stats = await fs.stat(filePath);
+    const fileInfo: FileMetadata = {
+        filename,
+        originalName,
+        size: stats.size,
+        mimeType: getFileMimeType(originalName),
+        uploadedAt: new Date().toISOString(),
+        fileExtension: extension,
+        category: getFileCategory(extension),
+    };
+
+    metadataMap[filename] = fileInfo;
+    await saveMetadata(metadataMap);
+    return fileInfo;
+}
+
+export async function getFileList(
+    options: FileListOptions = {}
+): Promise<FileListResult> {
+    const {
+        page = 1,
+        limit = 20,
+        sortBy = "uploadedAt",
+        sortOrder = "desc",
+        searchTerm,
+        category,
+    } = options;
+
+    const metadataMap = await getMetadataMap();
+    let files = Object.values(metadataMap);
+
+    if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        files = files.filter(
+            (item) =>
+                item.filename.toLowerCase().includes(searchLower) ||
+                item.originalName.toLowerCase().includes(searchLower)
+        );
     }
 
-    /**
-     * 上传文件
-     */
-    static async uploadFile(
-        file: File,
-        options: FileUploadOptions = {}
-    ): Promise<FileMetadata> {
-        this.validateFile(file);
-
-        const originalName = options.originalName || file.name;
-        const extension = path.extname(originalName).toLowerCase();
-
-        // 生成唯一文件名，防止重复
-        let filename = this.generateSEOFriendlyFilename(originalName, extension);
-        const metadataMap = await this.getMetadataMap();
-
-        // 如果文件名已存在，添加随机后缀
-        while (metadataMap[filename]) {
-            const baseName = path.parse(filename).name;
-            const suffix = uuidv4().substring(0, 8);
-            filename = `${baseName}-${suffix}${extension}`;
-        }
-
-        const filePath = path.join(FILE_DIR, filename);
-
-        // 保存文件
-        const buffer = Buffer.from(await file.arrayBuffer());
-        await fs.writeFile(filePath, buffer);
-
-        // 获取文件基本信息
-        const stats = await fs.stat(filePath);
-        const fileInfo: FileMetadata = {
-            filename,
-            originalName,
-            size: stats.size,
-            mimeType: this.getMimeType(originalName),
-            uploadedAt: new Date().toISOString(),
-            fileExtension: extension,
-            category: getFileCategory(extension),
-        };
-
-        // 保存元数据，filename 作为 key
-        metadataMap[filename] = fileInfo;
-        await this.saveMetadata(metadataMap);
-
-        return fileInfo;
+    if (category) {
+        files = files.filter((item) => item.category === category);
     }
 
-    /**
-     * 获取文件列表
-     */
-    static async getFileList(options: FileListOptions = {}): Promise<FileListResult> {
-        const {
-            page = 1,
-            limit = 20,
-            sortBy = 'uploadedAt',
-            sortOrder = 'desc',
-            searchTerm,
-            category,
-        } = options;
-
-        const metadataMap = await this.getMetadataMap();
-        let Files = Object.values(metadataMap);
-
-        // 搜索过滤
-        if (searchTerm) {
-            const searchLower = searchTerm.toLowerCase();
-            Files = Files.filter(File =>
-                File.filename.toLowerCase().includes(searchLower) ||
-                File.originalName.toLowerCase().includes(searchLower)
-            );
+    files.sort((a, b) => {
+        let comparison = 0;
+        switch (sortBy) {
+            case "uploadedAt":
+                comparison =
+                    new Date(a.uploadedAt).getTime() -
+                    new Date(b.uploadedAt).getTime();
+                break;
+            case "size":
+                comparison = a.size - b.size;
+                break;
+            case "filename":
+                comparison = a.filename.localeCompare(b.filename);
+                break;
+            case "originalName":
+                comparison = a.originalName.localeCompare(b.originalName);
+                break;
+            default:
+                comparison =
+                    new Date(a.uploadedAt).getTime() -
+                    new Date(b.uploadedAt).getTime();
         }
+        return sortOrder === "desc" ? -comparison : comparison;
+    });
 
-        // 分类过滤
-        if (category) {
-            Files = Files.filter(File => File.category === category);
-        }
+    const total = files.length;
+    const startIndex = (page - 1) * limit;
+    const paginatedFiles = files.slice(startIndex, startIndex + limit);
 
-        // 排序
-        Files.sort((a, b) => {
-            let comparison = 0;
-            switch (sortBy) {
-                case 'uploadedAt':
-                    comparison = new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime();
-                    break;
-                case 'size':
-                    comparison = a.size - b.size;
-                    break;
-                case 'filename':
-                    comparison = a.filename.localeCompare(b.filename);
-                    break;
-                case 'originalName':
-                    comparison = a.originalName.localeCompare(b.originalName);
-                    break;
-                default:
-                    comparison = new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime();
-            }
-            return sortOrder === 'desc' ? -comparison : comparison;
-        });
+    return {
+        files: paginatedFiles,
+        pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+            hasNext: startIndex + limit < total,
+            hasPrev: page > 1,
+        },
+    };
+}
 
-        // 分页
-        const total = Files.length;
-        const startIndex = (page - 1) * limit;
-        const paginatedFiles = Files.slice(startIndex, startIndex + limit);
+export async function deleteFile(filename: string): Promise<void> {
+    const metadataMap = await getMetadataMap();
 
-        return {
-            files: paginatedFiles,
-            pagination: {
-                page,
-                limit,
-                total,
-                totalPages: Math.ceil(total / limit),
-                hasNext: startIndex + limit < total,
-                hasPrev: page > 1,
-            },
-        };
+    if (!metadataMap[filename]) {
+        throw new Error("File not found");
     }
 
-    /**
-     * 删除文件
-     */
-    static async deleteFile(filename: string): Promise<void> {
-        const metadataMap = await this.getMetadataMap();
-
-        if (!metadataMap[filename]) {
-            throw new Error('文件不存在');
-        }
-
-        // 删除文件
-        const filePath = path.join(FILE_DIR, filename);
-        try {
-            await fs.unlink(filePath);
-        } catch (error) {
-            console.warn('删除文件失败:', error);
-        }
-
-        // 删除元数据
-        delete metadataMap[filename];
-        await this.saveMetadata(metadataMap);
+    const filePath = path.join(FILE_DIR, filename);
+    try {
+        await fs.unlink(filePath);
+    } catch (error) {
+        console.warn("Failed to delete file:", error);
     }
+
+    delete metadataMap[filename];
+    await saveMetadata(metadataMap);
 }

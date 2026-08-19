@@ -1,32 +1,45 @@
-import type { NextConfig } from "next";
-import createNextIntlPlugin from 'next-intl/plugin';
 import createBundleAnalyzer from "@next/bundle-analyzer";
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 let nextConfig: NextConfig = {
     //output: 'standalone',
     // BlockNoter's React Strict Mode causes issues with certain 3rd party libs
     reactStrictMode: false,
+    experimental: {
+        proxyClientMaxBodySize: "50mb",
+        serverActions: {
+            bodySizeLimit: "50mb",
+        },
+    },
     images: {
         // Temporarily disable the optimization feature of the Image component.
         unoptimized: true,
-        formats: ['image/webp', 'image/avif'],
+        formats: ["image/webp", "image/avif"],
         minimumCacheTTL: 60,
         dangerouslyAllowSVG: true,
-        contentDispositionType: 'attachment',
-        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+        contentDispositionType: "attachment",
+        contentSecurityPolicy:
+            "default-src 'self'; script-src 'none'; sandbox;",
     },
     async headers() {
         return [
             {
-                source: '/_next/static/:path*',
+                source: "/_next/static/:path*",
                 headers: [
-                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+                    {
+                        key: "Cache-Control",
+                        value: "public, max-age=31536000, immutable",
+                    },
                 ],
             },
             {
-                source: '/:static*\\.(png|jpg|jpeg|gif|svg|css|js|woff2?)',
+                source: "/:static*\\.(png|jpg|jpeg|gif|svg|css|js|woff2?)",
                 headers: [
-                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }
+                    {
+                        key: "Cache-Control",
+                        value: "public, max-age=31536000, immutable",
+                    },
                 ],
             },
         ];
@@ -34,27 +47,27 @@ let nextConfig: NextConfig = {
     webpack(config) {
         config.module.rules.push({
             test: /\.svg$/i,
-            use: ['@svgr/webpack'],
+            use: ["@svgr/webpack"],
         });
         return config;
     },
     logging: {
         fetches: {
             fullUrl: true,
-            hmrRefreshes: true
-        }
+            hmrRefreshes: true,
+        },
     },
 };
 
 // nextjs bundle analyzer
 const withBundleAnalyzer = createBundleAnalyzer({
-    enabled: process.env.ANALYZE === 'true',
+    enabled: process.env.ANALYZE === "true",
     openAnalyzer: false,
-})
+});
 nextConfig = withBundleAnalyzer(nextConfig);
 // next-intl plugin
 const withNextIntl = createNextIntlPlugin({
-    requestConfig: './src/i18n/request.ts',
+    requestConfig: "./src/i18n/request.ts",
 });
 nextConfig = withNextIntl(nextConfig);
 export default nextConfig;

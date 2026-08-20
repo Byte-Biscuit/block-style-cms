@@ -39,7 +39,7 @@ import {
 import { isSuccess } from "@/lib/response";
 
 const EXPIRES_OPTIONS = [
-    { value: "", days: 0 },
+    { value: "never" },
     { value: "30", seconds: 60 * 60 * 24 * 30 },
     { value: "90", seconds: 60 * 60 * 24 * 90 },
     { value: "365", seconds: 60 * 60 * 24 * 365 },
@@ -69,7 +69,7 @@ export default function ApiTokensTab() {
 
     const [createOpen, setCreateOpen] = useState(false);
     const [name, setName] = useState("");
-    const [expires, setExpires] = useState("");
+    const [expires, setExpires] = useState("never");
     const [createdKey, setCreatedKey] = useState<string | null>(null);
 
     const [detail, setDetail] = useState<ApiTokenSummary | null>(null);
@@ -120,7 +120,7 @@ export default function ApiTokensTab() {
             if (isSuccess(result) && result.payload.key) {
                 setCreatedKey(result.payload.key);
                 setName("");
-                setExpires("");
+                setExpires("never");
                 load();
             } else {
                 setSnackbar({
@@ -324,7 +324,7 @@ export default function ApiTokensTab() {
                                 onChange={(e) => setExpires(e.target.value)}
                                 fullWidth
                             >
-                                <MenuItem value="">
+                                <MenuItem value="never">
                                     {t("expires.never")}
                                 </MenuItem>
                                 <MenuItem value="30">

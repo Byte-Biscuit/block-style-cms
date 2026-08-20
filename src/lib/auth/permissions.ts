@@ -1,14 +1,14 @@
 /**
  * Permission Control System
- * 
+ *
  * Provides permission control functions:
  * - Get current login session
  * - Server Action permission check
  */
 
-import { getAuth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
-import { HttpStatus, Result } from "@/lib/response";
+import { getAuth } from "@/lib/auth/auth";
+import { HttpStatus, type Result } from "@/lib/response";
 import { systemConfigService } from "@/lib/services/system-config-service";
 
 // ==================== Type Definitions ====================
@@ -46,7 +46,7 @@ export interface PermissionCheckResult {
 
 /**
  * Get current logged-in user's session information
- * 
+ *
  * @returns Session information, or null if not logged in
  */
 export async function getCurrentSession(): Promise<UserSession | null> {
@@ -74,11 +74,11 @@ export async function getCurrentSession(): Promise<UserSession | null> {
 
 /**
  * Requires being logged in (any user)
- * 
+ *
  * Used for operations requiring authentication
- * 
+ *
  * @returns Permission check result
- * 
+ *
  * @example
  * ```typescript
  * export async function updateUser(userId: string) {
@@ -116,9 +116,81 @@ export async function requireAuthenticated(): Promise<PermissionCheckResult> {
     }
 }
 
+export interface ApiTokenAuth {
+    allowed: boolean;
+    code?: number;
+    message?: string;
+    userId?: string;
+    token?: {
+        id: string;
+        name: string | null;
+        referenceId: string;
+    };
+}
+
+/** Reads x-api-key or Authorization: Bearer from the request. */
+export function extractApiKey(request: Request): string | null {
+    const headerKey = request.headers.get("x-api-key")?.trim();
+    if (headerKey) {
+        return headerKey;
+    }
+    const authorization = request.headers.get("authorization");
+    if (authorization?.startsWith("Bearer ")) {
+        const token = authorization.slice("Bearer ".length).trim();
+        return token || null;
+    }
+    return null;
+}
+
+/**
+ * API-only auth. Does not read the session cookie.
+ */
+export async function requireApiToken(request: Request): Promise<ApiTokenAuth> {
+    try {
+        const key = extractApiKey(request);
+        if (!key) {
+            return {
+                allowed: false,
+                code: HttpStatus.UNAUTHORIZED,
+                message: "API token required",
+            };
+        }
+
+        const auth = await getAuth();
+        const result = await auth.api.verifyApiKey({
+            body: { key },
+        });
+
+        if (!result.valid || !result.key) {
+            return {
+                allowed: false,
+                code: HttpStatus.UNAUTHORIZED,
+                message: result.error?.message || "Invalid API token",
+            };
+        }
+
+        return {
+            allowed: true,
+            userId: result.key.referenceId,
+            token: {
+                id: result.key.id,
+                name: result.key.name,
+                referenceId: result.key.referenceId,
+            },
+        };
+    } catch (error) {
+        console.error("[Permissions] Error in requireApiToken:", error);
+        return {
+            allowed: false,
+            code: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: "API token check failed",
+        };
+    }
+}
+
 /**
  * Server Action Wrapper: Automatically handles installation mode bypass and admin mode authentication
- * 
+ *
  * @param action - Original Server Action function
  * @returns Wrapped Server Action function
  */
@@ -145,4 +217,3 @@ export function withAuth<T extends any[], R>(
         return action(...args);
     };
 }
-

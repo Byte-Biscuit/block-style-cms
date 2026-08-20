@@ -6,6 +6,15 @@ let nextConfig: NextConfig = {
     //output: 'standalone',
     // BlockNoter's React Strict Mode causes issues with certain 3rd party libs
     reactStrictMode: false,
+    // Dev: allow non-localhost hosts (LAN IP / hostname) to load HMR and /_next assets.
+    // Bind address is set in package.json: next dev|start --hostname 0.0.0.0
+    // Override with ALLOWED_DEV_ORIGINS=192.168.1.10,10.0.0.5
+    allowedDevOrigins: (
+        process.env.ALLOWED_DEV_ORIGINS ?? "127.0.0.1,0.0.0.0"
+    )
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     experimental: {
         proxyClientMaxBodySize: "50mb",
         serverActions: {

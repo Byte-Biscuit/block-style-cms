@@ -251,7 +251,8 @@
                 "userManagement": "User Management",
                 "authentication": "Authentication",
                 "externalServices": "External Services",
-                "channelManagement": "Channel Management"
+                "channelManagement": "Channel Management",
+                "apiTokens": "API Tokens"
             },
             "basicConfig": {
                 "comment": {
@@ -520,6 +521,56 @@
             },
             "confirm": {
                 "disable2FA": "Are you sure you want to disable 2FA for user \"{userName}\"?"
+            }
+        },
+        "apiTokens": {
+            "page": {
+                "title": "API Tokens",
+                "subtitle": "For /api/m HTTP calls (x-api-key or Bearer). Cannot sign in to the admin UI or replace Server Action session auth. The full value is shown once."
+            },
+            "table": {
+                "name": "Name",
+                "start": "Prefix",
+                "expiresAt": "Expires",
+                "lastRequest": "Last used",
+                "createdAt": "Created",
+                "enabled": "Status",
+                "actions": "Actions",
+                "empty": "No tokens yet"
+            },
+            "expires": {
+                "never": "Never",
+                "days30": "30 days",
+                "days90": "90 days",
+                "days365": "1 year"
+            },
+            "status": {
+                "enabled": "Enabled",
+                "disabled": "Disabled"
+            },
+            "create": {
+                "title": "Create token",
+                "name": "Name",
+                "expires": "Expiration",
+                "copyOnce": "Copy this now. You will not be able to see the full token again."
+            },
+            "detail": {
+                "title": "Token details"
+            },
+            "revoke": {
+                "title": "Revoke token",
+                "confirm": "Revoke \"{name}\"? It will stop working immediately."
+            },
+            "buttons": {
+                "create": "Create",
+                "copy": "Copy",
+                "detail": "Details",
+                "revoke": "Revoke",
+                "close": "Close"
+            },
+            "messages": {
+                "copied": "Copied",
+                "revoked": "Revoked"
             }
         }
     },

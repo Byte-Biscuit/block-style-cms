@@ -317,9 +317,15 @@ export const en = {
             },
         },
         placeholder: {
-            clickToAdd: "Click to add Mermaid diagram",
+            clickToAdd: "Add Mermaid diagram",
             supportText:
                 "Supports flowcharts, sequence diagrams, state diagrams and more",
+        },
+        dialog: {
+            cancel: "Cancel",
+            insert: "Insert",
+            save: "Save",
+            invalidCode: "Enter valid Mermaid code before saving",
         },
         edit: {
             editButton: "Edit",

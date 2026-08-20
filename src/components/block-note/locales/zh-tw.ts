@@ -79,7 +79,8 @@ export const zhTW = {
             subtitle: "選擇音訊檔案",
             dialogTitle: "上傳音訊檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM、Opus，最大 50MB",
+            supportedFormats:
+                "支援 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM、Opus，最大 50MB",
             uploading: "上傳中...",
             uploadError: "上傳失敗，請重試",
             networkError: "網路錯誤，請檢查連線後重試",
@@ -309,8 +310,14 @@ export const zhTW = {
             },
         },
         placeholder: {
-            clickToAdd: "點擊新增 Mermaid 圖表",
+            clickToAdd: "新增圖表",
             supportText: "支援流程圖、循序圖、狀態圖等多種圖表類型",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "儲存",
+            invalidCode: "請輸入有效的 Mermaid 程式碼後再儲存",
         },
         edit: {
             editButton: "編輯",

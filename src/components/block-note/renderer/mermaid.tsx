@@ -1,25 +1,24 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
-    Typography,
-    CircularProgress,
+    Close as CloseIcon,
+    FitScreen as FitScreenIcon,
+    ZoomIn as ZoomInIcon,
+    ZoomOut as ZoomOutIcon,
+} from "@mui/icons-material";
+import {
     Alert,
+    CircularProgress,
     Dialog,
     DialogContent,
     IconButton,
-    Box,
     Tooltip,
+    Typography,
 } from "@mui/material";
-import {
-    Close as CloseIcon,
-    ZoomIn as ZoomInIcon,
-    ZoomOut as ZoomOutIcon,
-    FitScreen as FitScreenIcon,
-} from "@mui/icons-material";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { roundedPx } from "@/lib/style-classes";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface MermaidBlockProps {
     code?: string;
@@ -42,6 +41,7 @@ export interface MermaidBlockData {
 interface MermaidProps {
     data: MermaidBlockData;
     className?: string;
+    controls?: React.ReactNode;
 }
 
 // Extract natural dimensions from SVG viewBox (used to calculate fit-to-window scale)
@@ -54,7 +54,7 @@ function getSvgDimensions(
         if (parts.length === 4) {
             const w = parseFloat(parts[2]);
             const h = parseFloat(parts[3]);
-            if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0)
+            if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0)
                 return { width: w, height: h };
         }
     }
@@ -64,7 +64,7 @@ function getSvgDimensions(
     if (wMatch && hMatch) {
         const w = parseFloat(wMatch[1]);
         const h = parseFloat(hMatch[1]);
-        if (!isNaN(w) && !isNaN(h) && w > 0 && h > 0)
+        if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0)
             return { width: w, height: h };
     }
     return null;
@@ -115,8 +115,10 @@ const MermaidDialog: React.FC<{
                 if (containerRef.current) {
                     const dims = getSvgDimensions(svgContent);
                     if (dims) {
-                        const containerW = containerRef.current.clientWidth - 64;
-                        const containerH = containerRef.current.clientHeight - 64;
+                        const containerW =
+                            containerRef.current.clientWidth - 64;
+                        const containerH =
+                            containerRef.current.clientHeight - 64;
                         const fs = Math.min(
                             containerW / dims.width,
                             containerH / dims.height,
@@ -135,7 +137,7 @@ const MermaidDialog: React.FC<{
     }, [open, svgContent]);
 
     const handleZoomIn = () =>
-        setScale((prev) => Math.min(3, +( prev + 0.25).toFixed(2)));
+        setScale((prev) => Math.min(3, +(prev + 0.25).toFixed(2)));
     const handleZoomOut = () =>
         setScale((prev) => Math.max(0.25, +(prev - 0.25).toFixed(2)));
     const handleFitToWindow = () => {
@@ -160,7 +162,7 @@ const MermaidDialog: React.FC<{
         >
             <DialogContent className="flex flex-col overflow-hidden p-0">
                 {/* Toolbar */}
-                <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-3 py-1 dark:border-gray-700">
+                <div className="flex shrink-0 items-center justify-between border-gray-200 border-b px-3 py-1 dark:border-gray-700">
                     <div className="flex items-center gap-1">
                         <Tooltip title={t("button.zoomOut")}>
                             <span>
@@ -191,7 +193,10 @@ const MermaidDialog: React.FC<{
                             </span>
                         </Tooltip>
                         <Tooltip title={t("button.fitToWindow")}>
-                            <IconButton size="small" onClick={handleFitToWindow}>
+                            <IconButton
+                                size="small"
+                                onClick={handleFitToWindow}
+                            >
                                 <FitScreenIcon fontSize="small" />
                             </IconButton>
                         </Tooltip>
@@ -206,7 +211,9 @@ const MermaidDialog: React.FC<{
                 {/* Canvas */}
                 <div
                     ref={containerRef}
-                    className={`relative flex-1 w-full overflow-hidden bg-white ${
+                    role="application"
+                    aria-label={`${t("hint.drag")}. ${t("hint.scroll")}`}
+                    className={`relative w-full flex-1 overflow-hidden bg-white ${
                         isDragging ? "cursor-grabbing" : "cursor-grab"
                     }`}
                     onMouseDown={(e: React.MouseEvent) => {
@@ -228,8 +235,45 @@ const MermaidDialog: React.FC<{
                     onWheel={(e: React.WheelEvent) => {
                         const delta = e.deltaY > 0 ? -0.1 : 0.1;
                         setScale((prev) =>
-                            Math.max(0.25, Math.min(3, +(prev + delta).toFixed(2)))
+                            Math.max(
+                                0.25,
+                                Math.min(3, +(prev + delta).toFixed(2))
+                            )
                         );
+                    }}
+                    onKeyDown={(e: React.KeyboardEvent) => {
+                        const step = 20;
+                        switch (e.key) {
+                            case "ArrowLeft":
+                                e.preventDefault();
+                                setPosition((p) => ({ ...p, x: p.x + step }));
+                                break;
+                            case "ArrowRight":
+                                e.preventDefault();
+                                setPosition((p) => ({ ...p, x: p.x - step }));
+                                break;
+                            case "ArrowUp":
+                                e.preventDefault();
+                                setPosition((p) => ({ ...p, y: p.y + step }));
+                                break;
+                            case "ArrowDown":
+                                e.preventDefault();
+                                setPosition((p) => ({ ...p, y: p.y - step }));
+                                break;
+                            case "+":
+                            case "=":
+                                e.preventDefault();
+                                handleZoomIn();
+                                break;
+                            case "-":
+                                e.preventDefault();
+                                handleZoomOut();
+                                break;
+                            case "0":
+                                e.preventDefault();
+                                handleFitToWindow();
+                                break;
+                        }
                     }}
                 >
                     <div
@@ -241,16 +285,23 @@ const MermaidDialog: React.FC<{
                                 ? "none"
                                 : "transform 0.1s ease-out",
                         }}
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Mermaid emits SVG as an HTML string; required for chart preview
                         dangerouslySetInnerHTML={{ __html: svgContent }}
                     />
                 </div>
 
                 {/* Hint bar */}
-                <div className="flex shrink-0 items-center justify-center gap-6 border-t border-gray-100 bg-gray-50 px-3 py-1 dark:border-gray-700 dark:bg-gray-800">
-                    <Typography variant="caption" className="text-gray-400 dark:text-gray-500">
+                <div className="flex shrink-0 items-center justify-center gap-6 border-gray-100 border-t bg-gray-50 px-3 py-1 dark:border-gray-700 dark:bg-gray-800">
+                    <Typography
+                        variant="caption"
+                        className="text-gray-400 dark:text-gray-500"
+                    >
                         {t("hint.drag")}
                     </Typography>
-                    <Typography variant="caption" className="text-gray-400 dark:text-gray-500">
+                    <Typography
+                        variant="caption"
+                        className="text-gray-400 dark:text-gray-500"
+                    >
                         {t("hint.scroll")}
                     </Typography>
                 </div>
@@ -259,7 +310,11 @@ const MermaidDialog: React.FC<{
     );
 };
 
-const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
+const Mermaid: React.FC<MermaidProps> = ({
+    data,
+    className = "",
+    controls = null,
+}) => {
     const [svgContent, setSvgContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
@@ -335,7 +390,7 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
         };
 
         renderChart();
-    }, [code, props?.theme, data.id, renderMermaid, resolvedTheme, t]);
+    }, [code, renderMermaid, t]);
 
     const handleImageClick = () => {
         if (svgContent && !error) {
@@ -370,22 +425,31 @@ const Mermaid: React.FC<MermaidProps> = ({ data, className = "" }) => {
 
     return (
         <>
-            <figure
-                className={`group relative mx-auto w-fit cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 dark:shadow-gray-700 ${className}`}
-                onClick={handleImageClick}
-            >
-                {/* Let Mermaid's inline max-width style dictate SVG width; only constrain height */}
-                <div
-                    dangerouslySetInnerHTML={{ __html: svgContent }}
-                    className="flex items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:max-h-80"
-                />
-                {/* Hover zoom hint */}
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                    <div className="rounded-full bg-black/40 p-2 text-white">
-                        <ZoomInIcon fontSize="medium" />
+            <div className="relative mx-auto w-fit">
+                {controls && (
+                    <div className="absolute top-1 right-1 z-50">
+                        {controls}
                     </div>
-                </div>
-            </figure>
+                )}
+                {/* biome-ignore lint/a11y/useKeyWithClickEvents: pointer zoom; MermaidDialog provides keyboard zoom controls */}
+                <figure
+                    className={`group relative mx-auto w-fit cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 dark:shadow-gray-700 ${className}`}
+                    onClick={handleImageClick}
+                >
+                    {/* Let Mermaid's inline max-width style dictate SVG width; only constrain height */}
+                    <div
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: Mermaid emits SVG as an HTML string; required for chart preview
+                        dangerouslySetInnerHTML={{ __html: svgContent }}
+                        className="flex items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:max-h-80"
+                    />
+                    {/* Hover zoom hint */}
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        <div className="rounded-full bg-black/40 p-2 text-white">
+                            <ZoomInIcon fontSize="medium" />
+                        </div>
+                    </div>
+                </figure>
+            </div>
 
             <MermaidDialog
                 open={isDialogOpen}

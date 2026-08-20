@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
+import type {
+    BlockNoteEditor,
+    BlockSchemaFromSpecs,
+    PartialBlock,
+} from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import {
-    Box,
-    Paper,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Typography,
-    CircularProgress,
-    Alert,
-} from "@mui/material";
+    createReactBlockSpec,
+    type DefaultReactSuggestionItem,
+    useBlockNoteEditor,
+} from "@blocknote/react";
 import {
     Code as CodeIcon,
     Visibility as PreviewIcon,
@@ -20,35 +18,58 @@ import {
     Palette as ThemeIcon,
 } from "@mui/icons-material";
 import {
-    createReactBlockSpec,
-    useBlockNoteEditor,
-    type DefaultReactSuggestionItem,
-} from "@blocknote/react";
-import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { BlockNoteEditor } from "@blocknote/core";
-import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
-import { schema } from "@/block-note/schema";
-import { localizeMermaidTemplates } from "@/types/mermaid";
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Typography,
+} from "@mui/material";
+import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
+import Mermaid from "@/block-note/renderer/mermaid";
+import type { schema } from "@/block-note/schema";
 import mermaidMonacoEditor from "@/components/block-note/block/monaco-editor-mermaid";
+import { useDebounce } from "@/lib/hooks";
+import { localizeMermaidTemplates } from "@/types/mermaid";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import MermaidIcon from "./icons/mermaid-icon";
-import { useDebounce } from "@/lib/hooks";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
-// Re-added missing constants
 export const MERMAID_BLOCK_TYPE = "mermaid";
 
 const EDITOR_DEFAULT_HEIGHT = "300px";
-// Global state management for Monaco Editor initialization
+
+const placeholderBarSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+    width: "100%",
+    px: 2,
+    py: 1.25,
+    borderRadius: 1,
+    bgcolor: "action.hover",
+    cursor: "pointer",
+    "&:hover": {
+        bgcolor: "action.selected",
+    },
+};
+
 let monacoInitialized = false;
 let monacoInitPromise: Promise<void> | null = null;
 
-// Global state management for Mermaid initialization
 let mermaidModule: typeof import("mermaid") | null = null;
 let mermaidImportPromise: Promise<typeof import("mermaid")> | null = null;
 
-// Get Mermaid instance (singleton)
 const getMermaid = async (): Promise<typeof import("mermaid")> => {
     if (mermaidModule) return mermaidModule;
     if (!mermaidImportPromise) {
@@ -60,7 +81,6 @@ const getMermaid = async (): Promise<typeof import("mermaid")> => {
     return mermaidImportPromise;
 };
 
-// Pre-initialize Monaco Editor
 const initializeMonacoEditor = async (
     monaco: typeof import("monaco-editor")
 ) => {
@@ -75,34 +95,38 @@ const initializeMonacoEditor = async (
     }
 };
 
-// Mermaid render component
 function MermaidRenderer({
     code,
     theme = "default",
     width,
     height,
     dict,
+    onValidityChange,
 }: {
     code: string;
     theme?: string;
     width?: number;
     height?: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: dictionary shape is locale-driven
     dict?: any;
+    onValidityChange?: (valid: boolean) => void;
 }) {
     const [svg, setSvg] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (!code.trim()) {
             setSvg("");
             setError(null);
+            onValidityChange?.(false);
             return;
         }
 
         setLoading(true);
         setError(null);
         setSvg("");
+        onValidityChange?.(false);
 
         getMermaid().then(async (mermaid) => {
             try {
@@ -133,6 +157,7 @@ function MermaidRenderer({
                               : "Unknown mermaid parse error";
                     setError(`Mermaid parse error: ${msg}`);
                     setLoading(false);
+                    onValidityChange?.(false);
                     return;
                 }
                 const id = `mermaid-block-${Date.now()}-${Math.random()
@@ -141,18 +166,21 @@ function MermaidRenderer({
                 try {
                     const { svg } = await mermaid.default.render(id, code);
                     setSvg(svg);
+                    onValidityChange?.(true);
                 } catch (err: unknown) {
                     setError(
                         `Mermaid rendering error: ${
                             err instanceof Error ? err.message : "Unknown error"
                         }`
                     );
+                    onValidityChange?.(false);
                 } finally {
                     setLoading(false);
                 }
             } catch (err: unknown) {
                 setSvg("");
                 setLoading(false);
+                onValidityChange?.(false);
                 throw new Error(
                     `Initialization error: ${
                         err instanceof Error ? err.message : "Unknown error"
@@ -160,7 +188,8 @@ function MermaidRenderer({
                 );
             }
         });
-    }, [code, theme]);
+    }, [code, theme, onValidityChange]);
+
     if (loading) {
         return (
             <Box
@@ -209,10 +238,6 @@ function MermaidRenderer({
 
     return (
         <Box
-            id={`mermaid-block-${Date.now()}-${Math.random()
-                .toString(36)
-                .substring(2, 11)}`}
-            // Use data attribute to ensure Mermaid correctly identifies the container
             data-mermaid-container="true"
             sx={{
                 width: width || "100%",
@@ -226,17 +251,16 @@ function MermaidRenderer({
                     maxWidth: "100%",
                     height: "auto",
                 },
-                // Ensure container content is fully controlled
                 "& > *": {
                     maxWidth: "100%",
                 },
             }}
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Mermaid emits SVG as an HTML string; required for chart preview
             dangerouslySetInnerHTML={{ __html: svg }}
         />
     );
 }
 
-// Mermaid editor component
 function MermaidEditor({
     code,
     onChange,
@@ -246,6 +270,7 @@ function MermaidEditor({
     onThemeChange,
     width,
     height,
+    onValidityChange,
 }: {
     code: string;
     onChange: (value: string) => void;
@@ -255,8 +280,7 @@ function MermaidEditor({
     onThemeChange?: (theme: string) => void;
     width?: number;
     height?: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    dict?: any;
+    onValidityChange?: (valid: boolean) => void;
 }) {
     const editor = useBlockNoteEditor();
     const dict = editor?.dictionary?.mermaid_block;
@@ -266,12 +290,16 @@ function MermaidEditor({
     const debouncedCode = useDebounce(localCode, 300);
 
     useEffect(() => {
+        setLocalCode(code);
+    }, [code]);
+
+    useEffect(() => {
         if (debouncedCode !== code) {
             onChange(debouncedCode);
         }
     }, [debouncedCode, code, onChange]);
-    // Initialize Monaco Editor with Mermaid support
-    const handleEditorDidMount = async (editor: unknown, monaco: unknown) => {
+
+    const handleEditorDidMount = async (_editor: unknown, monaco: unknown) => {
         try {
             if (!monacoInitPromise) {
                 monacoInitPromise = initializeMonacoEditor(
@@ -284,19 +312,17 @@ function MermaidEditor({
         }
     };
 
-    // Localized templates from dictionary
     const localizedTemplates = React.useMemo(
         () => localizeMermaidTemplates(dict?.templates),
         [dict]
     );
 
-    // Handle template selection
     const handleTemplateSelect = (templateValue: string) => {
-        const selectedTemplate = localizedTemplates.find(
+        const selected = localizedTemplates.find(
             (t) => t.value === templateValue
         );
-        if (selectedTemplate) {
-            setLocalCode(selectedTemplate.code);
+        if (selected) {
+            setLocalCode(selected.code);
             setSelectedTemplate(templateValue);
         }
     };
@@ -351,14 +377,16 @@ function MermaidEditor({
             }}
         >
             <MermaidRenderer
-                code={code}
+                code={debouncedCode}
                 theme={theme}
                 width={width}
                 height={height}
                 dict={dict}
+                onValidityChange={onValidityChange}
             />
         </Box>
     );
+
     return (
         <Paper
             variant="outlined"
@@ -388,6 +416,7 @@ function MermaidEditor({
                     justifyContent="space-between"
                     alignItems="center"
                     gap={2}
+                    flexWrap="wrap"
                 >
                     <Box
                         sx={{
@@ -429,7 +458,7 @@ function MermaidEditor({
                             }}
                         >
                             <CodeIcon sx={{ fontSize: "16px" }} />
-                            {dict.editor.editTitle}
+                            {dict?.editor?.editTitle || "Edit"}
                         </Box>
                         <Box
                             component="button"
@@ -465,20 +494,18 @@ function MermaidEditor({
                             }}
                         >
                             <PreviewIcon sx={{ fontSize: "16px" }} />
-                            {dict.editor.previewTitle}
+                            {dict?.editor?.previewTitle || "Preview"}
                         </Box>
                     </Box>
 
-                    {/* Right toolbar area */}
                     <Box display="flex" alignItems="center" gap={1.5}>
-                        {/* Theme selection */}
-                        <FormControl size="small" sx={{ minWidth: 200 }}>
+                        <FormControl size="small" sx={{ minWidth: 140 }}>
                             <InputLabel sx={{ fontSize: "12px" }}>
-                                {dict.editor.theme}
+                                {dict?.editor?.theme || "Theme"}
                             </InputLabel>
                             <Select
                                 value={theme || "default"}
-                                label="Theme"
+                                label={dict?.editor?.theme || "Theme"}
                                 onChange={(e) =>
                                     onThemeChange?.(e.target.value)
                                 }
@@ -494,7 +521,7 @@ function MermaidEditor({
                                     disablePortal: false,
                                     container: getBlockEditorContainer(),
                                     sx: {
-                                        zIndex: 1000,
+                                        zIndex: 1400,
                                     },
                                 }}
                                 startAdornment={
@@ -538,14 +565,15 @@ function MermaidEditor({
                             </Select>
                         </FormControl>
 
-                        {/* Template selection */}
-                        <FormControl size="small" sx={{ width: 300 }}>
+                        <FormControl size="small" sx={{ width: 220 }}>
                             <InputLabel sx={{ fontSize: "12px" }}>
-                                {dict.editor.selectTemplate}
+                                {dict?.editor?.selectTemplate || "Template"}
                             </InputLabel>
                             <Select
                                 value={selectedTemplate}
-                                label="Template"
+                                label={
+                                    dict?.editor?.selectTemplate || "Template"
+                                }
                                 onChange={(e) =>
                                     handleTemplateSelect(e.target.value)
                                 }
@@ -564,7 +592,7 @@ function MermaidEditor({
                                     disablePortal: false,
                                     container: getBlockEditorContainer(),
                                     sx: {
-                                        zIndex: 1000,
+                                        zIndex: 1400,
                                     },
                                 }}
                                 startAdornment={
@@ -619,78 +647,203 @@ function MermaidEditor({
             <Box sx={{ width: "100%" }}>
                 {mode === "edit" && renderEditor()}
                 {mode === "preview" && renderPreview()}
+                {/* Keep validation running while editing (hidden preview) */}
+                {mode === "edit" && (
+                    <Box sx={{ display: "none" }} aria-hidden>
+                        <MermaidRenderer
+                            code={debouncedCode}
+                            theme={theme}
+                            dict={dict}
+                            onValidityChange={onValidityChange}
+                        />
+                    </Box>
+                )}
             </Box>
         </Paper>
     );
 }
 
-// Mermaid Block render component
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const MermaidBlockRender = ({ block }: { block: any }) => {
+function MermaidEditDialog({
+    open,
+    onClose,
+    initialCode,
+    initialTheme,
+    isEdit,
+    onSave,
+}: {
+    open: boolean;
+    onClose: () => void;
+    initialCode: string;
+    initialTheme: string;
+    isEdit: boolean;
+    onSave: (data: { code: string; theme: string }) => void;
+}) {
     const editor = useBlockNoteEditor();
     const dict = editor?.dictionary?.mermaid_block;
-    const handleCodeChange = (code: string) => {
-        try {
-            if (editor) {
-                editor.updateBlock(block, {
-                    props: {
-                        ...block.props,
-                        code,
-                    },
-                });
-            }
-        } catch (error) {
-            console.error("Failed to update block code:", error);
+
+    const [draftCode, setDraftCode] = useState(initialCode);
+    const [draftTheme, setDraftTheme] = useState(initialTheme || "default");
+    const [mode, setMode] = useState<"edit" | "preview">("edit");
+    const [previewValid, setPreviewValid] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (open) {
+            setDraftCode(initialCode);
+            setDraftTheme(initialTheme || "default");
+            setMode("edit");
+            setPreviewValid(false);
+            setSaveError(null);
         }
+    }, [open, initialCode, initialTheme]);
+
+    const canSave = Boolean(draftCode.trim()) && previewValid;
+
+    const handleConfirm = () => {
+        if (!canSave) {
+            setSaveError(
+                dict?.dialog?.invalidCode ||
+                    "Enter valid Mermaid code before saving"
+            );
+            setMode("preview");
+            return;
+        }
+        onSave({ code: draftCode.trim(), theme: draftTheme });
+        onClose();
     };
 
-    const handleModeChange = (newMode: "edit" | "preview") => {
-        try {
-            if (editor) {
-                editor.updateBlock(block, {
-                    props: {
-                        ...block.props,
-                        mode: newMode,
-                    },
-                });
-            }
-        } catch (error) {
-            console.error("Failed to update block mode:", error);
-        }
-    };
-
-    const handleThemeChange = (newTheme: string) => {
-        try {
-            if (editor) {
-                editor.updateBlock(block, {
-                    props: {
-                        ...block.props,
-                        theme: newTheme,
-                    },
-                });
-            }
-        } catch (error) {
-            console.error("Failed to update block theme:", error);
-        }
-    };
     return (
-        <Box sx={{ my: 1, width: "100%", maxWidth: "100%" }}>
-            <MermaidEditor
-                code={block.props.code || ""}
-                onChange={handleCodeChange}
-                mode={block.props.mode || "edit"}
-                onModeChange={handleModeChange}
-                theme={block.props.theme}
-                onThemeChange={handleThemeChange}
-                width={block.props.width}
-                height={block.props.height}
-                dict={dict}
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="md"
+            fullWidth
+            container={getBlockEditorContainer()}
+        >
+            <DialogTitle>
+                {dict?.editor?.title || "Mermaid Diagram Editor"}
+            </DialogTitle>
+            <DialogContent dividers>
+                {dict?.placeholder?.supportText && (
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1.5 }}
+                    >
+                        {dict.placeholder.supportText}
+                    </Typography>
+                )}
+                <MermaidEditor
+                    code={draftCode}
+                    onChange={setDraftCode}
+                    mode={mode}
+                    onModeChange={setMode}
+                    theme={draftTheme}
+                    onThemeChange={setDraftTheme}
+                    onValidityChange={setPreviewValid}
+                />
+                {saveError && (
+                    <Alert severity="error" sx={{ mt: 1.5 }}>
+                        {saveError}
+                    </Alert>
+                )}
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>
+                    {dict?.dialog?.cancel || "Cancel"}
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={handleConfirm}
+                    disabled={!canSave}
+                >
+                    {isEdit
+                        ? dict?.dialog?.save || "Save"
+                        : dict?.dialog?.insert || "Insert"}
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+}
+
+// biome-ignore lint/suspicious/noExplicitAny: BlockNote render props are loosely typed
+export const MermaidBlockRender = ({ block }: { block: any }) => {
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const editor = useBlockNoteEditor();
+    const dict = editor?.dictionary?.mermaid_block;
+    const hasCode = Boolean(block.props.code?.trim());
+
+    const handleSave = (data: { code: string; theme: string }) => {
+        if (!editor) return;
+        try {
+            editor.updateBlock(block, {
+                props: {
+                    ...block.props,
+                    code: data.code,
+                    theme: data.theme,
+                    mode: "preview",
+                },
+            });
+        } catch (error) {
+            console.error("Failed to update mermaid block:", error);
+        }
+    };
+
+    if (!hasCode) {
+        return (
+            <>
+                <Box sx={placeholderBarSx} onClick={() => setDialogOpen(true)}>
+                    <Box sx={{ display: "flex", color: "text.secondary" }}>
+                        <MermaidIcon size={22} />
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                        {dict?.placeholder?.clickToAdd || "Add Mermaid diagram"}
+                    </Typography>
+                </Box>
+                <MermaidEditDialog
+                    open={dialogOpen}
+                    onClose={() => setDialogOpen(false)}
+                    initialCode=""
+                    initialTheme={block.props.theme || "default"}
+                    isEdit={false}
+                    onSave={handleSave}
+                />
+            </>
+        );
+    }
+
+    return (
+        <>
+            <Box sx={{ my: 1, width: "100%", maxWidth: "100%" }}>
+                <Mermaid
+                    data={block}
+                    controls={
+                        <Button
+                            className="edit-button"
+                            variant="contained"
+                            size="small"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setDialogOpen(true);
+                            }}
+                        >
+                            {dict?.edit?.editButton || "Edit"}
+                        </Button>
+                    }
+                />
+            </Box>
+            <MermaidEditDialog
+                open={dialogOpen}
+                onClose={() => setDialogOpen(false)}
+                initialCode={block.props.code || ""}
+                initialTheme={block.props.theme || "default"}
+                isEdit
+                onSave={handleSave}
             />
-        </Box>
+        </>
     );
 };
 
-// Block specification
 export const MermaidBlockSpec = createReactBlockSpec(
     {
         type: MERMAID_BLOCK_TYPE,
@@ -720,7 +873,7 @@ export const MermaidBlockSpec = createReactBlockSpec(
     },
     {
         render: (props) => (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: BlockNote render props are loosely typed
             <MermaidBlockRender block={props.block as any} />
         ),
     }
@@ -745,7 +898,7 @@ export const getMermaidSlashMenuItem = (
                 type: MERMAID_BLOCK_TYPE,
                 props: {
                     code: "",
-                    mode: "edit",
+                    mode: "preview",
                     theme: "default",
                 },
             } as unknown as PartialBlock<

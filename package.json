@@ -24,7 +24,7 @@
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@floating-ui/react": "^0.27.19",
-        "@langchain/core": "^1.2.8",
+        "@langchain/core": "^1.2.9",
         "@langchain/google-genai": "^2.2.0",
         "@langchain/openai": "^1.5.8",
         "@mantine/core": "^9.5.1",

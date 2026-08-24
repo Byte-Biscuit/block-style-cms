@@ -2,8 +2,8 @@
  * Suggestion Data Type Definitions with Zod Validation
  */
 
-import { z } from 'zod';
-import { TranslationFunction } from '@/i18n/config';
+import { z } from "zod";
+import type { TranslationFunction } from "@/i18n/config";
 
 /**
  * Suggestion Metadata Schema (Security Information)
@@ -22,16 +22,22 @@ export type SuggestionMetadata = z.infer<typeof suggestionMetadataSchema>;
 export function createSuggestionSchemas(t: TranslationFunction) {
     const suggestionSubmissionSchema = z.object({
         /** How to address the person */
-        name: z.string()
-            .min(1, t('web.suggestion.validation.name.required'))
-            .max(50, t('web.suggestion.validation.name.max', { max: 50 })),
+        name: z
+            .string()
+            .min(1, t("web.suggestion.validation.name.required"))
+            .max(50, t("web.suggestion.validation.name.max", { max: 50 })),
         /** Contact email */
-        email: z.email(t('web.suggestion.validation.email.format'))
-            .max(100, t('web.suggestion.validation.email.max', { max: 100 })),
+        email: z
+            .email(t("web.suggestion.validation.email.format"))
+            .max(100, t("web.suggestion.validation.email.max", { max: 100 })),
         /** Suggestion content */
-        content: z.string()
-            .min(10, t('web.suggestion.validation.content.min', { min: 10 }))
-            .max(2000, t('web.suggestion.validation.content.max', { max: 2000 })),
+        content: z
+            .string()
+            .min(10, t("web.suggestion.validation.content.min", { min: 10 }))
+            .max(
+                2000,
+                t("web.suggestion.validation.content.max", { max: 2000 })
+            ),
     });
 
     const suggestionSchema = suggestionSubmissionSchema.extend({
@@ -52,5 +58,9 @@ export function createSuggestionSchemas(t: TranslationFunction) {
 /**
  * Type exports derived from schemas
  */
-export type SuggestionSubmissionData = z.infer<ReturnType<typeof createSuggestionSchemas>['suggestionSubmissionSchema']>;
-export type Suggestion = z.infer<ReturnType<typeof createSuggestionSchemas>['suggestionSchema']>;
+export type SuggestionSubmissionData = z.infer<
+    ReturnType<typeof createSuggestionSchemas>["suggestionSubmissionSchema"]
+>;
+export type Suggestion = z.infer<
+    ReturnType<typeof createSuggestionSchemas>["suggestionSchema"]
+>;

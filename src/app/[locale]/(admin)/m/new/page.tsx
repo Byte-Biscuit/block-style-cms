@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { Alert, Paper, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
-import { Paper, Typography, Alert } from "@mui/material";
-import { $ZodError } from "zod/v4/core";
+import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import type { $ZodError } from "zod/v4/core";
 import ArticleForm from "@/admin/m/components/article-form";
 import ErrorDisplay from "@/admin/m/components/error-display";
-import { type Article, createArticleSchemas } from "@/types/article";
-import { useTranslations } from "next-intl";
-import { type Locale } from "@/i18n/config";
 import { LOCALE_PARAM_NAME } from "@/constants";
+import type { Locale } from "@/i18n/config";
+import { type Article, createArticleSchemas } from "@/types/article";
 
 export default function NewArticlePage() {
     const router = useRouter();
@@ -79,7 +79,14 @@ export default function NewArticlePage() {
 
     return (
         <Container maxWidth="xl" sx={{ py: 2, px: { xs: 2, sm: 4, md: 6 } }}>
-            <Paper elevation={3} sx={{ pt: { xs: 2, sm: 2 }, pb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 4 } }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    pt: { xs: 2, sm: 2 },
+                    pb: { xs: 2, sm: 4 },
+                    px: { xs: 2, sm: 4 },
+                }}
+            >
                 <Typography
                     variant="h4"
                     component="h1"

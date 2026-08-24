@@ -1,5 +1,5 @@
-import { Card, CardContent, Typography, Box } from "@mui/material";
 import FeedbackIcon from "@mui/icons-material/Feedback";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { getTranslations } from "next-intl/server";
 import Link from "@/components/link";
 import suggestionService from "@/lib/services/suggestion-service";

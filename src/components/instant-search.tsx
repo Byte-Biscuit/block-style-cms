@@ -1,21 +1,21 @@
 "use client";
 
-import { useMemo } from "react";
+import { Close } from "@mui/icons-material";
+import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { liteClient as algoliasearch } from "algoliasearch/lite";
+import type { Hit as AlgoliaHit } from "instantsearch.js";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo } from "react";
 import {
+    Configure,
+    Highlight,
+    Hits,
     InstantSearch,
     SearchBox,
-    Hits,
-    Highlight,
-    Configure,
     Stats,
 } from "react-instantsearch";
-import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import { Close } from "@mui/icons-material";
-import { useTranslations, useLocale } from "next-intl";
-import Link from "@/components/link";
-import type { Hit as AlgoliaHit } from "instantsearch.js";
 import I18NLocaleTime from "@/components/i18n-time";
+import Link from "@/components/link";
 
 // Algolia article hit type
 interface ArticleHit {
@@ -195,4 +195,3 @@ export default function AlgoliaSearchDialog({
         </Dialog>
     );
 }
-

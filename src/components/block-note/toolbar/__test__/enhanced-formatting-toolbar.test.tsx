@@ -1,15 +1,19 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import type React from "react";
+import { describe, expect, it, vi } from "vitest";
 
 // Mock @blocknote/react components
 vi.mock("@blocknote/react", () => ({
     FormattingToolbar: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="formatting-toolbar">{children}</div>
     ),
-    BlockTypeSelect: () => <button data-testid="block-type-select">BlockType</button>,
+    BlockTypeSelect: () => (
+        <button data-testid="block-type-select">BlockType</button>
+    ),
     BasicTextStyleButton: ({ basicTextStyle }: { basicTextStyle: string }) => (
-        <button data-testid={`style-${basicTextStyle}`}>{basicTextStyle}</button>
+        <button data-testid={`style-${basicTextStyle}`}>
+            {basicTextStyle}
+        </button>
     ),
     TextAlignButton: ({ textAlignment }: { textAlignment: string }) => (
         <button data-testid={`align-${textAlignment}`}>{textAlignment}</button>

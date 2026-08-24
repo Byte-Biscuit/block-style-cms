@@ -1,14 +1,14 @@
-import React from "react";
+import { Computer, Memory, Speed } from "@mui/icons-material";
 import {
+    Box,
     Card,
     CardContent,
-    Typography,
-    Box,
-    LinearProgress,
     Chip,
+    LinearProgress,
+    Typography,
 } from "@mui/material";
 import { getTranslations } from "next-intl/server";
-import { Computer, Memory, Speed } from "@mui/icons-material";
+import type React from "react";
 import { formatBytes } from "@/lib/file-utils";
 import { systemInfoService } from "@/lib/services/system-info-service";
 

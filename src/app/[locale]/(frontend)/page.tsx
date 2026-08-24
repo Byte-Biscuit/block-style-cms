@@ -1,6 +1,6 @@
-import { articleService } from "@/lib/services/article-service";
 import { getLocale, getTranslations } from "next-intl/server";
 import ArticleItem from "@/components/article-list-item";
+import { articleService } from "@/lib/services/article-service";
 
 export default async function Home() {
     const locale = await getLocale();

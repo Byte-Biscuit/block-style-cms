@@ -1,8 +1,8 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { Article, ArticleMetadata } from '@/types/article';
-import { ARTICLE_DIR, META_DIR } from '@/settings';
+import fs from "fs/promises";
+import path from "path";
 import { algoliaSearchService } from "@/lib/services/algolia-search-service";
+import { ARTICLE_DIR, META_DIR } from "@/settings";
+import type { Article, ArticleMetadata } from "@/types/article";
 
 class ArticleService {
     getArticleFile(id: string): string {
@@ -10,16 +10,16 @@ class ArticleService {
     }
 
     getMetadataFile(): string {
-        return path.join(META_DIR, 'article_metadata.json');
+        return path.join(META_DIR, "article_metadata.json");
     }
 
     /**
      * Save an article.
-     * @param article 
+     * @param article
      */
     async saveArticle(article: Article): Promise<void> {
         if (!article.id) {
-            throw new Error('Article ID is required');
+            throw new Error("Article ID is required");
         }
         const articleFile = this.getArticleFile(article.id);
         await fs.writeFile(articleFile, JSON.stringify(article, null, 2));
@@ -29,34 +29,39 @@ class ArticleService {
 
     /**
      * Update an existing article.
-     * @param article 
+     * @param article
      */
     async updateArticle(article: Article): Promise<void> {
         if (!article.id) {
-            throw new Error('Article ID is required');
+            throw new Error("Article ID is required");
         }
         const articleFile = this.getArticleFile(article.id);
         try {
-            const existingContent = await fs.readFile(articleFile, 'utf-8');
+            const existingContent = await fs.readFile(articleFile, "utf-8");
             const existingArticle: Article = JSON.parse(existingContent);
             const updatedArticle: Article = {
                 ...existingArticle,
                 ...article,
-                updatedAt: new Date()
+                updatedAt: new Date(),
             };
-            await fs.writeFile(articleFile, JSON.stringify(updatedArticle, null, 2));
+            await fs.writeFile(
+                articleFile,
+                JSON.stringify(updatedArticle, null, 2)
+            );
             await this.updateMetadata(updatedArticle);
             await algoliaSearchService.updateArticle(updatedArticle);
         } catch (error) {
             console.error(`Error updating article ${article.id}:`, error);
-            throw new Error(`Failed to update article: ${error instanceof Error ? error.message : String(error)}`);
+            throw new Error(
+                `Failed to update article: ${error instanceof Error ? error.message : String(error)}`
+            );
         }
     }
 
     /**
      * Delete an article.
-     * @param slug 
-     * @param id 
+     * @param slug
+     * @param id
      */
     async deleteArticle(slug: string, id: string): Promise<void> {
         const articleFile = this.getArticleFile(id);
@@ -65,22 +70,29 @@ class ArticleService {
 
             const metadataMap = await this.getMetadataMap();
             if (metadataMap[slug]) {
-                metadataMap[slug] = metadataMap[slug].filter(meta => meta.id !== id);
+                metadataMap[slug] = metadataMap[slug].filter(
+                    (meta) => meta.id !== id
+                );
                 if (metadataMap[slug].length === 0) {
                     delete metadataMap[slug];
                 }
-                await fs.writeFile(this.getMetadataFile(), JSON.stringify(metadataMap, null, 2));
+                await fs.writeFile(
+                    this.getMetadataFile(),
+                    JSON.stringify(metadataMap, null, 2)
+                );
             }
             await algoliaSearchService.deleteArticle(id);
         } catch (error) {
             console.error(`Error deleting article ${id}:`, error);
-            throw new Error(`Failed to delete article: ${error instanceof Error ? error.message : String(error)}`);
+            throw new Error(
+                `Failed to delete article: ${error instanceof Error ? error.message : String(error)}`
+            );
         }
     }
 
     /**
      * Update metadata for an article.
-     * @param article 
+     * @param article
      */
     async updateMetadata(article: Article): Promise<void> {
         const metadataMap = await this.getMetadataMap();
@@ -95,13 +107,15 @@ class ArticleService {
             locale: article.locale,
             published: article.published || false,
             image: article.image,
-            tags: article.tags
+            tags: article.tags,
         };
 
         if (!metadataMap[article.slug]) {
             metadataMap[article.slug] = [newMetadata];
         } else {
-            const existingIndex = metadataMap[article.slug].findIndex(meta => meta.id === article.id);
+            const existingIndex = metadataMap[article.slug].findIndex(
+                (meta) => meta.id === article.id
+            );
             if (existingIndex !== -1) {
                 const existing = metadataMap[article.slug][existingIndex];
                 metadataMap[article.slug][existingIndex] = {
@@ -112,13 +126,16 @@ class ArticleService {
                 metadataMap[article.slug].push(newMetadata);
             }
         }
-        await fs.writeFile(this.getMetadataFile(), JSON.stringify(metadataMap, null, 2));
+        await fs.writeFile(
+            this.getMetadataFile(),
+            JSON.stringify(metadataMap, null, 2)
+        );
     }
 
     async getArticle(id: string): Promise<Article | null> {
         try {
             const articleFile = this.getArticleFile(id);
-            const content = await fs.readFile(articleFile, 'utf-8');
+            const content = await fs.readFile(articleFile, "utf-8");
             const article = JSON.parse(content);
             return article;
         } catch {
@@ -128,13 +145,13 @@ class ArticleService {
 
     /**
      * Article metadata map
-     * @returns 
+     * @returns
      */
     async getMetadataMap(): Promise<Record<string, ArticleMetadata[]>> {
         const metadataFile = this.getMetadataFile();
         let metadataMap: Record<string, ArticleMetadata[]> = {};
         try {
-            const content = await fs.readFile(metadataFile, 'utf-8');
+            const content = await fs.readFile(metadataFile, "utf-8");
             metadataMap = JSON.parse(content);
         } catch {
             metadataMap = {};
@@ -144,20 +161,32 @@ class ArticleService {
 
     /**
      * Get all articles.
-     * @returns 
+     * @returns
      */
     async getAllArticles(): Promise<ArticleMetadata[]> {
-        console.log('Fetching all articles');
+        console.log("Fetching all articles");
         const metadataMap = await this.getMetadataMap();
-        const slugGroups = Object.entries(metadataMap).map(([slug, articles]) => {
-            const sortedArticles = [...articles].sort((a, b) => new Date(b.updatedAt || '0').getTime() - new Date(a.updatedAt || '0').getTime());
-            return {
-                slug,
-                articles: sortedArticles,
-                latest: sortedArticles[0]?.updatedAt || sortedArticles[0]?.createdAt || '0',
-            };
-        });
-        slugGroups.sort((a, b) => new Date(b.latest).getTime() - new Date(a.latest).getTime());
+        const slugGroups = Object.entries(metadataMap).map(
+            ([slug, articles]) => {
+                const sortedArticles = [...articles].sort(
+                    (a, b) =>
+                        new Date(b.updatedAt || "0").getTime() -
+                        new Date(a.updatedAt || "0").getTime()
+                );
+                return {
+                    slug,
+                    articles: sortedArticles,
+                    latest:
+                        sortedArticles[0]?.updatedAt ||
+                        sortedArticles[0]?.createdAt ||
+                        "0",
+                };
+            }
+        );
+        slugGroups.sort(
+            (a, b) =>
+                new Date(b.latest).getTime() - new Date(a.latest).getTime()
+        );
         const allArticles: ArticleMetadata[] = [];
         for (const group of slugGroups) {
             allArticles.push(...group.articles);
@@ -168,16 +197,27 @@ class ArticleService {
      * Get the total count of articles and draft count.
      * @returns The total count of articles and draft count.
      */
-    async getArticlesCount(): Promise<{ total: number, draft: number }> {
+    async getArticlesCount(): Promise<{ total: number; draft: number }> {
         const metadataMap = await this.getMetadataMap();
-        const total = Object.values(metadataMap).reduce((count, articles) => count + articles.length, 0)
-        const draft = Object.values(metadataMap).reduce((count, articles) => count + articles.filter(article => !article.published).length, 0)
+        const total = Object.values(metadataMap).reduce(
+            (count, articles) => count + articles.length,
+            0
+        );
+        const draft = Object.values(metadataMap).reduce(
+            (count, articles) =>
+                count + articles.filter((article) => !article.published).length,
+            0
+        );
         return { total, draft };
     }
 
-    async getArticlesWithPage(articles: ArticleMetadata[], page: number, pageSize: number): Promise<ArticleMetadata[] | null> {
+    async getArticlesWithPage(
+        articles: ArticleMetadata[],
+        page: number,
+        pageSize: number
+    ): Promise<ArticleMetadata[] | null> {
         if (page < 1 || pageSize < 1) {
-            throw new Error('Page and pageSize must be greater than 0');
+            throw new Error("Page and pageSize must be greater than 0");
         }
         const startIndex = (page - 1) * pageSize;
         const endIndex = startIndex + pageSize;
@@ -187,9 +227,12 @@ class ArticleService {
         return articles.slice(startIndex, endIndex);
     }
 
-    async getTotalPageCount(articles: ArticleMetadata[], pageSize: number): Promise<number> {
+    async getTotalPageCount(
+        articles: ArticleMetadata[],
+        pageSize: number
+    ): Promise<number> {
         if (pageSize <= 0) {
-            throw new Error('Page size must be greater than 0');
+            throw new Error("Page size must be greater than 0");
         }
         return Math.ceil(articles.length / pageSize);
     }
@@ -197,8 +240,8 @@ class ArticleService {
     async getAllTags(): Promise<string[]> {
         const articles = await this.getAllArticles();
         const tags = new Set<string>();
-        articles.forEach(article => {
-            article.tags.forEach(tag => tags.add(tag));
+        articles.forEach((article) => {
+            article.tags.forEach((tag) => tags.add(tag));
         });
         return Array.from(tags).sort();
     }
@@ -208,31 +251,37 @@ class ArticleService {
      * @param slug - Article slug
      * @param includeUnpublished - If true, include unpublished articles (for preview); if false, only published articles
      */
-    async getArticlesBySlug(slug: string, includeUnpublished: boolean = false): Promise<ArticleMetadata[] | null> {
+    async getArticlesBySlug(
+        slug: string,
+        includeUnpublished: boolean = false
+    ): Promise<ArticleMetadata[] | null> {
         const metadataMap = await this.getMetadataMap();
         let articles = metadataMap[slug];
         // 如果不包含未发布文章,则只返回已发布的
         if (!includeUnpublished) {
-            articles = articles?.filter(article => article.published) || null;
+            articles = articles?.filter((article) => article.published) || null;
         }
         if (!articles || articles.length === 0) {
             return null;
         }
         return articles;
-    };
+    }
     /**
      * Get latest articles by locale
-     * @param locale 
-     * @param limit 
+     * @param locale
+     * @param limit
      * @returns
      */
-    async getArticlesByLocale(locale: string, limit: number = 20): Promise<ArticleMetadata[]> {
+    async getArticlesByLocale(
+        locale: string,
+        limit: number = 20
+    ): Promise<ArticleMetadata[]> {
         const metadataMap = await this.getMetadataMap();
         // Simulate delay (for testing skeleton screen effects).
         //await new Promise(resolve => setTimeout(resolve, 20000));
         const allArticles: ArticleMetadata[] = [];
-        Object.values(metadataMap).forEach(articles => {
-            articles.forEach(article => {
+        Object.values(metadataMap).forEach((articles) => {
+            articles.forEach((article) => {
                 if (article.locale === locale && article.published) {
                     allArticles.push(article);
                 }
@@ -240,14 +289,14 @@ class ArticleService {
         });
 
         allArticles.sort((a, b) => {
-            const timeA = new Date(a.updatedAt || a.createdAt || '0').getTime();
-            const timeB = new Date(b.updatedAt || b.createdAt || '0').getTime();
+            const timeA = new Date(a.updatedAt || a.createdAt || "0").getTime();
+            const timeB = new Date(b.updatedAt || b.createdAt || "0").getTime();
             return timeB - timeA;
         });
-        const articles = allArticles.slice(0, limit)
+        const articles = allArticles.slice(0, limit);
         return articles;
-    };
+    }
 }
 
 export const articleService = new ArticleService();
-export { ArticleService }
+export { ArticleService };

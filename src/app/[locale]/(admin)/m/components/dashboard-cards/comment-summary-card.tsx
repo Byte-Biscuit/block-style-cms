@@ -1,8 +1,8 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
 import CommentIcon from "@mui/icons-material/Comment";
-import commentService from "@/lib/services/comment-service";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { getTranslations } from "next-intl/server";
 import Link from "@/components/link";
+import commentService from "@/lib/services/comment-service";
 
 const CommentSummaryCard = async () => {
     const commentCount = await commentService.getCommentCount();

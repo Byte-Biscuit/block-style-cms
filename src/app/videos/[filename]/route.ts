@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import { createReadStream } from 'fs';
-import path from 'path';
-import { getVideoInfo } from '@/lib/services/video-service';
-import { VIDEO_DIR } from '@/settings';
-import { validateFileSecurity } from '@/lib/file-utils';
-import type { VideoServeOptions } from '@/types/video';
+import { createReadStream, promises as fs } from "fs";
+import { type NextRequest, NextResponse } from "next/server";
+import path from "path";
+import { validateFileSecurity } from "@/lib/file-utils";
+import { getVideoInfo } from "@/lib/services/video-service";
+import { VIDEO_DIR } from "@/settings";
+import type { VideoServeOptions } from "@/types/video";
 
 /**
  * 获取视频的API路由
@@ -35,19 +34,22 @@ export async function GET(
         const options: VideoServeOptions = {};
 
         // 质量参数
-        const quality = searchParams.get('q');
-        if (quality && ['low', 'medium', 'high', 'original'].includes(quality)) {
-            options.q = quality as 'low' | 'medium' | 'high' | 'original';
+        const quality = searchParams.get("q");
+        if (
+            quality &&
+            ["low", "medium", "high", "original"].includes(quality)
+        ) {
+            options.q = quality as "low" | "medium" | "high" | "original";
         }
 
         // 格式参数
-        const format = searchParams.get('f');
-        if (format && ['mp4', 'webm'].includes(format)) {
-            options.f = format as 'mp4' | 'webm';
+        const format = searchParams.get("f");
+        if (format && ["mp4", "webm"].includes(format)) {
+            options.f = format as "mp4" | "webm";
         }
 
         // 开始时间参数
-        const startTime = searchParams.get('t');
+        const startTime = searchParams.get("t");
         if (startTime) {
             const t = parseFloat(startTime);
             if (!isNaN(t) && t >= 0) {
@@ -56,7 +58,7 @@ export async function GET(
         }
 
         // 持续时间参数
-        const duration = searchParams.get('d');
+        const duration = searchParams.get("d");
         if (duration) {
             const d = parseFloat(duration);
             if (!isNaN(d) && d > 0) {
@@ -67,10 +69,7 @@ export async function GET(
         // 获取视频元信息
         const videoInfo = await getVideoInfo(filename);
         if (!videoInfo) {
-            return NextResponse.json(
-                { error: '视频不存在' },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: "视频不存在" }, { status: 404 });
         }
 
         // 确定要返回的视频文件
@@ -78,19 +77,25 @@ export async function GET(
         let contentType = videoInfo.mimeType;
 
         // 如果指定了质量且不是original，尝试找到对应的变体
-        if (options.q && options.q !== 'original' && videoInfo.variants?.length) {
+        if (
+            options.q &&
+            options.q !== "original" &&
+            videoInfo.variants?.length
+        ) {
             const qualityMap: Record<string, string> = {
-                'low': '480p',
-                'medium': '720p',
-                'high': '1080p'
+                low: "480p",
+                medium: "720p",
+                high: "1080p",
             };
 
             const targetQuality = qualityMap[options.q];
-            const variant = videoInfo.variants.find(v => v.quality === targetQuality);
+            const variant = videoInfo.variants.find(
+                (v) => v.quality === targetQuality
+            );
 
             if (variant) {
                 targetFilename = variant.filename;
-                contentType = 'video/mp4'; // 变体通常是mp4格式
+                contentType = "video/mp4"; // 变体通常是mp4格式
             }
         }
 
@@ -105,30 +110,30 @@ export async function GET(
         try {
             await fs.access(filePath);
         } catch (error) {
-            console.error('视频文件不存在:', error);
+            console.error("视频文件不存在:", error);
             return NextResponse.json(
-                { error: '视频文件不存在' },
+                { error: "视频文件不存在" },
                 { status: 404 }
             );
         }
 
         // 处理Range请求（用于视频流）
-        const range = request.headers.get('range');
+        const range = request.headers.get("range");
         if (range) {
             const parts = range.replace(/bytes=/, "").split("-");
             const start = parseInt(parts[0], 10);
             const end = parts[1] ? parseInt(parts[1], 10) : videoInfo.size - 1;
-            const chunksize = (end - start) + 1;
+            const chunksize = end - start + 1;
 
             // 使用流式读取替代 buffer.slice
             const stream = createReadStream(filePath, { start, end });
 
             const headers = new Headers({
-                'Content-Range': `bytes ${start}-${end}/${videoInfo.size}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunksize.toString(),
-                'Content-Type': contentType,
-                'Cache-Control': 'public, max-age=3600', // 1小时缓存
+                "Content-Range": `bytes ${start}-${end}/${videoInfo.size}`,
+                "Accept-Ranges": "bytes",
+                "Content-Length": chunksize.toString(),
+                "Content-Type": contentType,
+                "Cache-Control": "public, max-age=3600", // 1小时缓存
             });
 
             // 将 Node.js stream 转换为 Web Stream
@@ -136,10 +141,16 @@ export async function GET(
                 start(controller) {
                     let isClosed = false;
 
-                    stream.on('data', (chunk) => {
+                    stream.on("data", (chunk) => {
                         if (!isClosed) {
                             try {
-                                controller.enqueue(new Uint8Array(chunk instanceof Buffer ? chunk : Buffer.from(chunk)));
+                                controller.enqueue(
+                                    new Uint8Array(
+                                        chunk instanceof Buffer
+                                            ? chunk
+                                            : Buffer.from(chunk)
+                                    )
+                                );
                             } catch {
                                 if (!isClosed) {
                                     isClosed = true;
@@ -149,7 +160,7 @@ export async function GET(
                         }
                     });
 
-                    stream.on('end', () => {
+                    stream.on("end", () => {
                         if (!isClosed) {
                             isClosed = true;
                             try {
@@ -160,7 +171,7 @@ export async function GET(
                         }
                     });
 
-                    stream.on('error', (error) => {
+                    stream.on("error", (error) => {
                         if (!isClosed) {
                             isClosed = true;
                             try {
@@ -174,33 +185,36 @@ export async function GET(
                 cancel() {
                     // 当客户端取消请求时清理资源
                     stream.destroy();
-                }
+                },
             });
 
             return new NextResponse(webStream, {
                 status: 206, // Partial Content
-                headers
+                headers,
             });
         }
 
         // 设置缓存头
         const headers = new Headers({
-            'Content-Type': contentType,
-            'Content-Length': videoInfo.size.toString(),
-            'Accept-Ranges': 'bytes',
-            'Cache-Control': 'public, max-age=3600', // 1小时缓存
-            'ETag': `"${videoInfo.filename}-${videoInfo.size}"`,
-            'Last-Modified': new Date(videoInfo.uploadedAt).toUTCString(),
+            "Content-Type": contentType,
+            "Content-Length": videoInfo.size.toString(),
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "public, max-age=3600", // 1小时缓存
+            ETag: `"${videoInfo.filename}-${videoInfo.size}"`,
+            "Last-Modified": new Date(videoInfo.uploadedAt).toUTCString(),
         });
 
         // 检查 If-None-Match 头（ETag缓存）
-        const ifNoneMatch = request.headers.get('if-none-match');
-        if (ifNoneMatch && ifNoneMatch.includes(`"${videoInfo.filename}-${videoInfo.size}"`)) {
+        const ifNoneMatch = request.headers.get("if-none-match");
+        if (
+            ifNoneMatch &&
+            ifNoneMatch.includes(`"${videoInfo.filename}-${videoInfo.size}"`)
+        ) {
             return new NextResponse(null, { status: 304, headers });
         }
 
         // 检查 If-Modified-Since 头
-        const ifModifiedSince = request.headers.get('if-modified-since');
+        const ifModifiedSince = request.headers.get("if-modified-since");
         if (ifModifiedSince) {
             const modifiedTime = new Date(videoInfo.uploadedAt).getTime();
             const requestTime = new Date(ifModifiedSince).getTime();
@@ -216,10 +230,16 @@ export async function GET(
             start(controller) {
                 let isClosed = false;
 
-                stream.on('data', (chunk) => {
+                stream.on("data", (chunk) => {
                     if (!isClosed) {
                         try {
-                            controller.enqueue(new Uint8Array(chunk instanceof Buffer ? chunk : Buffer.from(chunk)));
+                            controller.enqueue(
+                                new Uint8Array(
+                                    chunk instanceof Buffer
+                                        ? chunk
+                                        : Buffer.from(chunk)
+                                )
+                            );
                         } catch {
                             if (!isClosed) {
                                 isClosed = true;
@@ -229,7 +249,7 @@ export async function GET(
                     }
                 });
 
-                stream.on('end', () => {
+                stream.on("end", () => {
                     if (!isClosed) {
                         isClosed = true;
                         try {
@@ -240,7 +260,7 @@ export async function GET(
                     }
                 });
 
-                stream.on('error', (error) => {
+                stream.on("error", (error) => {
                     if (!isClosed) {
                         isClosed = true;
                         try {
@@ -254,17 +274,13 @@ export async function GET(
             cancel() {
                 // 当客户端取消请求时清理资源
                 stream.destroy();
-            }
+            },
         });
 
         return new NextResponse(webStream, { headers });
-
     } catch (error) {
-        console.error('获取视频时发生错误:', error);
-        return NextResponse.json(
-            { error: '服务器内部错误' },
-            { status: 500 }
-        );
+        console.error("获取视频时发生错误:", error);
+        return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
     }
 }
 
@@ -291,32 +307,31 @@ export async function HEAD(
 
         // 返回头信息
         const headers = new Headers({
-            'Content-Type': videoInfo.mimeType,
-            'Content-Length': videoInfo.size.toString(),
-            'Accept-Ranges': 'bytes',
-            'Cache-Control': 'public, max-age=3600',
-            'ETag': `"${videoInfo.filename}-${videoInfo.size}"`,
-            'Last-Modified': new Date(videoInfo.uploadedAt).toUTCString(),
-            'X-Video-Width': videoInfo.width.toString(),
-            'X-Video-Height': videoInfo.height.toString(),
-            'X-Video-Duration': videoInfo.duration.toString(),
+            "Content-Type": videoInfo.mimeType,
+            "Content-Length": videoInfo.size.toString(),
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "public, max-age=3600",
+            ETag: `"${videoInfo.filename}-${videoInfo.size}"`,
+            "Last-Modified": new Date(videoInfo.uploadedAt).toUTCString(),
+            "X-Video-Width": videoInfo.width.toString(),
+            "X-Video-Height": videoInfo.height.toString(),
+            "X-Video-Duration": videoInfo.duration.toString(),
         });
 
         // 添加可选的视频信息头
         if (videoInfo.bitrate !== undefined) {
-            headers.set('X-Video-Bitrate', videoInfo.bitrate.toString());
+            headers.set("X-Video-Bitrate", videoInfo.bitrate.toString());
         }
         if (videoInfo.framerate !== undefined) {
-            headers.set('X-Video-Framerate', videoInfo.framerate.toString());
+            headers.set("X-Video-Framerate", videoInfo.framerate.toString());
         }
         if (videoInfo.codec) {
-            headers.set('X-Video-Codec', videoInfo.codec);
+            headers.set("X-Video-Codec", videoInfo.codec);
         }
 
         return new NextResponse(null, { headers });
-
     } catch (error) {
-        console.error('获取视频元信息时发生错误:', error);
+        console.error("获取视频元信息时发生错误:", error);
         return new NextResponse(null, { status: 500 });
     }
 }

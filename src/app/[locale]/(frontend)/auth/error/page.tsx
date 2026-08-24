@@ -1,9 +1,9 @@
-import Link from "@/components/link";
 import { getTranslations } from "next-intl/server";
-import { type TranslationFunction } from "@/i18n/config";
+import Link from "@/components/link";
 import { BETTER_AUTH_SIGN_IN } from "@/constants";
+import type { TranslationFunction } from "@/i18n/config";
 import { sanitize } from "@/lib/security";
-import { container, button } from "@/lib/style-classes";
+import { button, container } from "@/lib/style-classes";
 
 interface AuthErrorPageProps {
     error?: string;

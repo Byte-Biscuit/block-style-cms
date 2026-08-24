@@ -1,15 +1,17 @@
-import { NextResponse, NextRequest } from "next/server";
 import fs from "fs";
+import { type NextRequest, NextResponse } from "next/server";
 import path from "path";
+import { getFileMimeType, validateFileSecurity } from "@/lib/file-utils";
 import { FILE_DIR } from "@/settings";
-import { validateFileSecurity, getFileMimeType } from "@/lib/file-utils";
 
-export async function GET(_: NextRequest, { params }: { params: Promise<{ filename: string }> }
+export async function GET(
+    _: NextRequest,
+    { params }: { params: Promise<{ filename: string }> }
 ) {
     const { filename } = await params;
 
     const validation = validateFileSecurity(filename, {
-        baseDirectory: FILE_DIR
+        baseDirectory: FILE_DIR,
     });
 
     if (!validation.isValid) {

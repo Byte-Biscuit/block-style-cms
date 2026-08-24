@@ -1,57 +1,57 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { useDebounce } from "@/lib/hooks";
 import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
-    Button,
+    Add as AddIcon,
+    Clear as ClearIcon,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+    FilterList as FilterIcon,
+    Search as SearchIcon,
+    Translate as TranslateIcon,
+    Visibility as ViewIcon,
+} from "@mui/icons-material";
+import {
+    Alert,
     Box,
+    Button,
+    Chip,
+    CircularProgress,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    IconButton,
+    InputLabel,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Pagination,
+    Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Chip,
-    IconButton,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Menu,
-    ListItemText,
-    Pagination,
-    Alert,
-    CircularProgress,
+    TextField,
     Tooltip,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
+    Typography,
 } from "@mui/material";
-import {
-    Add as AddIcon,
-    Edit as EditIcon,
-    Delete as DeleteIcon,
-    Visibility as ViewIcon,
-    Search as SearchIcon,
-    FilterList as FilterIcon,
-    Clear as ClearIcon,
-    Translate as TranslateIcon,
-} from "@mui/icons-material";
-import { useTranslations, useLocale } from "next-intl";
-import type { Article } from "@/types/article";
-import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
-import { localeMap, locales, getLanguageDisplayName } from "@/i18n/config";
-import { createLocaleVariant, getLocalesForSlug } from "@/app/actions/article";
-import { formatDateI18n } from "@/i18n/util";
+import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useCallback, useEffect, useState } from "react";
 import ErrorDisplay from "@/admin/m/components/error-display";
+import { createLocaleVariant, getLocalesForSlug } from "@/app/actions/article";
 import Link from "@/components/link";
+import { getLanguageDisplayName, localeMap, locales } from "@/i18n/config";
+import { formatDateI18n } from "@/i18n/util";
+import { useDebounce } from "@/lib/hooks";
+import { ADMIN_API_PREFIX, ADMIN_PAGE_PREFIX } from "@/settings";
+import type { Article } from "@/types/article";
 
 export default function PostListPage() {
     const router = useRouter();
@@ -146,9 +146,13 @@ export default function PostListPage() {
     );
     const [localeMenuLoading, setLocaleMenuLoading] = useState(false);
     // Per-button fetching spinner (while loading existing locales)
-    const [localeMenuFetchingId, setLocaleMenuFetchingId] = useState<string | null>(null);
+    const [localeMenuFetchingId, setLocaleMenuFetchingId] = useState<
+        string | null
+    >(null);
     // Locales that already exist for the current slug (including drafts)
-    const [localeMenuExistingLocales, setLocaleMenuExistingLocales] = useState<string[]>([]);
+    const [localeMenuExistingLocales, setLocaleMenuExistingLocales] = useState<
+        string[]
+    >([]);
 
     const handleOpenLocaleMenu = async (
         event: React.MouseEvent<HTMLElement>,
@@ -771,11 +775,15 @@ export default function PostListPage() {
                                                                     color="default"
                                                                     disabled={
                                                                         localeMenuLoading ||
-                                                                        localeMenuFetchingId === article.id
+                                                                        localeMenuFetchingId ===
+                                                                            article.id
                                                                     }
                                                                 >
-                                                                    {(localeMenuLoading && localeMenuArticle?.id === article.id) ||
-                                                                    localeMenuFetchingId === article.id ? (
+                                                                    {(localeMenuLoading &&
+                                                                        localeMenuArticle?.id ===
+                                                                            article.id) ||
+                                                                    localeMenuFetchingId ===
+                                                                        article.id ? (
                                                                         <CircularProgress
                                                                             size={
                                                                                 18

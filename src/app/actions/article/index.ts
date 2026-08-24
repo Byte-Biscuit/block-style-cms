@@ -1,11 +1,11 @@
 "use server";
 
 import { randomUUID } from "crypto";
-import { articleService } from "@/lib/services/article-service";
-import { withAuth } from "@/lib/auth/permissions";
-import { HttpStatus, Result } from "@/lib/response";
-import { locales } from "@/i18n/config";
 import type { Locale } from "@/i18n/config";
+import { locales } from "@/i18n/config";
+import { withAuth } from "@/lib/auth/permissions";
+import { HttpStatus, type Result } from "@/lib/response";
+import { articleService } from "@/lib/services/article-service";
 
 export interface CreateLocaleVariantResult {
     id: string;
@@ -83,8 +83,13 @@ export const createLocaleVariant = withAuth(
  * Get all locale codes that already exist for a given slug (including drafts).
  */
 export const getLocalesForSlug = withAuth(
-    async (params: { slug: string }): Promise<Result<{ locales: string[] }>> => {
-        const variants = await articleService.getArticlesBySlug(params.slug, true);
+    async (params: {
+        slug: string;
+    }): Promise<Result<{ locales: string[] }>> => {
+        const variants = await articleService.getArticlesBySlug(
+            params.slug,
+            true
+        );
         const existingLocales = (variants ?? []).map((v) => v.locale);
         return {
             code: HttpStatus.OK,

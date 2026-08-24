@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useMemo } from "react";
-import Image from "next/image";
-import { Box, Typography, CircularProgress } from "@mui/material";
 import { CheckCircle as CheckCircleIcon } from "@mui/icons-material";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import Image from "next/image";
+import type React from "react";
+import { useMemo } from "react";
 import type { MasonryImage, VirtualizedMasonryProps } from "@/types/masonry";
 
 // Masonry component

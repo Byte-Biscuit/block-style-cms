@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useRef, useLayoutEffect, useCallback } from "react";
+import type React from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 
 interface SmartToolbarChildrenProps {
     children: React.ReactNode;
@@ -13,11 +14,13 @@ interface SmartToolbarChildrenProps {
  * - At the end of the toolbar
  * - Adjacent to another separator (consecutive separators)
  * - The only visible elements (all buttons hidden)
- * 
+ *
  * This works by checking the actual DOM after render, since button visibility
  * is determined internally by each button component based on block type.
  */
-const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({ children }) => {
+const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({
+    children,
+}) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const filterSeparators = useCallback(() => {
@@ -26,7 +29,7 @@ const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({ children })
 
         // Get all direct children that are actually rendered (not display:none by default)
         const allChildren = Array.from(container.children) as HTMLElement[];
-        
+
         // First, reset all separators to visible
         allChildren.forEach((child) => {
             if (child.dataset.toolbarSeparator === "true") {
@@ -40,7 +43,7 @@ const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({ children })
             // Check if element is visible (has dimensions or is a separator)
             const style = window.getComputedStyle(child);
             if (style.display === "none") return false;
-            
+
             // For non-separator elements, check if they have actual content
             if (child.dataset.toolbarSeparator !== "true") {
                 // Check if the element or its children have any rendered content
@@ -50,8 +53,9 @@ const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({ children })
         });
 
         // Identify separators and non-separator (button) elements
-        const isSeparator = (el: HTMLElement) => el.dataset.toolbarSeparator === "true";
-        
+        const isSeparator = (el: HTMLElement) =>
+            el.dataset.toolbarSeparator === "true";
+
         // Track which separators to hide
         const separatorsToHide: HTMLElement[] = [];
 
@@ -93,7 +97,7 @@ const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({ children })
         const remainingButtons = visibleChildren.filter(
             (child) => !isSeparator(child) && !separatorsToHide.includes(child)
         );
-        
+
         if (remainingButtons.length === 0) {
             // Hide all separators if no buttons are visible
             visibleChildren.forEach((child) => {
@@ -133,8 +137,8 @@ const SmartToolbarChildren: React.FC<SmartToolbarChildrenProps> = ({ children })
     }, [filterSeparators]);
 
     return (
-        <div 
-            ref={containerRef} 
+        <div
+            ref={containerRef}
             className="contents"
             style={{ display: "contents" }}
         >

@@ -1,15 +1,13 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from "next/server";
 import { defineRouting } from "next-intl/routing";
-import { locales, defaultLocale } from "@/i18n/config"
+import { defaultLocale, locales } from "@/i18n/config";
 
-export const routing = defineRouting(
-    {
-        locales,
-        defaultLocale: defaultLocale,
-        localePrefix: "always",
-        localeDetection: true,
-    }
-);
+export const routing = defineRouting({
+    locales,
+    defaultLocale: defaultLocale,
+    localePrefix: "always",
+    localeDetection: true,
+});
 
 /**
  * Emulate the core logic of next-intl's createMiddleware to obtain the current locale
@@ -26,10 +24,7 @@ export function getLocale(request: NextRequest): string {
         // Core matching logic:
         // Case A: pathname is exactly "/en-US" -> match
         // Case B: pathname starts with "/en-US/" (e.g. "/en-US/about") -> match
-        return (
-            pathname === `/${locale}` ||
-            pathname.startsWith(`/${locale}/`)
-        );
+        return pathname === `/${locale}` || pathname.startsWith(`/${locale}/`);
     });
 
     // 2. If a match is found, return that locale

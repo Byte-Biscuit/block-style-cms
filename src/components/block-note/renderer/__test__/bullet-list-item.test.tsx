@@ -1,6 +1,6 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import React from "react";
+import { describe, expect, it } from "vitest";
 import { BulletListItem, type BulletListItemBlock } from "../bullet-list-item";
 
 describe("BulletListItem", () => {

@@ -1,8 +1,8 @@
-import { tagService } from "@/lib/services/tag-service";
+import { getTranslations } from "next-intl/server";
 import ArticleItem from "@/components/article-list-item";
 import Link from "@/components/link";
-import { Locale } from "@/i18n/config";
-import { getTranslations } from "next-intl/server";
+import type { Locale } from "@/i18n/config";
+import { tagService } from "@/lib/services/tag-service";
 
 export default async function TagDetailPage({
     params,

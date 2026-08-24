@@ -6,10 +6,10 @@
  */
 
 import { useState } from "react";
-import CommentForm from "./comment-form";
-import CommentList from "./comment-list";
 import { useComments } from "@/lib/hooks";
 import type { Comment } from "@/types/comment";
+import CommentForm from "./comment-form";
+import CommentList from "./comment-list";
 
 interface CommentSectionProps {
     articleId: string;

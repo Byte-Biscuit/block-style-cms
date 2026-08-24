@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
-import type { TocItem } from "@/lib/toc-utils";
 import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { TocItem } from "@/lib/toc-utils";
 
 interface TableOfContentsProps {
     articleTitle: string;

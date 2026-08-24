@@ -1,7 +1,6 @@
-import React from "react";
-import { type StyledText, type DefaultStyleSchema } from "@blocknote/core";
+import type { DefaultStyleSchema, StyledText } from "@blocknote/core";
+import type React from "react";
 import { getBlockClasses } from "@/lib/style-classes";
-
 
 const TextContent: React.FC<{ item: StyledText<DefaultStyleSchema> }> = ({
     item,

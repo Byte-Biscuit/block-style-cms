@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { Dialog, DialogContent, IconButton, Box } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
+import { Box, Dialog, DialogContent, IconButton } from "@mui/material";
+import type React from "react";
 
 interface ImagePreviewDialogProps {
     open: boolean;

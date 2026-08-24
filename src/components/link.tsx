@@ -1,8 +1,8 @@
 // from:https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/components/Link.tsx
 
-import Link from "next/link";
 import type { LinkProps } from "next/link";
-import { AnchorHTMLAttributes } from "react";
+import Link from "next/link";
+import type { AnchorHTMLAttributes } from "react";
 
 const CustomLink = ({
     href,

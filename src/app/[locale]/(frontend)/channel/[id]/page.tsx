@@ -1,11 +1,11 @@
-import { systemConfigService } from "@/lib/services/system-config-service";
-import { tagService } from "@/lib/services/tag-service";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import ArticleItem from "@/components/article-list-item";
 import Link from "@/components/link";
-import { Locale } from "@/i18n/config";
-import { getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+import type { Locale } from "@/i18n/config";
+import { systemConfigService } from "@/lib/services/system-config-service";
+import { tagService } from "@/lib/services/tag-service";
 
 /**
  * Generate metadata for channel page

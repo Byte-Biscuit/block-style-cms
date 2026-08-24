@@ -1,8 +1,8 @@
 import { Login } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { button } from "@/lib/style-classes";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "@/components/link";
-import { getTranslations, getLocale } from "next-intl/server";
+import { button } from "@/lib/style-classes";
 
 const ManageIconButton = async () => {
     const t = await getTranslations("web");

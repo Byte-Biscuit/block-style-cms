@@ -1,31 +1,31 @@
 // Image
-export {
-    EnhancedImageBlockSpec,
-    ENHANCED_IMAGE_BLOCK_TYPE,
-    getEnhancedImageSlashMenuItem
-}
-    from "./enhanced-image-block";
-// Video
-export {
-    EnhancedVideoBlockSpec,
-    ENHANCED_VIDEO_BLOCK_TYPE,
-    getEnhancedVideoSlashMenuItem
-} from "./enhanced-video-block";
+
 // Audio
 export {
-    EnhancedAudioBlockSpec,
     ENHANCED_AUDIO_BLOCK_TYPE,
-    getEnhancedAudioSlashMenuItem
+    EnhancedAudioBlockSpec,
+    getEnhancedAudioSlashMenuItem,
 } from "./enhanced-audio-block";
 // File
 export {
-    EnhancedFileBlockSpec,
     ENHANCED_FILE_BLOCK_TYPE,
-    getEnhancedFileSlashMenuItem
+    EnhancedFileBlockSpec,
+    getEnhancedFileSlashMenuItem,
 } from "./enhanced-file-block";
+export {
+    ENHANCED_IMAGE_BLOCK_TYPE,
+    EnhancedImageBlockSpec,
+    getEnhancedImageSlashMenuItem,
+} from "./enhanced-image-block";
+// Video
+export {
+    ENHANCED_VIDEO_BLOCK_TYPE,
+    EnhancedVideoBlockSpec,
+    getEnhancedVideoSlashMenuItem,
+} from "./enhanced-video-block";
 // Mermaid
 export {
-    MermaidBlockSpec,
+    getMermaidSlashMenuItem,
     MERMAID_BLOCK_TYPE,
-    getMermaidSlashMenuItem
+    MermaidBlockSpec,
 } from "./mermaid-block";

@@ -1,18 +1,18 @@
-import { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
 import Image from "next/image";
-import { articleService } from "@/lib/services/article-service";
-import { BlockListRenderer } from "@/components/block-note/universal-block-renderer";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { LocalBlock as Block } from "@/components/block-note/schema";
-import ArticleNotFound from "./article-not-found";
-import SlugNotFound from "./slug-not-found";
-import { getDefaultHeadingClasses } from "@/lib/style-classes";
+import { BlockListRenderer } from "@/components/block-note/universal-block-renderer";
+import CommentSection from "@/components/comment/comment-section";
 import I18NLocaleTime from "@/components/i18n-time";
 import TableOfContents from "@/components/toc/table-of-contents";
 import TableOfContentsMobile from "@/components/toc/table-of-contents-mobile";
-import { extractToc } from "@/lib/toc-utils";
-import CommentSection from "@/components/comment/comment-section";
+import { articleService } from "@/lib/services/article-service";
 import { systemConfigService } from "@/lib/services/system-config-service";
+import { getDefaultHeadingClasses } from "@/lib/style-classes";
+import { extractToc } from "@/lib/toc-utils";
+import ArticleNotFound from "./article-not-found";
+import SlugNotFound from "./slug-not-found";
 
 type PageParams = {
     slug: string;

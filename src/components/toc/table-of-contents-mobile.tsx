@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useTranslations } from "next-intl";
-import TableOfContents from "./table-of-contents";
+import { useEffect, useRef, useState } from "react";
 import type { TocItem } from "@/lib/toc-utils";
+import TableOfContents from "./table-of-contents";
 
 interface TableOfContentsMobileProps {
     items: TocItem[];

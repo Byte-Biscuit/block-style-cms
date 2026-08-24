@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Alert, Box, CircularProgress, Snackbar } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
-import { ServicesForm, ServicesFormData } from "@/components/configuration";
+import { useState, useTransition } from "react";
 import { updateServices } from "@/app/actions/settings/services";
+import {
+    ServicesForm,
+    type ServicesFormData,
+} from "@/components/configuration";
 import { isSuccess } from "@/lib/response";
 
 interface ServicesTabProps {
@@ -38,16 +41,12 @@ export default function ServicesTab({ initialData }: ServicesTabProps) {
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
-                        text:
-                            result.message ||
-                            t("messages.saveSuccess"),
+                        text: result.message || t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
-                        text:
-                            result.message ||
-                            t("messages.saveFailed"),
+                        text: result.message || t("messages.saveFailed"),
                     });
                 }
             } catch (error) {

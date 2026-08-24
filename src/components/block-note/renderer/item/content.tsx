@@ -1,16 +1,17 @@
-import React from "react";
-import {
-    type StyledText,
-    type Link as LinkType,
-    type DefaultStyleSchema,
-    type DefaultInlineContentSchema,
-    InlineContent
+import type {
+    DefaultInlineContentSchema,
+    DefaultStyleSchema,
+    InlineContent,
+    Link as LinkType,
+    StyledText,
 } from "@blocknote/core";
-import TextContent from "./text-content";
+import type React from "react";
 import LinkContent from "./link-content";
+import TextContent from "./text-content";
 
-
-const Content: React.FC<{ items?: InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[] }> = ({ items = [] }) => {
+const Content: React.FC<{
+    items?: InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[];
+}> = ({ items = [] }) => {
     return (
         <>
             {items.map((item, idx) => {

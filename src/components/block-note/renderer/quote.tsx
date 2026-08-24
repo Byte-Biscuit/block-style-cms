@@ -1,7 +1,7 @@
-import React from "react";
-import { LocalBlock as Block } from "@/block-note/schema";
-import Content from "./item/content";
+import type React from "react";
+import type { LocalBlock as Block } from "@/block-note/schema";
 import { getBlockClasses } from "@/lib/style-classes";
+import Content from "./item/content";
 
 export type QuoteBlock = Extract<Block, { type: "quote" }>;
 

@@ -1,8 +1,8 @@
-import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import CodeBlock from "../code-block";
 
 // Mock dependencies

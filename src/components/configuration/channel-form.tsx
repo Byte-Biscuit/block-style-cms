@@ -1,35 +1,35 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import {
-    Box,
-    TextField,
-    Button,
-    FormControl,
-    FormLabel,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    IconButton,
-    Paper,
-    Typography,
-    Divider,
-    Alert,
-    Autocomplete,
-    CircularProgress,
-    Tooltip,
-    Card,
-} from "@mui/material";
 import {
     Add as AddIcon,
-    Delete as DeleteIcon,
-    ArrowUpward as ArrowUpIcon,
     ArrowDownward as ArrowDownIcon,
+    ArrowUpward as ArrowUpIcon,
+    Delete as DeleteIcon,
     Info as InfoIcon,
 } from "@mui/icons-material";
-import { ChannelItem } from "@/types/system-config";
+import {
+    Alert,
+    Autocomplete,
+    Box,
+    Button,
+    Card,
+    CircularProgress,
+    Divider,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    IconButton,
+    Paper,
+    Radio,
+    RadioGroup,
+    TextField,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { ADMIN_API_PREFIX } from "@/settings";
+import type { ChannelItem } from "@/types/system-config";
 
 /**
  * Channel Form Data Structure

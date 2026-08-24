@@ -1,7 +1,7 @@
-import React from "react";
+import type { DefaultStyleSchema, StyledText } from "@blocknote/core";
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { type StyledText, type DefaultStyleSchema } from "@blocknote/core";
+import React from "react";
+import { describe, expect, it } from "vitest";
 import TextContent from "../text-content";
 
 describe("TextContent", () => {

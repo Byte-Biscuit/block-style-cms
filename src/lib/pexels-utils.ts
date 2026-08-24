@@ -1,4 +1,4 @@
-import { type ImageOptions } from '@/types/image';
+import type { ImageOptions } from "@/types/image";
 /**
  * 优化 Pexels 图片 URL
  * @param url 原始 Pexels 图片 URL
@@ -14,7 +14,7 @@ export function optimizePexelsImageUrl(
         height,
         quality = 85,
         autoCompress = true,
-        colorSpace = 'tinysrgb',
+        colorSpace = "tinysrgb",
         format,
         fit,
     } = options;
@@ -24,23 +24,23 @@ export function optimizePexelsImageUrl(
 
     // 添加自动压缩
     if (autoCompress) {
-        params.set('auto', 'compress');
+        params.set("auto", "compress");
     }
     // 添加颜色空间优化
-    params.set('cs', colorSpace);
+    params.set("cs", colorSpace);
     // 设置尺寸参数
     if (width) {
-        params.set('w', width.toString());
+        params.set("w", width.toString());
     }
     if (height) {
-        params.set('h', height.toString());
+        params.set("h", height.toString());
     }
     // 填充方式
     if (fit) params.set("fit", fit);
     // 设置文件格式
     if (format) params.set("fm", format); // 可选：例如 'webp'，若 CDN 支持
     // 设置质量参数
-    params.set('q', quality.toString());
+    params.set("q", quality.toString());
     return urlObj.toString();
 }
 
@@ -53,27 +53,27 @@ export const PexelsOptimizePresets = {
         width: 300,
         quality: 75,
         autoCompress: true,
-        colorSpace: 'tinysrgb' as const
+        colorSpace: "tinysrgb" as const,
     },
     /** 封面图片优化 */
     cover: {
         quality: 90,
         autoCompress: true,
-        colorSpace: 'tinysrgb' as const
+        colorSpace: "tinysrgb" as const,
     },
     /** 高质量显示 */
     highQuality: {
         quality: 95,
         autoCompress: true,
-        colorSpace: 'srgb' as const
+        colorSpace: "srgb" as const,
     },
     /** 移动端优化 */
     mobile: {
         width: 400,
         quality: 70,
         autoCompress: true,
-        colorSpace: 'tinysrgb' as const
-    }
+        colorSpace: "tinysrgb" as const,
+    },
 };
 
 /**

@@ -17,15 +17,14 @@ export interface ImageOptions {
     /** 图片质量 (1-100) */
     quality?: number | string;
     /**文件类型 */
-    format?: 'jpeg' | 'png' | 'webp' | 'avif' | 'gif';
+    format?: "jpeg" | "png" | "webp" | "avif" | "gif";
     /** 是否启用自动压缩 */
     autoCompress?: boolean;
     /** 颜色空间 */
-    colorSpace?: 'srgb' | 'tinysrgb';
+    colorSpace?: "srgb" | "tinysrgb";
     /** 是否保持宽高比 */
-    fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside' | 'crop';
+    fit?: "cover" | "contain" | "fill" | "inside" | "outside" | "crop";
 }
-
 
 /**
  * 图片上传相关类型定义
@@ -51,9 +50,9 @@ export interface ImageProcessOptions {
     /** 图片质量 (1-100) */
     quality?: number;
     /** 输出格式 */
-    format?: 'jpeg' | 'png' | 'webp' | 'avif';
+    format?: "jpeg" | "png" | "webp" | "avif";
     /** 是否保持宽高比 */
-    fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside';
+    fit?: "cover" | "contain" | "fill" | "inside" | "outside";
     /** Accept header for format negotiation */
     acceptHeader?: string;
 }
@@ -92,9 +91,9 @@ export interface ImageServeOptions {
     /** 图片质量 */
     q?: number;
     /** 输出格式 */
-    f?: 'jpeg' | 'png' | 'webp' | 'avif';
+    f?: "jpeg" | "png" | "webp" | "avif";
     /** 适应方式 */
-    fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside';
+    fit?: "cover" | "contain" | "fill" | "inside" | "outside";
 }
 
 /** 图片列表查询选项 */
@@ -104,9 +103,9 @@ export interface ImageListOptions {
     /** 每页数量 */
     limit: number;
     /** 排序字段 */
-    sortBy: 'uploadedAt' | 'size' | 'filename';
+    sortBy: "uploadedAt" | "size" | "filename";
     /** 排序方向 */
-    sortOrder: 'asc' | 'desc';
+    sortOrder: "asc" | "desc";
     /** 搜索关键词 */
     searchTerm?: string | null;
 }

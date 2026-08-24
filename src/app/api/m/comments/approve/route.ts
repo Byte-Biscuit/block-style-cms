@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
-import { success, failure } from '@/lib/response';
-import commentService from '@/lib/services/comment-service';
-import { withTiming } from '@/lib/with-timing';
+import type { NextRequest } from "next/server";
+import { failure, success } from "@/lib/response";
+import commentService from "@/lib/services/comment-service";
+import { withTiming } from "@/lib/with-timing";
 
 /**
  * POST /api/m/comments/approve
@@ -14,10 +14,13 @@ export const POST = withTiming(async (request: NextRequest) => {
         const { commentId } = body;
         // Approve the comment
         await commentService.approveComment(commentId);
-        return success('Comment approved successfully', { commentId });
+        return success("Comment approved successfully", { commentId });
     } catch (error) {
-        console.error('Failed to approve comment:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to approve comment';
+        console.error("Failed to approve comment:", error);
+        const errorMessage =
+            error instanceof Error
+                ? error.message
+                : "Failed to approve comment";
         return failure(errorMessage);
     }
 });

@@ -1,25 +1,25 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
-import {
-    Box,
-    Alert,
-    Snackbar,
-    CircularProgress,
-    Typography,
-    TextField,
-    Switch,
-    FormControlLabel,
-    Button,
-    Paper,
-    Divider,
-    Stack,
-} from "@mui/material";
 import { Save as SaveIcon } from "@mui/icons-material";
-import { BasicConfig } from "@/types/system-config";
+import {
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    Divider,
+    FormControlLabel,
+    Paper,
+    Snackbar,
+    Stack,
+    Switch,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { useTranslations } from "next-intl";
+import { useState, useTransition } from "react";
 import { updateBasicConfig } from "@/app/actions/settings/basic-config";
 import { isSuccess } from "@/lib/response";
+import type { BasicConfig } from "@/types/system-config";
 
 interface BasicConfigTabProps {
     initialData?: BasicConfig;

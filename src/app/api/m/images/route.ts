@@ -1,25 +1,28 @@
-import { NextRequest } from 'next/server';
-import { z } from 'zod';
-import { ImageService } from '@/lib/services/image-service';
-import { success, failure, badRequest } from '@/lib/response';
-import { withTiming } from '@/lib/with-timing';
-import type { ImageMetaInfo } from '@/types/image';
+import type { NextRequest } from "next/server";
+import { z } from "zod";
+import { badRequest, failure, success } from "@/lib/response";
+import { ImageService } from "@/lib/services/image-service";
+import { withTiming } from "@/lib/with-timing";
+import type { ImageMetaInfo } from "@/types/image";
 
 // 验证上传选项的schema
 const uploadOptionsSchema = z.object({
     quality: z.number().min(1).max(100).optional(),
     maxWidth: z.number().min(100).max(4096).optional(),
     maxHeight: z.number().min(100).max(4096).optional(),
-    enableWebP: z.boolean().optional()
+    enableWebP: z.boolean().optional(),
 });
 
 // 验证分页参数的schema
 const listOptionsSchema = z.object({
     page: z.number().min(1).optional().default(1),
     limit: z.number().min(1).max(100).optional().default(20),
-    sortBy: z.enum(['uploadedAt', 'size', 'filename']).optional().default('uploadedAt'),
-    sortOrder: z.enum(['asc', 'desc']).optional().default('desc'),
-    searchTerm: z.string().nullable().optional()
+    sortBy: z
+        .enum(["uploadedAt", "size", "filename"])
+        .optional()
+        .default("uploadedAt"),
+    sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
+    searchTerm: z.string().nullable().optional(),
 });
 
 /**
@@ -29,12 +32,12 @@ const listOptionsSchema = z.object({
 export const POST = withTiming(async (request: NextRequest) => {
     try {
         const formData = await request.formData();
-        const file = formData.get('file') as File;
-        const optionsStr = formData.get('options') as string;
+        const file = formData.get("file") as File;
+        const optionsStr = formData.get("options") as string;
 
         // Verify file exists
         if (!file) {
-            return badRequest('Please select an image file to upload');
+            return badRequest("Please select an image file to upload");
         }
 
         // 解析和验证选项
@@ -45,33 +48,30 @@ export const POST = withTiming(async (request: NextRequest) => {
                 const validation = uploadOptionsSchema.safeParse(parsedOptions);
 
                 if (!validation.success) {
-                    return badRequest(
-                        'Upload options format error: '
-                    );
+                    return badRequest("Upload options format error: ");
                 }
 
                 options = validation.data;
             } catch {
-                return badRequest('Upload options JSON format error');
+                return badRequest("Upload options JSON format error");
             }
         }
 
         // Upload and process image
         const imageInfo: ImageMetaInfo = await ImageService.uploadImage(file, {
             originalName: file.name,
-            ...options
+            ...options,
         });
 
-        return success('Image uploaded successfully', imageInfo);
-
+        return success("Image uploaded successfully", imageInfo);
     } catch (error) {
-        console.error('Image upload failed:', error);
+        console.error("Image upload failed:", error);
 
         if (error instanceof Error) {
             return badRequest(error.message);
         }
 
-        return failure('Image upload failed, please try again later');
+        return failure("Image upload failed, please try again later");
     }
 });
 
@@ -85,17 +85,26 @@ export const GET = withTiming(async (request: NextRequest) => {
 
         // 解析查询参数
         const queryParams = {
-            page: searchParams.get('page') ? parseInt(searchParams.get('page')!, 10) : 1,
-            limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : 20,
-            sortBy: searchParams.get('sortBy') as 'uploadedAt' | 'size' | 'filename' || 'uploadedAt',
-            sortOrder: searchParams.get('sortOrder') as 'asc' | 'desc' || 'desc',
-            searchTerm: searchParams.get('searchTerm') || null
+            page: searchParams.get("page")
+                ? parseInt(searchParams.get("page")!, 10)
+                : 1,
+            limit: searchParams.get("limit")
+                ? parseInt(searchParams.get("limit")!, 10)
+                : 20,
+            sortBy:
+                (searchParams.get("sortBy") as
+                    | "uploadedAt"
+                    | "size"
+                    | "filename") || "uploadedAt",
+            sortOrder:
+                (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
+            searchTerm: searchParams.get("searchTerm") || null,
         };
 
         // 验证参数
         const validation = listOptionsSchema.safeParse(queryParams);
         if (!validation.success) {
-            return badRequest('Query parameter error: ');
+            return badRequest("Query parameter error: ");
         }
 
         const options = validation.data;
@@ -103,10 +112,9 @@ export const GET = withTiming(async (request: NextRequest) => {
         // 获取图片列表
         const result = await ImageService.getImageList(options);
 
-        return success('Image list retrieved successfully', result);
-
+        return success("Image list retrieved successfully", result);
     } catch (error) {
-        console.error('Failed to retrieve image list:', error);
-        return failure('Failed to retrieve image list');
+        console.error("Failed to retrieve image list:", error);
+        return failure("Failed to retrieve image list");
     }
-})
+});

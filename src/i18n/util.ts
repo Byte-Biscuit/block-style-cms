@@ -15,7 +15,7 @@ export const formatDateI18n = (
 ): string => {
     const dateObj = typeof date === "string" ? new Date(date) : date;
     if (isNaN(dateObj.getTime())) {
-        return '';
+        return "";
     }
 
     const normalizedLocale = getLocale(locale);
@@ -35,10 +35,11 @@ export const formatDateI18n = (
     const formatOptions = options || defaultOptions;
 
     try {
-        return new Intl.DateTimeFormat(normalizedLocale, formatOptions).format(dateObj);
+        return new Intl.DateTimeFormat(normalizedLocale, formatOptions).format(
+            dateObj
+        );
     } catch (error) {
-        console.error('Date formatting error:', error);
+        console.error("Date formatting error:", error);
         return dateObj.toISOString();
     }
 };
-

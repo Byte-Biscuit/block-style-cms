@@ -1,7 +1,11 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { NumberedListItem, type NumberedListBlock } from "../numbered-list-item";
+import React from "react";
+import { describe, expect, it } from "vitest";
+import {
+    type NumberedListBlock,
+    NumberedListItem,
+} from "../numbered-list-item";
+
 // Ignore start property from props for testing
 describe("NumberedListItem", () => {
     it("renders simple numbered list item", () => {
@@ -66,7 +70,13 @@ describe("NumberedListItem", () => {
                 {
                     type: "link",
                     href: "https://example.com",
-                    content: [{ type: "text", text: "Example", styles: { underline: true } }],
+                    content: [
+                        {
+                            type: "text",
+                            text: "Example",
+                            styles: { underline: true },
+                        },
+                    ],
                 },
             ],
             children: [],

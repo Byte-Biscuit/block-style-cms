@@ -1,36 +1,37 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import {
-    Box,
-    TextField,
-    Button,
-    Typography,
-    Card,
-    CardMedia,
-    Menu,
-    MenuItem as MenuItemComponent,
-    CircularProgress,
-    Snackbar,
-    Alert,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    DialogContentText,
-} from "@mui/material";
 import {
     Add as AddIcon,
     CloudUpload as CloudUploadIcon,
+    Delete as DeleteIcon,
     PhotoLibrary as PhotoLibraryIcon,
     Visibility as VisibilityIcon,
-    Delete as DeleteIcon,
     Warning as WarningIcon,
     ZoomIn as ZoomInIcon,
 } from "@mui/icons-material";
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardMedia,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Menu,
+    MenuItem as MenuItemComponent,
+    Snackbar,
+    TextField,
+    Typography,
+} from "@mui/material";
 import dynamic from "next/dynamic";
-import { ALLOWED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/settings";
 import { useTranslations } from "next-intl";
+import type React from "react";
+import { useRef, useState } from "react";
+import { ALLOWED_IMAGE_MIME_TYPES, MAX_FILE_SIZE } from "@/settings";
 
 const ImagePreviewDialog = dynamic(
     () => import("@/admin/m/components/image-preview-dialog"),

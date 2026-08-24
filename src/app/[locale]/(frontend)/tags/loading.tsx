@@ -19,9 +19,24 @@ export default function TagsLoading() {
                     <div className="flex flex-wrap gap-6">
                         {/* Generate multiple tag skeletons with varying widths */}
                         {[
-                            "w-32", "w-24", "w-40", "w-28", "w-36", "w-20",
-                            "w-44", "w-32", "w-24", "w-28", "w-36", "w-32",
-                            "w-28", "w-40", "w-24", "w-32", "w-20", "w-36"
+                            "w-32",
+                            "w-24",
+                            "w-40",
+                            "w-28",
+                            "w-36",
+                            "w-20",
+                            "w-44",
+                            "w-32",
+                            "w-24",
+                            "w-28",
+                            "w-36",
+                            "w-32",
+                            "w-28",
+                            "w-40",
+                            "w-24",
+                            "w-32",
+                            "w-20",
+                            "w-36",
                         ].map((width, index) => (
                             <div
                                 key={index}

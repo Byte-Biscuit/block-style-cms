@@ -1,9 +1,9 @@
-import React from "react";
 import { ThemeProvider } from "next-themes";
-import Header from "@/components/layout/header";
-import Footer from "@/components/layout/footer";
-import { container } from "@/lib/style-classes";
+import type React from "react";
 import FloatingActionButtons from "@/components/floating-action-buttons";
+import Footer from "@/components/layout/footer";
+import Header from "@/components/layout/header";
+import { container } from "@/lib/style-classes";
 
 export default function LocaleLayout({
     children,

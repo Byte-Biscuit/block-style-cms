@@ -1,6 +1,6 @@
 /**
  * Public API: Get Authentication Methods Configuration
- * 
+ *
  * This endpoint provides information about enabled authentication methods
  * without exposing sensitive credentials.
  */
@@ -32,7 +32,8 @@ export async function GET() {
                 enabled: config.authentication.methods.google?.enabled || false,
             },
             passkey: {
-                enabled: config.authentication.methods.passkey?.enabled || false,
+                enabled:
+                    config.authentication.methods.passkey?.enabled || false,
             },
         };
 
@@ -40,9 +41,10 @@ export async function GET() {
             status: 200,
             headers: {
                 // Disable caching to ensure real-time configuration updates
-                "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
-                "Pragma": "no-cache",
-                "Expires": "0",
+                "Cache-Control":
+                    "no-store, no-cache, must-revalidate, max-age=0",
+                Pragma: "no-cache",
+                Expires: "0",
             },
         });
     } catch (error) {

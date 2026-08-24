@@ -1,16 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import MessageIcon from "@mui/icons-material/Message";
-import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 export default function SuggestionSubmit() {

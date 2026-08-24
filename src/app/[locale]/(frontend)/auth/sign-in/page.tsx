@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { container } from "@/lib/style-classes";
 import { EmailPasswordSignIn } from "./email-password-sign-in";
-import { TwoFactorAuth } from "./two-factor-auth";
 import { SocialAuth } from "./social-auth";
+import { TwoFactorAuth } from "./two-factor-auth";
 
 export default function SignInPage() {
     const [showTwoFactor, setShowTwoFactor] = useState(false);

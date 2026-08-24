@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import { GitHubIcon, GoogleIcon, LoadingSpinner } from "@/components/icons";
 import { authClient } from "@/lib/auth/auth-client";
 import { button } from "@/lib/style-classes";
-import { GitHubIcon, GoogleIcon, LoadingSpinner } from "@/components/icons";
 
 interface SocialAuthProps {
     onError: (message: string) => void;

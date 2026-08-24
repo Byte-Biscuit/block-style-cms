@@ -1,6 +1,6 @@
-import { algoliasearch, type SearchClient } from 'algoliasearch';
-import type { Article } from '@/types/article';
-import { systemConfigService } from './system-config-service';
+import { algoliasearch, type SearchClient } from "algoliasearch";
+import type { Article } from "@/types/article";
+import { systemConfigService } from "./system-config-service";
 
 /**
  * BlockNote block type definition
@@ -69,7 +69,7 @@ class AlgoliaSearchService {
      */
     private convertBlocksToMarkdown(blocks: BlockNoteBlock[]): string {
         if (!blocks || blocks.length === 0) {
-            return '';
+            return "";
         }
 
         const lines: string[] = [];
@@ -79,149 +79,174 @@ class AlgoliaSearchService {
             const content = this.extractTextContent(block);
 
             switch (type) {
-                case 'heading':
-                    const level = typeof block.props?.level === 'number' ? block.props.level : 1;
-                    lines.push(`${'#'.repeat(level)} ${content}`);
-                    lines.push('');
+                case "heading": {
+                    const level =
+                        typeof block.props?.level === "number"
+                            ? block.props.level
+                            : 1;
+                    lines.push(`${"#".repeat(level)} ${content}`);
+                    lines.push("");
                     break;
+                }
 
-                case 'paragraph':
+                case "paragraph":
                     lines.push(content);
-                    lines.push('');
+                    lines.push("");
                     break;
 
-                case 'bulletListItem':
+                case "bulletListItem":
                     lines.push(`- ${content}`);
                     if (block.children && block.children.length > 0) {
-                        const childMarkdown = this.convertBlocksToMarkdown(block.children);
-                        const indented = childMarkdown.split('\n').map(line => line ? `  ${line}` : '').join('\n');
+                        const childMarkdown = this.convertBlocksToMarkdown(
+                            block.children
+                        );
+                        const indented = childMarkdown
+                            .split("\n")
+                            .map((line) => (line ? `  ${line}` : ""))
+                            .join("\n");
                         lines.push(indented);
                     }
                     break;
 
-                case 'numberedListItem':
+                case "numberedListItem":
                     lines.push(`1. ${content}`);
                     if (block.children && block.children.length > 0) {
-                        const childMarkdown = this.convertBlocksToMarkdown(block.children);
-                        const indented = childMarkdown.split('\n').map(line => line ? `  ${line}` : '').join('\n');
+                        const childMarkdown = this.convertBlocksToMarkdown(
+                            block.children
+                        );
+                        const indented = childMarkdown
+                            .split("\n")
+                            .map((line) => (line ? `  ${line}` : ""))
+                            .join("\n");
                         lines.push(indented);
                     }
                     break;
 
-                case 'checkListItem':
-                    const checked = block.props?.checked ? 'x' : ' ';
+                case "checkListItem": {
+                    const checked = block.props?.checked ? "x" : " ";
                     lines.push(`- [${checked}] ${content}`);
                     break;
+                }
 
-                case 'quote':
+                case "quote":
                     lines.push(`> ${content}`);
-                    lines.push('');
+                    lines.push("");
                     break;
 
-                case 'code':
-                    const language = block.props?.language || '';
+                case "code": {
+                    const language = block.props?.language || "";
                     lines.push(`\`\`\`${language}`);
                     lines.push(content);
-                    lines.push('```');
-                    lines.push('');
+                    lines.push("```");
+                    lines.push("");
                     break;
+                }
 
-                case 'table':
+                case "table":
                     // Simplified table handling
-                    lines.push('[Table]');
-                    lines.push('');
+                    lines.push("[Table]");
+                    lines.push("");
                     break;
 
-                case 'enhancedImage':
-                case 'image':
-                    const imageUrl = block.props?.url || block.props?.src || '';
-                    const imageAlt = block.props?.alt || block.props?.caption || 'image';
+                case "enhancedImage":
+                case "image": {
+                    const imageUrl = block.props?.url || block.props?.src || "";
+                    const imageAlt =
+                        block.props?.alt || block.props?.caption || "image";
                     if (imageUrl) {
                         lines.push(`![${imageAlt}](${imageUrl})`);
-                        lines.push('');
+                        lines.push("");
                     }
                     break;
+                }
 
-                case 'enhancedVideo':
-                case 'video':
-                    const videoUrl = block.props?.url || block.props?.src || '';
+                case "enhancedVideo":
+                case "video": {
+                    const videoUrl = block.props?.url || block.props?.src || "";
                     if (videoUrl) {
                         lines.push(`[Video: ${videoUrl}]`);
-                        lines.push('');
+                        lines.push("");
                     }
                     break;
+                }
 
-                case 'enhancedAudio':
-                case 'audio':
-                    const audioUrl = block.props?.url || block.props?.src || '';
+                case "enhancedAudio":
+                case "audio": {
+                    const audioUrl = block.props?.url || block.props?.src || "";
                     if (audioUrl) {
                         lines.push(`[Audio: ${audioUrl}]`);
-                        lines.push('');
+                        lines.push("");
                     }
                     break;
+                }
 
-                case 'enhancedFile':
-                case 'file':
-                    const fileUrl = block.props?.url || block.props?.src || '';
-                    const fileName = block.props?.name || 'file';
+                case "enhancedFile":
+                case "file": {
+                    const fileUrl = block.props?.url || block.props?.src || "";
+                    const fileName = block.props?.name || "file";
                     if (fileUrl) {
                         lines.push(`[File: ${fileName}](${fileUrl})`);
-                        lines.push('');
+                        lines.push("");
                     }
                     break;
+                }
 
-                case 'mermaid':
-                    lines.push('```mermaid');
+                case "mermaid":
+                    lines.push("```mermaid");
                     lines.push(content);
-                    lines.push('```');
-                    lines.push('');
+                    lines.push("```");
+                    lines.push("");
                     break;
 
                 default:
                     // Other types, extract text content
                     if (content) {
                         lines.push(content);
-                        lines.push('');
+                        lines.push("");
                     }
             }
         }
 
-        return lines.join('\n').trim();
+        return lines.join("\n").trim();
     }
 
     /**
      * Extract text content from BlockNote block
      */
     private extractTextContent(block: BlockNoteBlock): string {
-        if (!block) return '';
+        if (!block) return "";
 
         // If has content array (rich text content)
         if (block.content && Array.isArray(block.content)) {
             return block.content
                 .map((item: BlockNoteContent) => {
-                    if (typeof item === 'string') return item;
-                    if (item.type === 'text') return item.text || '';
+                    if (typeof item === "string") return item;
+                    if (item.type === "text") return item.text || "";
                     if (item.text) return item.text;
-                    return '';
+                    return "";
                 })
-                .join('');
+                .join("");
         }
 
         // If has direct text property
         if (block.text) return block.text;
 
         // If in props
-        if (block.props?.text && typeof block.props.text === 'string') return block.props.text;
-        if (block.props?.content && typeof block.props.content === 'string') return block.props.content;
+        if (block.props?.text && typeof block.props.text === "string")
+            return block.props.text;
+        if (block.props?.content && typeof block.props.content === "string")
+            return block.props.content;
 
-        return '';
+        return "";
     }
 
     /**
      * Convert Article to Algolia index object
      */
     private articleToAlgoliaObject(article: Article): AlgoliaArticle {
-        const markdownContent = this.convertBlocksToMarkdown(article.content as BlockNoteBlock[]);
+        const markdownContent = this.convertBlocksToMarkdown(
+            article.content as BlockNoteBlock[]
+        );
         return {
             objectID: article.id!,
             slug: article.slug,
@@ -244,7 +269,9 @@ class AlgoliaSearchService {
 
         // Only sync published articles to Algolia
         if (!article.published) {
-            console.log(`Article ${article.id} is not published, skipping Algolia sync`);
+            console.log(
+                `Article ${article.id} is not published, skipping Algolia sync`
+            );
             return;
         }
 
@@ -256,21 +283,34 @@ class AlgoliaSearchService {
             });
             console.log(`Article ${article.id} saved to Algolia successfully`);
         } catch (error) {
-            if (error instanceof Error && error.message.includes('Record is too big')) {
+            if (
+                error instanceof Error &&
+                error.message.includes("Record is too big")
+            ) {
                 console.log("Handling oversized record by truncating content");
                 const algoliaObject = this.articleToAlgoliaObject(article);
                 algoliaObject.content = "";
                 this.client!.saveObject({
                     indexName: this.indexName,
                     body: algoliaObject,
-                }).then(() => {
-                    console.log(`Article ${article.id} with truncated content saved to Algolia successfully`);
-                }).catch(err => {
-                    console.error(`Failed to save truncated article ${article.id} to Algolia:`, err);
-                    throw err;
-                });
+                })
+                    .then(() => {
+                        console.log(
+                            `Article ${article.id} with truncated content saved to Algolia successfully`
+                        );
+                    })
+                    .catch((err) => {
+                        console.error(
+                            `Failed to save truncated article ${article.id} to Algolia:`,
+                            err
+                        );
+                        throw err;
+                    });
             } else {
-                console.error(`Failed to save article ${article.id} to Algolia:`, error);
+                console.error(
+                    `Failed to save article ${article.id} to Algolia:`,
+                    error
+                );
                 throw error;
             }
         }
@@ -288,13 +328,20 @@ class AlgoliaSearchService {
             // If article becomes unpublished, remove from Algolia
             if (!article.published) {
                 await this.deleteArticle(article.id!);
-                console.log(`Article ${article.id} unpublished, removed from Algolia`);
+                console.log(
+                    `Article ${article.id} unpublished, removed from Algolia`
+                );
                 return;
             }
             this.saveArticle(article);
-            console.log(`Article ${article.id} updated in Algolia successfully`);
+            console.log(
+                `Article ${article.id} updated in Algolia successfully`
+            );
         } catch (error) {
-            console.error(`Failed to update article ${article.id} in Algolia:`, error);
+            console.error(
+                `Failed to update article ${article.id} in Algolia:`,
+                error
+            );
             throw error;
         }
     }
@@ -311,9 +358,14 @@ class AlgoliaSearchService {
                 indexName: this.indexName,
                 objectID: articleId,
             });
-            console.log(`Article ${articleId} deleted from Algolia successfully`);
+            console.log(
+                `Article ${articleId} deleted from Algolia successfully`
+            );
         } catch (error) {
-            console.error(`Failed to delete article ${articleId} from Algolia:`, error);
+            console.error(
+                `Failed to delete article ${articleId} from Algolia:`,
+                error
+            );
             throw error;
         }
     }
@@ -327,14 +379,16 @@ class AlgoliaSearchService {
 
         try {
             // Only save published articles
-            const publishedArticles = articles.filter(article => article.published);
+            const publishedArticles = articles.filter(
+                (article) => article.published
+            );
 
             if (publishedArticles.length === 0) {
-                console.log('No published articles to sync to Algolia');
+                console.log("No published articles to sync to Algolia");
                 return;
             }
 
-            const algoliaObjects = publishedArticles.map(article =>
+            const algoliaObjects = publishedArticles.map((article) =>
                 this.articleToAlgoliaObject(article)
             );
 
@@ -343,9 +397,11 @@ class AlgoliaSearchService {
                 objects: algoliaObjects,
             });
 
-            console.log(`${publishedArticles.length} articles saved to Algolia successfully`);
+            console.log(
+                `${publishedArticles.length} articles saved to Algolia successfully`
+            );
         } catch (error) {
-            console.error('Failed to save articles to Algolia:', error);
+            console.error("Failed to save articles to Algolia:", error);
             throw error;
         }
     }
@@ -362,9 +418,11 @@ class AlgoliaSearchService {
                 indexName: this.indexName,
                 objectIDs: articleIds,
             });
-            console.log(`${articleIds.length} articles deleted from Algolia successfully`);
+            console.log(
+                `${articleIds.length} articles deleted from Algolia successfully`
+            );
         } catch (error) {
-            console.error('Failed to delete articles from Algolia:', error);
+            console.error("Failed to delete articles from Algolia:", error);
             throw error;
         }
     }
@@ -381,7 +439,7 @@ class AlgoliaSearchService {
             });
             console.log(`Algolia index ${this.indexName} cleared successfully`);
         } catch (error) {
-            console.error('Failed to clear Algolia index:', error);
+            console.error("Failed to clear Algolia index:", error);
             throw error;
         }
     }

@@ -12,49 +12,49 @@
  * Accessible by authenticated users
  */
 
-import { useEffect, useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
+import AddIcon from "@mui/icons-material/Add";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SecurityIcon from "@mui/icons-material/Security";
 import {
+    Alert,
     Box,
     Button,
     Chip,
-    IconButton,
-    Snackbar,
-    Alert,
+    CircularProgress,
     Dialog,
-    DialogTitle,
+    DialogActions,
     DialogContent,
     DialogContentText,
-    DialogActions,
+    DialogTitle,
+    IconButton,
+    Paper,
+    Snackbar,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Paper,
-    CircularProgress,
     TextField,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import SecurityIcon from "@mui/icons-material/Security";
-import { UserWithProvider } from "@/lib/services/user-management-service";
+import { useTranslations } from "next-intl";
+import { useEffect, useState, useTransition } from "react";
 import {
-    getUsers,
-    deleteUser,
     createUser,
-    updateUser,
-    resetUserPassword,
+    deleteUser,
     disableTwoFactor,
     generateTwoFactorSecret,
+    getUsers,
+    resetUserPassword,
+    updateUser,
     verifyAndEnableTwoFactor,
 } from "@/app/actions/settings/user-management";
-import { isSuccess } from "@/lib/response";
 import { EMAIL_REGEX } from "@/constants";
+import { isSuccess } from "@/lib/response";
+import type { UserWithProvider } from "@/lib/services/user-management-service";
 
 export default function UserManagementTab() {
     const t = useTranslations("configuration.userManagement");

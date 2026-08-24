@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
 import fs from "fs";
+import { NextResponse } from "next/server";
 import path from "path";
 import { CMS_DATA_PATH } from "@/settings";
 
 export async function GET() {
-    const dataLogoPath = path.join(CMS_DATA_PATH || '', "logo.png");
+    const dataLogoPath = path.join(CMS_DATA_PATH || "", "logo.png");
     const publicLogoPath = path.join(process.cwd(), "public", "logo.png");
 
     let logoPath = dataLogoPath;

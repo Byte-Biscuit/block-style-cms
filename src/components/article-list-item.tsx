@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Link from "@/components/link";
-import { ArticleMetadata } from "@/types/article";
 import I18NLocaleTime from "@/components/i18n-time";
+import Link from "@/components/link";
 import { ImageService } from "@/lib/services/image-service";
 import { tagService } from "@/lib/services/tag-service";
+import type { ArticleMetadata } from "@/types/article";
 
 const gradientVariants = [
     "from-orange-200 via-orange-300 to-rose-300",

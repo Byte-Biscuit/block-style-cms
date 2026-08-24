@@ -1,7 +1,7 @@
-import { vi, describe, it } from "vitest";
 import path from "path";
+import { describe, it, vi } from "vitest";
 
-vi.mock('@/settings', () => ({
+vi.mock("@/settings", () => ({
     CMS_DATA_PATH: path.join(__dirname, "..", "..", "..", "..", "data"),
 }));
 const { systemInfoService } = await import("../system-info-service");
@@ -12,8 +12,8 @@ describe("system-info-service", () => {
     });
 
     it("Get mounted directory storage status.", async () => {
-        const fsInfo = await systemInfoService.getMountedDirectoryStorageStatus();
+        const fsInfo =
+            await systemInfoService.getMountedDirectoryStorageStatus();
         console.log("Mounted Directory Storage Status:", fsInfo);
-    })
-
+    });
 });

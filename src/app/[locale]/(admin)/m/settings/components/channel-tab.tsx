@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Alert, Box, CircularProgress, Snackbar } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
-import ChannelForm, {
-    ChannelFormData,
-} from "@/components/configuration/channel-form";
+import { useState, useTransition } from "react";
 import { updateChannel } from "@/app/actions/settings/channel";
+import ChannelForm, {
+    type ChannelFormData,
+} from "@/components/configuration/channel-form";
 import { isSuccess } from "@/lib/response";
 
 interface ChannelTabProps {

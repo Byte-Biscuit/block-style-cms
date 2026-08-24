@@ -1,16 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import { AUDIO_DIR, FILE_EXTENSIONS } from '@/settings';
-import { validateFileSecurity, getFileMimeType, } from '@/lib/file-utils';
+import { promises as fs } from "fs";
+import { type NextRequest, NextResponse } from "next/server";
+import path from "path";
+import { getFileMimeType, validateFileSecurity } from "@/lib/file-utils";
+import { AUDIO_DIR, FILE_EXTENSIONS } from "@/settings";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ filename: string }> }) {
+export async function GET(
+    request: NextRequest,
+    { params }: { params: Promise<{ filename: string }> }
+) {
     try {
         const { filename } = await params;
 
         const validation = validateFileSecurity(filename, {
             allowedExtensions: [...FILE_EXTENSIONS.AUDIO],
-            baseDirectory: AUDIO_DIR
+            baseDirectory: AUDIO_DIR,
         });
 
         if (!validation.isValid) {
@@ -25,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         try {
             stats = await fs.stat(filePath);
         } catch {
-            return new NextResponse('音频文件不存在', { status: 404 });
+            return new NextResponse("音频文件不存在", { status: 404 });
         }
 
         // 读取文件
@@ -36,22 +39,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
         // 设置响应头
         const headers = new Headers();
-        headers.set('Content-Type', mimeType);
-        headers.set('Content-Length', stats.size.toString());
-        headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-        headers.set('Accept-Ranges', 'bytes');
+        headers.set("Content-Type", mimeType);
+        headers.set("Content-Length", stats.size.toString());
+        headers.set("Cache-Control", "public, max-age=31536000, immutable");
+        headers.set("Accept-Ranges", "bytes");
 
         // 支持部分内容请求（用于音频播放器的快进等功能）
-        const range = request.headers.get('range');
+        const range = request.headers.get("range");
         if (range) {
             const parts = range.replace(/bytes=/, "").split("-");
             const start = parseInt(parts[0], 10);
             const end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
-            const chunksize = (end - start) + 1;
+            const chunksize = end - start + 1;
             const chunk = fileBuffer.slice(start, end + 1);
 
-            headers.set('Content-Range', `bytes ${start}-${end}/${stats.size}`);
-            headers.set('Content-Length', chunksize.toString());
+            headers.set("Content-Range", `bytes ${start}-${end}/${stats.size}`);
+            headers.set("Content-Length", chunksize.toString());
 
             return new NextResponse(chunk, {
                 status: 206,
@@ -63,9 +66,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             status: 200,
             headers,
         });
-
     } catch (error) {
-        console.error('音频文件服务错误:', error);
-        return new NextResponse('服务器内部错误', { status: 500 });
+        console.error("音频文件服务错误:", error);
+        return new NextResponse("服务器内部错误", { status: 500 });
     }
 }

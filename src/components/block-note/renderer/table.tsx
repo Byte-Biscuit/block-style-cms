@@ -1,12 +1,12 @@
-import React from "react";
-import {
-    type DefaultStyleSchema,
-    type DefaultInlineContentSchema,
-    type TableCell,
-    type InlineContent,
-    type TableCellProps,
+import type {
+    DefaultInlineContentSchema,
+    DefaultStyleSchema,
+    InlineContent,
+    TableCell,
+    TableCellProps,
 } from "@blocknote/core";
-import {type LocalBlock as Block } from "@/block-note/schema";
+import type React from "react";
+import type { LocalBlock as Block } from "@/block-note/schema";
 import { getBlockClasses } from "@/lib/style-classes";
 import Content from "./item/content";
 
@@ -34,7 +34,9 @@ const isTableCell = (
 
 // TableCell component
 const TableCellRender: React.FC<{
-    cell: TableCell<DefaultInlineContentSchema, DefaultStyleSchema> | InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[];
+    cell:
+        | TableCell<DefaultInlineContentSchema, DefaultStyleSchema>
+        | InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[];
     isHeader?: boolean;
 }> = ({ cell, isHeader = false }) => {
     // Parse cell data: can be either a TableCell object or InlineContent[] array
@@ -50,18 +52,18 @@ const TableCellRender: React.FC<{
     } else {
         content = cell;
     }
-    const {
-        colspan = 1,
-        rowspan = 1,
-    } = props as TableCellProps;
-    let updateProps=props;
-    if ((colspan > 1||rowspan>1) && props.textAlignment) {
-        updateProps={...props, textAlignment: "center"};
+    const { colspan = 1, rowspan = 1 } = props as TableCellProps;
+    let updateProps = props;
+    if ((colspan > 1 || rowspan > 1) && props.textAlignment) {
+        updateProps = { ...props, textAlignment: "center" };
     }
-    const classes=getBlockClasses(updateProps,
+    const classes = getBlockClasses(
+        updateProps,
         "px-2 py-2 text-sm",
         "border-b border-r border-gray-200 dark:border-gray-700",
-        isHeader ? "py-3 font-semibold text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-gray-100" : "text-gray-700 dark:text-gray-200",
+        isHeader
+            ? "py-3 font-semibold text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-gray-100"
+            : "text-gray-700 dark:text-gray-200"
     );
 
     if (isHeader) {
@@ -86,8 +88,8 @@ const TableCellRender: React.FC<{
     return (
         <td
             className={classes}
-                colSpan={colspan > 1 ? colspan : undefined}
-                rowSpan={rowspan > 1 ? rowspan : undefined}
+            colSpan={colspan > 1 ? colspan : undefined}
+            rowSpan={rowspan > 1 ? rowspan : undefined}
         >
             {content && content.length > 0 ? (
                 <Content items={content} />
@@ -106,7 +108,13 @@ export const TableRender: React.FC<{
     const { props, content } = block;
     if (!content) return null;
     const { columnWidths, rows } = content;
-    const classes=getBlockClasses(props,"min-w-full","table-fixed","border-collapse",className)
+    const classes = getBlockClasses(
+        props,
+        "min-w-full",
+        "table-fixed",
+        "border-collapse",
+        className
+    );
 
     // Generate column styles if widths are specified
     const hasAnySpecified = columnWidths.some((w) => w !== null);

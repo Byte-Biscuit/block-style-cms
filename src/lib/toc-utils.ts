@@ -1,6 +1,5 @@
-import type { LocalBlock as Block } from "@/block-note/schema";
 import type { InlineContent, Link, StyledText } from "@blocknote/core";
-import { schema } from "@/block-note/schema";
+import type { LocalBlock as Block, schema } from "@/block-note/schema";
 
 // Infer the InlineContent and StyleSchema types from our custom schema
 type SchemaInlineContent = InlineContent<
@@ -53,7 +52,9 @@ export function extractToc(content: Block[]): TocItem[] {
 export function isLinkContent(
     item: SchemaInlineContent
 ): item is Link<typeof schema.styleSchema> {
-    return item.type === "link" && "content" in item && Array.isArray(item.content);
+    return (
+        item.type === "link" && "content" in item && Array.isArray(item.content)
+    );
 }
 
 /**
@@ -70,9 +71,7 @@ export function isStyledTextContent(
  * @param content Array of inline content items
  * @returns Extracted plain text
  */
-export function extractTextFromContent(
-    content: SchemaInlineContent[]
-): string {
+export function extractTextFromContent(content: SchemaInlineContent[]): string {
     return content
         .map((item) => {
             if (isLinkContent(item)) {

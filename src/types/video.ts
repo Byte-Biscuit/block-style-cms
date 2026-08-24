@@ -5,9 +5,9 @@ export interface VideoUploadOptions {
     /** 原始文件名（用于生成SEO友好的文件名） */
     originalName?: string;
     /** 视频质量 (低质量/中等质量/高质量) */
-    quality?: 'low' | 'medium' | 'high';
+    quality?: "low" | "medium" | "high";
     /** 最大分辨率 */
-    maxResolution?: '480p' | '720p' | '1080p' | 'original';
+    maxResolution?: "480p" | "720p" | "1080p" | "original";
     /** 是否生成缩略图 */
     generateThumbnail?: boolean;
     /** 缩略图时间点（秒） */
@@ -21,9 +21,9 @@ export interface VideoUploadOptions {
  */
 export interface VideoServeOptions {
     /** 视频质量 */
-    q?: 'low' | 'medium' | 'high' | 'original';
+    q?: "low" | "medium" | "high" | "original";
     /** 格式 */
-    f?: 'mp4' | 'webm';
+    f?: "mp4" | "webm";
     /** 开始时间（秒） */
     t?: number;
     /** 持续时间（秒） */
@@ -40,9 +40,9 @@ export interface VideoProcessOptions {
     /** 帧率 */
     framerate?: number;
     /** 输出格式 */
-    format?: 'mp4' | 'webm' | 'avi';
+    format?: "mp4" | "webm" | "avi";
     /** 视频编码器 */
-    codec?: 'h264' | 'h265' | 'vp9' | 'av1';
+    codec?: "h264" | "h265" | "vp9" | "av1";
     /** 音频比特率 */
     audioBitrate?: string;
 }
@@ -105,9 +105,9 @@ export interface VideoListOptions {
     /** 每页数量 */
     limit?: number;
     /** 排序字段 */
-    sortBy?: 'uploadedAt' | 'size' | 'duration' | 'filename';
+    sortBy?: "uploadedAt" | "size" | "duration" | "filename";
     /** 排序方向 */
-    sortOrder?: 'asc' | 'desc';
+    sortOrder?: "asc" | "desc";
     /** 搜索关键词 */
     searchTerm?: string | null;
     /** 是否只显示已处理的视频 */

@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
-import IconButton from "@mui/material/IconButton";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import IconButton from "@mui/material/IconButton";
+import { useEffect, useState } from "react";
 
 export default function ScrollToTop() {
     const [visible, setVisible] = useState(false);

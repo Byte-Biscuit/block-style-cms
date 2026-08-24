@@ -3,7 +3,7 @@
 exports[`Heading > renders h1 heading 1`] = `
 <DocumentFragment>
   <h1
-    class="text-foreground bg-transparent text-left font-extrabold text-gray-900 dark:text-gray-100 text-3xl leading-normal sm:text-4xl sm:leading-normal md:text-5xl md:leading-normal"
+    class="text-foreground bg-transparent text-left font-extrabold text-gray-900 dark:text-gray-100 text-2xl leading-normal sm:text-3xl sm:leading-normal md:text-4xl md:leading-normal"
     id="h1-1"
   >
     Heading 1
@@ -14,7 +14,7 @@ exports[`Heading > renders h1 heading 1`] = `
 exports[`Heading > renders h3 heading with link 1`] = `
 <DocumentFragment>
   <h3
-    class="text-foreground bg-transparent text-left font-bold text-gray-900 dark:text-gray-100 text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal"
+    class="text-foreground bg-transparent text-left font-bold text-gray-900 dark:text-gray-100 text-lg leading-normal sm:text-xl sm:leading-normal md:text-2xl md:leading-normal"
     id="h3-2"
   >
     Check 
@@ -39,7 +39,7 @@ exports[`Heading > renders h3 heading with link 1`] = `
 exports[`Heading > renders heading with text alignment 1`] = `
 <DocumentFragment>
   <h2
-    class="text-foreground bg-transparent text-center font-bold text-gray-900 dark:text-gray-100 text-2xl leading-normal sm:text-3xl sm:leading-normal md:text-4xl md:leading-normal"
+    class="text-foreground bg-transparent text-center font-bold text-gray-900 dark:text-gray-100 text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal"
     id="h2-3"
   >
     Centered Heading

@@ -4,8 +4,8 @@
  *
  */
 
-import fsSync from "fs";
-import fs from "fs/promises";
+import fsSync from "node:fs";
+import fs from "node:fs/promises";
 import { VERSION } from "@/settings";
 import {
     type ChannelConfig,
@@ -15,19 +15,19 @@ import {
 
 class SystemConfigService {
     private readonly configFileName = "settings.json";
-    private readonly configFilePath = process.env.CMS_DATA_PATH;
     private _cachedConfig: SystemConfig | null = null;
 
     /**
      * Get the full path to settings.json
      */
     public getConfigPath(): string {
-        if (!this.configFilePath) {
+        const configFilePath = process.env.CMS_DATA_PATH;
+        if (!configFilePath) {
             throw new Error("CMS_DATA_PATH environment variable is not set");
         }
-        const normalizedPath = this.configFilePath.endsWith("/")
-            ? this.configFilePath
-            : `${this.configFilePath}/`;
+        const normalizedPath = configFilePath.endsWith("/")
+            ? configFilePath
+            : `${configFilePath}/`;
         return `${normalizedPath}${this.configFileName}`;
     }
 

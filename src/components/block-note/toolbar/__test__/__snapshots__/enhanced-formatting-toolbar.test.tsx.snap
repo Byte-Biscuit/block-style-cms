@@ -5,91 +5,131 @@ exports[`EnhancedFormattingToolbar > renders toolbar with all components 1`] = `
   <div
     data-testid="formatting-toolbar"
   >
-    <button
-      data-testid="block-type-select"
-    >
-      BlockType
-    </button>
     <div
-      aria-hidden="true"
-      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
-    />
-    <button
-      data-testid="style-bold"
+      class="contents"
+      style="display: contents;"
     >
-      bold
-    </button>
-    <button
-      data-testid="style-italic"
-    >
-      italic
-    </button>
-    <button
-      data-testid="style-underline"
-    >
-      underline
-    </button>
-    <button
-      data-testid="style-strike"
-    >
-      strike
-    </button>
-    <div
-      aria-hidden="true"
-      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
-    />
-    <button
-      data-testid="align-left"
-    >
-      left
-    </button>
-    <button
-      data-testid="align-center"
-    >
-      center
-    </button>
-    <button
-      data-testid="align-right"
-    >
-      right
-    </button>
-    <div
-      aria-hidden="true"
-      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
-    />
-    <button
-      data-testid="color-textColor"
-    >
-      textColor
-    </button>
-    <button
-      data-testid="color-backgroundColor"
-    >
-      backgroundColor
-    </button>
-    <div
-      aria-hidden="true"
-      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
-    />
-    <button
-      data-testid="nest-block"
-    >
-      Nest
-    </button>
-    <button
-      data-testid="unnest-block"
-    >
-      Unnest
-    </button>
-    <div
-      aria-hidden="true"
-      class="h-5 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
-    />
-    <button
-      data-testid="create-link"
-    >
-      Link
-    </button>
+      <button
+        data-testid="block-type-select"
+        type="button"
+      >
+        BlockType
+      </button>
+      <div
+        aria-hidden="true"
+        class="bn-toolbar-separator h-5 w-px bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+        data-toolbar-separator="true"
+        style="display: none;"
+      />
+      <button
+        data-testid="table-cell-merge"
+        type="button"
+      >
+        Merge
+      </button>
+      <div
+        aria-hidden="true"
+        class="bn-toolbar-separator h-5 w-px bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+        data-toolbar-separator="true"
+        style="display: none;"
+      />
+      <button
+        data-testid="style-bold"
+        type="button"
+      >
+        bold
+      </button>
+      <button
+        data-testid="style-italic"
+        type="button"
+      >
+        italic
+      </button>
+      <button
+        data-testid="style-underline"
+        type="button"
+      >
+        underline
+      </button>
+      <button
+        data-testid="style-strike"
+        type="button"
+      >
+        strike
+      </button>
+      <div
+        aria-hidden="true"
+        class="bn-toolbar-separator h-5 w-px bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+        data-toolbar-separator="true"
+        style="display: none;"
+      />
+      <button
+        data-testid="align-left"
+        type="button"
+      >
+        left
+      </button>
+      <button
+        data-testid="align-center"
+        type="button"
+      >
+        center
+      </button>
+      <button
+        data-testid="align-right"
+        type="button"
+      >
+        right
+      </button>
+      <div
+        aria-hidden="true"
+        class="bn-toolbar-separator h-5 w-px bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+        data-toolbar-separator="true"
+        style="display: none;"
+      />
+      <button
+        data-testid="color-textColor"
+        type="button"
+      >
+        textColor
+      </button>
+      <button
+        data-testid="color-backgroundColor"
+        type="button"
+      >
+        backgroundColor
+      </button>
+      <div
+        aria-hidden="true"
+        class="bn-toolbar-separator h-5 w-px bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+        data-toolbar-separator="true"
+        style="display: none;"
+      />
+      <button
+        data-testid="nest-block"
+        type="button"
+      >
+        Nest
+      </button>
+      <button
+        data-testid="unnest-block"
+        type="button"
+      >
+        Unnest
+      </button>
+      <div
+        aria-hidden="true"
+        class="bn-toolbar-separator h-5 w-px bg-gray-200 dark:bg-gray-700 mx-1 self-center shrink-0"
+        data-toolbar-separator="true"
+        style="display: none;"
+      />
+      <button
+        data-testid="create-link"
+        type="button"
+      >
+        Link
+      </button>
+    </div>
   </div>
 </DocumentFragment>
 `;

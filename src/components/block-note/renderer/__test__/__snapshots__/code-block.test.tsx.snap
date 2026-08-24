@@ -12,13 +12,13 @@ exports[`CodeBlock > renders code block with custom language 1`] = `
     >
       <span
         aria-hidden="true"
-        class="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+        class="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 font-medium text-gray-700 text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
       >
         PYTHON
       </span>
       <button
         aria-label="Copy python code"
-        class="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+        class="rounded-md bg-gray-700 px-3 py-1 text-white text-xs transition hover:bg-gray-600"
         type="button"
       >
         Copy
@@ -51,13 +51,13 @@ exports[`CodeBlock > renders code block with typescript language 1`] = `
     >
       <span
         aria-hidden="true"
-        class="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+        class="inline-flex items-center rounded-md border border-gray-200 bg-gray-100 px-2 py-0.5 font-medium text-gray-700 text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
       >
         TS
       </span>
       <button
         aria-label="Copy ts code"
-        class="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+        class="rounded-md bg-gray-700 px-3 py-1 text-white text-xs transition hover:bg-gray-600"
         type="button"
       >
         Copy
@@ -92,7 +92,7 @@ exports[`CodeBlock > renders code block with vitest test code (from data sample)
     >
       <button
         aria-label="Copy  code"
-        class="rounded-md bg-gray-700 px-3 py-1 text-xs text-white transition hover:bg-gray-600"
+        class="rounded-md bg-gray-700 px-3 py-1 text-white text-xs transition hover:bg-gray-600"
         type="button"
       >
         Copy

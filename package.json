@@ -26,7 +26,7 @@
         "@floating-ui/react": "^0.27.19",
         "@langchain/core": "^1.2.8",
         "@langchain/google-genai": "^2.2.0",
-        "@langchain/openai": "^1.5.8",
+        "@langchain/openai": "^1.5.10",
         "@mantine/core": "^9.5.1",
         "@mantine/hooks": "^9.5.1",
         "@monaco-editor/react": "^4.7.0",

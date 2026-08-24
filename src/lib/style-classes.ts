@@ -169,6 +169,10 @@ export const base = {
     },
 } as const;
 
+/** Image/SVG: 16:9 box, max 568×320, content contain (no crop). */
+export const mediaConstrainedFrameClass =
+    "relative mx-auto aspect-video w-full max-w-[568px]";
+
 // Button base styles
 export const buttonBase =
     "group flex items-center justify-center rounded-lg shadow-sm transition-all duration-200 hover:shadow-md font-medium";

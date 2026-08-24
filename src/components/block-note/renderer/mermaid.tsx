@@ -400,13 +400,25 @@ const Mermaid: React.FC<MermaidProps> = ({
 
     if (error) {
         return (
-            <figure className={`p-4 ${className}`}>
-                <Alert severity="error" sx={{ borderRadius: 1 }}>
-                    <Typography variant="body2">
-                        {t("error.mermaidRenderWithDetail", { error })}
-                    </Typography>
-                </Alert>
-            </figure>
+            <div className="relative">
+                {controls && (
+                    <div className="absolute top-1 right-1 z-50">
+                        {controls}
+                    </div>
+                )}
+                <figure className={`p-4 ${className}`}>
+                    <Alert severity="error" sx={{ borderRadius: 1 }}>
+                        <Typography variant="body2">
+                            {t("error.mermaidRenderWithDetail", { error })}
+                        </Typography>
+                    </Alert>
+                    {code ? (
+                        <pre className="mt-3 max-h-80 overflow-auto rounded-md border border-gray-200 bg-gray-50 p-3 text-left text-sm dark:border-gray-700 dark:bg-gray-900">
+                            <code>{code}</code>
+                        </pre>
+                    ) : null}
+                </figure>
+            </div>
         );
     }
 

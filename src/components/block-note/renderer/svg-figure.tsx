@@ -16,8 +16,9 @@ import {
 } from "@mui/material";
 import { useTranslations } from "next-intl";
 import type React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sanitizeSvg } from "@/lib/sanitize-svg";
+import { mediaConstrainedFrameClass } from "@/lib/style-classes";
 
 export interface SvgBlockProps {
     code?: string;
@@ -275,11 +276,13 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
 }) => {
     const t = useTranslations("web.svg");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [sanitized, setSanitized] = useState<string | null>(null);
+    const [ready, setReady] = useState(false);
     const code = data.props?.code?.trim() ?? "";
 
-    const sanitized = useMemo(() => {
-        if (!code) return null;
-        return sanitizeSvg(code);
+    useEffect(() => {
+        setSanitized(code ? sanitizeSvg(code) : null);
+        setReady(true);
     }, [code]);
 
     if (!code) {
@@ -290,6 +293,10 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
                 </Alert>
             </figure>
         );
+    }
+
+    if (!ready) {
+        return <figure className={`min-h-20 ${className}`} />;
     }
 
     if (!sanitized) {
@@ -306,7 +313,7 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
 
     return (
         <>
-            <div className="relative mx-auto w-fit">
+            <div className={mediaConstrainedFrameClass}>
                 {controls && (
                     <div className="absolute top-1 right-1 z-50">
                         {controls}
@@ -314,13 +321,13 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
                 )}
                 {/* biome-ignore lint/a11y/useKeyWithClickEvents: pointer zoom; SvgZoomDialog provides keyboard zoom controls */}
                 <figure
-                    className={`group relative mx-auto w-fit cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 dark:shadow-gray-700 ${className}`}
+                    className={`group relative h-full w-full cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 dark:shadow-gray-700 ${className}`}
                     onClick={() => setIsDialogOpen(true)}
                 >
                     <div
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized SVG markup for illustration preview
                         dangerouslySetInnerHTML={{ __html: sanitized }}
-                        className="flex items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:max-h-80 [&_svg]:max-w-full"
+                        className="flex h-full w-full items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:max-h-full [&_svg]:w-auto [&_svg]:max-w-full"
                     />
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                         <div className="rounded-full bg-black/40 p-2 text-white">

@@ -1129,6 +1129,10 @@
                 "invalidSvg": "Invalid or unsafe SVG"
             }
         },
+        "image": {
+            "zoom": "Zoom",
+            "closePreview": "Close preview"
+        },
         "footer": {
             "buildWith": "Built with ",
             "and": "and",

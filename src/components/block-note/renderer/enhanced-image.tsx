@@ -1,5 +1,13 @@
+"use client";
+
+import CloseIcon from "@mui/icons-material/Close";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import { Box, Dialog, IconButton } from "@mui/material";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type React from "react";
+import { useState } from "react";
+import { mediaConstrainedFrameClass } from "@/lib/style-classes";
 
 export interface ImageBlockProps {
     src?: string;
@@ -32,64 +40,123 @@ export const EnhancedImage: React.FC<EnhancedImageProps> = ({
 }) => {
     const { props } = data;
 
-    if (!props?.src) return null;
-
-    const width = props.width ? parseInt(props.width, 10) : 800;
-    const height = props.height ? parseInt(props.height, 10) : 600;
-
     const captionText = props.caption?.trim();
     const altText = props.alt?.trim() || captionText || "Article image";
+    const t = useTranslations("web.image");
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    if (!props?.src) return null;
 
     return (
         <figure className={`w-full ${className || ""}`}>
-            <div
-                className={`flex w-full ${
-                    props.alignment === "left"
-                        ? "justify-start"
-                        : props.alignment === "right"
-                          ? "justify-end"
-                          : "justify-center"
-                }`}
-            >
+            <div className="flex w-full justify-center">
                 <div
-                    className="relative overflow-hidden rounded-lg bg-white shadow-sm transition-shadow duration-200 hover:shadow-md dark:bg-gray-900"
-                    style={{
-                        ...(width > 0 && { maxWidth: `${width}px` }),
-                        width: "100%",
-                    }}
+                    className={`group overflow-hidden rounded-lg bg-white shadow-sm transition-shadow duration-200 hover:shadow-md dark:bg-gray-900 ${mediaConstrainedFrameClass}`}
                 >
-                    <div className="relative">
+                    <button
+                        type="button"
+                        aria-label={t("zoom")}
+                        className="absolute inset-0 z-0 cursor-zoom-in border-0 bg-transparent p-0"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpen();
+                        }}
+                    >
                         <Image
                             src={props.src}
                             alt={altText}
-                            width={width}
-                            height={height}
+                            fill
+                            unoptimized
                             style={{
-                                width: "100%",
-                                height: "auto",
-                                maxHeight: "600px",
-                                maxWidth: "100%",
-                                objectFit:
-                                    (props.objectFit as React.CSSProperties["objectFit"]) ||
-                                    "contain",
+                                objectFit: "contain",
                             }}
                             priority={false}
                             placeholder="empty"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                            sizes="(max-width: 568px) 100vw, 568px"
                         />
-                    </div>
+
+                        {/* Hover hint for “this image can be zoomed”. */}
+                        <div
+                            className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                            aria-hidden="true"
+                        >
+                            <div className="rounded-full bg-black/40 p-2 text-white">
+                                <ZoomInIcon fontSize="medium" />
+                            </div>
+                        </div>
+                    </button>
+
                     {controls && (
                         <div className="absolute top-1 right-1 z-50">
                             {controls}
                         </div>
                     )}
-                    {captionText && (
-                        <figcaption className="border-t border-gray-100 bg-gray-50 px-4 py-3 text-center text-sm leading-relaxed font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                            {captionText}
-                        </figcaption>
-                    )}
                 </div>
             </div>
+
+            {captionText && (
+                <figcaption className="border-gray-100 border-t bg-gray-50 px-4 py-3 text-center font-medium text-gray-600 text-sm leading-relaxed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                    {captionText}
+                </figcaption>
+            )}
+
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth={false}
+                PaperProps={{
+                    sx: { bgcolor: "transparent", boxShadow: "none" },
+                }}
+            >
+                <Box
+                    sx={{
+                        position: "relative",
+                        cursor: "zoom-out",
+                        lineHeight: 0,
+                    }}
+                    onClick={handleClose}
+                >
+                    <IconButton
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleClose();
+                        }}
+                        aria-label={t("closePreview")}
+                        sx={{
+                            position: "absolute",
+                            top: 8,
+                            right: 8,
+                            zIndex: 1,
+                            backgroundColor: "rgba(0, 0, 0, 0.45)",
+                            color: "white",
+                            "&:hover": {
+                                backgroundColor: "rgba(0, 0, 0, 0.7)",
+                            },
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <Image
+                        src={props.src}
+                        alt={altText}
+                        width={0}
+                        height={0}
+                        unoptimized
+                        style={{
+                            display: "block",
+                            width: "auto",
+                            height: "auto",
+                            maxWidth: "90vw",
+                            maxHeight: "90vh",
+                            borderRadius: 8,
+                            objectFit: "contain",
+                        }}
+                    />
+                </Box>
+            </Dialog>
         </figure>
     );
 };

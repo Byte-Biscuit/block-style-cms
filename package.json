@@ -35,7 +35,7 @@
         "@mui/material-nextjs": "^7.3.2",
         "algoliasearch": "^5.56.0",
         "better-auth": "^1.7.1",
-        "better-sqlite3": "^12.4.1",
+        "better-sqlite3": "^13.0.3",
         "clsx": "^2.1.1",
         "dompurify": "^3.4.13",
         "hi-base32": "^0.5.1",

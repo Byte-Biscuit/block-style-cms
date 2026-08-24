@@ -97,13 +97,15 @@ function ImageSelectionDialog({
     const [alignment, setAlignment] = useState<"left" | "center" | "right">(
         initialData?.alignment || "center"
     );
-    const [imageWidth, setImageWidth] = useState(initialData?.width || "800");
+    const [imageWidth, setImageWidth] = useState(
+        initialData?.width || "568"
+    );
     const [imageHeight, setImageHeight] = useState(
-        initialData?.height || "600"
+        initialData?.height || "320"
     );
     const [objectFit, setObjectFit] = useState<
         "contain" | "cover" | "fill" | "scale-down" | "none"
-    >(initialData?.objectFit || "cover");
+    >(initialData?.objectFit || "contain");
     const [maxWidth, setMaxWidth] = useState(initialData?.maxWidth || "100%");
 
     const fillEmptyAltAndCaption = (label: string) => {
@@ -942,11 +944,11 @@ export const EnhancedImageBlockSpec = createReactBlockSpec(
                 type: "string",
             },
             width: {
-                default: "800",
+                default: "568",
                 type: "string",
             },
             height: {
-                default: "600",
+                default: "320",
                 type: "string",
             },
             source: {
@@ -958,7 +960,7 @@ export const EnhancedImageBlockSpec = createReactBlockSpec(
                 type: "string",
             },
             objectFit: {
-                default: "cover",
+                default: "contain",
                 type: "string",
             },
             maxWidth: {
@@ -997,11 +999,11 @@ export const getEnhancedImageSlashMenuItem = (
                     src: "",
                     alt: "",
                     caption: "",
-                    width: "800",
-                    height: "600",
+                    width: "568",
+                    height: "320",
                     source: "upload",
                     alignment: "center",
-                    objectFit: "cover",
+                    objectFit: "contain",
                     maxWidth: "100%",
                 },
             } as unknown as PartialBlock<

@@ -88,6 +88,8 @@ export async function GET(
         let imageBuffer: Buffer;
         let contentType: string;
 
+        const normalizeMime = (mime: string) => mime.replace(/\s+/g, "");
+
         if (needsProcessing && imageInfo.mimeType !== 'image/svg') {
             // 需要处理的图片（非SVG）
             try {
@@ -101,7 +103,7 @@ export async function GET(
 
                 // 设置处理后的内容类型
                 const outputFormat = options.f || 'jpeg';
-                contentType = `image/${outputFormat}`;
+                contentType = normalizeMime(`image/${outputFormat}`);
             } catch (error) {
                 console.error('图片处理失败:', error);
                 return NextResponse.json(
@@ -114,7 +116,7 @@ export async function GET(
             try {
                 const filePath = path.join(IMAGE_DIR, filename);
                 imageBuffer = await fs.readFile(filePath);
-                contentType = imageInfo.mimeType;
+                contentType = normalizeMime(imageInfo.mimeType);
             } catch (error) {
                 console.error('读取图片文件失败:', error);
                 return NextResponse.json(

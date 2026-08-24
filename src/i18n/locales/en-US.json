@@ -1113,6 +1113,22 @@
                 "mermaidRenderWithDetail": "Mermaid rendering error: {error}"
             }
         },
+        "svg": {
+            "button": {
+                "close": "Close",
+                "zoomIn": "Zoom In",
+                "zoomOut": "Zoom Out",
+                "fitToWindow": "Fit to Window"
+            },
+            "hint": {
+                "drag": "Drag to pan",
+                "scroll": "Scroll to zoom"
+            },
+            "error": {
+                "noCode": "No SVG markup provided",
+                "invalidSvg": "Invalid or unsafe SVG"
+            }
+        },
         "footer": {
             "buildWith": "Built with ",
             "and": "and",

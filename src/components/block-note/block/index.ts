@@ -29,3 +29,9 @@ export {
     MERMAID_BLOCK_TYPE,
     MermaidBlockSpec,
 } from "./mermaid-block";
+// SVG
+export {
+    getSvgSlashMenuItem,
+    SVG_BLOCK_TYPE,
+    SvgBlockSpec,
+} from "./svg-block";

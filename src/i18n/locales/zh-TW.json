@@ -1114,6 +1114,22 @@
                 "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}"
             }
         },
+        "svg": {
+            "button": {
+                "close": "關閉",
+                "zoomIn": "放大",
+                "zoomOut": "縮小",
+                "fitToWindow": "適應視窗"
+            },
+            "hint": {
+                "drag": "拖曳以平移",
+                "scroll": "滾輪縮放"
+            },
+            "error": {
+                "noCode": "沒有提供 SVG 程式碼",
+                "invalidSvg": "無效或不安全的 SVG"
+            }
+        },
         "footer": {
             "buildWith": "使用",
             "and": "與",

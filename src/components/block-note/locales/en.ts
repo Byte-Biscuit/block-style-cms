@@ -64,6 +64,12 @@ export const en = {
             aliases: ["mermaid", "chart", "flowchart", "sequence", "diagram"],
             group: "Advanced",
         },
+        svg: {
+            title: "SVG",
+            subtext: "Insert SVG illustration",
+            aliases: ["svg", "illustration", "vector", "drawing"],
+            group: "Advanced",
+        },
     },
     enhanced_audio_block: {
         dialog: {
@@ -326,6 +332,30 @@ export const en = {
             insert: "Insert",
             save: "Save",
             invalidCode: "Enter valid Mermaid code before saving",
+        },
+        edit: {
+            editButton: "Edit",
+        },
+    },
+    svg_block: {
+        editor: {
+            title: "SVG Illustration Editor",
+            editTitle: "Edit",
+            previewTitle: "Preview",
+        },
+        renderer: {
+            emptyPlaceholder: "Enter SVG markup to preview",
+            invalidSvg: "Invalid or unsafe SVG",
+        },
+        placeholder: {
+            clickToAdd: "Add SVG illustration",
+            supportText: "Paste inline SVG markup to use as an illustration",
+        },
+        dialog: {
+            cancel: "Cancel",
+            insert: "Insert",
+            save: "Save",
+            invalidCode: "Enter valid SVG markup before saving",
         },
         edit: {
             editButton: "Edit",

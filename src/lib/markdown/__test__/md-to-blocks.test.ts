@@ -3,7 +3,7 @@ import {
     markdownToBlocks,
     resolveStoredCodeLanguage,
     UnresolvedImagePathsError,
-} from "./md-to-blocks";
+} from "../md-to-blocks";
 
 type LooseBlock = {
     type: string;
@@ -69,6 +69,26 @@ describe("markdownToBlocks", () => {
         expect(mermaid?.props?.code).toContain("flowchart TD");
         expect(mermaid?.props?.mode).toBe("preview");
         expect(mermaid?.props?.theme).toBe("default");
+    });
+
+    it("maps svg fence to svg block", async () => {
+        const md =
+            '```svg\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>\n```';
+        const blocks = (await markdownToBlocks(md)) as LooseBlock[];
+        const svg = blocks.find((b) => b.type === "svg");
+        expect(svg).toBeTruthy();
+        expect(svg?.props?.code).toContain("<svg");
+        expect(svg?.props?.code).toContain("<circle");
+        expect(blocks.some((b) => b.type === "codeBlock")).toBe(false);
+    });
+
+    it("keeps html fence with svg markup as codeBlock", async () => {
+        const md =
+            '```html\n<svg xmlns="http://www.w3.org/2000/svg"><circle/></svg>\n```';
+        const blocks = (await markdownToBlocks(md)) as LooseBlock[];
+        const code = blocks.find((b) => b.type === "codeBlock");
+        expect(code?.props?.language).toBe("html");
+        expect(blocks.some((b) => b.type === "svg")).toBe(false);
     });
 
     it("maps ts fence to codeBlock with typescript language", async () => {

@@ -25,6 +25,7 @@ import NumberedListItem, {
 } from "./renderer/numbered-list-item";
 import Paragraph from "./renderer/paragraph";
 import Quote from "./renderer/quote";
+import SvgFigure, { type SvgBlockData } from "./renderer/svg-figure";
 import TableRender from "./renderer/table";
 
 // Bullet list style mapping: level 0 -> disc, 1 -> circle, 2 -> square
@@ -106,6 +107,10 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     // mermaid
     if (block.type === "mermaid") {
         return <Mermaid data={block as MermaidBlockData} />;
+    }
+    // svg illustration
+    if (block.type === "svg") {
+        return <SvgFigure data={block as SvgBlockData} />;
     }
     // quote
     if (block.type === "quote") {

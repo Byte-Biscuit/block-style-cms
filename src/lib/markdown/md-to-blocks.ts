@@ -59,6 +59,10 @@ function isMermaidLanguage(language: string): boolean {
     return normalized === "mermaid" || normalized === "mmd";
 }
 
+function isSvgLanguage(language: string): boolean {
+    return language.trim().toLowerCase() === "svg";
+}
+
 function inlineText(content: unknown): string {
     if (!Array.isArray(content)) return "";
     return content
@@ -135,10 +139,25 @@ function toMermaid(block: LooseBlock): LocalBlock {
     });
 }
 
+function toSvg(block: LooseBlock): LocalBlock {
+    return toLocalBlock({
+        id: block.id ?? uuidv4(),
+        type: "svg",
+        props: {
+            code: inlineText(block.content),
+        },
+        content: undefined,
+        children: [],
+    });
+}
+
 function remapCodeBlock(block: LooseBlock): LocalBlock {
     const language = String(block.props?.language ?? "");
     if (isMermaidLanguage(language)) {
         return toMermaid(block);
+    }
+    if (isSvgLanguage(language)) {
+        return toSvg(block);
     }
     return toLocalBlock({
         ...block,
@@ -209,7 +228,7 @@ function getEditor(): ServerBlockNoteEditor {
 
 /**
  * Parse markdown into CMS LocalBlock JSON via BlockNote's default schema,
- * then remap image → enhancedImage and mermaid fences → mermaid blocks.
+ * then remap image → enhancedImage and mermaid/svg fences → custom blocks.
  */
 export async function markdownToBlocks(
     md: string,

@@ -64,6 +64,12 @@ export const zh = {
             aliases: ["mermaid", "图表", "流程图", "序列图", "diagram"],
             group: "高级功能",
         },
+        svg: {
+            title: "SVG",
+            subtext: "插入 SVG 插图",
+            aliases: ["svg", "插图", "矢量图", "illustration"],
+            group: "高级功能",
+        },
     },
     enhanced_audio_block: {
         dialog: {
@@ -318,6 +324,30 @@ export const zh = {
             insert: "插入",
             save: "保存",
             invalidCode: "请输入有效的 Mermaid 代码后再保存",
+        },
+        edit: {
+            editButton: "编辑",
+        },
+    },
+    svg_block: {
+        editor: {
+            title: "SVG 插图编辑器",
+            editTitle: "编辑",
+            previewTitle: "预览",
+        },
+        renderer: {
+            emptyPlaceholder: "请输入 SVG 代码以预览",
+            invalidSvg: "无效或不安全的 SVG",
+        },
+        placeholder: {
+            clickToAdd: "添加 SVG 插图",
+            supportText: "粘贴内联 SVG 代码作为插图",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "保存",
+            invalidCode: "请输入有效的 SVG 代码后再保存",
         },
         edit: {
             editButton: "编辑",

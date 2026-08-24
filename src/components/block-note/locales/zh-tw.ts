@@ -64,6 +64,12 @@ export const zhTW = {
             aliases: ["mermaid", "圖表", "流程圖", "循序圖", "diagram"],
             group: "進階功能",
         },
+        svg: {
+            title: "SVG",
+            subtext: "插入 SVG 插圖",
+            aliases: ["svg", "插圖", "向量圖", "illustration"],
+            group: "進階功能",
+        },
     },
     enhanced_audio_block: {
         dialog: {
@@ -318,6 +324,30 @@ export const zhTW = {
             insert: "插入",
             save: "儲存",
             invalidCode: "請輸入有效的 Mermaid 程式碼後再儲存",
+        },
+        edit: {
+            editButton: "編輯",
+        },
+    },
+    svg_block: {
+        editor: {
+            title: "SVG 插圖編輯器",
+            editTitle: "編輯",
+            previewTitle: "預覽",
+        },
+        renderer: {
+            emptyPlaceholder: "請輸入 SVG 程式碼以預覽",
+            invalidSvg: "無效或不安全的 SVG",
+        },
+        placeholder: {
+            clickToAdd: "新增 SVG 插圖",
+            supportText: "貼上內聯 SVG 程式碼作為插圖",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "儲存",
+            invalidCode: "請輸入有效的 SVG 程式碼後再儲存",
         },
         edit: {
             editButton: "編輯",

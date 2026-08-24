@@ -24,6 +24,7 @@ import {
     getEnhancedImageSlashMenuItem,
     getEnhancedVideoSlashMenuItem,
     getMermaidSlashMenuItem,
+    getSvgSlashMenuItem,
 } from "@/block-note/block";
 import type { schema } from "@/block-note/schema";
 
@@ -102,6 +103,7 @@ export const getSlashMenuItems = (
     slashMenuItems.push(getEnhancedVideoSlashMenuItem(editor));
     slashMenuItems.push(getEnhancedFileSlashMenuItem(editor));
     slashMenuItems.push(getMermaidSlashMenuItem(editor));
+    slashMenuItems.push(getSvgSlashMenuItem(editor));
     return slashMenuItems;
 };
 

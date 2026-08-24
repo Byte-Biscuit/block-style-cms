@@ -198,6 +198,13 @@ class AlgoliaSearchService {
                     lines.push("");
                     break;
 
+                case "svg":
+                    lines.push("```svg");
+                    lines.push(content);
+                    lines.push("```");
+                    lines.push("");
+                    break;
+
                 default:
                     // Other types, extract text content
                     if (content) {
@@ -236,6 +243,8 @@ class AlgoliaSearchService {
             return block.props.text;
         if (block.props?.content && typeof block.props.content === "string")
             return block.props.content;
+        if (block.props?.code && typeof block.props.code === "string")
+            return block.props.code;
 
         return "";
     }

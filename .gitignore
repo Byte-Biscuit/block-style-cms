@@ -50,3 +50,6 @@ deploy.json
 # pm2
 /pm2/ecosystem.config.js
 /pm2/pm2-deploy.sh
+# python
+.venv/
+__pycache__/

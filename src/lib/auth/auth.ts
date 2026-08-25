@@ -13,11 +13,12 @@ import { systemConfigService } from "@/lib/services/system-config-service";
 /**
  * Better Auth Configuration
  *
- * Supports 4 authentication methods (configured via system-config):
+ * Supports 5 authentication methods (configured via system-config):
  * 1. Email/Password + Authenticator (2FA)
  * 2. GitHub OAuth
  * 3. Google OAuth
- * 4. Passkey (WebAuthn)
+ * 4. API Key (prefix `bsc_`)
+ * 5. Passkey (WebAuthn)
  *
  * OAuth and service keys are stored in settings.json (preferred) or .env
  * Method enablement is controlled by CMS_DATA_PATH/settings.json
@@ -127,6 +128,7 @@ export async function getAuth() {
                     storeBackupCodes: "encrypted",
                 },
             }),
+            // API Key (named keys, prefix bsc_, no session, no expiry/rate limit)
             apiKey({
                 defaultPrefix: "bsc_",
                 requireName: true,

@@ -19,7 +19,7 @@ import BasicConfigTab from "./basic-config-tab";
 import ChannelTab from "./channel-tab";
 import ServicesTab from "./services-tab";
 import SiteInfoTab from "./site-info-tab";
-import UserManagementTab from "./user-management-tab";
+import UserManagementTab from "./user-management";
 
 interface TabPanelProps {
     children?: React.ReactNode;

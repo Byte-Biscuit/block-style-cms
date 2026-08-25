@@ -1,7 +1,6 @@
 import { useBlockNoteEditor } from "@blocknote/react";
 import { useCallback } from "react";
 
-
 const getNestedValue = (obj: unknown, path: string): unknown => {
     if (typeof obj !== "object" || obj === null) {
         return undefined;

@@ -120,7 +120,10 @@ function md5Hash(email: string): string {
         try {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const crypto = require("crypto");
-            return crypto.createHash("md5").update(email.toLowerCase().trim()).digest("hex");
+            return crypto
+                .createHash("md5")
+                .update(email.toLowerCase().trim())
+                .digest("hex");
         } catch {
             return "";
         }
@@ -199,4 +202,5 @@ export async function getGravatarUrlClient(
 
 // 向后兼容的导出
 export const getNickLetterAvatar = getLetterAvatar;
-export const getNickLetterAvatarClient = async (name: string, size = 80) => getLetterAvatar(name, size);
+export const getNickLetterAvatarClient = async (name: string, size = 80) =>
+    getLetterAvatar(name, size);

@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-    IconButton,
-    Tooltip,
-    Menu,
-    MenuItem,
-    ListItemIcon,
-    ListItemText,
-} from "@mui/material";
 import {
     Brightness4 as DarkModeIcon,
     Brightness7 as LightModeIcon,
     SettingsBrightness as SystemIcon,
 } from "@mui/icons-material";
-import { useTheme } from "next-themes";
+import {
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+    Tooltip,
+} from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
+import React, { useEffect, useState } from "react";
 import { button } from "@/lib/style-classes";
 
 export function ThemeToggle() {

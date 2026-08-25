@@ -1,14 +1,17 @@
-import React from "react";
-import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import Content from "../../item/content";
 import type {
-    InlineContent,
     DefaultInlineContentSchema,
     DefaultStyleSchema,
+    InlineContent,
 } from "@blocknote/core";
+import { render } from "@testing-library/react";
+import React from "react";
+import { describe, expect, it } from "vitest";
+import Content from "../../item/content";
 
-type ContentItem = InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>;
+type ContentItem = InlineContent<
+    DefaultInlineContentSchema,
+    DefaultStyleSchema
+>;
 
 describe("Content", () => {
     it("renders text content", () => {
@@ -26,7 +29,9 @@ describe("Content", () => {
             {
                 type: "link",
                 href: "https://example.com",
-                content: [{ type: "text", text: "Example", styles: { bold: true } }],
+                content: [
+                    { type: "text", text: "Example", styles: { bold: true } },
+                ],
             },
             { type: "text", text: " for more.", styles: {} },
         ];

@@ -1,6 +1,6 @@
-import { success, failure } from '@/lib/response';
-import commentService from '@/lib/services/comment-service';
-import { withTiming } from '@/lib/with-timing';
+import { failure, success } from "@/lib/response";
+import commentService from "@/lib/services/comment-service";
+import { withTiming } from "@/lib/with-timing";
 
 /**
  * GET /api/m/comments
@@ -12,15 +12,17 @@ export const GET = withTiming(async () => {
         // Get all comments from cache
         const allComments = await commentService.getAllComments();
         // Sort by creation date (newest first)
-        allComments.sort((a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        allComments.sort(
+            (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
         );
-        return success('Comments retrieved successfully', {
+        return success("Comments retrieved successfully", {
             comments: allComments,
             total: allComments.length,
         });
     } catch (error) {
-        console.error('Failed to retrieve comments:', error);
-        return failure('Failed to retrieve comments');
+        console.error("Failed to retrieve comments:", error);
+        return failure("Failed to retrieve comments");
     }
 });

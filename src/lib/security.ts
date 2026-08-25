@@ -1,7 +1,7 @@
 /**
  * Sanitize a string to prevent XSS attacks by escaping special HTML characters.
- * @param content 
- * @returns 
+ * @param content
+ * @returns
  */
 export const sanitize = (content: string | null | undefined): string | null => {
     if (!content) return null;
@@ -15,4 +15,4 @@ export const sanitize = (content: string | null | undefined): string | null => {
         };
         return escapeMap[match] || match;
     });
-}
+};

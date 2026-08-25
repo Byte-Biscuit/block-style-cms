@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import type { Comment } from '@/types/comment';
+import { useCallback, useEffect, useState } from "react";
+import type { Comment } from "@/types/comment";
 
 /**
  * Generic debounce hook
@@ -30,17 +30,19 @@ export function useComments(articleId: string) {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/comments?articleId=${articleId}`);
+            const response = await fetch(
+                `/api/comments?articleId=${articleId}`
+            );
             const data = await response.json();
 
             if (data.code === 200) {
                 setComments(data.payload.comments || []);
             } else {
-                setError(data.message || 'Failed to load comments');
+                setError(data.message || "Failed to load comments");
             }
         } catch (err) {
-            setError('Failed to load comments');
-            console.error('Error fetching comments:', err);
+            setError("Failed to load comments");
+            console.error("Error fetching comments:", err);
         } finally {
             setLoading(false);
         }
@@ -62,12 +64,12 @@ export function useCommentTree(comments: Comment[]) {
         const rootComments: Comment[] = [];
 
         // First pass: create a map of all comments
-        comments.forEach(comment => {
+        comments.forEach((comment) => {
             commentMap.set(comment.id, { ...comment, replies: [] });
         });
 
         // Second pass: build the tree structure
-        comments.forEach(comment => {
+        comments.forEach((comment) => {
             const commentWithReplies = commentMap.get(comment.id)!;
 
             if (comment.replyToId) {
@@ -97,47 +99,52 @@ export function useCommentSubmission() {
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const submitComment = useCallback(async (data: {
-        articleId: string;
-        articleTitle: string;
-        content: string;
-        author: {
-            name: string;
-            email: string;
-            website?: string;
-        };
-        replyToId?: string;
-        locale?: string;
-    }) => {
-        try {
-            setSubmitting(true);
-            setSubmitError(null);
+    const submitComment = useCallback(
+        async (data: {
+            articleId: string;
+            articleTitle: string;
+            content: string;
+            author: {
+                name: string;
+                email: string;
+                website?: string;
+            };
+            replyToId?: string;
+            locale?: string;
+        }) => {
+            try {
+                setSubmitting(true);
+                setSubmitError(null);
 
-            const response = await fetch(`/api/comments`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+                const response = await fetch(`/api/comments`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
 
-            const result = await response.json();
+                const result = await response.json();
 
-            if (result.code === 200) {
-                return { success: true, data: result.payload };
-            } else {
-                setSubmitError(result.message || 'Failed to submit comment');
-                return { success: false, error: result.message };
+                if (result.code === 200) {
+                    return { success: true, data: result.payload };
+                } else {
+                    setSubmitError(
+                        result.message || "Failed to submit comment"
+                    );
+                    return { success: false, error: result.message };
+                }
+            } catch (err) {
+                const errorMessage = "Failed to submit comment";
+                setSubmitError(errorMessage);
+                console.error("Error submitting comment:", err);
+                return { success: false, error: errorMessage };
+            } finally {
+                setSubmitting(false);
             }
-        } catch (err) {
-            const errorMessage = 'Failed to submit comment';
-            setSubmitError(errorMessage);
-            console.error('Error submitting comment:', err);
-            return { success: false, error: errorMessage };
-        } finally {
-            setSubmitting(false);
-        }
-    }, []);
+        },
+        []
+    );
 
     return { submitComment, submitting, submitError };
 }

@@ -1,24 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 import {
-    InstallStep,
-    AdminCredentials,
-    SiteInfoConfig,
-    InstallAuthMethodsConfig,
-    InstallServicesConfig,
-} from "@/types/system-config";
-import WelcomeForm from "./welcome-form";
-import EnvironmentCheckForm from "./environment-check-form";
-import AdminAccountForm from "./admin-account-form";
-import {
-    SiteInfoForm,
     AuthenticationForm,
-    AuthFormData,
+    type AuthFormData,
     ServicesForm,
-    ServicesFormData,
+    type ServicesFormData,
+    SiteInfoForm,
 } from "@/components/configuration";
+import {
+    type AdminCredentials,
+    type InstallAuthMethodsConfig,
+    type InstallServicesConfig,
+    InstallStep,
+    type SiteInfoConfig,
+} from "@/types/system-config";
+import AdminAccountForm from "./admin-account-form";
+import EnvironmentCheckForm from "./environment-check-form";
+import WelcomeForm from "./welcome-form";
 
 interface InstallWizardProps {
     onComplete: () => void;

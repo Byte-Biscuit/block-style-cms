@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { systemConfigService } from '@/lib/services/system-config-service';
+import { type NextRequest, NextResponse } from "next/server";
+import { systemConfigService } from "@/lib/services/system-config-service";
 
-const PEXELS_BASE_URL = 'https://api.pexels.com/v1';
+const PEXELS_BASE_URL = "https://api.pexels.com/v1";
 
 export async function POST(request: NextRequest) {
     try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
         if (!pexelsApiKey) {
             return NextResponse.json(
-                { error: 'Pexels API key not configured in settings.json' },
+                { error: "Pexels API key not configured in settings.json" },
                 { status: 500 }
             );
         }
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
         if (!query) {
             return NextResponse.json(
-                { error: 'Search query is required' },
+                { error: "Search query is required" },
                 { status: 400 }
             );
         }
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
             `${PEXELS_BASE_URL}/search?query=${encodeURIComponent(query)}&page=${page}&per_page=${per_page}`,
             {
                 headers: {
-                    'Authorization': pexelsApiKey,
+                    Authorization: pexelsApiKey,
                 },
             }
         );
@@ -39,11 +39,10 @@ export async function POST(request: NextRequest) {
 
         const data = await response.json();
         return NextResponse.json(data);
-
     } catch (error) {
-        console.error('Pexels search error:', error);
+        console.error("Pexels search error:", error);
         return NextResponse.json(
-            { error: 'Failed to search images' },
+            { error: "Failed to search images" },
             { status: 500 }
         );
     }

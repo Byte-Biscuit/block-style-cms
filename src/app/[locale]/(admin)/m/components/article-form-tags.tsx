@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-    Box,
-    Typography,
-    Chip,
-    Card,
-    Autocomplete,
-    TextField,
-    CircularProgress,
-} from "@mui/material";
 import { LocalOffer as LocalOfferIcon } from "@mui/icons-material";
+import {
+    Autocomplete,
+    Box,
+    Card,
+    Chip,
+    CircularProgress,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { useTranslations } from "next-intl";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { ADMIN_API_PREFIX } from "@/settings";
 
 interface ArticleFormTagsProps {

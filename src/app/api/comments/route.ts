@@ -1,14 +1,14 @@
-import { NextRequest } from 'next/server';
-import { success, failure, forbidden } from '@/lib/response';
-import commentService from '@/lib/services/comment-service';
-import { sanitize } from '@/lib/security';
-import { withTiming } from '@/lib/with-timing';
-import { createCommentSchemas } from '@/types/comment';
-import { getTranslations } from 'next-intl/server';
-import { defaultLocale } from '@/i18n/config';
-import { LOCALE_PARAM_NAME } from '@/constants';
-import { getRequestMetadata } from '@/lib/request-util';
-import { z } from 'zod';
+import type { NextRequest } from "next/server";
+import { getTranslations } from "next-intl/server";
+import { z } from "zod";
+import { LOCALE_PARAM_NAME } from "@/constants";
+import { defaultLocale } from "@/i18n/config";
+import { getRequestMetadata } from "@/lib/request-util";
+import { failure, forbidden, success } from "@/lib/response";
+import { sanitize } from "@/lib/security";
+import commentService from "@/lib/services/comment-service";
+import { withTiming } from "@/lib/with-timing";
+import { createCommentSchemas } from "@/types/comment";
 
 /**
  * Rate limiting map: IP -> { count, resetTime }
@@ -49,17 +49,20 @@ function checkRateLimit(ip: string): boolean {
 export const GET = withTiming(async (request: NextRequest) => {
     try {
         const { searchParams } = new URL(request.url);
-        const articleId = searchParams.get('articleId');
+        const articleId = searchParams.get("articleId");
 
         if (!articleId) {
-            return failure('Article ID is required');
+            return failure("Article ID is required");
         }
 
         const comments = await commentService.getArticleComments(articleId);
-        return success('Comments retrieved successfully', { comments, total: comments.length });
+        return success("Comments retrieved successfully", {
+            comments,
+            total: comments.length,
+        });
     } catch (error) {
-        console.error('Failed to retrieve comments:', error);
-        return failure('Failed to retrieve comments');
+        console.error("Failed to retrieve comments:", error);
+        return failure("Failed to retrieve comments");
     }
 });
 
@@ -72,7 +75,7 @@ export const POST = withTiming(async (request: NextRequest) => {
         const { ip, userAgent } = getRequestMetadata(request);
         // Check rate limit
         if (!checkRateLimit(ip)) {
-            return forbidden('Rate limit exceeded. Please try again later.');
+            return forbidden("Rate limit exceeded. Please try again later.");
         }
 
         // Parse and validate request body
@@ -84,9 +87,9 @@ export const POST = withTiming(async (request: NextRequest) => {
 
         if (!validation.success) {
             const formatted = z.flattenError(validation.error);
-            return failure('Validation failed', {
+            return failure("Validation failed", {
                 fieldErrors: formatted.fieldErrors,
-                formErrors: formatted.formErrors
+                formErrors: formatted.formErrors,
             });
         }
 
@@ -95,14 +98,18 @@ export const POST = withTiming(async (request: NextRequest) => {
         // Sanitize content to prevent XSS
         const sanitizedContent = sanitize(submissionData.content);
         if (!sanitizedContent) {
-            return failure('Invalid content');
+            return failure("Invalid content");
         }
 
         // Validate content (length and link count)
         try {
             commentService.validateCommentContent(sanitizedContent);
         } catch (error) {
-            return failure(error instanceof Error ? error.message : 'Content validation failed');
+            return failure(
+                error instanceof Error
+                    ? error.message
+                    : "Content validation failed"
+            );
         }
 
         // Sanitize author fields
@@ -110,8 +117,8 @@ export const POST = withTiming(async (request: NextRequest) => {
             ? sanitize(submissionData.author.website)
             : undefined;
         const sanitizedAuthor = {
-            name: sanitize(submissionData.author.name) || '',
-            email: sanitize(submissionData.author.email) || '',
+            name: sanitize(submissionData.author.name) || "",
+            email: sanitize(submissionData.author.email) || "",
             website: sanitizedWebsite ?? undefined,
         };
 
@@ -123,15 +130,19 @@ export const POST = withTiming(async (request: NextRequest) => {
         };
 
         // Add comment
-        const comment = await commentService.addComment(sanitizedSubmission, { ip, userAgent });
+        const comment = await commentService.addComment(sanitizedSubmission, {
+            ip,
+            userAgent,
+        });
 
-        return success('Comment submitted successfully and pending approval', {
+        return success("Comment submitted successfully and pending approval", {
             commentId: comment.id,
-            status: comment.status
+            status: comment.status,
         });
     } catch (error) {
-        console.error('Failed to submit comment:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to submit comment';
+        console.error("Failed to submit comment:", error);
+        const errorMessage =
+            error instanceof Error ? error.message : "Failed to submit comment";
         return failure(errorMessage);
     }
 });

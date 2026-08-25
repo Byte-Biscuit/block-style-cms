@@ -1,8 +1,8 @@
-import React from "react";
+import type { DefaultStyleSchema, Link as LinkType } from "@blocknote/core";
 import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import React from "react";
+import { describe, expect, it } from "vitest";
 import LinkContent from "../../item/link-content";
-import type { Link as LinkType, DefaultStyleSchema } from "@blocknote/core";
 
 describe("LinkContent", () => {
     it("renders link with plain text", () => {

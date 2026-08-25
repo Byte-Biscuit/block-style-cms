@@ -1,9 +1,9 @@
 import React from "react";
-import { LocalBlock as Block } from "@/block-note/schema";
-import Content from "./item/content";
-import { getDefaultHeadingClasses,getBlockClasses} from "@/lib/style-classes";
+import type { LocalBlock as Block } from "@/block-note/schema";
+import { getBlockClasses, getDefaultHeadingClasses } from "@/lib/style-classes";
 import { generateHeadingId } from "@/lib/toc-utils";
-import {ChildrenBlockRenderer} from "../universal-block-renderer";
+import { ChildrenBlockRenderer } from "../universal-block-renderer";
+import Content from "./item/content";
 
 export type HeadingBlock = Extract<Block, { type: "heading" }>;
 
@@ -24,15 +24,19 @@ export const Heading: React.FC<HeadingProps> = ({
     className = "",
     index = 0,
 }) => {
-    const { props, content,children } = data;
+    const { props, content, children } = data;
 
     if (!props) return null;
     if (!content || content.length === 0) return null;
 
     const HeadingTag = `h${props.level}` as keyof React.JSX.IntrinsicElements;
-    const classes= getBlockClasses(props,className,getDefaultHeadingClasses(props.level));
-    
-    const headingElement=React.createElement(
+    const classes = getBlockClasses(
+        props,
+        className,
+        getDefaultHeadingClasses(props.level)
+    );
+
+    const headingElement = React.createElement(
         HeadingTag,
         {
             className: classes,
@@ -45,6 +49,6 @@ export const Heading: React.FC<HeadingProps> = ({
             {headingElement}
             <ChildrenBlockRenderer blocks={children || []} level={1} />
         </>
-    )
+    );
 };
 export default Heading;

@@ -1,13 +1,13 @@
-import { Suspense } from "react";
+import { Settings as SettingsIcon } from "@mui/icons-material";
 import {
+    Box,
+    CircularProgress,
     Container,
     Paper,
     Typography,
-    CircularProgress,
-    Box,
 } from "@mui/material";
-import { Settings as SettingsIcon } from "@mui/icons-material";
 import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import SettingsTabs from "./components/settings-tabs";
 

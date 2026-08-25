@@ -15,8 +15,8 @@ export interface FileUploadOptions {
 export interface FileListOptions {
     page?: number;
     limit?: number;
-    sortBy?: 'uploadedAt' | 'size' | 'filename' | 'originalName';
-    sortOrder?: 'asc' | 'desc';
+    sortBy?: "uploadedAt" | "size" | "filename" | "originalName";
+    sortOrder?: "asc" | "desc";
     searchTerm?: string;
     category?: string;
 }
@@ -32,5 +32,3 @@ export interface FileListResult {
         hasPrev: boolean;
     };
 }
-
-

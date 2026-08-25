@@ -26,8 +26,8 @@ export interface AudioMetaInfo {
 export interface AudioListOptions {
     page?: number;
     limit?: number;
-    sortBy?: 'uploadedAt' | 'size' | 'filename' | 'duration';
-    sortOrder?: 'asc' | 'desc';
+    sortBy?: "uploadedAt" | "size" | "filename" | "duration";
+    sortOrder?: "asc" | "desc";
     searchTerm?: string;
 }
 
@@ -53,6 +53,6 @@ export interface AudioPlayerConfig {
     autoplay?: boolean;
     loop?: boolean;
     controls?: boolean;
-    preload?: 'none' | 'metadata' | 'auto';
+    preload?: "none" | "metadata" | "auto";
     volume?: number;
 }

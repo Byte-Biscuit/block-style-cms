@@ -64,6 +64,12 @@ export const zh = {
             aliases: ["mermaid", "图表", "流程图", "序列图", "diagram"],
             group: "高级功能",
         },
+        svg: {
+            title: "SVG",
+            subtext: "插入 SVG 插图",
+            aliases: ["svg", "插图", "矢量图", "illustration"],
+            group: "高级功能",
+        },
     },
     enhanced_audio_block: {
         dialog: {
@@ -79,7 +85,8 @@ export const zh = {
             subtitle: "选择音频文件",
             dialogTitle: "上传音频文件",
             clickToSelect: "点击选择文件",
-            supportedFormats: "支持 MP3, WAV, OGG, AAC, M4A, FLAC, WEBM 格式",
+            supportedFormats:
+                "支持 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM、Opus，最大 50MB",
             uploading: "上传中...",
             uploadError: "上传失败，请重试",
             networkError: "网络错误，请检查连接后重试",
@@ -101,7 +108,7 @@ export const zh = {
             alignRight: "右对齐",
         },
         placeholder: {
-            clickToAdd: "点击添加音频",
+            clickToAdd: "添加音频",
             supportText: "支持本地上传或 URL 嵌入",
         },
         edit: {
@@ -151,7 +158,7 @@ export const zh = {
             maxWidth: "最大宽度",
         },
         placeholder: {
-            clickToAdd: "点击添加图片",
+            clickToAdd: "添加图片",
             supportText: "支持本地上传、URL 或 Pexels 图片",
         },
         edit: {
@@ -172,7 +179,7 @@ export const zh = {
             subtitle: "选择视频文件",
             dialogTitle: "上传视频文件",
             clickToSelect: "点击选择文件",
-            supportedFormats: "支持 MP4, WEBM, AVI, MOV 格式",
+            supportedFormats: "支持 MP4、WEBM、MOV、MKV、AVI，最大 100MB",
             uploading: "上传中...",
             uploadError: "上传失败，请重试",
             networkError: "网络错误，请检查连接后重试",
@@ -196,7 +203,7 @@ export const zh = {
             height: "高度 (px)",
         },
         placeholder: {
-            clickToAdd: "点击添加视频",
+            clickToAdd: "添加视频",
             supportText: "支持本地上传或 iframe 嵌入",
         },
         edit: {
@@ -217,7 +224,8 @@ export const zh = {
             subtitle: "选择文件",
             dialogTitle: "上传文件",
             clickToSelect: "点击选择文件",
-            supportedFormats: "支持 Office 文档、PDF、压缩包等格式",
+            supportedFormats:
+                "支持 Office、PDF、Markdown、压缩包、代码等，最大 50MB",
             uploading: "上传中...",
             uploadError: "文件上传失败",
             networkError: "网络错误，请检查网络连接后重试",
@@ -233,7 +241,7 @@ export const zh = {
             alignRight: "右对齐",
         },
         placeholder: {
-            clickToAdd: "点击添加文件",
+            clickToAdd: "添加文件",
             supportText: "支持 Office 文档、PDF、压缩包等格式",
         },
         edit: {
@@ -308,8 +316,38 @@ export const zh = {
             },
         },
         placeholder: {
-            clickToAdd: "点击添加 Mermaid 图表",
+            clickToAdd: "添加图表",
             supportText: "支持流程图、序列图、状态图等多种图表类型",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "保存",
+            invalidCode: "请输入有效的 Mermaid 代码后再保存",
+        },
+        edit: {
+            editButton: "编辑",
+        },
+    },
+    svg_block: {
+        editor: {
+            title: "SVG 插图编辑器",
+            editTitle: "编辑",
+            previewTitle: "预览",
+        },
+        renderer: {
+            emptyPlaceholder: "请输入 SVG 代码以预览",
+            invalidSvg: "无效或不安全的 SVG",
+        },
+        placeholder: {
+            clickToAdd: "添加 SVG 插图",
+            supportText: "粘贴内联 SVG 代码作为插图",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "保存",
+            invalidCode: "请输入有效的 SVG 代码后再保存",
         },
         edit: {
             editButton: "编辑",
@@ -320,4 +358,4 @@ export const zh = {
         text_color: "文字颜色",
         background_color: "背景颜色 (高亮)",
     },
-}
+};

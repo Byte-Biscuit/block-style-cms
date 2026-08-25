@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { useTranslations } from "next-intl";
+import React from "react";
 import GoHomeOnErrorButtons from "@/components/go-home-buttons";
 import { container } from "@/lib/style-classes";
 

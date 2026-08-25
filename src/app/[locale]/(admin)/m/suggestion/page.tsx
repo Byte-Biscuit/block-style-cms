@@ -1,42 +1,42 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useDebounce } from "@/lib/hooks";
 import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
-    Button,
+    Clear as ClearIcon,
+    Delete as DeleteIcon,
+    Email as EmailIcon,
+    Search as SearchIcon,
+} from "@mui/icons-material";
+import {
+    Alert,
     Box,
+    Button,
+    CircularProgress,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Link as MuiLink,
+    Pagination,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    IconButton,
-    Pagination,
-    Alert,
-    CircularProgress,
+    TextField,
     Tooltip,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-    Link as MuiLink,
+    Typography,
 } from "@mui/material";
-import {
-    Search as SearchIcon,
-    Clear as ClearIcon,
-    Delete as DeleteIcon,
-    Email as EmailIcon,
-} from "@mui/icons-material";
-import { useTranslations, useLocale } from "next-intl";
-import type { Suggestion } from "@/types/suggestion";
-import { ADMIN_API_PREFIX } from "@/settings";
+import { useLocale, useTranslations } from "next-intl";
+import { useCallback, useEffect, useState } from "react";
 import { formatDateI18n } from "@/i18n/util";
+import { useDebounce } from "@/lib/hooks";
+import { ADMIN_API_PREFIX } from "@/settings";
+import type { Suggestion } from "@/types/suggestion";
 
 export default function SuggestionManagementPage() {
     const t = useTranslations("admin.suggestion");

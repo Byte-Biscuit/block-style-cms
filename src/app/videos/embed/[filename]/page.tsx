@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
+import React from "react";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 

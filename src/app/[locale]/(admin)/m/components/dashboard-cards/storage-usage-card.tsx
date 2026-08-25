@@ -1,3 +1,4 @@
+import StorageIcon from "@mui/icons-material/Storage";
 import {
     Box,
     Card,
@@ -7,7 +8,6 @@ import {
 } from "@mui/material";
 import { getTranslations } from "next-intl/server";
 import { formatBytes } from "@/lib/file-utils";
-import StorageIcon from "@mui/icons-material/Storage";
 import { systemInfoService } from "@/lib/services/system-info-service";
 
 const StorageUsageCard = async () => {

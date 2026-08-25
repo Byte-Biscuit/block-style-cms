@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Alert, Box, CircularProgress, Snackbar } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
-import { AuthenticationForm, AuthFormData } from "@/components/configuration";
+import { useState, useTransition } from "react";
 import { updateAuthentication } from "@/app/actions/settings/authentication";
+import {
+    AuthenticationForm,
+    type AuthFormData,
+} from "@/components/configuration";
 import { isSuccess } from "@/lib/response";
 
 interface AuthenticationTabProps {
@@ -41,16 +44,12 @@ export default function AuthenticationTab({
                 if (isSuccess(result)) {
                     setMessage({
                         type: "success",
-                        text:
-                            result.message ||
-                            t("messages.saveSuccess"),
+                        text: result.message || t("messages.saveSuccess"),
                     });
                 } else {
                     setMessage({
                         type: "error",
-                        text:
-                            result.message ||
-                            t("messages.saveFailed"),
+                        text: result.message || t("messages.saveFailed"),
                     });
                 }
             } catch (error) {

@@ -1,25 +1,32 @@
-import path from "path";
+import path from "node:path";
+import { apiKey } from "@better-auth/api-key";
 import { betterAuth } from "better-auth";
-
 import { twoFactor } from "better-auth/plugins";
 import Database from "better-sqlite3";
-import { systemConfigService } from "../services/system-config-service";
-import { BETTER_AUTH_SIGN_IN, BETTER_AUTH_ERROR_PAGE, BETTER_AUTH_DATABASE } from "@/constants";
+import {
+    BETTER_AUTH_DATABASE,
+    BETTER_AUTH_ERROR_PAGE,
+    BETTER_AUTH_SIGN_IN,
+} from "@/constants";
+import { systemConfigService } from "@/lib/services/system-config-service";
 
 /**
  * Better Auth Configuration
- * 
+ *
  * Supports 4 authentication methods (configured via system-config):
  * 1. Email/Password + Authenticator (2FA)
  * 2. GitHub OAuth
  * 3. Google OAuth
  * 4. Passkey (WebAuthn)
- * 
+ *
  * OAuth and service keys are stored in settings.json (preferred) or .env
  * Method enablement is controlled by CMS_DATA_PATH/settings.json
  */
 
-const databasePath = path.join(process.env.CMS_DATA_PATH || "./data", BETTER_AUTH_DATABASE);
+const databasePath = path.join(
+    process.env.CMS_DATA_PATH || "./data",
+    BETTER_AUTH_DATABASE
+);
 
 /**
  * Global store to persist DB connection and Auth instance across HMR reloads in development.
@@ -37,7 +44,7 @@ if (!globalStore._betterAuthDb) {
     console.log(`[Database] 🔌 Initializing connection to: ${databasePath}`);
     globalStore._betterAuthDb = new Database(databasePath);
     // Enable WAL mode for better concurrency performance
-    globalStore._betterAuthDb.pragma('journal_mode = WAL');
+    globalStore._betterAuthDb.pragma("journal_mode = WAL");
 }
 const authDatabase = globalStore._betterAuthDb!;
 
@@ -55,19 +62,24 @@ export async function getAuth() {
 
     // C. Fast Cache Check (Singleton Pattern)
     // Check if an instance already exists in the global store and if the configuration version hasn't changed.
-    if (globalStore._betterAuthInstance && globalStore._lastAuthInitializedAt === currentInitializedAt) {
+    if (
+        globalStore._betterAuthInstance &&
+        globalStore._lastAuthInitializedAt === currentInitializedAt
+    ) {
         return globalStore._betterAuthInstance;
     }
 
     // D. Rebuild Instance (Only when timestamp differs or instance is null)
-    console.log(`[Auth] ♻️ Config updated (Time: ${currentInitializedAt}). Rebuilding instance...`);
+    console.log(
+        `[Auth] ♻️ Config updated (Time: ${currentInitializedAt}). Rebuilding instance...`
+    );
 
     const githubConfig = config?.authentication?.methods?.github;
     const googleConfig = config?.authentication?.methods?.google;
 
     // Get Better Auth Secret and Base URL from settings.json (required)
     const authSecret = systemConfigService.getAuthSecret();
-    const authBaseURL = config?.authentication?.baseURL || '';
+    const authBaseURL = config?.authentication?.baseURL || "";
 
     const newInstance = betterAuth({
         appName: "Block Style CMS",
@@ -91,18 +103,18 @@ export async function getAuth() {
         socialProviders: {
             github: {
                 // https://github.com/settings/apps
-                clientId: githubConfig?.clientId || '',
-                clientSecret: githubConfig?.clientSecret || '',
+                clientId: githubConfig?.clientId || "",
+                clientSecret: githubConfig?.clientSecret || "",
                 // Use double negation to ensure boolean type
                 enabled: !!githubConfig?.enabled,
             },
             google: {
                 // https://console.cloud.google.com/auth/clients
                 prompt: "select_account",
-                clientId: googleConfig?.clientId || '',
-                clientSecret: googleConfig?.clientSecret || '',
+                clientId: googleConfig?.clientId || "",
+                clientSecret: googleConfig?.clientSecret || "",
                 enabled: !!googleConfig?.enabled,
-            }
+            },
         },
 
         // Plugins for additional authentication methods
@@ -112,10 +124,16 @@ export async function getAuth() {
             twoFactor({
                 backupCodeOptions: {
                     // encrypted|plain
-                    storeBackupCodes: "encrypted"
-                }
+                    storeBackupCodes: "encrypted",
+                },
             }),
-
+            apiKey({
+                defaultPrefix: "bsc_",
+                requireName: true,
+                enableSessionForAPIKeys: false,
+                keyExpiration: { defaultExpiresIn: null },
+                rateLimit: { enabled: false },
+            }),
             // Passkey (WebAuthn) support
             //passkey(),
         ],
@@ -124,35 +142,44 @@ export async function getAuth() {
             user: {
                 create: {
                     before: async (user, ctx) => {
-                        const syncAllowedEmails = systemConfigService.getAllowedEmails();
-                        const email = user.email?.toLowerCase() || '';
+                        const syncAllowedEmails =
+                            systemConfigService.getAllowedEmails();
+                        const email = user.email?.toLowerCase() || "";
                         // Enforce allowed emails if configured
-                        if (syncAllowedEmails.length > 0 && !syncAllowedEmails.includes(email)) {
-                            console.error(`[Auth][Hook] Registration blocked for disallowed email: ${email}`);
+                        if (
+                            syncAllowedEmails.length > 0 &&
+                            !syncAllowedEmails.includes(email)
+                        ) {
+                            console.error(
+                                `[Auth][Hook] Registration blocked for disallowed email: ${email}`
+                            );
                             return false;
                         }
                         console.log("[Auth][Hook] Creating user:", user);
                         return true;
-                    }
-                }
+                    },
+                },
             },
             session: {
                 create: {
                     before: async (session, ctx) => {
                         console.log("[Auth][Hook] Creating session:", session);
-                        const syncAllowedEmails = systemConfigService.getAllowedEmails();
-                        const user = await authDatabase
+                        const syncAllowedEmails =
+                            systemConfigService.getAllowedEmails();
+                        const user = (await authDatabase
                             .prepare("SELECT email FROM user WHERE id = ?")
-                            .get(session.userId) as { email: string };
+                            .get(session.userId)) as { email: string };
                         if (user && !syncAllowedEmails.includes(user.email)) {
-                            console.warn(`[Auth] 🚫 Blocked login attempt: ${user.email}`);
+                            console.warn(
+                                `[Auth] 🚫 Blocked login attempt: ${user.email}`
+                            );
                             return false;
                         }
                         return true;
-                    }
-                }
-            }
-        }
+                    },
+                },
+            },
+        },
     });
 
     // E. Automatic Database Schema Synchronization (Auto-Migration)
@@ -161,17 +188,31 @@ export async function getAuth() {
         const { getMigrations } = await import("better-auth/db/migration");
 
         // Generate required SQL migrations (e.g., CREATE TABLE "two_factor"...)
-        const { toBeCreated, toBeAdded, runMigrations } = await getMigrations(newInstance.options);
+        const { toBeCreated, toBeAdded, runMigrations } = await getMigrations(
+            newInstance.options
+        );
 
         if (toBeCreated.length || toBeAdded.length) {
-            console.log(`[Auth] 🛠️ Applying ${(toBeCreated.length + toBeAdded.length)} schema changes...`);
+            console.log(
+                `[Auth] 🛠️ Applying ${toBeCreated.length + toBeAdded.length} schema changes...`
+            );
             await runMigrations();
             console.log("[Auth] ✅ Schema updated successfully.");
         } else {
             console.log("[Auth] Schema is up to date.");
         }
     } catch (err) {
-        console.error("[Auth] ⚠️ Auto-migration failed:", err);
+        const { UnsafeMigrationError } = await import(
+            "better-auth/db/migration"
+        );
+        if (err instanceof UnsafeMigrationError) {
+            console.error(
+                "[Auth] Unsafe migration (required column needs backfill first):",
+                err
+            );
+        } else {
+            console.error("[Auth] ⚠️ Auto-migration failed:", err);
+        }
     }
 
     // F. Update Global Cache

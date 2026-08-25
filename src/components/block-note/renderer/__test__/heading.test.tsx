@@ -1,6 +1,6 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import React from "react";
+import { describe, expect, it } from "vitest";
 import { Heading, type HeadingBlock } from "../heading";
 
 describe("Heading", () => {
@@ -37,7 +37,13 @@ describe("Heading", () => {
                 {
                     type: "link",
                     href: "https://example.com",
-                    content: [{ type: "text", text: "this link", styles: { bold: true } }],
+                    content: [
+                        {
+                            type: "text",
+                            text: "this link",
+                            styles: { bold: true },
+                        },
+                    ],
                 },
             ],
             children: [],

@@ -1,46 +1,78 @@
 "use client";
 
-import React, { useState } from "react";
+import type {
+    BlockNoteEditor,
+    BlockSchemaFromSpecs,
+    PartialBlock,
+} from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
+import {
+    createReactBlockSpec,
+    type DefaultReactSuggestionItem,
+    useBlockNoteEditor,
+} from "@blocknote/react";
+import {
+    AttachFile as AttachFileIcon,
+    Close as CloseIcon,
+    Upload as UploadIcon,
+} from "@mui/icons-material";
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    Typography,
-    CircularProgress,
-    Paper,
-    IconButton,
     FormControl,
-    Select,
+    IconButton,
     MenuItem,
+    Paper,
+    Select,
+    Typography,
 } from "@mui/material";
-import {
-    Upload as UploadIcon,
-    Close as CloseIcon,
-    AttachFile as AttachFileIcon,
-} from "@mui/icons-material";
-import {
-    createReactBlockSpec,
-    useBlockNoteEditor,
-    type DefaultReactSuggestionItem,
-} from "@blocknote/react";
-import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { BlockNoteEditor } from "@blocknote/core";
-import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
-import { schema } from "@/block-note/schema";
-import FileIcon from "@/components/file-icon";
-import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/settings";
-import { getBlockEditorContainer } from "../block-editor-utils";
-import { getFileCategory, formatBytes } from "@/lib/file-utils";
-import EnhancedFileIcon from "./icons/enhanced-file-icon";
+import React, { useState } from "react";
 import EnhancedFile, {
-    FileBlockProps,
+    type FileBlockProps,
 } from "@/block-note/renderer/enhanced-file";
+import type { schema } from "@/block-note/schema";
+import FileIcon from "@/components/file-icon";
+import { formatBytes, getFileCategory } from "@/lib/file-utils";
+import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/settings";
 import ErrorDisplay from "../../../app/[locale]/(admin)/m/components/error-display";
+import { getBlockEditorContainer } from "../block-editor-utils";
+import EnhancedFileIcon from "./icons/enhanced-file-icon";
 
 export const ENHANCED_FILE_BLOCK_TYPE = "enhancedFile" as const;
+
+const placeholderBarSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+    width: "100%",
+    px: 2,
+    py: 1.25,
+    borderRadius: 1,
+    bgcolor: "action.hover",
+    cursor: "pointer",
+    "&:hover": {
+        bgcolor: "action.selected",
+    },
+};
+
+const uploadRowSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    px: 2,
+    py: 1.5,
+    width: "100%",
+    cursor: "pointer",
+    "&:hover": {
+        borderColor: "primary.main",
+        bgcolor: "action.hover",
+    },
+};
 
 function FileSelectionDialog({
     open,
@@ -285,75 +317,43 @@ function FileSelectionDialog({
                             )}
                         </Paper>
                     ) : (
-                        // Display upload area
                         <Paper
                             variant="outlined"
                             sx={{
-                                p: 4,
+                                ...uploadRowSx,
                                 mb: 3,
-                                textAlign: "center",
-                                border: "2px dashed",
-                                borderColor: "divider",
-                                borderRadius: 2,
-                                transition: "all 0.2s ease-in-out",
-                                "&:hover": !isUploading
-                                    ? {
-                                          borderColor: "primary.main",
-                                      }
-                                    : {},
+                                cursor: isUploading ? "default" : "pointer",
                             }}
                             component="div"
+                            onClick={
+                                isUploading ? undefined : handleUploadClick
+                            }
                         >
                             {isUploading ? (
-                                <Box sx={{ py: 2 }}>
-                                    <CircularProgress size={32} />
-                                    <Typography variant="body2" sx={{ mt: 1 }}>
+                                <>
+                                    <CircularProgress size={22} />
+                                    <Typography variant="body2">
                                         {dict?.upload?.uploading ||
                                             "Uploading..."}
                                     </Typography>
-                                </Box>
+                                </>
                             ) : (
-                                <Box
-                                    sx={{
-                                        py: 1,
-                                        cursor: "pointer",
-                                        borderRadius: 1,
-                                        transition: "all 0.2s ease-in-out",
-                                        "&:hover": {
-                                            bgcolor: "action.hover",
-                                        },
-                                    }}
-                                    onClick={handleUploadClick}
-                                >
-                                    <UploadIcon
-                                        sx={{
-                                            fontSize: 40,
-                                            color: "primary.main",
-                                            mb: 1,
-                                            display: "block",
-                                            mx: "auto",
-                                        }}
-                                    />
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            mb: 0.5,
-                                            fontWeight: 500,
-                                            color: "text.primary",
-                                        }}
-                                    >
-                                        {dict?.upload?.clickToSelect ||
-                                            "Click to upload file"}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        sx={{ fontSize: "0.875rem" }}
-                                    >
-                                        {dict?.upload?.supportedFormats ||
-                                            "Supports Office documents, PDF, archives and other formats"}
-                                    </Typography>
-                                </Box>
+                                <>
+                                    <UploadIcon color="primary" />
+                                    <Box>
+                                        <Typography variant="subtitle2">
+                                            {dict?.upload?.clickToSelect ||
+                                                "Click to upload file"}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                        >
+                                            {dict?.upload?.supportedFormats ||
+                                                "Supports Office documents, PDF, archives and other formats"}
+                                        </Typography>
+                                    </Box>
+                                </>
                             )}
                         </Paper>
                     )}
@@ -447,30 +447,12 @@ export const EnhancedFileBlockRender = ({ block }: { block: any }) => {
     if (!block.props.filename) {
         return (
             <>
-                <Box
-                    sx={{
-                        border: "2px dashed",
-                        borderColor: "divider",
-                        borderRadius: 1,
-                        p: 4,
-                        textAlign: "center",
-                        cursor: "pointer",
-                        "&:hover": {
-                            borderColor: "primary.main",
-                            bgcolor: "action.hover",
-                        },
-                    }}
-                    onClick={() => setDialogOpen(true)}
-                >
+                <Box sx={placeholderBarSx} onClick={() => setDialogOpen(true)}>
                     <AttachFileIcon
-                        sx={{ fontSize: 48, color: "text.secondary", mb: 2 }}
+                        sx={{ fontSize: 22, color: "text.secondary" }}
                     />
-                    <Typography variant="h6" color="text.secondary">
-                        {dict?.placeholder?.clickToAdd || "Click to add file"}
-                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {dict?.placeholder?.supportText ||
-                            "Supports Office documents, PDF, archives and other formats"}
+                        {dict?.placeholder?.clickToAdd || "Add file"}
                     </Typography>
                 </Box>
                 <FileSelectionDialog

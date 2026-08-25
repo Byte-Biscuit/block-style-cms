@@ -1,16 +1,16 @@
 "use client";
 
-import React from "react";
-import { Box, IconButton, Tooltip, Stack, Divider } from "@mui/material";
+import type { BlockNoteEditor } from "@blocknote/core";
 import {
-    Fullscreen as FullscreenIcon,
-    FullscreenExit as FullscreenExitIcon,
-    OpenInFull as OpenInFullIcon,
     ContentPaste as ContentPasteIcon,
     DeleteSweep as DeleteSweepIcon,
+    FullscreenExit as FullscreenExitIcon,
+    Fullscreen as FullscreenIcon,
+    OpenInFull as OpenInFullIcon,
 } from "@mui/icons-material";
+import { Box, Divider, IconButton, Stack, Tooltip } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { BlockNoteEditor } from "@blocknote/core";
+import type React from "react";
 
 interface EditorActionToolbarProps {
     editor: BlockNoteEditor<any, any, any>;

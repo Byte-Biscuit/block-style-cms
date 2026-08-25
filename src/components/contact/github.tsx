@@ -1,8 +1,8 @@
 import { GitHub } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { button } from "@/lib/style-classes";
 import Link from "@/components/link";
 import { systemConfigService } from "@/lib/services/system-config-service";
+import { button } from "@/lib/style-classes";
 
 const GitHubIconButton = async () => {
     const systemConfig = await systemConfigService.readConfig();

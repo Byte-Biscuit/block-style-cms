@@ -1,13 +1,13 @@
 "use client";
-import React from "react";
+import { GitHub, Login, MoreHoriz } from "@mui/icons-material";
 import {
     IconButton,
-    Menu,
-    MenuItem,
     ListItemIcon,
     ListItemText,
+    Menu,
+    MenuItem,
 } from "@mui/material";
-import { MoreHoriz, GitHub, Login } from "@mui/icons-material";
+import React from "react";
 import Link from "@/components/link";
 
 const MediumIcon = () => (

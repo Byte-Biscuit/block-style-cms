@@ -1,10 +1,10 @@
-import React from "react";
+import { Download as DownloadIcon } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import Link from "next/link";
+import type React from "react";
+import FileIcon from "@/components/file-icon";
 import { formatBytes, getFileCategory } from "@/lib/file-utils";
 import { getFileTypeColor } from "@/lib/style-classes";
-import FileIcon from "@/components/file-icon";
-import Link from "next/link";
-import { IconButton } from "@mui/material";
-import { Download as DownloadIcon } from "@mui/icons-material";
 
 export interface FileBlockProps {
     filename?: string;

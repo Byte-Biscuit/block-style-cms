@@ -5,9 +5,9 @@
  * Displays a single comment with avatar, author info, timestamp, content, and reply button
  */
 
-import { useTranslations, useLocale } from "next-intl";
-import { getNickLetterAvatar } from "@/lib/gravatar-utils";
+import { useLocale, useTranslations } from "next-intl";
 import I18NLocaleTime from "@/components/i18n-time";
+import { getNickLetterAvatar } from "@/lib/gravatar-utils";
 import type { Comment } from "@/types/comment";
 
 interface CommentItemProps {

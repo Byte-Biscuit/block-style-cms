@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { Language as LanguageIcon } from "@mui/icons-material";
 import {
     IconButton,
-    Tooltip,
-    Menu,
-    MenuItem,
     ListItemIcon,
     ListItemText,
+    Menu,
+    MenuItem,
+    Tooltip,
 } from "@mui/material";
-import { Language as LanguageIcon } from "@mui/icons-material";
-import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useSearchParams } from "next/navigation";
-import { locales, localeMap } from "@/i18n/config";
+import { useLocale, useTranslations } from "next-intl";
+import React, { useEffect, useState } from "react";
+import { localeMap, locales } from "@/i18n/config";
 import { button } from "@/lib/style-classes";
 
 type LanguageToggleProps = {

@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
-import { Button, Box, Avatar, Typography } from "@mui/material";
-import { useTranslations } from "next-intl";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { authClient } from "@/lib/auth/auth-client";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import React from "react";
+import { authClient } from "@/lib/auth/auth-client";
 
 export default function SignOutButton({
     returnTo = "/auth/sign-out",

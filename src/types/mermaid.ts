@@ -26,7 +26,7 @@ flowchart TD
     B -->|Yes| C[Process A]
     B -->|No| D[Process B]
     C --> E[End]
-    D --> E`
+    D --> E`,
     },
     {
         label: "Sequence Diagram",
@@ -43,7 +43,7 @@ sequenceDiagram
     A->>B: Login Request
     B->>C: Query User Info
     C-->>B: Return User Data
-    B-->>A: Login Success`
+    B-->>A: Login Success`,
     },
     {
         label: "Git Graph",
@@ -60,7 +60,7 @@ gitGraph
     commit id: "Bug fix"
     checkout main
     merge develop
-    commit id: "Release version"`
+    commit id: "Release version"`,
     },
     {
         label: "Gantt Chart",
@@ -74,7 +74,7 @@ gitGraph
     UI Design            :done,    des2, 2024-01-11, 2024-01-20
     section Development Phase
     Frontend Development :active,  dev1, 2024-01-21, 30d
-    Backend Development  :         dev2, 2024-01-21, 25d`
+    Backend Development  :         dev2, 2024-01-21, 25d`,
     },
     {
         label: "Class Diagram",
@@ -97,7 +97,7 @@ classDiagram
         +meow()
     }
     Animal <|-- Dog
-    Animal <|-- Cat`
+    Animal <|-- Cat`,
     },
     {
         label: "State Diagram",
@@ -111,7 +111,7 @@ stateDiagram-v2
     Pending --> Processing : Start Processing
     Processing --> Completed : Process Complete
     Processing --> Pending : Process Failed
-    Completed --> [*]`
+    Completed --> [*]`,
     },
     {
         label: "Pie Chart",
@@ -121,7 +121,7 @@ stateDiagram-v2
     "Product A" : 35
     "Product B" : 25
     "Product C" : 20
-    "Others" : 20`
+    "Others" : 20`,
     },
     {
         label: "Entity Relationship Diagram",
@@ -153,7 +153,7 @@ erDiagram
     }
     
     USER ||--|| PROFILE : has
-    USER ||--o{ POST : creates`
+    USER ||--o{ POST : creates`,
     },
     {
         label: "User Journey",
@@ -175,7 +175,7 @@ journey
     section Post-Purchase
       Order Confirmation: 5: User
       Delivery: 4: User
-      Review Product: 5: User`
+      Review Product: 5: User`,
     },
     {
         label: "Quadrant Chart",
@@ -196,7 +196,7 @@ quadrantChart
     Campaign B: [0.45, 0.23]
     Campaign C: [0.57, 0.69]
     Campaign D: [0.78, 0.34]
-    Campaign E: [0.40, 0.34]`
+    Campaign E: [0.40, 0.34]`,
     },
     {
         label: "XY Chart",
@@ -211,8 +211,8 @@ xychart-beta
     x-axis [Jan, Feb, Mar, Apr, May, Jun]
     y-axis "Revenue (K)" 0 --> 200
     line [20, 50, 80, 120, 160, 180]
-    bar [30, 60, 90, 130, 170, 190]`
-    }
+    bar [30, 60, 90, 130, 170, 190]`,
+    },
 ];
 
 // Localize template label/description using provided dictionary
@@ -223,7 +223,9 @@ export function localizeMermaidTemplates(
     if (!dict) return MERMAID_TEMPLATES;
     return MERMAID_TEMPLATES.map((t) => {
         const key = t.value as keyof typeof dict;
-        const entry = dict[key] as { label?: string; description?: string } | undefined;
+        const entry = dict[key] as
+            | { label?: string; description?: string }
+            | undefined;
         const label = entry?.label ?? t.label ?? t.value;
         const description = entry?.description ?? t.description ?? "";
         return { ...t, label, description };

@@ -1,5 +1,5 @@
-import React from "react";
-import { LocalBlock as Block } from "@/block-note/schema";
+import type React from "react";
+import type { LocalBlock as Block } from "@/block-note/schema";
 
 export type DividerBlock = Extract<Block, { type: "divider" }>;
 

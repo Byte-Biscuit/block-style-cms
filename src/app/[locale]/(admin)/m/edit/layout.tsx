@@ -1,6 +1,6 @@
-import React from "react";
-import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import React from "react";
 
 export const metadata: Metadata = {
     title: "编辑文章",

@@ -1,8 +1,8 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
 import ArticleIcon from "@mui/icons-material/Article";
-import { articleService } from "@/lib/services/article-service";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import { getTranslations } from "next-intl/server";
 import Link from "@/components/link";
+import { articleService } from "@/lib/services/article-service";
 
 const ArticleSummaryCard = async () => {
     const articleCount = await articleService.getArticlesCount();

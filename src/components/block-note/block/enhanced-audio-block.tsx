@@ -1,47 +1,81 @@
 "use client";
 
-import React, { useState } from "react";
+import type {
+    BlockNoteEditor,
+    BlockSchemaFromSpecs,
+    PartialBlock,
+} from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
 import {
+    createReactBlockSpec,
+    type DefaultReactSuggestionItem,
+    useBlockNoteEditor,
+} from "@blocknote/react";
+import {
+    MusicNote as AudioIcon,
+    Close as CloseIcon,
+    Upload as UploadIcon,
+} from "@mui/icons-material";
+import {
+    Alert,
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    TextField,
-    Typography,
-    CircularProgress,
-    Paper,
-    IconButton,
     Divider,
     FormControl,
+    IconButton,
     InputLabel,
-    Select,
     MenuItem,
-    Alert,
+    Paper,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
-import {
-    Upload as UploadIcon,
-    MusicNote as AudioIcon,
-    Close as CloseIcon,
-} from "@mui/icons-material";
-import {
-    createReactBlockSpec,
-    useBlockNoteEditor,
-    type DefaultReactSuggestionItem,
-} from "@blocknote/react";
-import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { BlockNoteEditor } from "@blocknote/core";
-import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
-import { schema } from "@/block-note/schema";
-import { ADMIN_API_PREFIX } from "@/settings";
+import type React from "react";
+import { useState } from "react";
+import EnhancedAudio, {
+    type AudioBlockProps,
+} from "@/block-note/renderer/enhanced-audio";
+import type { schema } from "@/block-note/schema";
+import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedAudioIcon from "./icons/enhanced-audio-icon";
-import EnhancedAudio, {
-    AudioBlockProps,
-} from "@/block-note/renderer/enhanced-audio";
+import { labelFromFilename } from "./image-label";
 
 export const ENHANCED_AUDIO_BLOCK_TYPE = "enhancedAudio";
+
+const placeholderBarSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+    width: "100%",
+    px: 2,
+    py: 1.25,
+    borderRadius: 1,
+    bgcolor: "action.hover",
+    cursor: "pointer",
+    "&:hover": {
+        bgcolor: "action.selected",
+    },
+};
+
+const sourceRowSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    px: 2,
+    py: 1.5,
+    width: "100%",
+    cursor: "pointer",
+    "&:hover": {
+        borderColor: "primary.main",
+        bgcolor: "action.hover",
+    },
+};
 
 function AudioSelectionDialog({
     open,
@@ -98,6 +132,7 @@ function AudioSelectionDialog({
                 setSelectedAudioUrl(audioUrl);
                 setEditableUrl(audioUrl);
                 setPlatform("upload");
+                setTitle((prev) => prev || labelFromFilename(file.name));
                 setUploadDialogVisible(false);
             } else {
                 // Handle business errors (such as unsupported format)
@@ -199,35 +234,30 @@ function AudioSelectionDialog({
                                 {dict?.dialog?.reselect || "Reselect"}
                             </Button>
                         </Box>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 3,
-                                alignItems: "flex-start",
-                                mb: 3,
-                            }}
-                        >
+                        <Box sx={{ mb: 3 }}>
                             <Box
                                 sx={{
-                                    width: 200,
-                                    height: 60,
-                                    bgcolor: "white",
-                                    borderRadius: 1,
-                                    border: "1px solid",
-                                    borderColor: "grey.300",
-                                    overflow: "hidden",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
+                                    width: "100%",
+                                    mb: 2,
+                                    "& audio": {
+                                        display: "block",
+                                        width: "100%",
+                                    },
                                 }}
                             >
                                 <audio
                                     controls
+                                    preload="metadata"
                                     src={selectedAudioUrl}
-                                    style={{ width: "100%" }}
-                                />
+                                >
+                                    <track
+                                        kind="captions"
+                                        srcLang="en"
+                                        label="Captions"
+                                    />
+                                </audio>
                             </Box>
-                            <Box sx={{ flex: 1 }}>
+                            <Box>
                                 <TextField
                                     fullWidth
                                     label={
@@ -318,55 +348,28 @@ function AudioSelectionDialog({
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: 2,
-                            minHeight: "120px",
+                            gap: 1.5,
                         }}
                     >
                         <Typography
-                            variant="h6"
+                            variant="body2"
                             color="text.secondary"
-                            gutterBottom
-                            sx={{ textAlign: "center" }}
+                            sx={{ mb: 0.5 }}
                         >
                             {dict?.dialog?.selectSource ||
                                 "Select Audio Source"}
                         </Typography>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 2,
-                                justifyContent: "center",
+                        <Paper
+                            variant="outlined"
+                            sx={sourceRowSx}
+                            onClick={() => {
+                                setUploadDialogVisible(true);
+                                setUploadError("");
                             }}
                         >
-                            {/* Local upload option */}
-                            <Paper
-                                variant="outlined"
-                                sx={{
-                                    p: 2,
-                                    textAlign: "center",
-                                    minWidth: "140px",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s",
-                                    "&:hover": {
-                                        borderColor: "primary.main",
-                                        bgcolor: "action.hover",
-                                        transform: "translateY(-1px)",
-                                        boxShadow: 1,
-                                    },
-                                }}
-                                onClick={() => {
-                                    setUploadDialogVisible(true);
-                                    setUploadError(""); // Clear previous errors when opening
-                                }}
-                            >
-                                <UploadIcon
-                                    sx={{
-                                        fontSize: 32,
-                                        color: "primary.main",
-                                        mb: 1,
-                                    }}
-                                />
-                                <Typography variant="body1" gutterBottom>
+                            <UploadIcon color="primary" />
+                            <Box>
+                                <Typography variant="subtitle2">
                                     {dict?.upload?.title || "Local Upload"}
                                 </Typography>
                                 <Typography
@@ -376,35 +379,18 @@ function AudioSelectionDialog({
                                     {dict?.upload?.subtitle ||
                                         "Select Audio File"}
                                 </Typography>
-                            </Paper>
-                            {/* URL embed option */}
-                            <Paper
-                                variant="outlined"
-                                sx={{
-                                    p: 2,
-                                    textAlign: "center",
-                                    minWidth: "140px",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s",
-                                    "&:hover": {
-                                        borderColor: "primary.main",
-                                        bgcolor: "action.hover",
-                                        transform: "translateY(-1px)",
-                                        boxShadow: 1,
-                                    },
-                                }}
-                                onClick={() => {
-                                    setPlatform("url");
-                                }}
-                            >
-                                <AudioIcon
-                                    sx={{
-                                        fontSize: 32,
-                                        color: "primary.main",
-                                        mb: 1,
-                                    }}
-                                />
-                                <Typography variant="body1" gutterBottom>
+                            </Box>
+                        </Paper>
+                        <Paper
+                            variant="outlined"
+                            sx={sourceRowSx}
+                            onClick={() => {
+                                setPlatform("url");
+                            }}
+                        >
+                            <AudioIcon color="primary" />
+                            <Box>
+                                <Typography variant="subtitle2">
                                     {dict?.embed?.title || "Embed Audio"}
                                 </Typography>
                                 <Typography
@@ -413,8 +399,8 @@ function AudioSelectionDialog({
                                 >
                                     {dict?.embed?.subtitle || "Audio URL"}
                                 </Typography>
-                            </Paper>
-                        </Box>
+                            </Box>
+                        </Paper>
                         {platform === "url" && (
                             <Box sx={{ mt: 2, width: "100%" }}>
                                 <TextField
@@ -467,62 +453,49 @@ function AudioSelectionDialog({
                                         {uploadError}
                                     </Alert>
                                 )}
-                                <Box
-                                    sx={{
-                                        pt: 2,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        gap: 3,
-                                    }}
-                                >
+                                <Box sx={{ pt: 2 }}>
                                     <Paper
                                         variant="outlined"
                                         sx={{
-                                            p: 4,
-                                            textAlign: "center",
-                                            border: "2px dashed",
-                                            borderColor: "divider",
-                                            width: "100%",
-                                            cursor: "pointer",
-                                            "&:hover": {
-                                                borderColor: "primary.main",
-                                                bgcolor: "action.hover",
-                                            },
+                                            ...sourceRowSx,
+                                            cursor: isUploading
+                                                ? "default"
+                                                : "pointer",
                                         }}
                                         component="label"
                                     >
                                         {isUploading ? (
-                                            <CircularProgress />
+                                            <>
+                                                <CircularProgress size={22} />
+                                                <Typography variant="body2">
+                                                    {dict?.upload?.uploading ||
+                                                        "Uploading..."}
+                                                </Typography>
+                                            </>
                                         ) : (
                                             <>
-                                                <UploadIcon
-                                                    sx={{
-                                                        fontSize: 48,
-                                                        color: "text.secondary",
-                                                        mb: 2,
-                                                    }}
-                                                />
-                                                <Typography
-                                                    variant="h6"
-                                                    gutterBottom
-                                                >
-                                                    {dict?.upload
-                                                        ?.clickToSelect ||
-                                                        "Click to Select File"}
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="text.secondary"
-                                                >
-                                                    {dict?.upload
-                                                        ?.supportedFormats ||
-                                                        "Supports MP3, WAV, OGG, AAC, M4A, FLAC, WEBM formats"}
-                                                </Typography>
+                                                <UploadIcon color="primary" />
+                                                <Box>
+                                                    <Typography variant="subtitle2">
+                                                        {dict?.upload
+                                                            ?.clickToSelect ||
+                                                            "Click to Select File"}
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                    >
+                                                        {dict?.upload
+                                                            ?.supportedFormats ||
+                                                            "MP3, WAV, OGG, AAC, M4A, FLAC, WEBM, Opus — max 50MB"}
+                                                    </Typography>
+                                                </Box>
                                                 <input
                                                     type="file"
                                                     hidden
-                                                    accept="audio/*"
+                                                    accept={[
+                                                        ...FILE_EXTENSIONS.AUDIO,
+                                                    ].join(",")}
                                                     onChange={handleFileUpload}
                                                     disabled={isUploading}
                                                 />
@@ -577,30 +550,10 @@ export const EnhancedAudioBlockRender = ({ block }: { block: any }) => {
     if (!block.props.content) {
         return (
             <>
-                <Box
-                    sx={{
-                        border: "2px dashed",
-                        borderColor: "divider",
-                        borderRadius: 1,
-                        p: 4,
-                        textAlign: "center",
-                        cursor: "pointer",
-                        "&:hover": {
-                            borderColor: "primary.main",
-                            bgcolor: "action.hover",
-                        },
-                    }}
-                    onClick={() => setDialogOpen(true)}
-                >
-                    <AudioIcon
-                        sx={{ fontSize: 48, color: "text.secondary", mb: 2 }}
-                    />
-                    <Typography variant="h6" color="text.secondary">
-                        {dict?.placeholder?.clickToAdd || "Click to Add Audio"}
-                    </Typography>
+                <Box sx={placeholderBarSx} onClick={() => setDialogOpen(true)}>
+                    <AudioIcon sx={{ fontSize: 22, color: "text.secondary" }} />
                     <Typography variant="body2" color="text.secondary">
-                        {dict?.placeholder?.supportText ||
-                            "Supports local upload or URL embedding"}
+                        {dict?.placeholder?.clickToAdd || "Add audio"}
                     </Typography>
                 </Box>
                 <AudioSelectionDialog

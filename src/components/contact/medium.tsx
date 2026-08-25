@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@mui/material";
-import { button } from "@/lib/style-classes";
 import Link from "@/components/link";
 import { systemConfigService } from "@/lib/services/system-config-service";
+import { button } from "@/lib/style-classes";
 
 /** Medium three-ellipse logo icon */
 const MediumIcon = () => (

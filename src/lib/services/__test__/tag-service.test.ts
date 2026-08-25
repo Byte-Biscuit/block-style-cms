@@ -1,23 +1,23 @@
-import { fileURLToPath } from "url";
 import path from "path";
-import { describe, it, expect, beforeEach, vi, beforeAll } from "vitest";
+import { fileURLToPath } from "url";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Mock config before importing modules
-vi.mock('@/config', () => ({
+vi.mock("@/config", () => ({
     ARTICLE_DIR: path.join(__dirname, "..", "..", "..", "data", "articles"),
-    META_DIR: path.join(__dirname, "..", "..", "..", "data", "meta")
+    META_DIR: path.join(__dirname, "..", "..", "..", "data", "meta"),
 }));
 
 // Mock algolia-search-service to prevent actual API calls
-vi.mock('../algolia-search-service', () => ({
+vi.mock("../algolia-search-service", () => ({
     algoliaSearchService: {
         saveArticle: vi.fn().mockResolvedValue(undefined),
         deleteArticle: vi.fn().mockResolvedValue(undefined),
         search: vi.fn().mockResolvedValue([]),
-    }
+    },
 }));
 
 // Import after mocking
@@ -25,7 +25,6 @@ const { tagService } = await import("../tag-service");
 const { lruCacheService } = await import("../lru-cache-service");
 
 describe("TagService - getTagsWithArticles", () => {
-
     beforeEach(() => {
         // Clear cache before each test
         lruCacheService.clear();
@@ -38,7 +37,10 @@ describe("TagService - getTagsWithArticles", () => {
         console.log("First call - Type:", tagMap.constructor.name);
         console.log("First call - Is Map:", tagMap instanceof Map);
         console.log("First call - Size:", tagMap.size);
-        console.log("First call - Entries:", Array.from(tagMap.entries()).slice(0, 3));
+        console.log(
+            "First call - Entries:",
+            Array.from(tagMap.entries()).slice(0, 3)
+        );
         expect(tagMap).toBeInstanceOf(Map);
     });
 });

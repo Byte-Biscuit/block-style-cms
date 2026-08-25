@@ -1,51 +1,51 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useDebounce } from "@/lib/hooks";
 import {
-    Container,
-    Paper,
-    Typography,
-    TextField,
-    Button,
+    Check as ApproveIcon,
+    Article as ArticleIcon,
+    Clear as ClearIcon,
+    Delete as DeleteIcon,
+    Search as SearchIcon,
+    Language as WebsiteIcon,
+} from "@mui/icons-material";
+import {
+    Alert,
+    Avatar,
     Box,
+    Button,
+    Chip,
+    CircularProgress,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Link as MuiLink,
+    Pagination,
+    Paper,
+    Select,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Chip,
-    IconButton,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Pagination,
-    Alert,
-    CircularProgress,
+    TextField,
     Tooltip,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
-    DialogActions,
-    Avatar,
-    Link as MuiLink,
+    Typography,
 } from "@mui/material";
-import {
-    Search as SearchIcon,
-    Clear as ClearIcon,
-    Delete as DeleteIcon,
-    Check as ApproveIcon,
-    Language as WebsiteIcon,
-    Article as ArticleIcon,
-} from "@mui/icons-material";
-import { useTranslations, useLocale } from "next-intl";
-import type { Comment, CommentStatus } from "@/types/comment";
-import { ADMIN_API_PREFIX } from "@/settings";
+import { useLocale, useTranslations } from "next-intl";
+import { useCallback, useEffect, useState } from "react";
 import { formatDateI18n } from "@/i18n/util";
 import { getGravatarUrl } from "@/lib/gravatar-utils";
+import { useDebounce } from "@/lib/hooks";
+import { ADMIN_API_PREFIX } from "@/settings";
+import type { Comment, CommentStatus } from "@/types/comment";
 
 export default function CommentManagementPage() {
     const t = useTranslations("admin.comment");
@@ -248,7 +248,14 @@ export default function CommentManagementPage() {
 
     return (
         <Container maxWidth="xl" sx={{ py: 2, px: { xs: 2, sm: 4, md: 6 } }}>
-            <Paper elevation={3} sx={{ pt: { xs: 2, sm: 2 }, pb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 4 } }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    pt: { xs: 2, sm: 2 },
+                    pb: { xs: 2, sm: 4 },
+                    px: { xs: 2, sm: 4 },
+                }}
+            >
                 <Box
                     sx={{
                         display: "flex",

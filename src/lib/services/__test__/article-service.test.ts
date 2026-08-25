@@ -1,15 +1,14 @@
-import { fileURLToPath } from "url";
 import path from "path";
-import { describe, it, vi } from "vitest"
-
+import { fileURLToPath } from "url";
+import { describe, it, vi } from "vitest";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // mock 必须在导入使用该模块之前执行
-vi.mock('@/config', () => ({
+vi.mock("@/config", () => ({
     ARTICLE_DIR: path.join(__dirname, "..", "..", "..", "data", "articles"),
-    META_DIR: path.join(__dirname, "..", "..", "..", "data", "meta")
+    META_DIR: path.join(__dirname, "..", "..", "..", "data", "meta"),
 }));
 
 //The test run did not record any output.
@@ -33,5 +32,5 @@ describe("article-service", () => {
         locale = "error";
         articles = await articleService.getArticlesByLocale(locale, 20);
         console.log(`Latest articles in ${locale}:`, articles.length);
-    })
+    });
 });

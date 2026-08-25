@@ -1,10 +1,10 @@
 "use client";
-import React from "react";
-import { IconButton, Tooltip, Menu, MenuItem } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { useTranslations, useLocale } from "next-intl";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import { useLocale, useTranslations } from "next-intl";
+import React from "react";
 import Link from "@/components/link";
-import { ChannelItem } from "@/types/system-config";
+import type { ChannelItem } from "@/types/system-config";
 
 interface SmallScreenNavButtonProps {
     channels: ChannelItem[];

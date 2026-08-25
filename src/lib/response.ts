@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export interface Result<T = unknown> {
     code: number;
@@ -13,57 +13,79 @@ export interface Result<T = unknown> {
  */
 export const HttpStatus = {
     // 2xx Success
-    OK: 200,                    // Request succeeded
-    CREATED: 201,               // Resource created successfully
-    ACCEPTED: 202,              // Request accepted, processing
-    NO_CONTENT: 204,            // Success, no content
+    OK: 200, // Request succeeded
+    CREATED: 201, // Resource created successfully
+    ACCEPTED: 202, // Request accepted, processing
+    NO_CONTENT: 204, // Success, no content
 
     // 4xx Client errors
-    BAD_REQUEST: 400,           // Bad request parameters
-    UNAUTHORIZED: 401,          // Unauthorized
-    FORBIDDEN: 403,             // Forbidden
-    NOT_FOUND: 404,             // Resource not found
-    CONFLICT: 409,              // Resource conflict (e.g., duplicate)
-    UNPROCESSABLE_ENTITY: 422,  // Unprocessable entity (e.g., validation failed)
+    BAD_REQUEST: 400, // Bad request parameters
+    UNAUTHORIZED: 401, // Unauthorized
+    FORBIDDEN: 403, // Forbidden
+    NOT_FOUND: 404, // Resource not found
+    CONFLICT: 409, // Resource conflict (e.g., duplicate)
+    UNPROCESSABLE_ENTITY: 422, // Unprocessable entity (e.g., validation failed)
 
     // 5xx Server errors
     INTERNAL_SERVER_ERROR: 500, // Internal server error
-    NOT_IMPLEMENTED: 501,       // Not implemented
-    SERVICE_UNAVAILABLE: 503,   // Service unavailable
+    NOT_IMPLEMENTED: 501, // Not implemented
+    SERVICE_UNAVAILABLE: 503, // Service unavailable
 } as const;
 
 // Success response
-export function success<T = Record<string, unknown>>(message = 'success', payload: T = {} as T) {
+export function success<T = Record<string, unknown>>(
+    message = "success",
+    payload: T = {} as T
+) {
     const res: Result<T> = { code: HttpStatus.OK, message, payload };
     return NextResponse.json(res);
 }
 
 // Internal server error
-export function failure<T = Record<string, unknown>>(message = 'failure', payload: T = {} as T) {
-    const res: Result<T> = { code: HttpStatus.INTERNAL_SERVER_ERROR, message, payload };
+export function failure<T = Record<string, unknown>>(
+    message = "failure",
+    payload: T = {} as T
+) {
+    const res: Result<T> = {
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
+        message,
+        payload,
+    };
     return NextResponse.json(res);
 }
 
 // Unauthorized
-export function unauthorized<T = Record<string, unknown>>(message = '未授权', payload: T = {} as T) {
+export function unauthorized<T = Record<string, unknown>>(
+    message = "未授权",
+    payload: T = {} as T
+) {
     const res: Result<T> = { code: HttpStatus.UNAUTHORIZED, message, payload };
     return NextResponse.json(res);
 }
 
 // Forbidden
-export function forbidden<T = Record<string, unknown>>(message = '禁止访问', payload: T = {} as T) {
+export function forbidden<T = Record<string, unknown>>(
+    message = "禁止访问",
+    payload: T = {} as T
+) {
     const res: Result<T> = { code: HttpStatus.FORBIDDEN, message, payload };
     return NextResponse.json(res);
 }
 
 // Bad request
-export function badRequest<T = Record<string, unknown>>(message = '参数错误', payload: T = {} as T) {
+export function badRequest<T = Record<string, unknown>>(
+    message = "参数错误",
+    payload: T = {} as T
+) {
     const res: Result<T> = { code: HttpStatus.BAD_REQUEST, message, payload };
     return NextResponse.json(res);
 }
 
 // Resource not found
-export function notFound<T = Record<string, unknown>>(message = '资源未找到', payload: T = {} as T) {
+export function notFound<T = Record<string, unknown>>(
+    message = "资源未找到",
+    payload: T = {} as T
+) {
     const res: Result<T> = { code: HttpStatus.NOT_FOUND, message, payload };
     return NextResponse.json(res);
 }

@@ -1,33 +1,39 @@
 /**
  * System Configuration Service
  * Manages CMS_DATA_PATH/settings.json
- * 
+ *
  */
 
-import fs from 'fs/promises';
-import fsSync from 'fs';
-import { SystemConfig, DEFAULT_SYSTEM_CONFIG, ChannelConfig } from '@/types/system-config';
-import { VERSION } from '@/settings';
+import fsSync from "node:fs";
+import fs from "node:fs/promises";
+import { VERSION } from "@/settings";
+import {
+    type ChannelConfig,
+    DEFAULT_SYSTEM_CONFIG,
+    type SystemConfig,
+} from "@/types/system-config";
 
 class SystemConfigService {
-    private readonly configFileName = 'settings.json';
-    private readonly configFilePath = process.env.CMS_DATA_PATH;
+    private readonly configFileName = "settings.json";
     private _cachedConfig: SystemConfig | null = null;
 
     /**
      * Get the full path to settings.json
      */
     public getConfigPath(): string {
-        if (!this.configFilePath) {
-            throw new Error('CMS_DATA_PATH environment variable is not set');
+        const configFilePath = process.env.CMS_DATA_PATH;
+        if (!configFilePath) {
+            throw new Error("CMS_DATA_PATH environment variable is not set");
         }
-        const normalizedPath = this.configFilePath.endsWith('/') ? this.configFilePath : `${this.configFilePath}/`;
+        const normalizedPath = configFilePath.endsWith("/")
+            ? configFilePath
+            : `${configFilePath}/`;
         return `${normalizedPath}${this.configFileName}`;
     }
 
     /**
      * Check if the application has been initialized
-     * 
+     *
      * @returns true if initialized, false otherwise
      */
     public async isInitialized(): Promise<boolean> {
@@ -35,14 +41,14 @@ class SystemConfigService {
             const config = await this.readConfig();
             return !!(config && config.initializedAt);
         } catch (error) {
-            console.error('Error checking initialization status:', error);
+            console.error("Error checking initialization status:", error);
             return false;
         }
     }
 
     /**
      * Read configuration from settings.json
-     * 
+     *
      * @returns System configuration object or null if file doesn't exist
      */
     public async readConfig(): Promise<SystemConfig | null> {
@@ -58,18 +64,18 @@ class SystemConfigService {
                 return null;
             }
 
-            const content = await fs.readFile(configPath, 'utf-8');
+            const content = await fs.readFile(configPath, "utf-8");
             this._cachedConfig = JSON.parse(content) as SystemConfig;
             return this._cachedConfig;
         } catch (error) {
-            console.error('Error reading settings.json:', error);
+            console.error("Error reading settings.json:", error);
             return null;
         }
     }
 
     /**
      * Write configuration to settings.json
-     * 
+     *
      * @param config - System configuration to write
      */
     public async writeConfig(config: SystemConfig): Promise<void> {
@@ -80,22 +86,22 @@ class SystemConfigService {
             await fs.writeFile(
                 configPath,
                 JSON.stringify(config, null, 4),
-                'utf-8'
+                "utf-8"
             );
 
             // Update cache
             this._cachedConfig = config;
 
-            console.log('✅ System configuration saved to:', configPath);
+            console.log("✅ System configuration saved to:", configPath);
         } catch (error) {
-            console.error('Error writing settings.json:', error);
-            throw new Error('Failed to write configuration file');
+            console.error("Error writing settings.json:", error);
+            throw new Error("Failed to write configuration file");
         }
     }
 
     /**
      * Initialize configuration with default values
-     * 
+     *
      * @param customConfig - Optional custom configuration to override defaults
      * @returns Initialized configuration
      */
@@ -118,7 +124,7 @@ class SystemConfigService {
 
     /**
      * Update partial configuration
-     * 
+     *
      * @param updates - Partial configuration updates
      * @returns Updated configuration
      */
@@ -127,7 +133,9 @@ class SystemConfigService {
     ): Promise<SystemConfig> {
         const currentConfig = await this.readConfig();
         if (!currentConfig) {
-            throw new Error('Cannot update configuration: settings.json not found');
+            throw new Error(
+                "Cannot update configuration: settings.json not found"
+            );
         }
 
         const updatedConfig: SystemConfig = {
@@ -142,16 +150,18 @@ class SystemConfigService {
 
     /**
      * Update authentication configuration
-     * 
+     *
      * @param authConfig - Partial authentication configuration
      * @returns Updated configuration
      */
     public async updateAuthConfig(
-        authConfig: Partial<SystemConfig['authentication']>
+        authConfig: Partial<SystemConfig["authentication"]>
     ): Promise<SystemConfig> {
         const currentConfig = await this.readConfig();
         if (!currentConfig) {
-            throw new Error('Cannot update auth configuration: settings.json not found');
+            throw new Error(
+                "Cannot update auth configuration: settings.json not found"
+            );
         }
 
         const updatedConfig: SystemConfig = {
@@ -177,7 +187,7 @@ class SystemConfigService {
 
     /**
      * Read configuration from settings.json (Synchronous)
-     * 
+     *
      * @returns System configuration object or null if file doesn't exist
      */
     public readConfigSync(): SystemConfig | null {
@@ -186,11 +196,11 @@ class SystemConfigService {
             if (!fsSync.existsSync(configPath)) {
                 return null;
             }
-            const content = fsSync.readFileSync(configPath, 'utf-8');
+            const content = fsSync.readFileSync(configPath, "utf-8");
             this._cachedConfig = JSON.parse(content) as SystemConfig;
             return this._cachedConfig;
         } catch (error) {
-            console.error('Error reading settings.json (sync):', error);
+            console.error("Error reading settings.json (sync):", error);
             return null;
         }
     }
@@ -202,27 +212,27 @@ class SystemConfigService {
 
     /**
      * Get Better Auth Secret from configuration
-     * 
+     *
      * @throws Error if secret is not configured
      * @returns Better Auth secret string
      */
     public getAuthSecret(): string {
         const config = this.readConfigSync();
         const secret = config?.authentication?.secret;
-        
+
         if (!secret) {
             throw new Error(
-                'Better Auth secret is not configured. ' +
-                'Please ensure the application is properly initialized with a secret in settings.json'
+                "Better Auth secret is not configured. " +
+                    "Please ensure the application is properly initialized with a secret in settings.json"
             );
         }
-        
+
         return secret;
     }
 
     /**
      * Get channel configuration
-     * 
+     *
      * @returns Channel configuration array
      */
     public async getChannels(): Promise<ChannelConfig> {
@@ -232,7 +242,7 @@ class SystemConfigService {
 
     /**
      * Get channel configuration (Synchronous)
-     * 
+     *
      * @returns Channel configuration array
      */
     public getChannelsSync(): ChannelConfig {
@@ -242,4 +252,3 @@ class SystemConfigService {
 }
 
 export const systemConfigService = new SystemConfigService();
-

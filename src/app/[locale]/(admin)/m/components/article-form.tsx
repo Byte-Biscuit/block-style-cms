@@ -1,42 +1,43 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-    Box,
-    FormControl,
-    InputLabel,
-    TextField,
-    Select,
-    MenuItem,
-    Button,
-    Typography,
-    Switch,
-    FormControlLabel,
-    Chip,
-    CircularProgress,
-    Card,
-    Tabs,
-    Tab,
-    Tooltip,
-} from "@mui/material";
+import type { Block, Dictionary, PartialBlock } from "@blocknote/core";
 import {
     Add as AddIcon,
-    Save as SaveIcon,
     Close as CloseIcon,
-    Psychology as PsychologyIcon,
-    Summarize as SummarizeIcon,
-    Key as KeyIcon,
-    RocketLaunch as RocketLaunchIcon,
     InsertPhoto as InsertPhotoIcon,
+    Key as KeyIcon,
+    Psychology as PsychologyIcon,
+    RocketLaunch as RocketLaunchIcon,
+    Save as SaveIcon,
+    Summarize as SummarizeIcon,
 } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
+import {
+    Box,
+    Button,
+    Card,
+    Chip,
+    CircularProgress,
+    FormControl,
+    FormControlLabel,
+    InputLabel,
+    MenuItem,
+    Select,
+    Switch,
+    Tab,
+    Tabs,
+    TextField,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import dynamic from "next/dynamic";
-import type { Article } from "@/types/article";
-import type { PartialBlock, Block, Dictionary } from "@blocknote/core";
+import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { getBlockNoteSelfDictionary } from "@/block-note/block-editor-utils";
+import { defaultLocale, localeMap as LANGUAGE_OPTIONS } from "@/i18n/config";
 import { ADMIN_API_PREFIX } from "@/settings";
-import { localeMap as LANGUAGE_OPTIONS, defaultLocale } from "@/i18n/config";
-import { useTranslations, useLocale } from "next-intl";
+import type { Article } from "@/types/article";
 
 const BlockNoteEditor = dynamic(
     () => import("@/admin/m/components/block-note-editor"),

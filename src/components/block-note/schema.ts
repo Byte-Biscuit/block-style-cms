@@ -14,6 +14,8 @@ import {
     EnhancedVideoBlockSpec,
     MERMAID_BLOCK_TYPE,
     MermaidBlockSpec,
+    SVG_BLOCK_TYPE,
+    SvgBlockSpec,
 } from "@/block-note/block";
 import { CODE_BLOCK_SUPPORTED_LANGUAGES } from "@/block-note/code-block-languages";
 import { syntaxHighlighter } from "@/block-note/syntax-highlighter";
@@ -49,6 +51,7 @@ export const schema = BlockNoteSchema.create({
         [ENHANCED_VIDEO_BLOCK_TYPE]: EnhancedVideoBlockSpec,
         [ENHANCED_IMAGE_BLOCK_TYPE]: EnhancedImageBlockSpec,
         [MERMAID_BLOCK_TYPE]: MermaidBlockSpec,
+        [SVG_BLOCK_TYPE]: SvgBlockSpec,
     },
 });
 

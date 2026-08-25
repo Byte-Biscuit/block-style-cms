@@ -1,11 +1,11 @@
 "use client";
-import React from "react";
-import Link from "@/components/link";
 import { useTranslations } from "next-intl";
+import React from "react";
 import GoHomeOnErrorButtons from "@/components/go-home-buttons";
-import { ArticleMetadata } from "@/types/article";
+import Link from "@/components/link";
 import { getLanguageDisplayName } from "@/i18n/config";
 import { container } from "@/lib/style-classes";
+import type { ArticleMetadata } from "@/types/article";
 
 interface ArticleNotFoundProps {
     slug: string;

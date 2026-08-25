@@ -1,11 +1,11 @@
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getTranslations, getMessages } from "next-intl/server";
-import { systemConfigService } from "@/lib/services/system-config-service";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { X_PATH_HEADER_KEY } from "@/constants";
+import { systemConfigService } from "@/lib/services/system-config-service";
 import "./globals.css";
 
 async function isEmbedPage(): Promise<boolean> {

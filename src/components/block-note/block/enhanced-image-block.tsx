@@ -1,50 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import type {
+    BlockNoteEditor,
+    BlockSchemaFromSpecs,
+    PartialBlock,
+} from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
+import {
+    createReactBlockSpec,
+    type DefaultReactSuggestionItem,
+    useBlockNoteEditor,
+} from "@blocknote/react";
+import {
+    Close as CloseIcon,
+    Image as ImageIcon,
+    Link as LinkIcon,
+    Search as SearchIcon,
+    Upload as UploadIcon,
+} from "@mui/icons-material";
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
+    FormControl,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
     TextField,
     Typography,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    IconButton,
-    Divider,
-    Paper,
 } from "@mui/material";
-import {
-    Upload as UploadIcon,
-    Link as LinkIcon,
-    Search as SearchIcon,
-    Close as CloseIcon,
-    Image as ImageIcon,
-} from "@mui/icons-material";
-import {
-    createReactBlockSpec,
-    useBlockNoteEditor,
-    type DefaultReactSuggestionItem,
-} from "@blocknote/react";
-import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { BlockNoteEditor } from "@blocknote/core";
-import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
-import { schema } from "@/block-note/schema";
+import Image from "next/image";
+import type React from "react";
+import { useState } from "react";
 import PexelsImagePicker from "@/admin/m/components/pexels-image-picker";
+import EnhancedImage, {
+    type ImageBlockProps,
+} from "@/block-note/renderer/enhanced-image";
+import type { schema } from "@/block-note/schema";
 import { ADMIN_API_PREFIX } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedImageIcon from "./icons/enhanced-image-icon";
-import EnhancedImage, {
-    ImageBlockProps,
-} from "@/block-note/renderer/enhanced-image";
+import { labelFromFilename } from "./image-label";
 
 export const ENHANCED_IMAGE_BLOCK_TYPE = "enhancedImage";
+
+const sourceRowSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    px: 2,
+    py: 1.5,
+    width: "100%",
+    cursor: "pointer",
+    "&:hover": {
+        borderColor: "primary.main",
+        bgcolor: "action.hover",
+    },
+};
 
 // Image selection dialog component
 function ImageSelectionDialog({
@@ -78,14 +97,22 @@ function ImageSelectionDialog({
     const [alignment, setAlignment] = useState<"left" | "center" | "right">(
         initialData?.alignment || "center"
     );
-    const [imageWidth, setImageWidth] = useState(initialData?.width || "800");
+    const [imageWidth, setImageWidth] = useState(
+        initialData?.width || "568"
+    );
     const [imageHeight, setImageHeight] = useState(
-        initialData?.height || "600"
+        initialData?.height || "320"
     );
     const [objectFit, setObjectFit] = useState<
         "contain" | "cover" | "fill" | "scale-down" | "none"
-    >(initialData?.objectFit || "cover");
+    >(initialData?.objectFit || "contain");
     const [maxWidth, setMaxWidth] = useState(initialData?.maxWidth || "100%");
+
+    const fillEmptyAltAndCaption = (label: string) => {
+        if (!label) return;
+        setAltInput((prev) => prev || label);
+        setCaptionInput((prev) => prev || label);
+    };
 
     const handleFileUpload = async (
         event: React.ChangeEvent<HTMLInputElement>
@@ -93,6 +120,7 @@ function ImageSelectionDialog({
         const file = event.target.files?.[0];
         if (!file) return;
 
+        const fileLabel = labelFromFilename(file.name);
         setIsUploading(true);
         try {
             const formData = new FormData();
@@ -110,8 +138,13 @@ function ImageSelectionDialog({
                     const imageUrl = `/images/${data.filename}`;
                     setSelectedImageUrl(imageUrl);
                     setEditableUrl(imageUrl);
-                    setAltInput(altInput || data.altText || "");
-                    setUploadDialogVisible(false); // Close upload dialog
+                    fillEmptyAltAndCaption(
+                        fileLabel ||
+                            labelFromFilename(
+                                data.originalName || data.filename || ""
+                            )
+                    );
+                    setUploadDialogVisible(false);
                 }
             } else {
                 console.error("Upload failed");
@@ -128,21 +161,22 @@ function ImageSelectionDialog({
             const imageUrl = urlInput.trim();
             setSelectedImageUrl(imageUrl);
             setEditableUrl(imageUrl);
+            fillEmptyAltAndCaption(labelFromFilename(imageUrl));
             setUrlDialogVisible(false);
         }
     };
 
-    const handlePexelsSelect = (imageUrl: string) => {
+    const handlePexelsSelect = (imageUrl: string, alt?: string) => {
         setSelectedImageUrl(imageUrl);
         setEditableUrl(imageUrl);
-        setAltInput("Image from Pexels");
+        fillEmptyAltAndCaption(alt?.trim() || labelFromFilename(imageUrl));
     };
 
     const handleSaveImage = () => {
         if (editableUrl.trim()) {
             onSelect({
                 src: editableUrl.trim(),
-                alt: altInput || "Image",
+                alt: altInput || "",
                 caption: captionInput || "",
                 source: "url",
                 alignment: alignment,
@@ -172,7 +206,7 @@ function ImageSelectionDialog({
             container={getBlockEditorContainer()}
             slotProps={{
                 paper: {
-                    sx: { minHeight: "600px" },
+                    sx: { minHeight: selectedImageUrl ? 480 : 280 },
                 },
             }}
         >
@@ -512,56 +546,25 @@ function ImageSelectionDialog({
                             sx={{
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: 3,
-                                minHeight: "400px",
-                                justifyContent: "center",
-                                alignItems: "center",
+                                gap: 1.5,
                             }}
                         >
                             <Typography
-                                variant="h6"
+                                variant="body2"
                                 color="text.secondary"
-                                gutterBottom
+                                sx={{ mb: 0.5 }}
                             >
                                 {dict?.dialog?.selectSource ||
                                     "Select image source"}
                             </Typography>
-
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    gap: 3,
-                                    flexWrap: "wrap",
-                                    justifyContent: "center",
-                                    maxWidth: "600px",
-                                }}
+                            <Paper
+                                variant="outlined"
+                                sx={sourceRowSx}
+                                onClick={() => setUploadDialogVisible(true)}
                             >
-                                {/* Local upload option */}
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        p: 4,
-                                        textAlign: "center",
-                                        minWidth: "180px",
-                                        cursor: "pointer",
-                                        transition: "all 0.2s",
-                                        "&:hover": {
-                                            borderColor: "primary.main",
-                                            bgcolor: "action.hover",
-                                            transform: "translateY(-2px)",
-                                            boxShadow: 2,
-                                        },
-                                    }}
-                                    onClick={() => setUploadDialogVisible(true)}
-                                >
-                                    <UploadIcon
-                                        sx={{
-                                            fontSize: 48,
-                                            color: "primary.main",
-                                            mb: 2,
-                                        }}
-                                    />
-                                    <Typography variant="h6" gutterBottom>
+                                <UploadIcon color="primary" />
+                                <Box>
+                                    <Typography variant="subtitle2">
                                         {dict?.upload?.title || "Local Upload"}
                                     </Typography>
                                     <Typography
@@ -571,34 +574,16 @@ function ImageSelectionDialog({
                                         {dict?.upload?.subtitle ||
                                             "Select image file from device"}
                                     </Typography>
-                                </Paper>
-
-                                {/* URL link option */}
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        p: 4,
-                                        textAlign: "center",
-                                        minWidth: "180px",
-                                        cursor: "pointer",
-                                        transition: "all 0.2s",
-                                        "&:hover": {
-                                            borderColor: "primary.main",
-                                            bgcolor: "action.hover",
-                                            transform: "translateY(-2px)",
-                                            boxShadow: 2,
-                                        },
-                                    }}
-                                    onClick={() => setUrlDialogVisible(true)}
-                                >
-                                    <LinkIcon
-                                        sx={{
-                                            fontSize: 48,
-                                            color: "primary.main",
-                                            mb: 2,
-                                        }}
-                                    />
-                                    <Typography variant="h6" gutterBottom>
+                                </Box>
+                            </Paper>
+                            <Paper
+                                variant="outlined"
+                                sx={sourceRowSx}
+                                onClick={() => setUrlDialogVisible(true)}
+                            >
+                                <LinkIcon color="primary" />
+                                <Box>
+                                    <Typography variant="subtitle2">
                                         {dict?.embed?.title || "URL Link"}
                                     </Typography>
                                     <Typography
@@ -608,36 +593,18 @@ function ImageSelectionDialog({
                                         {dict?.embed?.subtitle ||
                                             "Enter image URL"}
                                     </Typography>
-                                </Paper>
-
-                                {/* Pexels gallery option */}
-                                <Paper
-                                    variant="outlined"
-                                    sx={{
-                                        p: 4,
-                                        textAlign: "center",
-                                        minWidth: "180px",
-                                        cursor: "pointer",
-                                        transition: "all 0.2s",
-                                        "&:hover": {
-                                            borderColor: "primary.main",
-                                            bgcolor: "action.hover",
-                                            transform: "translateY(-2px)",
-                                            boxShadow: 2,
-                                        },
-                                    }}
-                                    onClick={() =>
-                                        setPexelsImagePickerVisible(true)
-                                    }
-                                >
-                                    <SearchIcon
-                                        sx={{
-                                            fontSize: 48,
-                                            color: "primary.main",
-                                            mb: 2,
-                                        }}
-                                    />
-                                    <Typography variant="h6" gutterBottom>
+                                </Box>
+                            </Paper>
+                            <Paper
+                                variant="outlined"
+                                sx={sourceRowSx}
+                                onClick={() =>
+                                    setPexelsImagePickerVisible(true)
+                                }
+                            >
+                                <SearchIcon color="primary" />
+                                <Box>
+                                    <Typography variant="subtitle2">
                                         {dict?.pexels?.title ||
                                             "Pexels Gallery"}
                                     </Typography>
@@ -648,8 +615,8 @@ function ImageSelectionDialog({
                                         {dict?.pexels?.subtitle ||
                                             "Choose from free gallery"}
                                     </Typography>
-                                </Paper>
-                            </Box>
+                                </Box>
+                            </Paper>
                         </Box>
                     )}
                 </Box>
@@ -886,28 +853,24 @@ export const EnhancedImageBlockRender = ({ block }: { block: any }) => {
             <>
                 <Box
                     sx={{
-                        border: "2px dashed",
-                        borderColor: "divider",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        width: "100%",
+                        px: 2,
+                        py: 1.25,
                         borderRadius: 1,
-                        p: 4,
-                        textAlign: "center",
+                        bgcolor: "action.hover",
                         cursor: "pointer",
                         "&:hover": {
-                            borderColor: "primary.main",
-                            bgcolor: "action.hover",
+                            bgcolor: "action.selected",
                         },
                     }}
                     onClick={() => setDialogOpen(true)}
                 >
-                    <ImageIcon
-                        sx={{ fontSize: 48, color: "text.secondary", mb: 2 }}
-                    />
-                    <Typography variant="h6" color="text.secondary">
-                        {dict?.placeholder?.clickToAdd || "Click to Add Image"}
-                    </Typography>
+                    <ImageIcon sx={{ fontSize: 22, color: "text.secondary" }} />
                     <Typography variant="body2" color="text.secondary">
-                        {dict?.placeholder?.supportText ||
-                            "Support local upload, URL link or Pexels selection"}
+                        {dict?.placeholder?.clickToAdd || "Add image"}
                     </Typography>
                 </Box>
 
@@ -981,11 +944,11 @@ export const EnhancedImageBlockSpec = createReactBlockSpec(
                 type: "string",
             },
             width: {
-                default: "800",
+                default: "568",
                 type: "string",
             },
             height: {
-                default: "600",
+                default: "320",
                 type: "string",
             },
             source: {
@@ -997,7 +960,7 @@ export const EnhancedImageBlockSpec = createReactBlockSpec(
                 type: "string",
             },
             objectFit: {
-                default: "cover",
+                default: "contain",
                 type: "string",
             },
             maxWidth: {
@@ -1036,11 +999,11 @@ export const getEnhancedImageSlashMenuItem = (
                     src: "",
                     alt: "",
                     caption: "",
-                    width: "800",
-                    height: "600",
+                    width: "568",
+                    height: "320",
                     source: "upload",
                     alignment: "center",
-                    objectFit: "cover",
+                    objectFit: "contain",
                     maxWidth: "100%",
                 },
             } as unknown as PartialBlock<

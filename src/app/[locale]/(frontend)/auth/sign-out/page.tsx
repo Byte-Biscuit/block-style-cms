@@ -1,7 +1,7 @@
+import { useTranslations } from "next-intl";
+import { HomeIcon, RightArrowIcon } from "@/components/icons";
 import Link from "@/components/link";
 import { button, container } from "@/lib/style-classes";
-import { HomeIcon, RightArrowIcon } from "@/components/icons";
-import { useTranslations } from "next-intl";
 
 export default function SignOutPage() {
     const t = useTranslations("web.auth.logout");

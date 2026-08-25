@@ -3,14 +3,14 @@
  * Handles all comment-related operations with in-memory cache and file persistence
  */
 
-import fs from 'fs/promises';
-import path from 'path';
-import { COMMENT_DIR } from '@/settings';
-import type { Comment, CommentSubmissionData } from '@/types/comment';
-import type { CommentConfig } from '@/types/system-config';
-import { v4 as uuidv4 } from 'uuid';
-import { systemConfigService } from './system-config-service';
-import { coerceNumber } from '@/lib/utils';
+import fs from "fs/promises";
+import path from "path";
+import { v4 as uuidv4 } from "uuid";
+import { coerceNumber } from "@/lib/utils";
+import { COMMENT_DIR } from "@/settings";
+import type { Comment, CommentSubmissionData } from "@/types/comment";
+import type { CommentConfig } from "@/types/system-config";
+import { systemConfigService } from "./system-config-service";
 
 /**
  * Default comment configuration (fallback)
@@ -35,7 +35,7 @@ class CommentService {
     private commentsFile: string;
 
     constructor() {
-        this.commentsFile = path.join(COMMENT_DIR, 'comments.json');
+        this.commentsFile = path.join(COMMENT_DIR, "comments.json");
     }
 
     /**
@@ -46,7 +46,10 @@ class CommentService {
             const systemConfig = await systemConfigService.readConfig();
             return systemConfig?.basic?.comment || DEFAULT_COMMENT_CONFIG;
         } catch (error) {
-            console.error('Failed to read comment config, using defaults:', error);
+            console.error(
+                "Failed to read comment config, using defaults:",
+                error
+            );
             return DEFAULT_COMMENT_CONFIG;
         }
     }
@@ -71,12 +74,15 @@ class CommentService {
         }
     }
 
-
     /**
      * Write all comments to file
      */
     private async writeAllComments(comments: Comment[]): Promise<void> {
-        await fs.writeFile(this.commentsFile, JSON.stringify(comments, null, 2), 'utf-8');
+        await fs.writeFile(
+            this.commentsFile,
+            JSON.stringify(comments, null, 2),
+            "utf-8"
+        );
     }
 
     /**
@@ -85,7 +91,7 @@ class CommentService {
     async getArticleComments(articleId: string): Promise<Comment[]> {
         const articleFile = path.join(COMMENT_DIR, `article_${articleId}.json`);
         try {
-            const data = await fs.readFile(articleFile, 'utf-8');
+            const data = await fs.readFile(articleFile, "utf-8");
             return JSON.parse(data);
         } catch {
             // File doesn't exist, return empty array
@@ -106,7 +112,9 @@ class CommentService {
 
         // Check total comment limit
         if (comments.length >= coerceNumber(config.maxTotalComments, 0)) {
-            throw new Error(`Comment limit reached (${config.maxTotalComments})`);
+            throw new Error(
+                `Comment limit reached (${config.maxTotalComments})`
+            );
         }
 
         // Create new comment
@@ -117,7 +125,7 @@ class CommentService {
             content: submissionData.content,
             createdAt: new Date().toISOString(),
             author: submissionData.author,
-            status: 'pending',
+            status: "pending",
             replyToId: submissionData.replyToId,
             metadata,
         };
@@ -134,27 +142,30 @@ class CommentService {
      */
     async approveComment(commentId: string): Promise<void> {
         const comments = await this.getAllComments();
-        const commentIndex = comments.findIndex(c => c.id === commentId);
+        const commentIndex = comments.findIndex((c) => c.id === commentId);
 
         if (commentIndex === -1) {
-            throw new Error('Comment not found');
+            throw new Error("Comment not found");
         }
 
         const comment = comments[commentIndex];
 
-        if (comment.status === 'approved') {
-            throw new Error('Comment already approved');
+        if (comment.status === "approved") {
+            throw new Error("Comment already approved");
         }
 
         // Update status to approved
-        comment.status = 'approved';
+        comment.status = "approved";
 
         // Copy to article-specific file (prepend for reverse chronological order)
-        const articleFile = path.join(COMMENT_DIR, `article_${comment.articleId}.json`);
+        const articleFile = path.join(
+            COMMENT_DIR,
+            `article_${comment.articleId}.json`
+        );
         let articleComments: Comment[] = [];
 
         try {
-            const data = await fs.readFile(articleFile, 'utf-8');
+            const data = await fs.readFile(articleFile, "utf-8");
             articleComments = JSON.parse(data);
         } catch {
             // File doesn't exist, use empty array
@@ -162,7 +173,11 @@ class CommentService {
 
         // Prepend to maintain reverse chronological order (newest first)
         articleComments.unshift(comment);
-        await fs.writeFile(articleFile, JSON.stringify(articleComments, null, 2), 'utf-8');
+        await fs.writeFile(
+            articleFile,
+            JSON.stringify(articleComments, null, 2),
+            "utf-8"
+        );
 
         // Remove from pending list
         comments.splice(commentIndex, 1);
@@ -176,10 +191,10 @@ class CommentService {
      */
     async rejectComment(commentId: string): Promise<void> {
         const comments = await this.getAllComments();
-        const commentIndex = comments.findIndex(c => c.id === commentId);
+        const commentIndex = comments.findIndex((c) => c.id === commentId);
 
         if (commentIndex === -1) {
-            throw new Error('Comment not found');
+            throw new Error("Comment not found");
         }
 
         // Remove from list
@@ -195,15 +210,20 @@ class CommentService {
      */
     async validateCommentContent(content: string): Promise<void> {
         const config = await this.getConfig();
-        const { contentMinLength, contentMaxLength, maxLinksAllowed } = config.limits;
+        const { contentMinLength, contentMaxLength, maxLinksAllowed } =
+            config.limits;
 
         // Check length
         if (content.length < coerceNumber(contentMinLength, 0)) {
-            throw new Error(`Comment too short (minimum ${contentMinLength} characters)`);
+            throw new Error(
+                `Comment too short (minimum ${contentMinLength} characters)`
+            );
         }
 
         if (content.length > coerceNumber(contentMaxLength, 0)) {
-            throw new Error(`Comment too long (maximum ${contentMaxLength} characters)`);
+            throw new Error(
+                `Comment too long (maximum ${contentMaxLength} characters)`
+            );
         }
 
         // Check link count
@@ -211,7 +231,9 @@ class CommentService {
         const links = content.match(urlRegex) || [];
 
         if (links.length > coerceNumber(maxLinksAllowed, 0)) {
-            throw new Error(`Too many links (maximum ${maxLinksAllowed} allowed)`);
+            throw new Error(
+                `Too many links (maximum ${maxLinksAllowed} allowed)`
+            );
         }
     }
 
@@ -228,9 +250,9 @@ class CommentService {
 
         return {
             total: comments.length,
-            pending: comments.filter(c => c.status === 'pending').length,
-            approved: comments.filter(c => c.status === 'approved').length,
-            rejected: comments.filter(c => c.status === 'rejected').length,
+            pending: comments.filter((c) => c.status === "pending").length,
+            approved: comments.filter((c) => c.status === "approved").length,
+            rejected: comments.filter((c) => c.status === "rejected").length,
         };
     }
 }

@@ -64,6 +64,12 @@ export const zhTW = {
             aliases: ["mermaid", "圖表", "流程圖", "循序圖", "diagram"],
             group: "進階功能",
         },
+        svg: {
+            title: "SVG",
+            subtext: "插入 SVG 插圖",
+            aliases: ["svg", "插圖", "向量圖", "illustration"],
+            group: "進階功能",
+        },
     },
     enhanced_audio_block: {
         dialog: {
@@ -79,7 +85,8 @@ export const zhTW = {
             subtitle: "選擇音訊檔案",
             dialogTitle: "上傳音訊檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM 格式",
+            supportedFormats:
+                "支援 MP3、WAV、OGG、AAC、M4A、FLAC、WEBM、Opus，最大 50MB",
             uploading: "上傳中...",
             uploadError: "上傳失敗，請重試",
             networkError: "網路錯誤，請檢查連線後重試",
@@ -101,7 +108,7 @@ export const zhTW = {
             alignRight: "靠右對齊",
         },
         placeholder: {
-            clickToAdd: "點擊新增音訊",
+            clickToAdd: "新增音訊",
             supportText: "支援本機上傳或 URL 嵌入",
         },
         edit: {
@@ -151,7 +158,7 @@ export const zhTW = {
             maxWidth: "最大寬度",
         },
         placeholder: {
-            clickToAdd: "點擊新增圖片",
+            clickToAdd: "新增圖片",
             supportText: "支援本機上傳、URL 或 Pexels 圖片",
         },
         edit: {
@@ -172,7 +179,7 @@ export const zhTW = {
             subtitle: "選擇影片檔案",
             dialogTitle: "上傳影片檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 MP4、WEBM、AVI、MOV 格式",
+            supportedFormats: "支援 MP4、WEBM、MOV、MKV、AVI，最大 100MB",
             uploading: "上傳中...",
             uploadError: "上傳失敗，請重試",
             networkError: "網路錯誤，請檢查連線後重試",
@@ -196,7 +203,7 @@ export const zhTW = {
             height: "高度 (px)",
         },
         placeholder: {
-            clickToAdd: "點擊新增影片",
+            clickToAdd: "新增影片",
             supportText: "支援本機上傳或 iframe 嵌入",
         },
         edit: {
@@ -217,7 +224,8 @@ export const zhTW = {
             subtitle: "選擇檔案",
             dialogTitle: "上傳檔案",
             clickToSelect: "點擊選擇檔案",
-            supportedFormats: "支援 Office 文件、PDF、壓縮檔等格式",
+            supportedFormats:
+                "支援 Office、PDF、Markdown、壓縮檔、程式碼等，最大 50MB",
             uploading: "上傳中...",
             uploadError: "檔案上傳失敗",
             networkError: "網路錯誤，請檢查網路連線後重試",
@@ -233,7 +241,7 @@ export const zhTW = {
             alignRight: "靠右對齊",
         },
         placeholder: {
-            clickToAdd: "點擊新增檔案",
+            clickToAdd: "新增檔案",
             supportText: "支援 Office 文件、PDF、壓縮檔等格式",
         },
         edit: {
@@ -308,8 +316,38 @@ export const zhTW = {
             },
         },
         placeholder: {
-            clickToAdd: "點擊新增 Mermaid 圖表",
+            clickToAdd: "新增圖表",
             supportText: "支援流程圖、循序圖、狀態圖等多種圖表類型",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "儲存",
+            invalidCode: "請輸入有效的 Mermaid 程式碼後再儲存",
+        },
+        edit: {
+            editButton: "編輯",
+        },
+    },
+    svg_block: {
+        editor: {
+            title: "SVG 插圖編輯器",
+            editTitle: "編輯",
+            previewTitle: "預覽",
+        },
+        renderer: {
+            emptyPlaceholder: "請輸入 SVG 程式碼以預覽",
+            invalidSvg: "無效或不安全的 SVG",
+        },
+        placeholder: {
+            clickToAdd: "新增 SVG 插圖",
+            supportText: "貼上內聯 SVG 程式碼作為插圖",
+        },
+        dialog: {
+            cancel: "取消",
+            insert: "插入",
+            save: "儲存",
+            invalidCode: "請輸入有效的 SVG 程式碼後再儲存",
         },
         edit: {
             editButton: "編輯",
@@ -320,4 +358,4 @@ export const zhTW = {
         text_color: "文字顏色",
         background_color: "背景顏色 (醒目提示)",
     },
-}
+};

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import Link from "@/components/link";
-import { ChannelItem } from "@/types/system-config";
-import { IconButton } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { IconButton } from "@mui/material";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import Link from "@/components/link";
+import type { ChannelItem } from "@/types/system-config";
 
 interface ChannelDropdownProps {
     channels: ChannelItem[];

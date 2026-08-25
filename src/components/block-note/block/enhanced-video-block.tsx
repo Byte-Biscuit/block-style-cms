@@ -1,46 +1,80 @@
 "use client";
 
-import React, { useState } from "react";
+import type {
+    BlockNoteEditor,
+    BlockSchemaFromSpecs,
+    PartialBlock,
+} from "@blocknote/core";
+import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
+import {
+    createReactBlockSpec,
+    type DefaultReactSuggestionItem,
+    useBlockNoteEditor,
+} from "@blocknote/react";
+import {
+    Close as CloseIcon,
+    Upload as UploadIcon,
+    VideoLibrary as VideoIcon,
+} from "@mui/icons-material";
 import {
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    TextField,
-    Typography,
-    CircularProgress,
-    Paper,
-    IconButton,
     Divider,
     FormControl,
+    IconButton,
     InputLabel,
-    Select,
     MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
-import {
-    Upload as UploadIcon,
-    VideoLibrary as VideoIcon,
-    Close as CloseIcon,
-} from "@mui/icons-material";
-import {
-    createReactBlockSpec,
-    useBlockNoteEditor,
-    type DefaultReactSuggestionItem,
-} from "@blocknote/react";
-import type { BlockSchemaFromSpecs, PartialBlock } from "@blocknote/core";
-import { BlockNoteEditor } from "@blocknote/core";
-import { insertOrUpdateBlockForSlashMenu } from "@blocknote/core/extensions";
-import { schema } from "@/block-note/schema";
-import { ADMIN_API_PREFIX } from "@/settings";
+import type React from "react";
+import { useState } from "react";
+import EnhancedVideo, {
+    type VideoBlockProps,
+} from "@/block-note/renderer/enhanced-video";
+import type { schema } from "@/block-note/schema";
+import { ADMIN_API_PREFIX, FILE_EXTENSIONS } from "@/settings";
 import { getBlockEditorContainer } from "../block-editor-utils";
 import EnhancedVideoIcon from "./icons/enhanced-video-icon";
-import EnhancedVideo, {
-    VideoBlockProps,
-} from "@/block-note/renderer/enhanced-video";
+import { labelFromFilename } from "./image-label";
 
 export const ENHANCED_VIDEO_BLOCK_TYPE = "enhancedVideo";
+
+const placeholderBarSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 1.5,
+    width: "100%",
+    px: 2,
+    py: 1.25,
+    borderRadius: 1,
+    bgcolor: "action.hover",
+    cursor: "pointer",
+    "&:hover": {
+        bgcolor: "action.selected",
+    },
+};
+
+const sourceRowSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+    px: 2,
+    py: 1.5,
+    width: "100%",
+    cursor: "pointer",
+    "&:hover": {
+        borderColor: "primary.main",
+        bgcolor: "action.hover",
+    },
+};
 
 function VideoSelectionDialog({
     open,
@@ -95,6 +129,7 @@ function VideoSelectionDialog({
                     setSelectedVideoUrl(iframeContent);
                     setEditableUrl(iframeContent);
                     setPlatform("upload");
+                    setTitle((prev) => prev || labelFromFilename(file.name));
                     setUploadDialogVisible(false);
                 }
             } else {
@@ -223,12 +258,13 @@ function VideoSelectionDialog({
                                 }}
                             >
                                 <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: selectedVideoUrl,
-                                    }}
                                     style={{
                                         width: "100%",
                                         height: "100%",
+                                    }}
+                                    // biome-ignore lint/security/noDangerouslySetInnerHtml: required to preview a user-pasted iframe embed in the editor dialog
+                                    dangerouslySetInnerHTML={{
+                                        __html: selectedVideoUrl,
                                     }}
                                 />
                             </Box>
@@ -325,52 +361,25 @@ function VideoSelectionDialog({
                         sx={{
                             display: "flex",
                             flexDirection: "column",
-                            gap: 2,
-                            minHeight: "200px",
+                            gap: 1.5,
                         }}
                     >
                         <Typography
-                            variant="h6"
+                            variant="body2"
                             color="text.secondary"
-                            gutterBottom
-                            sx={{ textAlign: "center" }}
+                            sx={{ mb: 0.5 }}
                         >
                             {dict?.dialog?.selectSource ||
                                 "Select video source"}
                         </Typography>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: 2,
-                                justifyContent: "center",
-                            }}
+                        <Paper
+                            variant="outlined"
+                            sx={sourceRowSx}
+                            onClick={() => setUploadDialogVisible(true)}
                         >
-                            {/* Local upload option */}
-                            <Paper
-                                variant="outlined"
-                                sx={{
-                                    p: 2,
-                                    textAlign: "center",
-                                    minWidth: "140px",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s",
-                                    "&:hover": {
-                                        borderColor: "primary.main",
-                                        bgcolor: "action.hover",
-                                        transform: "translateY(-1px)",
-                                        boxShadow: 1,
-                                    },
-                                }}
-                                onClick={() => setUploadDialogVisible(true)}
-                            >
-                                <UploadIcon
-                                    sx={{
-                                        fontSize: 32,
-                                        color: "primary.main",
-                                        mb: 1,
-                                    }}
-                                />
-                                <Typography variant="body1" gutterBottom>
+                            <UploadIcon color="primary" />
+                            <Box>
+                                <Typography variant="subtitle2">
                                     {dict?.upload?.title || "Local Upload"}
                                 </Typography>
                                 <Typography
@@ -380,35 +389,18 @@ function VideoSelectionDialog({
                                     {dict?.upload?.subtitle ||
                                         "Select video file"}
                                 </Typography>
-                            </Paper>
-                            {/* Iframe embed option */}
-                            <Paper
-                                variant="outlined"
-                                sx={{
-                                    p: 2,
-                                    textAlign: "center",
-                                    minWidth: "140px",
-                                    cursor: "pointer",
-                                    transition: "all 0.2s",
-                                    "&:hover": {
-                                        borderColor: "primary.main",
-                                        bgcolor: "action.hover",
-                                        transform: "translateY(-1px)",
-                                        boxShadow: 1,
-                                    },
-                                }}
-                                onClick={() => {
-                                    setPlatform("iframe");
-                                }}
-                            >
-                                <VideoIcon
-                                    sx={{
-                                        fontSize: 32,
-                                        color: "primary.main",
-                                        mb: 1,
-                                    }}
-                                />
-                                <Typography variant="body1" gutterBottom>
+                            </Box>
+                        </Paper>
+                        <Paper
+                            variant="outlined"
+                            sx={sourceRowSx}
+                            onClick={() => {
+                                setPlatform("iframe");
+                            }}
+                        >
+                            <VideoIcon color="primary" />
+                            <Box>
+                                <Typography variant="subtitle2">
                                     {dict?.embed?.title || "Embed Video"}
                                 </Typography>
                                 <Typography
@@ -417,8 +409,8 @@ function VideoSelectionDialog({
                                 >
                                     {dict?.embed?.subtitle || "iframe code"}
                                 </Typography>
-                            </Paper>
-                        </Box>
+                            </Box>
+                        </Paper>
                         {platform === "iframe" && (
                             <Box sx={{ mt: 2, width: "100%" }}>
                                 <TextField
@@ -468,62 +460,49 @@ function VideoSelectionDialog({
                                     "Upload Video File"}
                             </DialogTitle>
                             <DialogContent>
-                                <Box
-                                    sx={{
-                                        pt: 2,
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        gap: 3,
-                                    }}
-                                >
+                                <Box sx={{ pt: 2 }}>
                                     <Paper
                                         variant="outlined"
                                         sx={{
-                                            p: 4,
-                                            textAlign: "center",
-                                            border: "2px dashed",
-                                            borderColor: "divider",
-                                            width: "100%",
-                                            cursor: "pointer",
-                                            "&:hover": {
-                                                borderColor: "primary.main",
-                                                bgcolor: "action.hover",
-                                            },
+                                            ...sourceRowSx,
+                                            cursor: isUploading
+                                                ? "default"
+                                                : "pointer",
                                         }}
                                         component="label"
                                     >
                                         {isUploading ? (
-                                            <CircularProgress />
+                                            <>
+                                                <CircularProgress size={22} />
+                                                <Typography variant="body2">
+                                                    {dict?.upload?.uploading ||
+                                                        "Uploading..."}
+                                                </Typography>
+                                            </>
                                         ) : (
                                             <>
-                                                <UploadIcon
-                                                    sx={{
-                                                        fontSize: 48,
-                                                        color: "text.secondary",
-                                                        mb: 2,
-                                                    }}
-                                                />
-                                                <Typography
-                                                    variant="h6"
-                                                    gutterBottom
-                                                >
-                                                    {dict?.upload
-                                                        ?.clickToSelect ||
-                                                        "Click to Select File"}
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="text.secondary"
-                                                >
-                                                    {dict?.upload
-                                                        ?.supportedFormats ||
-                                                        "Supports MP4, WebM, Ogg formats"}
-                                                </Typography>
+                                                <UploadIcon color="primary" />
+                                                <Box>
+                                                    <Typography variant="subtitle2">
+                                                        {dict?.upload
+                                                            ?.clickToSelect ||
+                                                            "Click to Select File"}
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="body2"
+                                                        color="text.secondary"
+                                                    >
+                                                        {dict?.upload
+                                                            ?.supportedFormats ||
+                                                            "MP4, WebM, MOV, MKV, AVI — max 100MB"}
+                                                    </Typography>
+                                                </Box>
                                                 <input
                                                     type="file"
                                                     hidden
-                                                    accept="video/*"
+                                                    accept={[
+                                                        ...FILE_EXTENSIONS.VIDEO,
+                                                    ].join(",")}
                                                     onChange={handleFileUpload}
                                                     disabled={isUploading}
                                                 />
@@ -576,30 +555,10 @@ export const EnhancedVideoBlockRender = ({ block }: { block: any }) => {
     if (!block.props.content) {
         return (
             <>
-                <Box
-                    sx={{
-                        border: "2px dashed",
-                        borderColor: "divider",
-                        borderRadius: 1,
-                        p: 4,
-                        textAlign: "center",
-                        cursor: "pointer",
-                        "&:hover": {
-                            borderColor: "primary.main",
-                            bgcolor: "action.hover",
-                        },
-                    }}
-                    onClick={() => setDialogOpen(true)}
-                >
-                    <VideoIcon
-                        sx={{ fontSize: 48, color: "text.secondary", mb: 2 }}
-                    />
-                    <Typography variant="h6" color="text.secondary">
-                        {dict?.placeholder?.clickToAdd || "Click to add video"}
-                    </Typography>
+                <Box sx={placeholderBarSx} onClick={() => setDialogOpen(true)}>
+                    <VideoIcon sx={{ fontSize: 22, color: "text.secondary" }} />
                     <Typography variant="body2" color="text.secondary">
-                        {dict?.placeholder?.supportText ||
-                            "Supports local upload or iframe embedding"}
+                        {dict?.placeholder?.clickToAdd || "Add video"}
                     </Typography>
                 </Box>
                 <VideoSelectionDialog

@@ -1,9 +1,6 @@
-import React from "react";
+import type { DefaultStyleSchema, Link as LinkType } from "@blocknote/core";
+import type React from "react";
 import Link from "@/components/link";
-import {
-    type Link as LinkType,
-    type DefaultStyleSchema,
-} from "@blocknote/core";
 import TextContent from "./text-content";
 
 const LinkContent: React.FC<{ item: LinkType<DefaultStyleSchema> }> = ({

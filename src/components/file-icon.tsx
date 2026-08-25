@@ -1,13 +1,13 @@
-import React from "react";
 import {
-    Description as DocumentIcon,
-    TableChart as SpreadsheetIcon,
-    Slideshow as PresentationIcon,
     Archive as ArchiveIcon,
     Code as CodeIcon,
-    MenuBook as EbookIcon,
     InsertDriveFile as DefaultFileIcon,
+    Description as DocumentIcon,
+    MenuBook as EbookIcon,
+    Slideshow as PresentationIcon,
+    TableChart as SpreadsheetIcon,
 } from "@mui/icons-material";
+import React from "react";
 
 interface FileIconProps {
     category: string;

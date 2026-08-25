@@ -251,7 +251,8 @@
                 "userManagement": "使用者管理",
                 "authentication": "身份驗證",
                 "externalServices": "外部服務",
-                "channelManagement": "頻道管理"
+                "channelManagement": "頻道管理",
+                "apiTokens": "API Token"
             },
             "basicConfig": {
                 "comment": {
@@ -520,6 +521,56 @@
             },
             "confirm": {
                 "disable2FA": "確定要為使用者「{userName}」停用雙因素驗證嗎？"
+            }
+        },
+        "apiTokens": {
+            "page": {
+                "title": "API Token",
+                "subtitle": "用於呼叫 /api/m HTTP（x-api-key 或 Bearer）。不能登入後台，也不能替代 Server Action 的登入態。明文只顯示一次。"
+            },
+            "table": {
+                "name": "名稱",
+                "start": "前綴",
+                "expiresAt": "過期時間",
+                "lastRequest": "最近使用",
+                "createdAt": "建立時間",
+                "enabled": "狀態",
+                "actions": "操作",
+                "empty": "還沒有 Token"
+            },
+            "expires": {
+                "never": "永不過期",
+                "days30": "30 天",
+                "days90": "90 天",
+                "days365": "1 年"
+            },
+            "status": {
+                "enabled": "啟用",
+                "disabled": "停用"
+            },
+            "create": {
+                "title": "建立 Token",
+                "name": "名稱",
+                "expires": "過期",
+                "copyOnce": "請立即複製。關閉後將無法再次查看完整 Token。"
+            },
+            "detail": {
+                "title": "Token 明細"
+            },
+            "revoke": {
+                "title": "撤銷 Token",
+                "confirm": "確定撤銷「{name}」？撤銷後立即失效。"
+            },
+            "buttons": {
+                "create": "建立",
+                "copy": "複製",
+                "detail": "明細",
+                "revoke": "撤銷",
+                "close": "關閉"
+            },
+            "messages": {
+                "copied": "已複製",
+                "revoked": "已撤銷"
             }
         }
     },
@@ -1062,6 +1113,26 @@
                 "mermaidRender": "Mermaid 渲染錯誤",
                 "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}"
             }
+        },
+        "svg": {
+            "button": {
+                "close": "關閉",
+                "zoomIn": "放大",
+                "zoomOut": "縮小",
+                "fitToWindow": "適應視窗"
+            },
+            "hint": {
+                "drag": "拖曳以平移",
+                "scroll": "滾輪縮放"
+            },
+            "error": {
+                "noCode": "沒有提供 SVG 程式碼",
+                "invalidSvg": "無效或不安全的 SVG"
+            }
+        },
+        "image": {
+            "zoom": "放大圖片",
+            "closePreview": "關閉預覽"
         },
         "footer": {
             "buildWith": "使用",

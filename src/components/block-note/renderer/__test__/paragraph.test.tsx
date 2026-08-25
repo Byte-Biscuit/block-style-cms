@@ -1,6 +1,6 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import React from "react";
+import { describe, expect, it } from "vitest";
 import { Paragraph, type ParagraphBlock } from "../paragraph";
 
 describe("Paragraph", () => {
@@ -13,9 +13,7 @@ describe("Paragraph", () => {
                 backgroundColor: "default",
                 textAlignment: "left",
             },
-            content: [
-                { type: "text", text: "Hello World", styles: {} },
-            ],
+            content: [{ type: "text", text: "Hello World", styles: {} }],
             children: [],
         };
 
@@ -77,9 +75,7 @@ describe("Paragraph", () => {
                 backgroundColor: "default",
                 textAlignment: "center",
             },
-            content: [
-                { type: "text", text: "Centered text", styles: {} },
-            ],
+            content: [{ type: "text", text: "Centered text", styles: {} }],
             children: [],
         };
 

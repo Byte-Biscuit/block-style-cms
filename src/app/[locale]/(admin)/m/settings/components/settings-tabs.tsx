@@ -1,23 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Tabs, Tab, Box } from "@mui/material";
 import {
+    CloudQueue as CloudIcon,
     Language as LanguageIcon,
     People as PeopleIcon,
     Security as SecurityIcon,
-    CloudQueue as CloudIcon,
-    ViewList as ViewListIcon,
     Settings as SettingsIcon,
+    ViewList as ViewListIcon,
+    VpnKey as VpnKeyIcon,
 } from "@mui/icons-material";
-import { SystemConfig } from "@/types/system-config";
+import { Box, Tab, Tabs } from "@mui/material";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
+import type { SystemConfig } from "@/types/system-config";
+import ApiTokensTab from "./api-tokens-tab";
+import AuthenticationTab from "./authentication-tab";
+import BasicConfigTab from "./basic-config-tab";
+import ChannelTab from "./channel-tab";
+import ServicesTab from "./services-tab";
 import SiteInfoTab from "./site-info-tab";
 import UserManagementTab from "./user-management-tab";
-import AuthenticationTab from "./authentication-tab";
-import ServicesTab from "./services-tab";
-import ChannelTab from "./channel-tab";
-import BasicConfigTab from "./basic-config-tab";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -44,7 +46,6 @@ interface SettingsTabsProps {
 
 /**
  * Settings Tabs Container Component
- * 设置页面Tab容器组件
  *
  * Manages the tabbed interface for different settings categories.
  * Each tab is independent and has its own save functionality.
@@ -116,6 +117,13 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                     label={t("channelManagement")}
                     id="settings-tab-5"
                     aria-controls="settings-tabpanel-5"
+                />
+                <Tab
+                    icon={<VpnKeyIcon />}
+                    iconPosition="start"
+                    label={t("apiTokens")}
+                    id="settings-tab-6"
+                    aria-controls="settings-tabpanel-6"
                 />
             </Tabs>
 
@@ -234,6 +242,9 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
 
             <TabPanel value={activeTab} index={5}>
                 <ChannelTab initialData={initialConfig.channel || []} />
+            </TabPanel>
+            <TabPanel value={activeTab} index={6}>
+                <ApiTokensTab />
             </TabPanel>
         </Box>
     );

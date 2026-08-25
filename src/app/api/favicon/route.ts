@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import fs from "fs";
+import { NextResponse } from "next/server";
 import path from "path";
 import { CMS_DATA_PATH } from "@/settings";
 
@@ -23,7 +23,8 @@ export async function GET() {
                 return new NextResponse(fileBuffer, {
                     headers: {
                         "Content-Type": item.type,
-                        "Cache-Control": "public, max-age=3600, must-revalidate",
+                        "Cache-Control":
+                            "public, max-age=3600, must-revalidate",
                     },
                 });
             } catch (error) {

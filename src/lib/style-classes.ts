@@ -2,15 +2,60 @@
  * Color definitions for BlockNote editor and renderers.
  */
 export const BLOCKNOTE_COLORS = [
-    { name: "Default", value: "default", textClass: "text-foreground", bgClass: "bg-transparent" },
-    { name: "Gray", value: "gray", textClass: "text-gray-500", bgClass: "bg-gray-100 dark:bg-gray-800" },
-    { name: "Red", value: "red", textClass: "text-red-500", bgClass: "bg-red-100 dark:bg-red-900/30" },
-    { name: "Orange", value: "orange", textClass: "text-orange-500", bgClass: "bg-orange-100 dark:bg-orange-900/30" },
-    { name: "Yellow", value: "yellow", textClass: "text-yellow-500", bgClass: "bg-yellow-100 dark:bg-yellow-900/30" },
-    { name: "Green", value: "green", textClass: "text-green-500", bgClass: "bg-green-100 dark:bg-green-900/30" },
-    { name: "Blue", value: "blue", textClass: "text-blue-500", bgClass: "bg-blue-100 dark:bg-blue-900/30" },
-    { name: "Purple", value: "purple", textClass: "text-purple-500", bgClass: "bg-purple-100 dark:bg-purple-900/30" },
-    { name: "Pink", value: "pink", textClass: "text-pink-500", bgClass: "bg-pink-100 dark:bg-pink-900/30" },
+    {
+        name: "Default",
+        value: "default",
+        textClass: "text-foreground",
+        bgClass: "bg-transparent",
+    },
+    {
+        name: "Gray",
+        value: "gray",
+        textClass: "text-gray-500",
+        bgClass: "bg-gray-100 dark:bg-gray-800",
+    },
+    {
+        name: "Red",
+        value: "red",
+        textClass: "text-red-500",
+        bgClass: "bg-red-100 dark:bg-red-900/30",
+    },
+    {
+        name: "Orange",
+        value: "orange",
+        textClass: "text-orange-500",
+        bgClass: "bg-orange-100 dark:bg-orange-900/30",
+    },
+    {
+        name: "Yellow",
+        value: "yellow",
+        textClass: "text-yellow-500",
+        bgClass: "bg-yellow-100 dark:bg-yellow-900/30",
+    },
+    {
+        name: "Green",
+        value: "green",
+        textClass: "text-green-500",
+        bgClass: "bg-green-100 dark:bg-green-900/30",
+    },
+    {
+        name: "Blue",
+        value: "blue",
+        textClass: "text-blue-500",
+        bgClass: "bg-blue-100 dark:bg-blue-900/30",
+    },
+    {
+        name: "Purple",
+        value: "purple",
+        textClass: "text-purple-500",
+        bgClass: "bg-purple-100 dark:bg-purple-900/30",
+    },
+    {
+        name: "Pink",
+        value: "pink",
+        textClass: "text-pink-500",
+        bgClass: "bg-pink-100 dark:bg-pink-900/30",
+    },
 ] as const;
 
 export const findColorByValue = (value: string) =>
@@ -65,17 +110,21 @@ export function getBlockClasses(
     // --------------------------------------------------------
     // A. Handle colors (textColor, backgroundColor)
     // --------------------------------------------------------
-    if (props.textColor && typeof props.textColor === 'string') {
+    if (props.textColor && typeof props.textColor === "string") {
         classes.push(findColorByValue(props.textColor)?.textClass);
     }
-    if (props.backgroundColor && typeof props.backgroundColor === 'string') {
+    if (props.backgroundColor && typeof props.backgroundColor === "string") {
         classes.push(findColorByValue(props.backgroundColor)?.bgClass);
     }
 
     // --------------------------------------------------------
     // B. Handle alignment (textAlignment)
     // --------------------------------------------------------
-    if (props.textAlignment && typeof props.textAlignment === 'string' && ALIGNMENT_MAP[props.textAlignment]) {
+    if (
+        props.textAlignment &&
+        typeof props.textAlignment === "string" &&
+        ALIGNMENT_MAP[props.textAlignment]
+    ) {
         classes.push(ALIGNMENT_MAP[props.textAlignment]);
     }
 
@@ -94,9 +143,8 @@ export function getBlockClasses(
     // --------------------------------------------------------
     return [...classes, ...extraClasses]
         .filter(Boolean) // filter out undefined, null, false, empty strings
-        .join(" ");      // join with spaces
+        .join(" "); // join with spaces
 }
-
 
 // Base style components
 export const base = {
@@ -110,19 +158,24 @@ export const base = {
         sm: "sm:max-w-2xl",
         md: "md:max-w-4xl",
         lg: "xl:max-w-7xl",
-        content: "sm:max-w-2xl md:max-w-3xl xl:max-w-5xl"
+        content: "sm:max-w-2xl md:max-w-3xl xl:max-w-5xl",
     },
 
     // Spacing
     padding: {
         page: "px-4 py-4",
         section: "px-6 py-4",
-        compact: "px-4 py-2"
-    }
+        compact: "px-4 py-2",
+    },
 } as const;
 
+/** Image/SVG: 16:9 box, max 568×320, content contain (no crop). */
+export const mediaConstrainedFrameClass =
+    "relative mx-auto aspect-video w-full max-w-[568px]";
+
 // Button base styles
-export const buttonBase = "group flex items-center justify-center rounded-lg shadow-sm transition-all duration-200 hover:shadow-md font-medium";
+export const buttonBase =
+    "group flex items-center justify-center rounded-lg shadow-sm transition-all duration-200 hover:shadow-md font-medium";
 
 export const button = {
     // Primary button
@@ -138,15 +191,16 @@ export const button = {
     size: {
         sm: "px-4 py-2 text-sm",
         md: "px-6 py-3",
-        lg: "px-8 py-4 text-lg"
-    }
+        lg: "px-8 py-4 text-lg",
+    },
 } as const;
 
 // Card styles
 export const card = {
     base: "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700",
     hover: "hover:shadow-md transition-shadow duration-200",
-    interactive: "hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+    interactive:
+        "hover:shadow-md hover:-translate-y-0.5 transition-all duration-200",
 } as const;
 
 // Text styles
@@ -155,18 +209,18 @@ export const text = {
     body: "text-gray-600 dark:text-gray-400",
     muted: "text-gray-500 dark:text-gray-500",
     success: "text-green-600 dark:text-green-400",
-    error: "text-red-600 dark:text-red-400"
+    error: "text-red-600 dark:text-red-400",
 } as const;
 
 // Layout containers (preserve existing, add new)
 export const container = {
     header: `${base.container} ${base.padding.page} ${base.maxWidth.lg} ${base.flexBetween}`,
     main: `${base.container} ${base.padding.page} ${base.maxWidth.content} flex-1`,
-    messagePage: `${base.container} ${base.flexCol} sm:max-w-xl md:max-w-2xl xl:max-w-4xl`
+    messagePage: `${base.container} ${base.flexCol} sm:max-w-xl md:max-w-2xl xl:max-w-4xl`,
 } as const;
 
 // Global border radius setting.
-export const roundedPx = 8
+export const roundedPx = 8;
 
 // Unify title style function
 export const getDefaultHeadingClasses = (level: number): string => {
@@ -174,18 +228,18 @@ export const getDefaultHeadingClasses = (level: number): string => {
 
     const headingClasses = {
         1: `${baseClasses} text-2xl leading-normal sm:text-3xl sm:leading-normal md:text-4xl md:leading-normal`,
-        2: `${baseClasses.replace('extrabold', 'bold')} text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal`,
-        3: `${baseClasses.replace('extrabold', 'bold')} text-lg leading-normal sm:text-xl sm:leading-normal md:text-2xl md:leading-normal`,
-        4: `${baseClasses.replace('extrabold', 'semibold')} text-base leading-relaxed sm:text-lg sm:leading-relaxed md:text-xl md:leading-relaxed`,
-        5: `${baseClasses.replace('extrabold', 'semibold')} text-sm leading-relaxed sm:text-base sm:leading-relaxed md:text-lg md:leading-relaxed`,
-        6: `${baseClasses.replace('extrabold', 'medium')} text-sm leading-relaxed`,
+        2: `${baseClasses.replace("extrabold", "bold")} text-xl leading-normal sm:text-2xl sm:leading-normal md:text-3xl md:leading-normal`,
+        3: `${baseClasses.replace("extrabold", "bold")} text-lg leading-normal sm:text-xl sm:leading-normal md:text-2xl md:leading-normal`,
+        4: `${baseClasses.replace("extrabold", "semibold")} text-base leading-relaxed sm:text-lg sm:leading-relaxed md:text-xl md:leading-relaxed`,
+        5: `${baseClasses.replace("extrabold", "semibold")} text-sm leading-relaxed sm:text-base sm:leading-relaxed md:text-lg md:leading-relaxed`,
+        6: `${baseClasses.replace("extrabold", "medium")} text-sm leading-relaxed`,
     };
 
     return (
         headingClasses[level as keyof typeof headingClasses] ||
         headingClasses[3]
     );
-}
+};
 
 // Get color classes based on file extension
 export const getFileTypeColor = (extension: string): string => {

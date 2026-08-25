@@ -1,7 +1,7 @@
-import { getTranslations, getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "@/components/link";
 import { systemConfigService } from "@/lib/services/system-config-service";
-import { ChannelItem } from "@/types/system-config";
+import type { ChannelItem } from "@/types/system-config";
 import ChannelDropdown from "./channel-dropdown";
 
 const navItemLinkTwCls =

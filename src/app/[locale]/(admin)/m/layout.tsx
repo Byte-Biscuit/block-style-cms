@@ -1,22 +1,22 @@
-import { redirect } from "next/navigation";
-import Image from "next/image";
-import { headers } from "next/headers";
-import {
-    Box,
-    Typography,
-    AppBar,
-    Toolbar,
-    IconButton,
-    Tooltip,
-} from "@mui/material";
 import { Dashboard as DashboardIcon } from "@mui/icons-material";
-import { getAuth } from "@/lib/auth/auth";
-import { BETTER_AUTH_SIGN_IN } from "@/constants";
-import Link from "@/components/link";
-import Footer from "./components/layout/footer";
+import {
+    AppBar,
+    Box,
+    IconButton,
+    Toolbar,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+import { headers } from "next/headers";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import SignOutButton from "@/components/signout-button";
 import { LanguageToggle } from "@/components/language-toggle";
+import Link from "@/components/link";
+import SignOutButton from "@/components/signout-button";
+import { BETTER_AUTH_SIGN_IN } from "@/constants";
+import { getAuth } from "@/lib/auth/auth";
+import Footer from "./components/layout/footer";
 
 export default async function AdminLayout({
     children,

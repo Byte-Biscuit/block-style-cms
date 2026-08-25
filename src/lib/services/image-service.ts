@@ -187,7 +187,7 @@ async function uploadImage(
         size: outputInfo.size,
         width: finalMetadata.width || 0,
         height: finalMetadata.height || 0,
-        mimeType: `image / ${outputFormat} `,
+        mimeType: `image/${outputFormat}`,
         uploadedAt: new Date().toISOString(),
     };
     await saveMetadata(imageInfo);

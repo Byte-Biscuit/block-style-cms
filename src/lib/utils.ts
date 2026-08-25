@@ -3,7 +3,7 @@
  * @param target - Base object
  * @param source - Override object (takes precedence)
  * @returns Merged object with source values overriding target values
- * 
+ *
  * @example
  * const base = { a: 1, b: { c: 2, d: 3 } };
  * const override = { b: { c: 5 }, e: 6 };
@@ -17,16 +17,16 @@ export function mergeDeep<T extends Record<string, any>>(
     const result = { ...target };
 
     for (const key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
+        if (Object.hasOwn(source, key)) {
             const sourceValue = source[key];
             const targetValue = result[key];
 
             if (
                 sourceValue &&
-                typeof sourceValue === 'object' &&
+                typeof sourceValue === "object" &&
                 !Array.isArray(sourceValue) &&
                 targetValue &&
-                typeof targetValue === 'object' &&
+                typeof targetValue === "object" &&
                 !Array.isArray(targetValue)
             ) {
                 result[key] = mergeDeep(targetValue, sourceValue);
@@ -40,9 +40,9 @@ export function mergeDeep<T extends Record<string, any>>(
 }
 /**
  * Coerce a value to a number, or return a fallback if invalid
- * @param value 
- * @param fallback 
- * @returns 
+ * @param value
+ * @param fallback
+ * @returns
  */
 export function coerceNumber(value: unknown, fallback: number) {
     const parsed = typeof value === "number" ? value : Number(value);

@@ -1,29 +1,56 @@
-import React from "react";
 import { render } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import type React from "react";
+import { describe, expect, it, vi } from "vitest";
 
 // Mock @blocknote/react components
 vi.mock("@blocknote/react", () => ({
     FormattingToolbar: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="formatting-toolbar">{children}</div>
     ),
-    BlockTypeSelect: () => <button data-testid="block-type-select">BlockType</button>,
+    BlockTypeSelect: () => (
+        <button type="button" data-testid="block-type-select">
+            BlockType
+        </button>
+    ),
     BasicTextStyleButton: ({ basicTextStyle }: { basicTextStyle: string }) => (
-        <button data-testid={`style-${basicTextStyle}`}>{basicTextStyle}</button>
+        <button type="button" data-testid={`style-${basicTextStyle}`}>
+            {basicTextStyle}
+        </button>
     ),
     TextAlignButton: ({ textAlignment }: { textAlignment: string }) => (
-        <button data-testid={`align-${textAlignment}`}>{textAlignment}</button>
+        <button type="button" data-testid={`align-${textAlignment}`}>
+            {textAlignment}
+        </button>
     ),
-    CreateLinkButton: () => <button data-testid="create-link">Link</button>,
-    NestBlockButton: () => <button data-testid="nest-block">Nest</button>,
-    UnnestBlockButton: () => <button data-testid="unnest-block">Unnest</button>,
+    CreateLinkButton: () => (
+        <button type="button" data-testid="create-link">
+            Link
+        </button>
+    ),
+    NestBlockButton: () => (
+        <button type="button" data-testid="nest-block">
+            Nest
+        </button>
+    ),
+    UnnestBlockButton: () => (
+        <button type="button" data-testid="unnest-block">
+            Unnest
+        </button>
+    ),
+    TableCellMergeButton: () => (
+        <button type="button" data-testid="table-cell-merge">
+            Merge
+        </button>
+    ),
     useBlockNoteEditor: () => ({}),
 }));
 
 // Mock color picker (uses useBlockNoteEditor internally)
 vi.mock("../color-picker-button", () => ({
     ColorPickerButton: ({ type }: { type: string }) => (
-        <button data-testid={`color-${type}`}>{type}</button>
+        <button type="button" data-testid={`color-${type}`}>
+            {type}
+        </button>
     ),
 }));
 
@@ -72,10 +99,14 @@ describe("EnhancedFormattingToolbar", () => {
         expect(getByTestId("create-link")).toBeTruthy();
     });
 
+    it("contains table cell merge button", () => {
+        const { getByTestId } = render(<EnhancedFormattingToolbar />);
+        expect(getByTestId("table-cell-merge")).toBeTruthy();
+    });
+
     it("renders separators between button groups", () => {
         const { container } = render(<EnhancedFormattingToolbar />);
         const separators = container.querySelectorAll('[aria-hidden="true"]');
-        // Should have 5 separators between groups
-        expect(separators.length).toBe(5);
+        expect(separators.length).toBe(6);
     });
 });

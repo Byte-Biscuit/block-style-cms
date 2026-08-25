@@ -1,16 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-import { systemConfigService } from "@/lib/services/system-config-service";
-import { getAuth } from "@/lib/auth/auth";
+import { type NextRequest, NextResponse } from "next/server";
 import { EMAIL_REGEX } from "@/constants";
+import { getAuth } from "@/lib/auth/auth";
+import { systemConfigService } from "@/lib/services/system-config-service";
 
 /**
  * POST /api/install
- * 
+ *
  * Initialize the CMS system:
  * 1. Save authentication configuration (including secret) to settings.json
  * 2. Create admin user account with email/password
  * 3. Return success response
- * 
+ *
  * Note: Configuration must be saved BEFORE creating user account,
  * because Better Auth needs to read the secret from settings.json
  */
@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
                     },
                 },
                 authentication: {
-                    secret: authMethods?.secret || '',
-                    baseURL: authMethods?.baseURL || '',
+                    secret: authMethods?.secret || "",
+                    baseURL: authMethods?.baseURL || "",
                     methods: {
                         github: {
                             enabled: authMethods?.github || false,
@@ -80,7 +80,9 @@ export async function POST(request: NextRequest) {
                         },
                     },
                     accessControl: {
-                        allowedEmails: authMethods?.allowedEmails || [admin.email],
+                        allowedEmails: authMethods?.allowedEmails || [
+                            admin.email,
+                        ],
                     },
                 },
                 services: {
@@ -94,20 +96,28 @@ export async function POST(request: NextRequest) {
                     umami: {
                         enabled: services?.umami?.enabled || false,
                         websiteId: services?.umami?.websiteId,
-                        src: services?.umami?.src || "https://cloud.umami.is/script.js",
+                        src:
+                            services?.umami?.src ||
+                            "https://cloud.umami.is/script.js",
                     },
                     ai: {
                         enabled: services?.ai?.enabled || false,
                         provider: services?.ai?.provider || "openai",
                         openai: {
                             apiKey: services?.ai?.openai?.apiKey,
-                            baseUrl: services?.ai?.openai?.baseUrl || "https://api.openai.com/v1",
+                            baseUrl:
+                                services?.ai?.openai?.baseUrl ||
+                                "https://api.openai.com/v1",
                             model: services?.ai?.openai?.model || "gpt-4o-mini",
                         },
                         gemini: {
                             apiKey: services?.ai?.gemini?.apiKey,
-                            baseUrl: services?.ai?.gemini?.baseUrl || "https://generativelanguage.googleapis.com/v1beta",
-                            model: services?.ai?.gemini?.model || "gemini-2.0-flash",
+                            baseUrl:
+                                services?.ai?.gemini?.baseUrl ||
+                                "https://generativelanguage.googleapis.com/v1beta",
+                            model:
+                                services?.ai?.gemini?.model ||
+                                "gemini-2.0-flash",
                         },
                     },
                     pexels: {
@@ -118,12 +128,20 @@ export async function POST(request: NextRequest) {
             });
 
             console.log("[Install API] Configuration saved successfully");
-            console.log("[Install API] Config initialized at:", config.initializedAt);
-
+            console.log(
+                "[Install API] Config initialized at:",
+                config.initializedAt
+            );
         } catch (error) {
             console.error("Error initializing configuration:", error);
             return NextResponse.json(
-                { error: "Failed to initialize configuration: " + (error instanceof Error ? error.message : String(error)) },
+                {
+                    error:
+                        "Failed to initialize configuration: " +
+                        (error instanceof Error
+                            ? error.message
+                            : String(error)),
+                },
                 { status: 500 }
             );
         }
@@ -145,12 +163,20 @@ export async function POST(request: NextRequest) {
                 throw new Error("Failed to create admin user");
             }
 
-            console.log("[Install API] Admin user created successfully:", user.email);
-
+            console.log(
+                "[Install API] Admin user created successfully:",
+                user.email
+            );
         } catch (error) {
             console.error("Error creating admin user:", error);
             return NextResponse.json(
-                { error: "Failed to create admin account: " + (error instanceof Error ? error.message : String(error)) },
+                {
+                    error:
+                        "Failed to create admin account: " +
+                        (error instanceof Error
+                            ? error.message
+                            : String(error)),
+                },
                 { status: 500 }
             );
         }
@@ -161,11 +187,14 @@ export async function POST(request: NextRequest) {
             message: "Installation completed successfully",
             config,
         });
-
     } catch (error) {
         console.error("Installation error:", error);
         return NextResponse.json(
-            { error: "Installation failed: " + (error instanceof Error ? error.message : String(error)) },
+            {
+                error:
+                    "Installation failed: " +
+                    (error instanceof Error ? error.message : String(error)),
+            },
             { status: 500 }
         );
     }
@@ -173,7 +202,7 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/install
- * 
+ *
  * Check if system is already initialized
  */
 export async function GET() {

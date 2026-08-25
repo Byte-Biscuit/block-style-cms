@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { SiteInfoConfig } from "@/types/system-config";
+import { useEffect, useRef, useState } from "react";
 import { uploadLogo } from "@/app/actions/settings/site-info";
 import { isSuccess } from "@/lib/response";
+import type { SiteInfoConfig } from "@/types/system-config";
 
 interface SiteInfoFormProps {
     /** Form mode: 'install' for installation wizard, 'edit' for settings page */

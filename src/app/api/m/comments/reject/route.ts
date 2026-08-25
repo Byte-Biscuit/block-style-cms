@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
-import { success, failure } from '@/lib/response';
-import commentService from '@/lib/services/comment-service';
-import { withTiming } from '@/lib/with-timing';
+import type { NextRequest } from "next/server";
+import { failure, success } from "@/lib/response";
+import commentService from "@/lib/services/comment-service";
+import { withTiming } from "@/lib/with-timing";
 
 /**
  * POST /api/m/comments/reject
@@ -14,10 +14,11 @@ export const POST = withTiming(async (request: NextRequest) => {
         const { commentId } = body;
         // Reject the comment (will be deleted)
         await commentService.rejectComment(commentId);
-        return success('Comment rejected successfully', { commentId });
+        return success("Comment rejected successfully", { commentId });
     } catch (error) {
-        console.error('Failed to reject comment:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to reject comment';
+        console.error("Failed to reject comment:", error);
+        const errorMessage =
+            error instanceof Error ? error.message : "Failed to reject comment";
         return failure(errorMessage);
     }
 });

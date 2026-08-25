@@ -1,6 +1,6 @@
-import { Paper, Container, Typography, Box } from "@mui/material";
-import { VERSION } from "@/settings";
+import { Box, Container, Paper, Typography } from "@mui/material";
 import { getTranslations } from "next-intl/server";
+import { VERSION } from "@/settings";
 
 export default async function Footer() {
     const t = await getTranslations("admin.footer");

@@ -49,8 +49,10 @@ export function sanitizeIframeHtml(html: string): string {
         ];
 
         const newStyle =
-            filtered.map(({ k, v }) => `${k}:${v}`).concat(enforced).join(";") +
-            ";";
+            filtered
+                .map(({ k, v }) => `${k}:${v}`)
+                .concat(enforced)
+                .join(";") + ";";
 
         el.setAttribute("style", newStyle);
     });

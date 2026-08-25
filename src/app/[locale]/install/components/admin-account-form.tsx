@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { AdminCredentials } from "@/types/system-config";
+import { useState } from "react";
 import { EMAIL_REGEX } from "@/constants";
+import type { AdminCredentials } from "@/types/system-config";
 
 interface AdminAccountFormProps {
     onNext: (data: AdminCredentials) => void;

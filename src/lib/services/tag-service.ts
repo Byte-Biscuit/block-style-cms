@@ -1,7 +1,7 @@
-import { ArticleMetadata } from '@/types/article';
+import type { Locale } from "@/i18n/config";
 import { lruCacheService } from "@/lib/services/lru-cache-service";
-import { articleService, ArticleService } from './article-service';
-import { Locale } from "@/i18n/config"
+import type { ArticleMetadata } from "@/types/article";
+import { type ArticleService, articleService } from "./article-service";
 
 /**
  * Tag Service - Manages article tags and tag-article relationships
@@ -16,12 +16,15 @@ class TagService {
     /**
      * Get all unique tags for a specific locale
      * Note: Automatically filters out channel tags (tags with format _channel_)
-     * 
+     *
      * @param locale - Target locale
      * @param publishedOnly - Only include tags from published articles
      * @returns Array of unique tag names (excluding channel tags)
      */
-    async getTagsByLocale(locale: Locale, publishedOnly: boolean = true): Promise<string[]> {
+    async getTagsByLocale(
+        locale: Locale,
+        publishedOnly: boolean = true
+    ): Promise<string[]> {
         const tagsCacheKey4LocaleKey = `tags_${locale}_key`;
         if (lruCacheService.has(tagsCacheKey4LocaleKey)) {
             return lruCacheService.get(tagsCacheKey4LocaleKey) as string[];
@@ -29,9 +32,10 @@ class TagService {
         const articleMetaMap = await this.articleService.getMetadataMap();
         const articleMetas = Object.values(articleMetaMap)
             .flat()
-            .filter(article =>
-                article.locale === locale &&
-                (publishedOnly ? article.published : true)
+            .filter(
+                (article) =>
+                    article.locale === locale &&
+                    (publishedOnly ? article.published : true)
             );
 
         const tags = new Set<string>();
@@ -41,7 +45,7 @@ class TagService {
                 tags.add(trimmedTag);
             });
         });
-        const _tags = Array.from(tags).sort()
+        const _tags = Array.from(tags).sort();
         if (_tags.length !== 0) {
             lruCacheService.set(tagsCacheKey4LocaleKey, _tags);
         }
@@ -51,7 +55,7 @@ class TagService {
     /**
      * Get all tags with their associated articles
      * Note: Automatically filters out channel tags (tags with format _channel_)
-     * 
+     *
      * @param locale - Target locale
      * @param publishedOnly - Only include published articles
      * @returns Map of tag to array of article metadata (excluding channel tags)
@@ -63,16 +67,21 @@ class TagService {
         const tagsCacheKey4LocaleArticles = `tags_${locale}_articles_key`;
         if (lruCacheService.has(tagsCacheKey4LocaleArticles)) {
             // Correctly deserialize Map from cache
-            const cachedData = lruCacheService.get(tagsCacheKey4LocaleArticles) as string;
-            const entries = JSON.parse(cachedData) as Array<[string, ArticleMetadata[]]>;
+            const cachedData = lruCacheService.get(
+                tagsCacheKey4LocaleArticles
+            ) as string;
+            const entries = JSON.parse(cachedData) as Array<
+                [string, ArticleMetadata[]]
+            >;
             return new Map(entries);
         }
         const articleMetaMap = await this.articleService.getMetadataMap();
         const articleMetas = Object.values(articleMetaMap)
             .flat()
-            .filter(article =>
-                article.locale === locale &&
-                (publishedOnly ? article.published : true)
+            .filter(
+                (article) =>
+                    article.locale === locale &&
+                    (publishedOnly ? article.published : true)
             );
 
         const tagArticleMap = new Map<string, ArticleMetadata[]>();
@@ -88,7 +97,10 @@ class TagService {
         });
         // Correctly serialize Map to cache - convert to array first
         if (tagsCacheKey4LocaleArticles.length > 0) {
-            lruCacheService.set(tagsCacheKey4LocaleArticles, JSON.stringify(Array.from(tagArticleMap.entries())));
+            lruCacheService.set(
+                tagsCacheKey4LocaleArticles,
+                JSON.stringify(Array.from(tagArticleMap.entries()))
+            );
         }
         return tagArticleMap;
     }
@@ -105,7 +117,10 @@ class TagService {
         locale: Locale,
         publishedOnly: boolean = true
     ): Promise<ArticleMetadata[]> {
-        const tagArticleMap = await this.getTagsWithArticles(locale, publishedOnly);
+        const tagArticleMap = await this.getTagsWithArticles(
+            locale,
+            publishedOnly
+        );
         return tagArticleMap.get(tag.trim()) || [];
     }
 
@@ -118,14 +133,21 @@ class TagService {
     async getTagStatistics(
         locale: Locale,
         publishedOnly: boolean = true
-    ): Promise<Array<{ tag: string; count: number; articles: ArticleMetadata[] }>> {
-        const tagArticleMap = await this.getTagsWithArticles(locale, publishedOnly);
+    ): Promise<
+        Array<{ tag: string; count: number; articles: ArticleMetadata[] }>
+    > {
+        const tagArticleMap = await this.getTagsWithArticles(
+            locale,
+            publishedOnly
+        );
 
-        const statistics = Array.from(tagArticleMap.entries()).map(([tag, articles]) => ({
-            tag,
-            count: articles.length,
-            articles
-        }));
+        const statistics = Array.from(tagArticleMap.entries()).map(
+            ([tag, articles]) => ({
+                tag,
+                count: articles.length,
+                articles,
+            })
+        );
 
         // Sort by count (descending), then by tag name (ascending)
         return statistics.sort((a, b) => {
@@ -151,8 +173,8 @@ class TagService {
         const articles = await this.getArticlesByTag(tag, locale);
         const relatedTagCount = new Map<string, number>();
 
-        articles.forEach(article => {
-            article.tags?.forEach(t => {
+        articles.forEach((article) => {
+            article.tags?.forEach((t) => {
                 const trimmedTag = t.trim();
                 if (trimmedTag !== tag.trim()) {
                     relatedTagCount.set(
@@ -180,15 +202,13 @@ class TagService {
         return tags.includes(tag.trim());
     }
 
-
-
     /**
      * Check if a tag is a channel tag
      * Channel tags are used for internal categorization/navigation (format: _channel_)
-     * 
+     *
      * @param tag - Tag name to check
      * @returns true if it's a channel tag, false otherwise
-     * 
+     *
      * @example
      * isChannelTag("_ai_") // true
      * isChannelTag("_education_") // true

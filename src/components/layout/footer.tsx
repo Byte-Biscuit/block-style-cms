@@ -1,8 +1,8 @@
-import Link from "@/components/link";
 import { getTranslations } from "next-intl/server";
-import { VERSION } from "@/settings";
+import Link from "@/components/link";
 import UmamiAnalytics from "@/components/umami-analytics";
 import { systemConfigService } from "@/lib/services/system-config-service";
+import { VERSION } from "@/settings";
 
 const footerLinkTwCls =
     "text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300";
@@ -67,9 +67,9 @@ const Footer = async () => {
             </div>
             <div>v{VERSION}</div>
             {umamiConfig?.enabled && (
-                <UmamiAnalytics 
-                    websiteId={umamiConfig.websiteId} 
-                    src={umamiConfig.src} 
+                <UmamiAnalytics
+                    websiteId={umamiConfig.websiteId}
+                    src={umamiConfig.src}
                 />
             )}
         </footer>

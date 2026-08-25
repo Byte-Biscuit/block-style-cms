@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Container, Typography, Box, Button, Alert } from "@mui/material";
-import dynamic from "next/dynamic";
 import type { Dictionary } from "@blocknote/core";
-import { getBlockNoteSelfDictionary } from "@/block-note/block-editor-utils";
-import {LocalBlock as Block} from "@/block-note/schema";
+import { Alert, Box, Button, Container, Typography } from "@mui/material";
+import dynamic from "next/dynamic";
 import { useLocale } from "next-intl";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { getBlockNoteSelfDictionary } from "@/block-note/block-editor-utils";
+import type { LocalBlock as Block } from "@/block-note/schema";
 
 const BlockNoteEditor = dynamic(
     () => import("@/admin/m/components/block-note-editor"),
@@ -117,9 +118,7 @@ const BlockEditorTestPage: React.FC = () => {
         },
     ] as Block[];
 
-    const handleContentChange = (
-        newContent: Block[]
-    ) => {
+    const handleContentChange = (newContent: Block[]) => {
         setContent(newContent);
     };
 

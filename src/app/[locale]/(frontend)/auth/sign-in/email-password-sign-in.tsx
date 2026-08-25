@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { LoadingSpinner } from "@/components/icons";
 import { authClient } from "@/lib/auth/auth-client";
 import { button } from "@/lib/style-classes";
-import { LoadingSpinner } from "@/components/icons";
 
 interface EmailPasswordSignInProps {
     onRequireTwoFactor: () => void;

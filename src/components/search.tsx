@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Search } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import AlgoliaSearchDialog from "@/components/instant-search";
 
 interface SearchIconButtonProps {

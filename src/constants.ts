@@ -10,7 +10,7 @@ export const LOCALE_PARAM_NAME = "__locale__";
 
 /**
  * Email validation regular expression
- * 
+ *
  * Rules:
  * - Must contain @ symbol
  * - Must have domain and TLD

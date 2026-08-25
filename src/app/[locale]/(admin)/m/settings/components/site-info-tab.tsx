@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Alert, Box, CircularProgress, Snackbar } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { Box, Alert, Snackbar, CircularProgress } from "@mui/material";
-import { SiteInfoForm } from "@/components/configuration";
-import { SiteInfoConfig } from "@/types/system-config";
+import { useState, useTransition } from "react";
 import { updateSiteInfo } from "@/app/actions/settings/site-info";
+import { SiteInfoForm } from "@/components/configuration";
 import { isSuccess } from "@/lib/response";
+import type { SiteInfoConfig } from "@/types/system-config";
 
 interface SiteInfoTabProps {
     initialData?: SiteInfoConfig;

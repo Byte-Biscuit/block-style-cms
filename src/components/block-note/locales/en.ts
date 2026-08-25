@@ -64,6 +64,12 @@ export const en = {
             aliases: ["mermaid", "chart", "flowchart", "sequence", "diagram"],
             group: "Advanced",
         },
+        svg: {
+            title: "SVG",
+            subtext: "Insert SVG illustration",
+            aliases: ["svg", "illustration", "vector", "drawing"],
+            group: "Advanced",
+        },
     },
     enhanced_audio_block: {
         dialog: {
@@ -79,10 +85,12 @@ export const en = {
             subtitle: "Select audio file",
             dialogTitle: "Upload Audio File",
             clickToSelect: "Click to select file",
-            supportedFormats: "Supports MP3, WAV, OGG, AAC, M4A, FLAC, WEBM formats",
+            supportedFormats:
+                "MP3, WAV, OGG, AAC, M4A, FLAC, WEBM, Opus — max 50MB",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
-            networkError: "Network error, please check connection and try again",
+            networkError:
+                "Network error, please check connection and try again",
         },
         embed: {
             title: "Embed Audio",
@@ -101,7 +109,7 @@ export const en = {
             alignRight: "Right",
         },
         placeholder: {
-            clickToAdd: "Click to add audio",
+            clickToAdd: "Add audio",
             supportText: "Supports local upload or URL embed",
         },
         edit: {
@@ -124,7 +132,8 @@ export const en = {
             supportedFormats: "Supports JPG, PNG, GIF, WEBP formats",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
-            networkError: "Network error, please check connection and try again",
+            networkError:
+                "Network error, please check connection and try again",
         },
         embed: {
             title: "Embed Image",
@@ -151,7 +160,7 @@ export const en = {
             maxWidth: "Max Width",
         },
         placeholder: {
-            clickToAdd: "Click to add image",
+            clickToAdd: "Add image",
             supportText: "Supports local upload, URL, or Pexels images",
         },
         edit: {
@@ -172,10 +181,11 @@ export const en = {
             subtitle: "Select video file",
             dialogTitle: "Upload Video File",
             clickToSelect: "Click to select file",
-            supportedFormats: "Supports MP4, WEBM, AVI, MOV formats",
+            supportedFormats: "MP4, WebM, MOV, MKV, AVI — max 100MB",
             uploading: "Uploading...",
             uploadError: "Upload failed, please try again",
-            networkError: "Network error, please check connection and try again",
+            networkError:
+                "Network error, please check connection and try again",
         },
         embed: {
             title: "Embed Video",
@@ -196,7 +206,7 @@ export const en = {
             height: "Height (px)",
         },
         placeholder: {
-            clickToAdd: "Click to add video",
+            clickToAdd: "Add video",
             supportText: "Supports local upload or iframe embed",
         },
         edit: {
@@ -217,12 +227,16 @@ export const en = {
             subtitle: "Select file",
             dialogTitle: "Upload File",
             clickToSelect: "Click to select file",
-            supportedFormats: "Supports Office documents, PDF, archives and other formats",
+            supportedFormats:
+                "Office, PDF, Markdown, archives, code — max 50MB",
             uploading: "Uploading...",
             uploadError: "File upload failed",
-            networkError: "Network error, please check network connection and try again",
-            unsupportedFormat: "Unsupported file format, please upload supported file types",
-            fileTooLarge: "File size exceeds limit, please select a smaller file",
+            networkError:
+                "Network error, please check network connection and try again",
+            unsupportedFormat:
+                "Unsupported file format, please upload supported file types",
+            fileTooLarge:
+                "File size exceeds limit, please select a smaller file",
         },
         form: {
             fileContent: "File Content",
@@ -233,8 +247,9 @@ export const en = {
             alignRight: "Right",
         },
         placeholder: {
-            clickToAdd: "Click to add file",
-            supportText: "Supports Office documents, PDF, archives and other formats",
+            clickToAdd: "Add file",
+            supportText:
+                "Supports Office documents, PDF, archives and other formats",
         },
         edit: {
             editButton: "Edit",
@@ -308,8 +323,39 @@ export const en = {
             },
         },
         placeholder: {
-            clickToAdd: "Click to add Mermaid diagram",
-            supportText: "Supports flowcharts, sequence diagrams, state diagrams and more",
+            clickToAdd: "Add Mermaid diagram",
+            supportText:
+                "Supports flowcharts, sequence diagrams, state diagrams and more",
+        },
+        dialog: {
+            cancel: "Cancel",
+            insert: "Insert",
+            save: "Save",
+            invalidCode: "Enter valid Mermaid code before saving",
+        },
+        edit: {
+            editButton: "Edit",
+        },
+    },
+    svg_block: {
+        editor: {
+            title: "SVG Illustration Editor",
+            editTitle: "Edit",
+            previewTitle: "Preview",
+        },
+        renderer: {
+            emptyPlaceholder: "Enter SVG markup to preview",
+            invalidSvg: "Invalid or unsafe SVG",
+        },
+        placeholder: {
+            clickToAdd: "Add SVG illustration",
+            supportText: "Paste inline SVG markup to use as an illustration",
+        },
+        dialog: {
+            cancel: "Cancel",
+            insert: "Insert",
+            save: "Save",
+            invalidCode: "Enter valid SVG markup before saving",
         },
         edit: {
             editButton: "Edit",
@@ -320,4 +366,4 @@ export const en = {
         text_color: "Text Color",
         background_color: "Background Color",
     },
-}
+};

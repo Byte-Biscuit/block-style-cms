@@ -1,7 +1,7 @@
 /**
  * System Configuration Type Definitions
  * Runtime configuration (stored in CMS_DATA_PATH/settings.json)
- * 
+ *
  */
 
 /**
@@ -11,7 +11,7 @@ export interface ChannelItem {
     /** Unique channel identifier (also used as i18n key) */
     id: string;
     /** Channel type */
-    type: 'tag' | 'page';
+    type: "tag" | "page";
     /** Channel link path */
     href: string;
     /** Tag name (only for type="tag") */
@@ -148,7 +148,7 @@ export interface AIProviderConfig {
 export interface AIServiceConfig {
     enabled: boolean;
     /** AI provider selection */
-    provider?: 'openai' | 'gemini';
+    provider?: "openai" | "gemini";
     /** OpenAI specific configuration */
     openai?: AIProviderConfig;
     /** Gemini specific configuration */
@@ -275,7 +275,7 @@ export interface AdminCredentials {
 
 /**
  * Authentication Methods Configuration for Installation
- * 
+ *
  * Note: Email/Password and 2FA are enabled by default and not configurable during installation.
  */
 export interface InstallAuthMethodsConfig {
@@ -295,7 +295,7 @@ export interface InstallAuthMethodsConfig {
 
 /**
  * Services Configuration for Installation
- * 
+ *
  * Uses nested structure aligned with ServicesFormData for easier conversion.
  */
 export interface InstallServicesConfig {
@@ -335,36 +335,39 @@ export interface InstallServicesConfig {
  * Installation Step Status
  */
 export enum InstallStep {
-    Welcome = 'welcome',
-    Environment = 'environment',
-    SiteInfo = 'site-info',
-    AdminAccount = 'admin-account',
-    AuthMethods = 'auth-methods',
-    Services = 'services',
-    Complete = 'complete',
+    Welcome = "welcome",
+    Environment = "environment",
+    SiteInfo = "site-info",
+    AdminAccount = "admin-account",
+    AuthMethods = "auth-methods",
+    Services = "services",
+    Complete = "complete",
 }
 
 /**
  * Default System Configuration
  */
-export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> = {
+export const DEFAULT_SYSTEM_CONFIG: Omit<
+    SystemConfig,
+    "version" | "updatedAt"
+> = {
     siteInfo: {
-        baseUrl: '',
+        baseUrl: "",
         contact: {
-            email: 'biscuit_zhou@outlook.com',
-            wechat: '',
-            x: '',
-            telegram: '',
-            discord: '',
-            whatsapp: '',
-            linkedin: '',
-            github: 'https://github.com/Byte-Biscuit/block-style-cms',
-            medium: '',
+            email: "biscuit_zhou@outlook.com",
+            wechat: "",
+            x: "",
+            telegram: "",
+            discord: "",
+            whatsapp: "",
+            linkedin: "",
+            github: "https://github.com/Byte-Biscuit/block-style-cms",
+            medium: "",
         },
     },
     authentication: {
-        secret: '',
-        baseURL: '',
+        secret: "",
+        baseURL: "",
         methods: {
             github: {
                 enabled: true,
@@ -383,33 +386,33 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<SystemConfig, 'version' | 'updatedAt'> 
     services: {
         algolia: {
             enabled: false,
-            appId: '',
-            apiKey: '',
-            searchKey: '',
-            indexName: 'articles',
+            appId: "",
+            apiKey: "",
+            searchKey: "",
+            indexName: "articles",
         },
         umami: {
             enabled: false,
-            websiteId: '',
-            src: 'https://cloud.umami.is/script.js',
+            websiteId: "",
+            src: "https://cloud.umami.is/script.js",
         },
         ai: {
             enabled: false,
-            provider: 'openai',
+            provider: "openai",
             openai: {
-                apiKey: '',
-                baseUrl: 'https://api.openai.com/v1',
-                model: 'gpt-4o-mini',
+                apiKey: "",
+                baseUrl: "https://api.openai.com/v1",
+                model: "gpt-4o-mini",
             },
             gemini: {
-                apiKey: '',
-                baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-                model: 'gemini-2.0-flash',
+                apiKey: "",
+                baseUrl: "https://generativelanguage.googleapis.com/v1beta",
+                model: "gemini-2.0-flash",
             },
         },
         pexels: {
             enabled: false,
-            apiKey: '',
+            apiKey: "",
         },
     },
     basic: {

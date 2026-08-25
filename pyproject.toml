@@ -1,0 +1,9 @@
+[project]
+name = "block-style-cms"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "deploy-4-developer>=0.0.4",
+]

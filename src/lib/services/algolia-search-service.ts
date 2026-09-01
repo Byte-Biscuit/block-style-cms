@@ -1,21 +1,192 @@
 import { algoliasearch, type SearchClient } from "algoliasearch";
+import type { LocalBlock } from "@/block-note/schema";
+import { extractTextFromContent } from "@/lib/toc-utils";
 import type { Article } from "@/types/article";
 import { systemConfigService } from "./system-config-service";
 
-/**
- * BlockNote block type definition
- */
-interface BlockNoteBlock {
-    type: string;
-    content?: BlockNoteContent[];
-    props?: Record<string, unknown>;
-    children?: BlockNoteBlock[];
-    text?: string;
+function isMermaidLanguage(language: string): boolean {
+    const normalized = language.trim().toLowerCase();
+    return normalized === "mermaid" || normalized === "mmd";
 }
 
-interface BlockNoteContent {
-    type?: string;
-    text?: string;
+function isSvgLanguage(language: string): boolean {
+    return language.trim().toLowerCase() === "svg";
+}
+
+function blockProps(block: LocalBlock): Record<string, unknown> | undefined {
+    return block.props as Record<string, unknown> | undefined;
+}
+
+function extractBlockTextContent(block: LocalBlock): string {
+    if (block.content && Array.isArray(block.content)) {
+        return extractTextFromContent(block.content);
+    }
+
+    const props = blockProps(block);
+    if (props?.text && typeof props.text === "string") return props.text;
+    if (props?.content && typeof props.content === "string")
+        return props.content;
+    if (props?.code && typeof props.code === "string") return props.code;
+
+    return "";
+}
+
+/**
+ * Convert BlockNote blocks to searchable markdown for Algolia.
+ * ponytail: mermaid/svg source omitted — not useful for search and blows the 10KB record limit.
+ */
+export function convertBlocksToAlgoliaMarkdown(blocks: LocalBlock[]): string {
+    if (!blocks || blocks.length === 0) {
+        return "";
+    }
+
+    const lines: string[] = [];
+
+    for (const block of blocks) {
+        // ponytail: persisted JSON may include legacy block type names outside LocalBlock union
+        const type = block.type as string;
+        const content = extractBlockTextContent(block);
+        const props = blockProps(block);
+
+        switch (type) {
+            case "heading": {
+                const level =
+                    typeof props?.level === "number" ? props.level : 1;
+                lines.push(`${"#".repeat(level)} ${content}`);
+                lines.push("");
+                break;
+            }
+
+            case "paragraph":
+                lines.push(content);
+                lines.push("");
+                break;
+
+            case "bulletListItem":
+                lines.push(`- ${content}`);
+                if (block.children && block.children.length > 0) {
+                    const childMarkdown = convertBlocksToAlgoliaMarkdown(
+                        block.children
+                    );
+                    const indented = childMarkdown
+                        .split("\n")
+                        .map((line) => (line ? `  ${line}` : ""))
+                        .join("\n");
+                    lines.push(indented);
+                }
+                break;
+
+            case "numberedListItem":
+                lines.push(`1. ${content}`);
+                if (block.children && block.children.length > 0) {
+                    const childMarkdown = convertBlocksToAlgoliaMarkdown(
+                        block.children
+                    );
+                    const indented = childMarkdown
+                        .split("\n")
+                        .map((line) => (line ? `  ${line}` : ""))
+                        .join("\n");
+                    lines.push(indented);
+                }
+                break;
+
+            case "checkListItem": {
+                const checked = props?.checked ? "x" : " ";
+                lines.push(`- [${checked}] ${content}`);
+                break;
+            }
+
+            case "quote":
+                lines.push(`> ${content}`);
+                lines.push("");
+                break;
+
+            case "code":
+            case "codeBlock": {
+                const language = String(props?.language ?? "");
+                if (isMermaidLanguage(language)) {
+                    lines.push("[Mermaid]");
+                    lines.push("");
+                    break;
+                }
+                if (isSvgLanguage(language)) {
+                    lines.push("[SVG]");
+                    lines.push("");
+                    break;
+                }
+                lines.push(`\`\`\`${language}`);
+                lines.push(content);
+                lines.push("```");
+                lines.push("");
+                break;
+            }
+
+            case "table":
+                lines.push("[Table]");
+                lines.push("");
+                break;
+
+            case "enhancedImage":
+            case "image": {
+                const imageUrl = props?.url || props?.src || "";
+                const imageAlt = props?.alt || props?.caption || "image";
+                if (imageUrl) {
+                    lines.push(`![${imageAlt}](${imageUrl})`);
+                    lines.push("");
+                }
+                break;
+            }
+
+            case "enhancedVideo":
+            case "video": {
+                const videoUrl = props?.url || props?.src || "";
+                if (videoUrl) {
+                    lines.push(`[Video: ${videoUrl}]`);
+                    lines.push("");
+                }
+                break;
+            }
+
+            case "enhancedAudio":
+            case "audio": {
+                const audioUrl = props?.url || props?.src || "";
+                if (audioUrl) {
+                    lines.push(`[Audio: ${audioUrl}]`);
+                    lines.push("");
+                }
+                break;
+            }
+
+            case "enhancedFile":
+            case "file": {
+                const fileUrl = props?.url || props?.src || "";
+                const fileName = props?.name || "file";
+                if (fileUrl) {
+                    lines.push(`[File: ${fileName}](${fileUrl})`);
+                    lines.push("");
+                }
+                break;
+            }
+
+            case "mermaid":
+                lines.push("[Mermaid]");
+                lines.push("");
+                break;
+
+            case "svg":
+                lines.push("[SVG]");
+                lines.push("");
+                break;
+
+            default:
+                if (content) {
+                    lines.push(content);
+                    lines.push("");
+                }
+        }
+    }
+
+    return lines.join("\n").trim();
 }
 
 /**
@@ -63,201 +234,18 @@ class AlgoliaSearchService {
     }
 
     /**
-     * Convert BlockNote content to Markdown format
-     * @param blocks BlockNote blocks array
-     * @returns Markdown formatted string
-     */
-    private convertBlocksToMarkdown(blocks: BlockNoteBlock[]): string {
-        if (!blocks || blocks.length === 0) {
-            return "";
-        }
-
-        const lines: string[] = [];
-
-        for (const block of blocks) {
-            const type = block.type;
-            const content = this.extractTextContent(block);
-
-            switch (type) {
-                case "heading": {
-                    const level =
-                        typeof block.props?.level === "number"
-                            ? block.props.level
-                            : 1;
-                    lines.push(`${"#".repeat(level)} ${content}`);
-                    lines.push("");
-                    break;
-                }
-
-                case "paragraph":
-                    lines.push(content);
-                    lines.push("");
-                    break;
-
-                case "bulletListItem":
-                    lines.push(`- ${content}`);
-                    if (block.children && block.children.length > 0) {
-                        const childMarkdown = this.convertBlocksToMarkdown(
-                            block.children
-                        );
-                        const indented = childMarkdown
-                            .split("\n")
-                            .map((line) => (line ? `  ${line}` : ""))
-                            .join("\n");
-                        lines.push(indented);
-                    }
-                    break;
-
-                case "numberedListItem":
-                    lines.push(`1. ${content}`);
-                    if (block.children && block.children.length > 0) {
-                        const childMarkdown = this.convertBlocksToMarkdown(
-                            block.children
-                        );
-                        const indented = childMarkdown
-                            .split("\n")
-                            .map((line) => (line ? `  ${line}` : ""))
-                            .join("\n");
-                        lines.push(indented);
-                    }
-                    break;
-
-                case "checkListItem": {
-                    const checked = block.props?.checked ? "x" : " ";
-                    lines.push(`- [${checked}] ${content}`);
-                    break;
-                }
-
-                case "quote":
-                    lines.push(`> ${content}`);
-                    lines.push("");
-                    break;
-
-                case "code": {
-                    const language = block.props?.language || "";
-                    lines.push(`\`\`\`${language}`);
-                    lines.push(content);
-                    lines.push("```");
-                    lines.push("");
-                    break;
-                }
-
-                case "table":
-                    // Simplified table handling
-                    lines.push("[Table]");
-                    lines.push("");
-                    break;
-
-                case "enhancedImage":
-                case "image": {
-                    const imageUrl = block.props?.url || block.props?.src || "";
-                    const imageAlt =
-                        block.props?.alt || block.props?.caption || "image";
-                    if (imageUrl) {
-                        lines.push(`![${imageAlt}](${imageUrl})`);
-                        lines.push("");
-                    }
-                    break;
-                }
-
-                case "enhancedVideo":
-                case "video": {
-                    const videoUrl = block.props?.url || block.props?.src || "";
-                    if (videoUrl) {
-                        lines.push(`[Video: ${videoUrl}]`);
-                        lines.push("");
-                    }
-                    break;
-                }
-
-                case "enhancedAudio":
-                case "audio": {
-                    const audioUrl = block.props?.url || block.props?.src || "";
-                    if (audioUrl) {
-                        lines.push(`[Audio: ${audioUrl}]`);
-                        lines.push("");
-                    }
-                    break;
-                }
-
-                case "enhancedFile":
-                case "file": {
-                    const fileUrl = block.props?.url || block.props?.src || "";
-                    const fileName = block.props?.name || "file";
-                    if (fileUrl) {
-                        lines.push(`[File: ${fileName}](${fileUrl})`);
-                        lines.push("");
-                    }
-                    break;
-                }
-
-                case "mermaid":
-                    lines.push("```mermaid");
-                    lines.push(content);
-                    lines.push("```");
-                    lines.push("");
-                    break;
-
-                case "svg":
-                    lines.push("```svg");
-                    lines.push(content);
-                    lines.push("```");
-                    lines.push("");
-                    break;
-
-                default:
-                    // Other types, extract text content
-                    if (content) {
-                        lines.push(content);
-                        lines.push("");
-                    }
-            }
-        }
-
-        return lines.join("\n").trim();
-    }
-
-    /**
-     * Extract text content from BlockNote block
-     */
-    private extractTextContent(block: BlockNoteBlock): string {
-        if (!block) return "";
-
-        // If has content array (rich text content)
-        if (block.content && Array.isArray(block.content)) {
-            return block.content
-                .map((item: BlockNoteContent) => {
-                    if (typeof item === "string") return item;
-                    if (item.type === "text") return item.text || "";
-                    if (item.text) return item.text;
-                    return "";
-                })
-                .join("");
-        }
-
-        // If has direct text property
-        if (block.text) return block.text;
-
-        // If in props
-        if (block.props?.text && typeof block.props.text === "string")
-            return block.props.text;
-        if (block.props?.content && typeof block.props.content === "string")
-            return block.props.content;
-        if (block.props?.code && typeof block.props.code === "string")
-            return block.props.code;
-
-        return "";
-    }
-
-    /**
      * Convert Article to Algolia index object
      */
     private articleToAlgoliaObject(article: Article): AlgoliaArticle {
-        const markdownContent = this.convertBlocksToMarkdown(
-            article.content as BlockNoteBlock[]
+        if (!article.id) {
+            throw new Error("Article ID is required for Algolia sync");
+        }
+
+        const markdownContent = convertBlocksToAlgoliaMarkdown(
+            article.content as LocalBlock[]
         );
         return {
-            objectID: article.id!,
+            objectID: article.id,
             slug: article.slug,
             title: article.title,
             summary: article.summary,
@@ -266,6 +254,13 @@ class AlgoliaSearchService {
             content: markdownContent,
             updatedAt: article.updatedAt,
         };
+    }
+
+    private getClient(): SearchClient {
+        if (!this.client) {
+            throw new Error("Algolia client is not configured");
+        }
+        return this.client;
     }
 
     /**
@@ -286,7 +281,7 @@ class AlgoliaSearchService {
 
         try {
             const algoliaObject = this.articleToAlgoliaObject(article);
-            await this.client!.saveObject({
+            await this.getClient().saveObject({
                 indexName: this.indexName,
                 body: algoliaObject,
             });
@@ -299,7 +294,8 @@ class AlgoliaSearchService {
                 console.log("Handling oversized record by truncating content");
                 const algoliaObject = this.articleToAlgoliaObject(article);
                 algoliaObject.content = "";
-                this.client!.saveObject({
+                this.getClient()
+                    .saveObject({
                     indexName: this.indexName,
                     body: algoliaObject,
                 })
@@ -336,7 +332,12 @@ class AlgoliaSearchService {
         try {
             // If article becomes unpublished, remove from Algolia
             if (!article.published) {
-                await this.deleteArticle(article.id!);
+                if (!article.id) {
+                    throw new Error(
+                        "Article ID is required to remove from Algolia"
+                    );
+                }
+                await this.deleteArticle(article.id);
                 console.log(
                     `Article ${article.id} unpublished, removed from Algolia`
                 );
@@ -363,7 +364,7 @@ class AlgoliaSearchService {
         if (!this.isEnabled) return;
 
         try {
-            await this.client!.deleteObject({
+            await this.getClient().deleteObject({
                 indexName: this.indexName,
                 objectID: articleId,
             });
@@ -401,7 +402,7 @@ class AlgoliaSearchService {
                 this.articleToAlgoliaObject(article)
             );
 
-            await this.client!.saveObjects({
+            await this.getClient().saveObjects({
                 indexName: this.indexName,
                 objects: algoliaObjects,
             });
@@ -423,7 +424,7 @@ class AlgoliaSearchService {
         if (!this.isEnabled) return;
 
         try {
-            await this.client!.deleteObjects({
+            await this.getClient().deleteObjects({
                 indexName: this.indexName,
                 objectIDs: articleIds,
             });
@@ -443,7 +444,7 @@ class AlgoliaSearchService {
         if (!this.isEnabled) return;
 
         try {
-            await this.client!.clearObjects({
+            await this.getClient().clearObjects({
                 indexName: this.indexName,
             });
             console.log(`Algolia index ${this.indexName} cleared successfully`);
@@ -455,23 +456,3 @@ class AlgoliaSearchService {
 }
 
 export const algoliaSearchService = new AlgoliaSearchService();
-
-/**
- * Failed to update article a61f2cc8-ded2-4913-8b59-2fdbf6e763ef in Algolia: Error [ApiError]: Record is too big size=11226/10000 bytes. Please have a look at https://www.algolia.com/doc/guides/sending-and-managing-data/prepare-your-data/in-depth/index-and-records-size-and-usage-limitations/#record-size-limits
-    at async AlgoliaSearchService.updateArticle (src\lib\services\algolia-search-service.ts:278:13)
-    at async ArticleService.updateArticle (src\lib\services\article-service.ts:56:13)
-    at async eval (src\app\api\m\articles\route.ts:122:9)
-    at async eval (src\lib\with-timing.ts:6:21)
-  276 |             // Otherwise update article
-  277 |             const algoliaObject = this.articleToAlgoliaObject(article);
-> 278 |             await this.client!.saveObject({
-      |             ^
-  279 |                 indexName: this.indexName,
-  280 |                 body: algoliaObject,
-  281 |             }); {
-  stackTrace: [Array],
-  status: 400
-}
-Error updating article a61f2cc8-ded2-4913-8b59-2fdbf6e763ef: Error [ApiError]: Record is too big size=11226/10000 bytes. Please have a look at https://www.algolia.com/doc/guides/sending-and-managing-data/prepare-your-data/in-depth/index-and-records-size-and-usage-limitations/#record-size-limits
- * 
- */

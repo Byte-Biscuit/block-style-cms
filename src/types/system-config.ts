@@ -218,6 +218,23 @@ export interface SuggestionConfig {
 }
 
 /**
+ * PNG export lockup letters (midline dots drawn between each character).
+ */
+export interface ExportMarkConfig {
+    /** Lockup letters only; empty disables the mark. */
+    text: string;
+    /** Render letters in uppercase before drawing. */
+    uppercase: boolean;
+}
+
+/**
+ * Miscellaneous basic settings (export mark and future options).
+ */
+export interface OtherBasicConfig {
+    exportMark: ExportMarkConfig;
+}
+
+/**
  * Basic Configuration
  */
 export interface BasicConfig {
@@ -225,7 +242,14 @@ export interface BasicConfig {
     comment: CommentConfig;
     /** Suggestion system configuration */
     suggestion: SuggestionConfig;
+    /** Other settings */
+    other: OtherBasicConfig;
 }
+
+export const DEFAULT_EXPORT_MARK: ExportMarkConfig = {
+    text: "bsc",
+    uppercase: false,
+};
 
 /**
  * Complete System Configuration Structure
@@ -436,6 +460,9 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<
                 contentMaxLength: 2000,
                 maxLinksAllowed: 3,
             },
+        },
+        other: {
+            exportMark: DEFAULT_EXPORT_MARK,
         },
     },
 };

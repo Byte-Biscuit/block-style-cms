@@ -19,6 +19,8 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getSvgDimensions } from "@/lib/svg-export";
+import SvgExportButton from "./svg-export-button";
 
 export interface MermaidBlockProps {
     code?: string;
@@ -44,32 +46,6 @@ interface MermaidProps {
     controls?: React.ReactNode;
 }
 
-// Extract natural dimensions from SVG viewBox (used to calculate fit-to-window scale)
-function getSvgDimensions(
-    svgContent: string
-): { width: number; height: number } | null {
-    const viewBoxMatch = svgContent.match(/viewBox=["']([^"']+)["']/);
-    if (viewBoxMatch) {
-        const parts = viewBoxMatch[1].trim().split(/[\s,]+/);
-        if (parts.length === 4) {
-            const w = parseFloat(parts[2]);
-            const h = parseFloat(parts[3]);
-            if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0)
-                return { width: w, height: h };
-        }
-    }
-    // Fallback: numeric width/height attributes
-    const wMatch = svgContent.match(/\swidth=["']([0-9.]+)["']/);
-    const hMatch = svgContent.match(/\sheight=["']([0-9.]+)["']/);
-    if (wMatch && hMatch) {
-        const w = parseFloat(wMatch[1]);
-        const h = parseFloat(hMatch[1]);
-        if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0)
-            return { width: w, height: h };
-    }
-    return null;
-}
-
 // Global state management for Mermaid initialization
 let mermaidModule: typeof import("mermaid") | null = null;
 let mermaidImportPromise: Promise<typeof import("mermaid")> | null = null;
@@ -90,7 +66,8 @@ const MermaidDialog: React.FC<{
     open: boolean;
     onClose: () => void;
     svgContent: string;
-}> = ({ open, onClose, svgContent }) => {
+    filename: string;
+}> = ({ open, onClose, svgContent, filename }) => {
     const [scale, setScale] = useState<number>(1);
     const [fitScale, setFitScale] = useState<number>(1);
     const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -200,6 +177,13 @@ const MermaidDialog: React.FC<{
                                 <FitScreenIcon fontSize="small" />
                             </IconButton>
                         </Tooltip>
+                        <SvgExportButton
+                            svgMarkup={svgContent}
+                            filename={filename}
+                            fallbackRoot={containerRef}
+                            label={t("button.exportImage")}
+                            errorLabel={t("error.exportFailed")}
+                        />
                     </div>
                     <Tooltip title={t("button.close")}>
                         <IconButton size="small" onClick={onClose}>
@@ -319,6 +303,7 @@ const Mermaid: React.FC<MermaidProps> = ({
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const previewRef = useRef<HTMLDivElement>(null);
     const t = useTranslations("web.mermaid");
     const { resolvedTheme } = useTheme();
 
@@ -339,6 +324,7 @@ const Mermaid: React.FC<MermaidProps> = ({
                     startOnLoad: false,
                     theme: mermaidTheme,
                     securityLevel: "loose",
+                    arrowMarkerAbsolute: false,
                     fontFamily: "inherit",
                     themeVariables: {
                         background: "#ffffff",
@@ -443,6 +429,15 @@ const Mermaid: React.FC<MermaidProps> = ({
                         {controls}
                     </div>
                 )}
+                <div className="absolute right-1 bottom-1 z-50">
+                    <SvgExportButton
+                        svgMarkup={svgContent}
+                        filename={`mermaid-${data.id}.png`}
+                        fallbackRoot={previewRef}
+                        label={t("button.exportImage")}
+                        errorLabel={t("error.exportFailed")}
+                    />
+                </div>
                 {/* biome-ignore lint/a11y/useKeyWithClickEvents: pointer zoom; MermaidDialog provides keyboard zoom controls */}
                 <figure
                     className={`group relative mx-auto w-fit cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 dark:shadow-gray-700 ${className}`}
@@ -450,6 +445,7 @@ const Mermaid: React.FC<MermaidProps> = ({
                 >
                     {/* Let Mermaid's inline max-width style dictate SVG width; only constrain height */}
                     <div
+                        ref={previewRef}
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: Mermaid emits SVG as an HTML string; required for chart preview
                         dangerouslySetInnerHTML={{ __html: svgContent }}
                         className="flex items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:max-h-80"
@@ -467,6 +463,7 @@ const Mermaid: React.FC<MermaidProps> = ({
                 open={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
                 svgContent={svgContent}
+                filename={`mermaid-${data.id}.png`}
             />
         </>
     );

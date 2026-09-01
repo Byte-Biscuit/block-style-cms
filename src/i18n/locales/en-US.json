@@ -255,6 +255,11 @@
                 "apiTokens": "API Tokens"
             },
             "basicConfig": {
+                "tabs": {
+                    "comment": "Comments",
+                    "suggestion": "Suggestions",
+                    "other": "Other"
+                },
                 "comment": {
                     "title": "Comment System Configuration",
                     "description": "Configure comment system settings and limitations",
@@ -289,6 +294,15 @@
                         "maxLengthHelper": "Maximum characters",
                         "maxLinks": "Max Links Allowed",
                         "maxLinksHelper": "Maximum links in suggestion"
+                    }
+                },
+                "other": {
+                    "exportMark": {
+                        "title": "Export mark",
+                        "description": "Letter lockup shown in the bottom-right when exporting Mermaid / SVG as PNG",
+                        "text": "Mark letters",
+                        "textHelper": "Letters only; dots are drawn automatically. Leave empty to hide the mark.",
+                        "uppercase": "Uppercase"
                     }
                 },
                 "buttons": {
@@ -1097,7 +1111,8 @@
                 "close": "Close",
                 "zoomIn": "Zoom In",
                 "zoomOut": "Zoom Out",
-                "fitToWindow": "Fit to Window"
+                "fitToWindow": "Fit to Window",
+                "exportImage": "Export image"
             },
             "hint": {
                 "drag": "Drag to pan",
@@ -1110,7 +1125,8 @@
                 "noCode": "No Mermaid code provided",
                 "renderFailed": "Rendering failed",
                 "mermaidRender": "Mermaid rendering error",
-                "mermaidRenderWithDetail": "Mermaid rendering error: {error}"
+                "mermaidRenderWithDetail": "Mermaid rendering error: {error}",
+                "exportFailed": "Export failed"
             }
         },
         "svg": {
@@ -1118,7 +1134,8 @@
                 "close": "Close",
                 "zoomIn": "Zoom In",
                 "zoomOut": "Zoom Out",
-                "fitToWindow": "Fit to Window"
+                "fitToWindow": "Fit to Window",
+                "exportImage": "Export image"
             },
             "hint": {
                 "drag": "Drag to pan",
@@ -1126,7 +1143,8 @@
             },
             "error": {
                 "noCode": "No SVG markup provided",
-                "invalidSvg": "Invalid or unsafe SVG"
+                "invalidSvg": "Invalid or unsafe SVG",
+                "exportFailed": "Export failed"
             }
         },
         "image": {

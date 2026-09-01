@@ -15,11 +15,11 @@ import { useState } from "react";
 import type { SystemConfig } from "@/types/system-config";
 import ApiTokensTab from "./api-tokens-tab";
 import AuthenticationTab from "./authentication-tab";
-import BasicConfigTab from "./basic-config-tab";
+import BasicConfigTab from "./basic-config";
 import ChannelTab from "./channel-tab";
 import ServicesTab from "./services-tab";
 import SiteInfoTab from "./site-info-tab";
-import UserManagementTab from "./user-management-tab";
+import UserManagementTab from "./user-management";
 
 interface TabPanelProps {
     children?: React.ReactNode;

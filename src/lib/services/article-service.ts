@@ -2,7 +2,11 @@ import fs from "fs/promises";
 import path from "path";
 import { algoliaSearchService } from "@/lib/services/algolia-search-service";
 import { ARTICLE_DIR, META_DIR } from "@/settings";
-import type { Article, ArticleMetadata } from "@/types/article";
+import {
+    type Article,
+    type ArticleMetadata,
+    keywordsFromTags,
+} from "@/types/article";
 
 class ArticleService {
     getArticleFile(id: string): string {
@@ -21,6 +25,7 @@ class ArticleService {
         if (!article.id) {
             throw new Error("Article ID is required");
         }
+        article.keywords = keywordsFromTags(article.tags, article.keywords);
         const articleFile = this.getArticleFile(article.id);
         await fs.writeFile(articleFile, JSON.stringify(article, null, 2));
         await this.updateMetadata(article);
@@ -44,6 +49,10 @@ class ArticleService {
                 ...article,
                 updatedAt: new Date(),
             };
+            updatedArticle.keywords = keywordsFromTags(
+                updatedArticle.tags,
+                updatedArticle.keywords
+            );
             await fs.writeFile(
                 articleFile,
                 JSON.stringify(updatedArticle, null, 2)
@@ -240,9 +249,11 @@ class ArticleService {
     async getAllTags(): Promise<string[]> {
         const articles = await this.getAllArticles();
         const tags = new Set<string>();
-        articles.forEach((article) => {
-            article.tags.forEach((tag) => tags.add(tag));
-        });
+        for (const article of articles) {
+            for (const tag of article.tags) {
+                tags.add(tag);
+            }
+        }
         return Array.from(tags).sort();
     }
 

@@ -255,6 +255,11 @@
                 "apiTokens": "API Token"
             },
             "basicConfig": {
+                "tabs": {
+                    "comment": "評論系統",
+                    "suggestion": "建議系統",
+                    "other": "其他設定"
+                },
                 "comment": {
                     "title": "評論系統配置",
                     "description": "配置評論系統的設定與限制",
@@ -289,6 +294,15 @@
                         "maxLengthHelper": "最多字元數",
                         "maxLinks": "最大允許連結數",
                         "maxLinksHelper": "建議中允許的最大連結數量"
+                    }
+                },
+                "other": {
+                    "exportMark": {
+                        "title": "匯出標記",
+                        "description": "Mermaid / SVG 匯出 PNG 時右下角顯示的字母標記",
+                        "text": "標記字母",
+                        "textHelper": "僅填寫字母，圓點會自動繪製；留空則不顯示標記",
+                        "uppercase": "大寫顯示"
                     }
                 },
                 "buttons": {
@@ -1098,7 +1112,8 @@
                 "close": "關閉",
                 "zoomIn": "放大",
                 "zoomOut": "縮小",
-                "fitToWindow": "適應視窗"
+                "fitToWindow": "適應視窗",
+                "exportImage": "匯出圖片"
             },
             "hint": {
                 "drag": "拖曳以平移",
@@ -1111,7 +1126,8 @@
                 "noCode": "沒有提供 Mermaid 程式碼",
                 "renderFailed": "渲染失敗",
                 "mermaidRender": "Mermaid 渲染錯誤",
-                "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}"
+                "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}",
+                "exportFailed": "匯出失敗"
             }
         },
         "svg": {
@@ -1119,7 +1135,8 @@
                 "close": "關閉",
                 "zoomIn": "放大",
                 "zoomOut": "縮小",
-                "fitToWindow": "適應視窗"
+                "fitToWindow": "適應視窗",
+                "exportImage": "匯出圖片"
             },
             "hint": {
                 "drag": "拖曳以平移",
@@ -1127,7 +1144,8 @@
             },
             "error": {
                 "noCode": "沒有提供 SVG 程式碼",
-                "invalidSvg": "無效或不安全的 SVG"
+                "invalidSvg": "無效或不安全的 SVG",
+                "exportFailed": "匯出失敗"
             }
         },
         "image": {

@@ -1097,7 +1097,8 @@
                 "close": "Close",
                 "zoomIn": "Zoom In",
                 "zoomOut": "Zoom Out",
-                "fitToWindow": "Fit to Window"
+                "fitToWindow": "Fit to Window",
+                "exportImage": "Export image"
             },
             "hint": {
                 "drag": "Drag to pan",
@@ -1110,7 +1111,8 @@
                 "noCode": "No Mermaid code provided",
                 "renderFailed": "Rendering failed",
                 "mermaidRender": "Mermaid rendering error",
-                "mermaidRenderWithDetail": "Mermaid rendering error: {error}"
+                "mermaidRenderWithDetail": "Mermaid rendering error: {error}",
+                "exportFailed": "Export failed"
             }
         },
         "svg": {
@@ -1118,7 +1120,8 @@
                 "close": "Close",
                 "zoomIn": "Zoom In",
                 "zoomOut": "Zoom Out",
-                "fitToWindow": "Fit to Window"
+                "fitToWindow": "Fit to Window",
+                "exportImage": "Export image"
             },
             "hint": {
                 "drag": "Drag to pan",
@@ -1126,7 +1129,8 @@
             },
             "error": {
                 "noCode": "No SVG markup provided",
-                "invalidSvg": "Invalid or unsafe SVG"
+                "invalidSvg": "Invalid or unsafe SVG",
+                "exportFailed": "Export failed"
             }
         },
         "image": {

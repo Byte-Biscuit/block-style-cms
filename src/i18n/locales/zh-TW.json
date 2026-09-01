@@ -1098,7 +1098,8 @@
                 "close": "關閉",
                 "zoomIn": "放大",
                 "zoomOut": "縮小",
-                "fitToWindow": "適應視窗"
+                "fitToWindow": "適應視窗",
+                "exportImage": "匯出圖片"
             },
             "hint": {
                 "drag": "拖曳以平移",
@@ -1111,7 +1112,8 @@
                 "noCode": "沒有提供 Mermaid 程式碼",
                 "renderFailed": "渲染失敗",
                 "mermaidRender": "Mermaid 渲染錯誤",
-                "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}"
+                "mermaidRenderWithDetail": "Mermaid 渲染錯誤：{error}",
+                "exportFailed": "匯出失敗"
             }
         },
         "svg": {
@@ -1119,7 +1121,8 @@
                 "close": "關閉",
                 "zoomIn": "放大",
                 "zoomOut": "縮小",
-                "fitToWindow": "適應視窗"
+                "fitToWindow": "適應視窗",
+                "exportImage": "匯出圖片"
             },
             "hint": {
                 "drag": "拖曳以平移",
@@ -1127,7 +1130,8 @@
             },
             "error": {
                 "noCode": "沒有提供 SVG 程式碼",
-                "invalidSvg": "無效或不安全的 SVG"
+                "invalidSvg": "無效或不安全的 SVG",
+                "exportFailed": "匯出失敗"
             }
         },
         "image": {

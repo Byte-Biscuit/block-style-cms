@@ -1098,7 +1098,8 @@
                 "close": "关闭",
                 "zoomIn": "放大",
                 "zoomOut": "缩小",
-                "fitToWindow": "适应窗口"
+                "fitToWindow": "适应窗口",
+                "exportImage": "导出图片"
             },
             "hint": {
                 "drag": "拖拽以平移",
@@ -1111,7 +1112,8 @@
                 "noCode": "没有提供 Mermaid 代码",
                 "renderFailed": "渲染失败",
                 "mermaidRender": "Mermaid 渲染错误",
-                "mermaidRenderWithDetail": "Mermaid 渲染错误: {error}"
+                "mermaidRenderWithDetail": "Mermaid 渲染错误: {error}",
+                "exportFailed": "导出失败"
             }
         },
         "svg": {
@@ -1119,7 +1121,8 @@
                 "close": "关闭",
                 "zoomIn": "放大",
                 "zoomOut": "缩小",
-                "fitToWindow": "适应窗口"
+                "fitToWindow": "适应窗口",
+                "exportImage": "导出图片"
             },
             "hint": {
                 "drag": "拖拽以平移",
@@ -1127,7 +1130,8 @@
             },
             "error": {
                 "noCode": "没有提供 SVG 代码",
-                "invalidSvg": "无效或不安全的 SVG"
+                "invalidSvg": "无效或不安全的 SVG",
+                "exportFailed": "导出失败"
             }
         },
         "image": {

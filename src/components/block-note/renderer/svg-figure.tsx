@@ -19,6 +19,8 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { sanitizeSvg } from "@/lib/sanitize-svg";
 import { mediaConstrainedFrameClass } from "@/lib/style-classes";
+import { getSvgDimensions } from "@/lib/svg-export";
+import SvgExportButton from "./svg-export-button";
 
 export interface SvgBlockProps {
     code?: string;
@@ -36,35 +38,12 @@ interface SvgFigureProps {
     controls?: React.ReactNode;
 }
 
-function getSvgDimensions(
-    svgContent: string
-): { width: number; height: number } | null {
-    const viewBoxMatch = svgContent.match(/viewBox=["']([^"']+)["']/);
-    if (viewBoxMatch) {
-        const parts = viewBoxMatch[1].trim().split(/[\s,]+/);
-        if (parts.length === 4) {
-            const w = parseFloat(parts[2]);
-            const h = parseFloat(parts[3]);
-            if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0)
-                return { width: w, height: h };
-        }
-    }
-    const wMatch = svgContent.match(/\swidth=["']([0-9.]+)["']/);
-    const hMatch = svgContent.match(/\sheight=["']([0-9.]+)["']/);
-    if (wMatch && hMatch) {
-        const w = parseFloat(wMatch[1]);
-        const h = parseFloat(hMatch[1]);
-        if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0)
-            return { width: w, height: h };
-    }
-    return null;
-}
-
 const SvgZoomDialog: React.FC<{
     open: boolean;
     onClose: () => void;
     svgContent: string;
-}> = ({ open, onClose, svgContent }) => {
+    filename: string;
+}> = ({ open, onClose, svgContent, filename }) => {
     const [scale, setScale] = useState(1);
     const [fitScale, setFitScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -161,6 +140,13 @@ const SvgZoomDialog: React.FC<{
                                 <FitScreenIcon fontSize="small" />
                             </IconButton>
                         </Tooltip>
+                        <SvgExportButton
+                            svgMarkup={svgContent}
+                            filename={filename}
+                            fallbackRoot={containerRef}
+                            label={t("button.exportImage")}
+                            errorLabel={t("error.exportFailed")}
+                        />
                     </div>
                     <Tooltip title={t("button.close")}>
                         <IconButton size="small" onClick={onClose}>
@@ -278,6 +264,7 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [sanitized, setSanitized] = useState<string | null>(null);
     const [ready, setReady] = useState(false);
+    const previewRef = useRef<HTMLDivElement>(null);
     const code = data.props?.code?.trim() ?? "";
 
     useEffect(() => {
@@ -315,16 +302,24 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
         <>
             <div className={mediaConstrainedFrameClass}>
                 {controls && (
-                    <div className="absolute top-1 right-1 z-50">
-                        {controls}
-                    </div>
+                    <div className="absolute top-1 right-1 z-50">{controls}</div>
                 )}
+                <div className="absolute right-1 bottom-1 z-50">
+                    <SvgExportButton
+                        svgMarkup={sanitized}
+                        filename={`svg-${data.id}.png`}
+                        fallbackRoot={previewRef}
+                        label={t("button.exportImage")}
+                        errorLabel={t("error.exportFailed")}
+                    />
+                </div>
                 {/* biome-ignore lint/a11y/useKeyWithClickEvents: pointer zoom; SvgZoomDialog provides keyboard zoom controls */}
                 <figure
                     className={`group relative h-full w-full cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white opacity-100 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-gray-700 dark:shadow-gray-700 ${className}`}
                     onClick={() => setIsDialogOpen(true)}
                 >
                     <div
+                        ref={previewRef}
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized SVG markup for illustration preview
                         dangerouslySetInnerHTML={{ __html: sanitized }}
                         className="flex h-full w-full items-center justify-center bg-white p-4 [&_svg]:block [&_svg]:h-auto [&_svg]:max-h-full [&_svg]:w-auto [&_svg]:max-w-full"
@@ -341,6 +336,7 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
                 open={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
                 svgContent={sanitized}
+                filename={`svg-${data.id}.png`}
             />
         </>
     );

@@ -221,7 +221,7 @@ function prepareSvgMarkup(svgMarkup: string, dims: SvgSize): string {
 }
 
 function loadImage(url: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img);
         img.onerror = () => reject(new Error("Failed to load SVG for export"));

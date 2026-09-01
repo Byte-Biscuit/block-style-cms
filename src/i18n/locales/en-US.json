@@ -255,6 +255,11 @@
                 "apiTokens": "API Tokens"
             },
             "basicConfig": {
+                "tabs": {
+                    "comment": "Comments",
+                    "suggestion": "Suggestions",
+                    "other": "Other"
+                },
                 "comment": {
                     "title": "Comment System Configuration",
                     "description": "Configure comment system settings and limitations",
@@ -289,6 +294,15 @@
                         "maxLengthHelper": "Maximum characters",
                         "maxLinks": "Max Links Allowed",
                         "maxLinksHelper": "Maximum links in suggestion"
+                    }
+                },
+                "other": {
+                    "exportMark": {
+                        "title": "Export mark",
+                        "description": "Letter lockup shown in the bottom-right when exporting Mermaid / SVG as PNG",
+                        "text": "Mark letters",
+                        "textHelper": "Letters only; dots are drawn automatically. Leave empty to hide the mark.",
+                        "uppercase": "Uppercase"
                     }
                 },
                 "buttons": {

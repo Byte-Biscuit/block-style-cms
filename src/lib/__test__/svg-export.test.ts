@@ -4,6 +4,7 @@ import {
     drawExportWatermark,
     getSvgDimensions,
     isolateSvgIds,
+    resolveExportMarkText,
     SVG_EXPORT_PADDING,
     SVG_EXPORT_WATERMARK,
     stripSvgTaintSources,
@@ -111,6 +112,30 @@ describe("drawExportWatermark", () => {
         drawExportWatermark(ctx, 440, 240, 2, "  ");
         expect(fillText).not.toHaveBeenCalled();
         expect(arc).not.toHaveBeenCalled();
+    });
+
+    it("draws uppercase letters when resolved from settings", () => {
+        const { ctx, fillText } = mockCtx();
+        drawExportWatermark(
+            ctx,
+            440,
+            240,
+            2,
+            resolveExportMarkText({ text: "bsc", uppercase: true })
+        );
+        expect(fillText.mock.calls.map((c) => c[0])).toEqual(["B", "S", "C"]);
+    });
+});
+
+describe("resolveExportMarkText", () => {
+    it("uppercases when the flag is set", () => {
+        expect(resolveExportMarkText({ text: "bsc", uppercase: true })).toBe(
+            "BSC"
+        );
+    });
+
+    it("falls back to SVG_EXPORT_WATERMARK", () => {
+        expect(resolveExportMarkText()).toBe(SVG_EXPORT_WATERMARK);
     });
 });
 

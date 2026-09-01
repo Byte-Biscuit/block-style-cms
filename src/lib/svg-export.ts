@@ -12,6 +12,11 @@ const PIXEL_RATIO = 2;
 const MAX_EDGE = 1600;
 const WATERMARK_INSET = 16;
 
+export type ExportMarkOptions = {
+    text?: string;
+    uppercase?: boolean;
+};
+
 export type SvgSize = { width: number; height: number };
 
 export type ExportCanvasSize = {
@@ -80,6 +85,15 @@ export function computeExportCanvasSize(
 
 function watermarkLetters(text: string): string[] {
     return Array.from(text.trim());
+}
+
+/** Resolve lockup letters from settings or code fallback. */
+export function resolveExportMarkText(options?: ExportMarkOptions): string {
+    let text = (options?.text ?? SVG_EXPORT_WATERMARK).trim();
+    if (options?.uppercase) {
+        text = text.toUpperCase();
+    }
+    return text;
 }
 
 /** Bottom-right initialism lockup. Empty text skips drawing. */
@@ -236,7 +250,8 @@ function loadImage(url: string): Promise<HTMLImageElement> {
 
 export async function svgMarkupToPngBlob(
     svgMarkup: string,
-    fallbackSvg?: SVGSVGElement | null
+    fallbackSvg?: SVGSVGElement | null,
+    exportMark?: ExportMarkOptions
 ): Promise<Blob> {
     const source = sourceSvgMarkup(svgMarkup, fallbackSvg);
     const dims = getSvgDimensions(source) ?? measureSvgElement(fallbackSvg);
@@ -265,7 +280,13 @@ export async function svgMarkupToPngBlob(
     ctx.fillRect(0, 0, canvasW, canvasH);
     const pad = SVG_EXPORT_PADDING * scale;
     ctx.drawImage(img, pad, pad, dims.width * scale, dims.height * scale);
-    drawExportWatermark(ctx, canvasW, canvasH, scale);
+    drawExportWatermark(
+        ctx,
+        canvasW,
+        canvasH,
+        scale,
+        resolveExportMarkText(exportMark)
+    );
 
     return await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((result) => {

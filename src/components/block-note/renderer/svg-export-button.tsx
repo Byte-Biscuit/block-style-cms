@@ -4,6 +4,7 @@ import { Download as DownloadIcon } from "@mui/icons-material";
 import { CircularProgress, IconButton, Tooltip } from "@mui/material";
 import type React from "react";
 import { useState } from "react";
+import { getExportMark } from "@/app/actions/settings/export-mark";
 import { downloadBlob, svgMarkupToPngBlob } from "@/lib/svg-export";
 
 type SvgExportButtonProps = {
@@ -33,7 +34,12 @@ const SvgExportButton: React.FC<SvgExportButtonProps> = ({
         try {
             const el = fallbackRoot?.current?.querySelector("svg");
             const fallbackSvg = el instanceof SVGSVGElement ? el : null;
-            const blob = await svgMarkupToPngBlob(svgMarkup, fallbackSvg);
+            const exportMark = await getExportMark();
+            const blob = await svgMarkupToPngBlob(
+                svgMarkup,
+                fallbackSvg,
+                exportMark
+            );
             downloadBlob(blob, filename);
         } catch (err) {
             console.error("SVG export failed:", err);

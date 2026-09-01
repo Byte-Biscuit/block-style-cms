@@ -255,6 +255,11 @@
                 "apiTokens": "API Token"
             },
             "basicConfig": {
+                "tabs": {
+                    "comment": "评论系统",
+                    "suggestion": "建议系统",
+                    "other": "其他设置"
+                },
                 "comment": {
                     "title": "评论系统配置",
                     "description": "配置评论系统的设置与限制",
@@ -289,6 +294,15 @@
                         "maxLengthHelper": "最多字符数",
                         "maxLinks": "最大允许链接数",
                         "maxLinksHelper": "建议中允许的最大链接数量"
+                    }
+                },
+                "other": {
+                    "exportMark": {
+                        "title": "导出标记",
+                        "description": "Mermaid / SVG 导出 PNG 时右下角显示的字母标记",
+                        "text": "标记字母",
+                        "textHelper": "仅填写字母，圆点会自动绘制；留空则不显示标记",
+                        "uppercase": "大写显示"
                     }
                 },
                 "buttons": {

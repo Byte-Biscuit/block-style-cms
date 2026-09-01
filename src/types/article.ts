@@ -1,6 +1,23 @@
 import { z } from "zod";
 import { localeMap, type TranslationFunction } from "@/i18n/config";
 
+/** When keywords is empty, copy tags minus channel tags (`_TAG_`). Tags unchanged. */
+export function keywordsFromTags(
+    tags: string[] = [],
+    keywords: string[] = []
+): string[] {
+    if (keywords.length > 0) return keywords;
+    return tags
+        .filter((t) => {
+            const tag = t.trim();
+            return (
+                tag.length >= 2 &&
+                !(tag.startsWith("_") && tag.endsWith("_"))
+            );
+        })
+        .slice(0, 20);
+}
+
 const localeCodesTmp = Object.values(localeMap).map(
     (locale) => locale.code
 ) as [string, ...string[]];
@@ -96,29 +113,53 @@ export function createArticleSchemas(t: TranslationFunction) {
         content: z.array(z.any()),
     });
 
-    const articleSchema = z.object({
+    const withKeywordsFromTags = <T extends z.ZodType>(schema: T) =>
+        z.preprocess((data) => {
+            if (!data || typeof data !== "object") return data;
+            const d = data as Record<string, unknown>;
+            return {
+                ...d,
+                keywords: keywordsFromTags(
+                    (d.tags as string[]) ?? [],
+                    (d.keywords as string[]) ?? []
+                ),
+            };
+        }, schema);
+
+    const articleObjectSchema = z.object({
         ...baseArticleSchema.shape,
         createdAt: z.coerce
-            .date({ message: t("admin.validation.article.createdAt.format") })
+            .date({
+                message: t("admin.validation.article.createdAt.format"),
+            })
             .optional(),
         updatedAt: z.coerce
-            .date({ message: t("admin.validation.article.updatedAt.format") })
+            .date({
+                message: t("admin.validation.article.updatedAt.format"),
+            })
             .optional(),
     });
+    const articleSchema = withKeywordsFromTags(articleObjectSchema);
     // Must include id when updating
-    const updateArticleSchema = baseArticleSchema.extend({
-        id: articleIdSchema,
-    });
+    const updateArticleSchema = withKeywordsFromTags(
+        baseArticleSchema.extend({
+            id: articleIdSchema,
+        })
+    );
     // Draft update: id required but other fields are loose
-    const draftUpdateArticleSchema = draftArticleSchema.extend({
-        id: articleIdSchema,
-    });
+    const draftUpdateArticleSchema = withKeywordsFromTags(
+        draftArticleSchema.extend({
+            id: articleIdSchema,
+        })
+    );
     // Omit content when only metadata is needed
-    const articleMetadataSchema = articleSchema.omit({ content: true });
+    const articleMetadataSchema = withKeywordsFromTags(
+        articleObjectSchema.omit({ content: true })
+    );
 
     return {
         articleSchema,
-        draftArticleSchema,
+        draftArticleSchema: withKeywordsFromTags(draftArticleSchema),
         updateArticleSchema,
         draftUpdateArticleSchema,
         articleMetadataSchema,

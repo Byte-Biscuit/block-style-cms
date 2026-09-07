@@ -14,7 +14,7 @@
         "typecheck": "tsc --build"
     },
     "dependencies": {
-        "@better-auth/api-key": "^1.7.1",
+        "@better-auth/api-key": "^1.7.2",
         "@blocknote/code-block": "^0.54.0",
         "@blocknote/core": "^0.54.0",
         "@blocknote/mantine": "^0.54.0",

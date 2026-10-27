@@ -28,7 +28,7 @@
         "@langchain/google-genai": "^2.2.0",
         "@langchain/openai": "^1.5.10",
         "@mantine/core": "^9.5.1",
-        "@mantine/hooks": "^9.5.1",
+        "@mantine/hooks": "^9.6.0",
         "@monaco-editor/react": "^4.7.0",
         "@mui/icons-material": "^7.3.2",
         "@mui/material": "^7.3.2",

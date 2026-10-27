@@ -65,7 +65,7 @@
         "better-sqlite3": "$better-sqlite3"
     },
     "devDependencies": {
-        "@biomejs/biome": "2.5.9",
+        "@biomejs/biome": "2.5.12",
         "@next/bundle-analyzer": "^16.3.1",
         "@svgr/webpack": "^8.1.0",
         "@tailwindcss/postcss": "^4",

@@ -129,8 +129,7 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
         };
 
         submitData();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [installData.isComplete]);
+    }, [installData, t]);
 
     return (
         <div className="container mx-auto max-w-4xl px-4 py-12">
@@ -288,6 +287,7 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                                 },
                             },
                             pexels: { enabled: false },
+                            giphy: { enabled: false },
                         }}
                         onSubmit={(data: ServicesFormData) => {
                             if (isLoading) return;
@@ -329,6 +329,7 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                                         },
                                     },
                                     pexels: { enabled: false },
+                                    giphy: { enabled: false },
                                 },
                                 isComplete: true,
                             });
@@ -350,6 +351,7 @@ export default function InstallWizard({ onComplete }: InstallWizardProps) {
                             {t("complete.description")}
                         </p>
                         <button
+                            type="button"
                             onClick={onComplete}
                             className="mt-8 rounded-lg bg-blue-500 px-8 py-3 font-semibold text-white shadow-lg transition hover:bg-blue-600"
                         >

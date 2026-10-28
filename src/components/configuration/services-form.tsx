@@ -37,6 +37,10 @@ export interface ServicesFormData {
         enabled: boolean;
         apiKey?: string;
     };
+    giphy: {
+        enabled: boolean;
+        apiKey?: string;
+    };
 }
 
 interface ServicesFormProps {
@@ -68,6 +72,7 @@ interface ServicesFormProps {
  * 2. Umami Analytics (web analytics)
  * 3. AI Services (OpenAI/Gemini)
  * 4. Pexels (stock photos)
+ * 5. Giphy (GIFs / stickers)
  *
  * Can be used in both installation wizard and settings page.
  *
@@ -137,6 +142,10 @@ export default function ServicesForm({
             enabled: initialData?.pexels?.enabled ?? false,
             apiKey: initialData?.pexels?.apiKey ?? "",
         },
+        giphy: {
+            enabled: initialData?.giphy?.enabled ?? false,
+            apiKey: initialData?.giphy?.apiKey ?? "",
+        },
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -194,6 +203,12 @@ export default function ServicesForm({
         if (formData.pexels.enabled) {
             if (!formData.pexels.apiKey?.trim()) {
                 newErrors.pexelsApiKey = t("validation.pexelsApiKeyRequired");
+            }
+        }
+
+        if (formData.giphy.enabled) {
+            if (!formData.giphy.apiKey?.trim()) {
+                newErrors.giphyApiKey = t("validation.giphyApiKeyRequired");
             }
         }
 
@@ -266,10 +281,14 @@ export default function ServicesForm({
                                 {formData.algolia.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="algolia-app-id"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("algolia.appId")}
                                             </label>
                                             <input
+                                                id="algolia-app-id"
                                                 type="text"
                                                 value={formData.algolia.appId}
                                                 onChange={(e) =>
@@ -299,10 +318,14 @@ export default function ServicesForm({
                                             )}
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="algolia-admin-api-key"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("algolia.adminApiKey")}
                                             </label>
                                             <input
+                                                id="algolia-admin-api-key"
                                                 type="password"
                                                 value={formData.algolia.apiKey}
                                                 onChange={(e) =>
@@ -330,10 +353,14 @@ export default function ServicesForm({
                                             )}
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="algolia-search-api-key"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("algolia.searchApiKey")}
                                             </label>
                                             <input
+                                                id="algolia-search-api-key"
                                                 type="text"
                                                 value={
                                                     formData.algolia.searchKey
@@ -363,10 +390,14 @@ export default function ServicesForm({
                                             )}
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="algolia-index-name"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("algolia.indexName")}
                                             </label>
                                             <input
+                                                id="algolia-index-name"
                                                 type="text"
                                                 value={
                                                     formData.algolia.indexName
@@ -425,10 +456,14 @@ export default function ServicesForm({
                                 {formData.umami.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="umami-website-id"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("umami.websiteId")}
                                             </label>
                                             <input
+                                                id="umami-website-id"
                                                 type="text"
                                                 value={formData.umami.websiteId}
                                                 onChange={(e) =>
@@ -458,10 +493,14 @@ export default function ServicesForm({
                                             )}
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="umami-script-source"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("umami.scriptSource")}
                                             </label>
                                             <input
+                                                id="umami-script-source"
                                                 type="text"
                                                 value={formData.umami.src}
                                                 onChange={(e) =>
@@ -526,9 +565,9 @@ export default function ServicesForm({
                                 {formData.ai.enabled && (
                                     <div className="mt-3 max-w-lg space-y-4">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <p className="block text-xs font-medium text-gray-700 dark:text-gray-300">
                                                 {t("ai.provider")}
-                                            </label>
+                                            </p>
                                             <div className="mt-2 flex space-x-4">
                                                 <label className="flex items-center">
                                                     <input
@@ -590,10 +629,14 @@ export default function ServicesForm({
                                         {formData.ai.provider === "openai" ? (
                                             <div className="space-y-3 border-t border-gray-100 pt-3 dark:border-gray-700">
                                                 <div>
-                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    <label
+                                                        htmlFor="ai-openai-api-key"
+                                                        className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                    >
                                                         {t("ai.openaiApiKey")}
                                                     </label>
                                                     <input
+                                                        id="ai-openai-api-key"
                                                         type="password"
                                                         value={
                                                             formData.ai.openai
@@ -632,10 +675,14 @@ export default function ServicesForm({
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    <label
+                                                        htmlFor="ai-openai-base-url"
+                                                        className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                    >
                                                         {t("ai.baseUrl")}
                                                     </label>
                                                     <input
+                                                        id="ai-openai-base-url"
                                                         type="text"
                                                         value={
                                                             formData.ai.openai
@@ -666,10 +713,14 @@ export default function ServicesForm({
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    <label
+                                                        htmlFor="ai-openai-model"
+                                                        className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                    >
                                                         {t("ai.model")}
                                                     </label>
                                                     <input
+                                                        id="ai-openai-model"
                                                         type="text"
                                                         value={
                                                             formData.ai.openai
@@ -702,10 +753,14 @@ export default function ServicesForm({
                                         ) : (
                                             <div className="space-y-3 border-t border-gray-100 pt-3 dark:border-gray-700">
                                                 <div>
-                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    <label
+                                                        htmlFor="ai-gemini-api-key"
+                                                        className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                    >
                                                         {t("ai.geminiApiKey")}
                                                     </label>
                                                     <input
+                                                        id="ai-gemini-api-key"
                                                         type="password"
                                                         value={
                                                             formData.ai.gemini
@@ -744,10 +799,14 @@ export default function ServicesForm({
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    <label
+                                                        htmlFor="ai-gemini-base-url"
+                                                        className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                    >
                                                         {t("ai.baseUrl")}
                                                     </label>
                                                     <input
+                                                        id="ai-gemini-base-url"
                                                         type="text"
                                                         value={
                                                             formData.ai.gemini
@@ -778,10 +837,14 @@ export default function ServicesForm({
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                    <label
+                                                        htmlFor="ai-gemini-model"
+                                                        className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                                    >
                                                         {t("ai.model")}
                                                     </label>
                                                     <input
+                                                        id="ai-gemini-model"
                                                         type="text"
                                                         value={
                                                             formData.ai.gemini
@@ -849,10 +912,14 @@ export default function ServicesForm({
                                 {formData.pexels.enabled && (
                                     <div className="mt-3 max-w-lg space-y-3">
                                         <div>
-                                            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <label
+                                                htmlFor="pexels-api-key"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
                                                 {t("pexels.apiKey")}
                                             </label>
                                             <input
+                                                id="pexels-api-key"
                                                 type="password"
                                                 value={formData.pexels.apiKey}
                                                 onChange={(e) =>
@@ -876,6 +943,77 @@ export default function ServicesForm({
                                             {errors.pexelsApiKey && (
                                                 <p className="mt-1 text-xs text-red-500">
                                                     {errors.pexelsApiKey}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Giphy GIFs */}
+                <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+                    <div className="flex items-start justify-between">
+                        <div className="flex flex-1 items-start">
+                            <input
+                                type="checkbox"
+                                checked={formData.giphy.enabled}
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        giphy: {
+                                            ...formData.giphy,
+                                            enabled: e.target.checked,
+                                        },
+                                    })
+                                }
+                                disabled={isLoading}
+                                className="mt-0.5 h-5 w-5 rounded border-gray-300 text-blue-600"
+                            />
+                            <div className="ml-3 flex-1">
+                                <h3 className="font-semibold text-gray-900 dark:text-white">
+                                    {t("giphy.title")}
+                                </h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {t("giphy.description")}
+                                </p>
+
+                                {formData.giphy.enabled && (
+                                    <div className="mt-3 max-w-lg space-y-3">
+                                        <div>
+                                            <label
+                                                htmlFor="giphy-api-key"
+                                                className="block text-xs font-medium text-gray-700 dark:text-gray-300"
+                                            >
+                                                {t("giphy.apiKey")}
+                                            </label>
+                                            <input
+                                                id="giphy-api-key"
+                                                type="password"
+                                                value={formData.giphy.apiKey}
+                                                onChange={(e) =>
+                                                    setFormData({
+                                                        ...formData,
+                                                        giphy: {
+                                                            ...formData.giphy,
+                                                            apiKey: e.target
+                                                                .value,
+                                                        },
+                                                    })
+                                                }
+                                                disabled={isLoading}
+                                                className={`mt-1 block w-full rounded-md border ${
+                                                    errors.giphyApiKey
+                                                        ? "border-red-500"
+                                                        : "border-gray-300 dark:border-gray-600"
+                                                } px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:text-white`}
+                                                placeholder="API Key"
+                                            />
+                                            {errors.giphyApiKey && (
+                                                <p className="mt-1 text-xs text-red-500">
+                                                    {errors.giphyApiKey}
                                                 </p>
                                             )}
                                         </div>

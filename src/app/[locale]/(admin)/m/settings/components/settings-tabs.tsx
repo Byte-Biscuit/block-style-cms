@@ -236,6 +236,13 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                             apiKey:
                                 initialConfig.services?.pexels?.apiKey || "",
                         },
+                        giphy: {
+                            enabled:
+                                initialConfig.services?.giphy?.enabled ||
+                                false,
+                            apiKey:
+                                initialConfig.services?.giphy?.apiKey || "",
+                        },
                     }}
                 />
             </TabPanel>

@@ -39,6 +39,7 @@ import {
 import Image from "next/image";
 import type React from "react";
 import { useState } from "react";
+import GiphyGifPicker from "@/admin/m/components/giphy-gif-picker";
 import PexelsImagePicker from "@/admin/m/components/pexels-image-picker";
 import EnhancedImage, {
     type ImageBlockProps,
@@ -87,6 +88,7 @@ function ImageSelectionDialog({
     );
     const [pexelsImagePickerVisible, setPexelsImagePickerVisible] =
         useState(false);
+    const [giphyGifPickerVisible, setGiphyGifPickerVisible] = useState(false);
     const [urlDialogVisible, setUrlDialogVisible] = useState(false);
     const [uploadDialogVisible, setUploadDialogVisible] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -172,13 +174,21 @@ function ImageSelectionDialog({
         fillEmptyAltAndCaption(alt?.trim() || labelFromFilename(imageUrl));
     };
 
+    const handleGiphySelect = (imageUrl: string, alt?: string) => {
+        setSelectedImageUrl(imageUrl);
+        setEditableUrl(imageUrl);
+        fillEmptyAltAndCaption(alt?.trim() || labelFromFilename(imageUrl));
+    };
+
     const handleSaveImage = () => {
         if (editableUrl.trim()) {
+            const src = editableUrl.trim();
+            const isGiphy = /giphy\.com/i.test(src);
             onSelect({
-                src: editableUrl.trim(),
+                src,
                 alt: altInput || "",
                 caption: captionInput || "",
-                source: "url",
+                source: isGiphy ? "giphy" : "url",
                 alignment: alignment,
                 width: imageWidth,
                 height: imageHeight,
@@ -617,6 +627,25 @@ function ImageSelectionDialog({
                                     </Typography>
                                 </Box>
                             </Paper>
+                            <Paper
+                                variant="outlined"
+                                sx={sourceRowSx}
+                                onClick={() => setGiphyGifPickerVisible(true)}
+                            >
+                                <SearchIcon color="secondary" />
+                                <Box>
+                                    <Typography variant="subtitle2">
+                                        {dict?.giphy?.title || "Giphy"}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                    >
+                                        {dict?.giphy?.subtitle ||
+                                            "Search GIFs and stickers"}
+                                    </Typography>
+                                </Box>
+                            </Paper>
                         </Box>
                     )}
                 </Box>
@@ -826,6 +855,11 @@ function ImageSelectionDialog({
                 open={pexelsImagePickerVisible}
                 onClose={() => setPexelsImagePickerVisible(false)}
                 onSelect={handlePexelsSelect}
+            />
+            <GiphyGifPicker
+                open={giphyGifPickerVisible}
+                onClose={() => setGiphyGifPickerVisible(false)}
+                onSelect={handleGiphySelect}
             />
         </Dialog>
     );

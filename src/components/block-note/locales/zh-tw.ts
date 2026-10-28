@@ -145,6 +145,10 @@ export const zhTW = {
             title: "Pexels 圖片",
             subtitle: "線上圖片庫",
         },
+        giphy: {
+            title: "Giphy",
+            subtitle: "GIF 與貼紙",
+        },
         form: {
             imageContent: "圖片內容",
             styleSettings: "🎨 樣式設定",
@@ -159,7 +163,7 @@ export const zhTW = {
         },
         placeholder: {
             clickToAdd: "新增圖片",
-            supportText: "支援本機上傳、URL 或 Pexels 圖片",
+            supportText: "支援本機上傳、URL、Pexels 或 Giphy GIF",
         },
         edit: {
             editButton: "編輯",

@@ -15,7 +15,7 @@ export interface ImageBlockProps {
     caption?: string;
     width?: string;
     height?: string;
-    source?: "upload" | "url" | "pexels";
+    source?: "upload" | "url" | "pexels" | "giphy";
     alignment?: "left" | "center" | "right";
     objectFit?: "contain" | "cover" | "fill" | "scale-down" | "none";
     maxWidth?: string;

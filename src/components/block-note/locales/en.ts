@@ -147,6 +147,10 @@ export const en = {
             title: "Pexels Images",
             subtitle: "Online Image Library",
         },
+        giphy: {
+            title: "Giphy",
+            subtitle: "GIFs and stickers",
+        },
         form: {
             imageContent: "Image Content",
             styleSettings: "🎨 Style Settings",
@@ -161,7 +165,8 @@ export const en = {
         },
         placeholder: {
             clickToAdd: "Add image",
-            supportText: "Supports local upload, URL, or Pexels images",
+            supportText:
+                "Supports local upload, URL, Pexels, or Giphy GIFs",
         },
         edit: {
             editButton: "Edit",

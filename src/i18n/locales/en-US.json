@@ -203,6 +203,11 @@
                 "description": "Free stock photos integration",
                 "apiKey": "API Key"
             },
+            "giphy": {
+                "title": "Giphy",
+                "description": "GIF and sticker search for the editor (client-side hotlink)",
+                "apiKey": "API Key"
+            },
             "validation": {
                 "algoliaAppIdRequired": "Algolia App ID is required",
                 "algoliaAdminApiKeyRequired": "Algolia Admin API Key is required",
@@ -211,7 +216,8 @@
                 "umamiScriptSourceRequired": "Umami Script Source is required",
                 "openaiApiKeyRequired": "OpenAI API Key is required",
                 "geminiApiKeyRequired": "Gemini API Key is required",
-                "pexelsApiKeyRequired": "Pexels API Key is required"
+                "pexelsApiKeyRequired": "Pexels API Key is required",
+                "giphyApiKeyRequired": "Giphy API Key is required"
             },
             "buttons": {
                 "completeSetup": "Complete Setup →",
@@ -865,6 +871,33 @@
             "errors": {
                 "searchFailed": "Failed to search images",
                 "loadImagesFailed": "Failed to load images"
+            }
+        },
+
+        "giphy_gif_picker": {
+            "title": "Select from Giphy",
+            "attribution": "Powered By GIPHY",
+            "tabs": {
+                "gifs": "GIFs",
+                "stickers": "Stickers"
+            },
+            "search": {
+                "label": "Search Giphy",
+                "placeholder": "e.g.: hello, cat, celebrate...",
+                "button": "Search",
+                "searching": "Searching..."
+            },
+            "states": {
+                "noResults": "No results found",
+                "noResultsHint": "Try another keyword, or clear search for trending"
+            },
+            "actions": {
+                "cancel": "Cancel",
+                "confirm": "Confirm Selection"
+            },
+            "errors": {
+                "notConfigured": "Giphy is not enabled or API key is missing in settings",
+                "searchFailed": "Failed to load Giphy results"
             }
         },
 

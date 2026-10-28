@@ -14,7 +14,11 @@ async function isEmbedPage(): Promise<boolean> {
     return pathname.includes("/videos/embed/");
 }
 // Viewport
-export const viewport: Viewport = { width: "device-width", initialScale: 1 };
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    interactiveWidget: "resizes-content",
+};
 // metadata
 export async function generateMetadata(): Promise<Metadata> {
     const t = await getTranslations("web");

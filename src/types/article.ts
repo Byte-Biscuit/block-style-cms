@@ -11,8 +11,7 @@ export function keywordsFromTags(
         .filter((t) => {
             const tag = t.trim();
             return (
-                tag.length >= 2 &&
-                !(tag.startsWith("_") && tag.endsWith("_"))
+                tag.length >= 2 && !(tag.startsWith("_") && tag.endsWith("_"))
             );
         })
         .slice(0, 20);

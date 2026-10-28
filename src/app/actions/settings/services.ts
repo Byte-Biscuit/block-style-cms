@@ -113,6 +113,17 @@ export const updateServices = withAuth(
                 }
             }
 
+            if (data.giphy.enabled) {
+                if (!data.giphy.apiKey?.trim()) {
+                    return {
+                        code: HttpStatus.BAD_REQUEST,
+                        message:
+                            "Giphy API Key is required when Giphy is enabled",
+                        payload: {} as ServicesFormData,
+                    };
+                }
+            }
+
             // Update services config
             const updatedConfig = {
                 ...currentConfig,
@@ -152,6 +163,10 @@ export const updateServices = withAuth(
                     pexels: {
                         enabled: data.pexels.enabled,
                         apiKey: data.pexels.apiKey || undefined,
+                    },
+                    giphy: {
+                        enabled: data.giphy.enabled,
+                        apiKey: data.giphy.apiKey || undefined,
                     },
                 },
                 updatedAt: new Date().toISOString(),
@@ -241,6 +256,10 @@ export const getServices = withAuth(
                 pexels: {
                     enabled: config.services.pexels?.enabled || false,
                     apiKey: config.services.pexels?.apiKey || "",
+                },
+                giphy: {
+                    enabled: config.services.giphy?.enabled || false,
+                    apiKey: config.services.giphy?.apiKey || "",
                 },
             };
 

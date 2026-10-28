@@ -165,6 +165,15 @@ export interface PexelsServiceConfig {
 }
 
 /**
+ * Giphy GIF / Sticker Service Configuration
+ */
+export interface GiphyServiceConfig {
+    enabled: boolean;
+    /** Giphy API Key (browser client-side search) */
+    apiKey?: string;
+}
+
+/**
  * External Services Configuration
  */
 export interface ServicesConfig {
@@ -172,6 +181,7 @@ export interface ServicesConfig {
     umami: UmamiServiceConfig;
     ai: AIServiceConfig;
     pexels: PexelsServiceConfig;
+    giphy: GiphyServiceConfig;
 }
 
 /**
@@ -353,6 +363,10 @@ export interface InstallServicesConfig {
         enabled: boolean;
         apiKey?: string;
     };
+    giphy: {
+        enabled: boolean;
+        apiKey?: string;
+    };
 }
 
 /**
@@ -435,6 +449,10 @@ export const DEFAULT_SYSTEM_CONFIG: Omit<
             },
         },
         pexels: {
+            enabled: false,
+            apiKey: "",
+        },
+        giphy: {
             enabled: false,
             apiKey: "",
         },

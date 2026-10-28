@@ -19,8 +19,8 @@ export default function ArticleLoading() {
                 </header>
 
                 {/* Cover Image Skeleton */}
-                <section className="mb-6 md:mb-8">
-                    <div className="relative aspect-video w-full animate-pulse overflow-hidden rounded-lg bg-gray-300 dark:bg-gray-700" />
+                <section className="mb-6 flex justify-center md:mb-8">
+                    <div className="aspect-video max-h-90 w-full max-w-3xl animate-pulse rounded-lg bg-gray-300 dark:bg-gray-700" />
                 </section>
 
                 {/* Summary Section Skeleton */}

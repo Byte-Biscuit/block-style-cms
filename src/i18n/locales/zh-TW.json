@@ -203,6 +203,11 @@
                 "description": "免費圖庫整合",
                 "apiKey": "API 金鑰"
             },
+            "giphy": {
+                "title": "Giphy",
+                "description": "編輯器 GIF / 貼紙搜尋（瀏覽器直連熱鏈）",
+                "apiKey": "API 金鑰"
+            },
             "validation": {
                 "algoliaAppIdRequired": "Algolia 應用程式 ID 為必填項",
                 "algoliaAdminApiKeyRequired": "Algolia 管理 API 金鑰為必填項",
@@ -211,7 +216,8 @@
                 "umamiScriptSourceRequired": "Umami 指令碼源為必填項",
                 "openaiApiKeyRequired": "OpenAI API 金鑰為必填項",
                 "geminiApiKeyRequired": "Gemini API 金鑰為必填項",
-                "pexelsApiKeyRequired": "Pexels API 金鑰為必填項"
+                "pexelsApiKeyRequired": "Pexels API 金鑰為必填項",
+                "giphyApiKeyRequired": "Giphy API 金鑰為必填項"
             },
             "buttons": {
                 "completeSetup": "完成設定 →",
@@ -865,6 +871,33 @@
             "errors": {
                 "searchFailed": "搜尋圖片失敗",
                 "loadImagesFailed": "載入圖片失敗"
+            }
+        },
+
+        "giphy_gif_picker": {
+            "title": "從 Giphy 選擇",
+            "attribution": "Powered By GIPHY",
+            "tabs": {
+                "gifs": "GIF",
+                "stickers": "貼紙"
+            },
+            "search": {
+                "label": "搜尋 Giphy",
+                "placeholder": "例如: hello, cat, celebrate...",
+                "button": "搜尋",
+                "searching": "搜尋中..."
+            },
+            "states": {
+                "noResults": "沒有找到結果",
+                "noResultsHint": "試試其他關鍵字，或清空搜尋查看熱門"
+            },
+            "actions": {
+                "cancel": "取消",
+                "confirm": "確認選擇"
+            },
+            "errors": {
+                "notConfigured": "未在設定中啟用 Giphy 或缺少 API 金鑰",
+                "searchFailed": "載入 Giphy 結果失敗"
             }
         },
 

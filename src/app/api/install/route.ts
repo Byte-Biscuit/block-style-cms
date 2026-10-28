@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { EMAIL_REGEX } from "@/constants";
 import { getAuth } from "@/lib/auth/auth";
 import { systemConfigService } from "@/lib/services/system-config-service";
+import type { SystemConfig } from "@/types/system-config";
 
 /**
  * POST /api/install
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Step 1: Initialize system configuration (must save secret before creating user)
-        let config;
+        let config: SystemConfig;
         try {
             // Create base config with siteInfo, authentication methods, and services
             config = await systemConfigService.initializeConfig({
@@ -123,6 +124,10 @@ export async function POST(request: NextRequest) {
                     pexels: {
                         enabled: services?.pexels?.enabled || false,
                         apiKey: services?.pexels?.apiKey,
+                    },
+                    giphy: {
+                        enabled: services?.giphy?.enabled || false,
+                        apiKey: services?.giphy?.apiKey,
                     },
                 },
             });

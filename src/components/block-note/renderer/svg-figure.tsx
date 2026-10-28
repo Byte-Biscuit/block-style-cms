@@ -302,7 +302,9 @@ const SvgFigure: React.FC<SvgFigureProps> = ({
         <>
             <div className={mediaConstrainedFrameClass}>
                 {controls && (
-                    <div className="absolute top-1 right-1 z-50">{controls}</div>
+                    <div className="absolute top-1 right-1 z-50">
+                        {controls}
+                    </div>
                 )}
                 <div className="absolute right-1 bottom-1 z-50">
                     <SvgExportButton

@@ -145,6 +145,10 @@ export const zh = {
             title: "Pexels 图片",
             subtitle: "在线图片库",
         },
+        giphy: {
+            title: "Giphy",
+            subtitle: "GIF 与贴纸",
+        },
         form: {
             imageContent: "图片内容",
             styleSettings: "🎨 样式设置",
@@ -159,7 +163,7 @@ export const zh = {
         },
         placeholder: {
             clickToAdd: "添加图片",
-            supportText: "支持本地上传、URL 或 Pexels 图片",
+            supportText: "支持本地上传、URL、Pexels 或 Giphy GIF",
         },
         edit: {
             editButton: "编辑",

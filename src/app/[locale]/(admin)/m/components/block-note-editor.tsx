@@ -186,7 +186,6 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                         );
                     }}
                     suggestionMenuComponent={EnhanceSlashMenu}
-                    portalElement={slashMenuPortal}
                     floatingUIOptions={{
                         useFloatingOptions: {
                             strategy: "fixed",

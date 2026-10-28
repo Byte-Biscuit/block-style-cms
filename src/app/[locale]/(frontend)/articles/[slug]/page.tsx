@@ -163,17 +163,22 @@ export default async function ArticleDetailPage({
                         />
                     </header>
                     {article.image && (
-                        <section className="mb-6 md:mb-8">
-                            <div className="relative aspect-video max-h-90 w-full overflow-hidden rounded-lg shadow-md">
-                                <Image
-                                    src={article.image}
-                                    alt={article.title || "Article cover"}
-                                    fill
-                                    className="object-cover transition-transform duration-300 hover:scale-105"
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
-                                    priority
-                                />
-                            </div>
+                        <section className="mb-6 flex justify-center md:mb-8">
+                            <Image
+                                src={article.image}
+                                alt={article.title || "Article cover"}
+                                width={1920}
+                                height={1080}
+                                className="max-h-90 max-w-full rounded-lg shadow-md"
+                                style={{
+                                    width: "auto",
+                                    height: "auto",
+                                    // ponytail: width/height props are upload caps, not real ratio; cancel the 16:9 hint so the bitmap's intrinsic ratio wins
+                                    aspectRatio: "auto",
+                                }}
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 80vw"
+                                priority
+                            />
                         </section>
                     )}
                     <section className="space-y-2 pb-4 md:space-y-5">

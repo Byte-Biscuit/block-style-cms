@@ -338,9 +338,7 @@ const GiphyGifPicker: React.FC<GiphyGifPickerProps> = ({
                     </IconButton>
                 </Box>
             </DialogTitle>
-            <DialogContent
-                sx={{ pt: 1, maxHeight: "70vh", overflowY: "auto" }}
-            >
+            <DialogContent sx={{ pt: 1, maxHeight: "70vh", overflowY: "auto" }}>
                 <Tabs
                     value={kind}
                     onChange={(_, value: GiphyMediaKind) => setKind(value)}

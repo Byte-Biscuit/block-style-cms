@@ -296,9 +296,9 @@ class AlgoliaSearchService {
                 algoliaObject.content = "";
                 this.getClient()
                     .saveObject({
-                    indexName: this.indexName,
-                    body: algoliaObject,
-                })
+                        indexName: this.indexName,
+                        body: algoliaObject,
+                    })
                     .then(() => {
                         console.log(
                             `Article ${article.id} with truncated content saved to Algolia successfully`

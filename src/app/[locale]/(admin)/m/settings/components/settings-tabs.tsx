@@ -238,10 +238,8 @@ export default function SettingsTabs({ initialConfig }: SettingsTabsProps) {
                         },
                         giphy: {
                             enabled:
-                                initialConfig.services?.giphy?.enabled ||
-                                false,
-                            apiKey:
-                                initialConfig.services?.giphy?.apiKey || "",
+                                initialConfig.services?.giphy?.enabled || false,
+                            apiKey: initialConfig.services?.giphy?.apiKey || "",
                         },
                     }}
                 />

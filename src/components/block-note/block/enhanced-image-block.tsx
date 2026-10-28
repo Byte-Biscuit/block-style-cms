@@ -99,9 +99,7 @@ function ImageSelectionDialog({
     const [alignment, setAlignment] = useState<"left" | "center" | "right">(
         initialData?.alignment || "center"
     );
-    const [imageWidth, setImageWidth] = useState(
-        initialData?.width || "568"
-    );
+    const [imageWidth, setImageWidth] = useState(initialData?.width || "568");
     const [imageHeight, setImageHeight] = useState(
         initialData?.height || "320"
     );

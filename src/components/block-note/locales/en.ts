@@ -165,8 +165,7 @@ export const en = {
         },
         placeholder: {
             clickToAdd: "Add image",
-            supportText:
-                "Supports local upload, URL, Pexels, or Giphy GIFs",
+            supportText: "Supports local upload, URL, Pexels, or Giphy GIFs",
         },
         edit: {
             editButton: "Edit",

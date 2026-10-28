@@ -52,18 +52,14 @@ function getLLM() {
             }
             const baseURL =
                 openaiConfig?.baseUrl || "https://api.openai.com/v1";
+            const model = openaiConfig?.model || "gpt-4o-mini";
             return new ChatOpenAI({
                 configuration: {
                     apiKey,
                     baseURL,
                 },
-                model: openaiConfig?.model || "gpt-4o-mini",
+                model,
                 temperature: 0.15,
-                // MiniMax-M3 thinks by default and dumps <think> into content.
-                // M2.x ignores this flag; generate() still strips leftover tags.
-                modelKwargs: /minimax/i.test(baseURL)
-                    ? { thinking: { type: "disabled" } }
-                    : undefined,
             });
         }
         case "gemini": {
@@ -104,10 +100,7 @@ export async function generate(
         }
         return result;
     } catch (error) {
-        console.error(
-            `AI generation failed for type: ${type}, provider: ${llm}`,
-            error
-        );
+        console.error(`AI generation failed for type: ${type}`, error);
         return "";
     }
 }

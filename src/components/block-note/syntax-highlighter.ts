@@ -1,4 +1,4 @@
-import { SyntaxHighlightingExtension } from "@blocknote/core";
+import { SyntaxHighlightingExtension } from "@blocknote/core/extensions";
 import { createBundledHighlighter } from "@shikijs/core";
 import { createJavaScriptRegexEngine } from "@shikijs/engine-javascript";
 

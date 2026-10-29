@@ -1,6 +1,6 @@
 {
     "name": "block-style-cms",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "private": true,
     "scripts": {
         "dev": "next dev --hostname 0.0.0.0",
@@ -14,7 +14,7 @@
         "typecheck": "tsc --build"
     },
     "dependencies": {
-        "@better-auth/api-key": "^1.7.2",
+        "@better-auth/api-key": "^1.7.3",
         "@blocknote/code-block": "^0.56.0",
         "@blocknote/core": "^0.56.0",
         "@blocknote/mantine": "^0.56.0",
@@ -34,7 +34,7 @@
         "@mui/material": "^7.3.2",
         "@mui/material-nextjs": "^7.3.2",
         "algoliasearch": "^5.57.0",
-        "better-auth": "^1.7.1",
+        "better-auth": "^1.7.3",
         "better-sqlite3": "^13.0.3",
         "clsx": "^2.1.1",
         "dompurify": "^3.4.14",

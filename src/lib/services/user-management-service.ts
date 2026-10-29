@@ -298,11 +298,11 @@ async function createCredentialUser(
         ).run(userId, data.name, data.email, now, now);
 
         // 5. Insert account record (credential type)
-        // 1.7: issuer + accountId is the identity key; credential accountId is user.id
+        // Identity key is providerId + accountId (1.7.3+); credential accountId is user.id
         db.prepare(
             `
-            INSERT INTO account (id, userId, providerId, accountId, issuer, password, createdAt, updatedAt)
-            VALUES (?, ?, 'credential', ?, 'local:credential', ?, ?, ?)
+            INSERT INTO account (id, userId, providerId, accountId, password, createdAt, updatedAt)
+            VALUES (?, ?, 'credential', ?, ?, ?, ?)
         `
         ).run(accountRowId, userId, userId, hashedPassword, now, now);
 

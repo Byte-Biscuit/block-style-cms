@@ -60,3 +60,19 @@ export const getLanguageDisplayName = (
 export type Locale = (typeof locales)[number];
 // export type Translations = Awaited<ReturnType<typeof getTranslations>>;
 export type TranslationFunction = Awaited<ReturnType<typeof getTranslations>>;
+
+/** True when value is a configured site locale (see `locales` / `localeMap`). */
+export function isLocale(value: unknown): value is Locale {
+    return (
+        typeof value === "string" &&
+        (locales as readonly string[]).includes(value)
+    );
+}
+
+/** Return a valid Locale, or `fallback` (default: defaultLocale). */
+export function resolveLocale(
+    value: unknown,
+    fallback: Locale = defaultLocale
+): Locale {
+    return isLocale(value) ? value : fallback;
+}

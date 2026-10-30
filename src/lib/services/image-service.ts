@@ -1,8 +1,9 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import sharp, { type Metadata, type Sharp } from "sharp";
 import slugify from "slugify";
 import { v4 as uuidv4 } from "uuid";
+import { sha256Hex } from "@/lib/hash";
 import { optimizePexelsImageUrl } from "@/lib/pexels-utils";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { ALLOWED_IMAGE_MIME_TYPES, IMAGE_DIR, META_DIR } from "@/settings";
@@ -25,8 +26,7 @@ function getMetadataFile(): string {
 }
 
 /**
- * Post metadata map
- * @returns
+ * Load the image metadata map from disk.
  */
 async function getMetadataMap(): Promise<Record<string, ImageMetaInfo>> {
     const metadataFile = getMetadataFile();
@@ -38,6 +38,16 @@ async function getMetadataMap(): Promise<Record<string, ImageMetaInfo>> {
         metadataMap = {};
     }
     return metadataMap;
+}
+
+async function findByContentHash(
+    contentHash: string
+): Promise<ImageMetaInfo | null> {
+    const metadataMap = await getMetadataMap();
+    for (const meta of Object.values(metadataMap)) {
+        if (meta.contentHash === contentHash) return meta;
+    }
+    return null;
 }
 
 function generateSEOFriendlyFilename(
@@ -63,26 +73,29 @@ function generateSEOFriendlyFilename(
         const timestamp = Date.now().toString().slice(-6);
         return `${truncatedName}-${timestamp}${extension}`;
     } catch (error) {
-        console.warn("生成SEO文件名失败，使用UUID:", error);
+        console.warn(
+            "Failed to generate SEO-friendly filename, falling back to UUID:",
+            error
+        );
         return `${uuidv4()}${extension}`;
     }
 }
 
 /**
- * 验证文件类型和大小
+ * Validate file MIME type and size.
  */
 function validateFile(file: File): void {
     if (
         !new Set(ALLOWED_IMAGE_MIME_TYPES as readonly string[]).has(file.type)
     ) {
         throw new Error(
-            `不支持的文件类型: ${file.type}。支持的类型: ${ALLOWED_IMAGE_MIME_TYPES.join(", ")}`
+            `Unsupported file type: ${file.type}. Allowed types: ${ALLOWED_IMAGE_MIME_TYPES.join(", ")}`
         );
     }
 
     if (file.size > MAX_FILE_SIZE) {
         throw new Error(
-            `文件太大: ${(file.size / 1024 / 1024).toFixed(2)}MB。最大支持: ${MAX_FILE_SIZE / 1024 / 1024}MB`
+            `File too large: ${(file.size / 1024 / 1024).toFixed(2)}MB. Maximum allowed: ${MAX_FILE_SIZE / 1024 / 1024}MB`
         );
     }
 }
@@ -94,7 +107,7 @@ async function uploadImage(
     validateFile(file);
     const buffer = Buffer.from(await file.arrayBuffer());
 
-    // 安全地获取元数据
+    // Read image metadata safely (dispose Sharp instance afterward).
     let metadataInstance: Sharp | null = null;
     let metadata: Metadata;
     try {
@@ -113,21 +126,16 @@ async function uploadImage(
         maxHeight = 2048,
     } = options;
 
-    // SVG 保持原格式，其他格式全部转换为 WebP
+    // Keep SVG as-is; convert all other formats to WebP.
     const isSvg = file.type === "image/svg+xml";
     const outputFormat = isSvg ? "svg" : "webp";
     const extension = isSvg ? ".svg" : ".webp";
 
-    const filename = generateSEOFriendlyFilename(originalName, extension);
-    const filePath = path.join(IMAGE_DIR, filename);
-
-    let outputInfo: { size: number };
+    let outputBuffer: Buffer;
     let finalMetadata: { width?: number; height?: number; format?: string };
 
     if (isSvg) {
-        // SVG 直接保存，不进行处理
-        await fs.writeFile(filePath, buffer);
-        outputInfo = { size: buffer.length };
+        outputBuffer = buffer;
         finalMetadata = {
             width: metadata.width || 0,
             height: metadata.height || 0,
@@ -137,14 +145,11 @@ async function uploadImage(
         let sharpInstance: Sharp | null = null;
         try {
             sharpInstance = sharp(buffer);
-            // 对于动画 GIF，sharp 会自动处理为 WebP 动画
             if (file.type === "image/gif") {
-                // 检查是否为动画 GIF
                 if (metadata.pages && metadata.pages > 1) {
                     console.log(
-                        `处理动画 GIF: ${originalName}，帧数: ${metadata.pages}`
+                        `Processing animated GIF: ${originalName}, frames: ${metadata.pages}`
                     );
-                    // WebP 支持动画，sharp 会自动转换
                 }
             }
 
@@ -157,21 +162,9 @@ async function uploadImage(
                 }
             }
 
-            // 统一转换为 WebP（包括动画）
             sharpInstance = sharpInstance.webp({ quality });
-
-            outputInfo = await sharpInstance.toFile(filePath);
-
-            // 安全地获取最终元数据
-            let metadataSharp: Sharp | null = null;
-            try {
-                metadataSharp = sharp(filePath);
-                finalMetadata = await metadataSharp.metadata();
-            } finally {
-                if (metadataSharp) {
-                    metadataSharp.destroy();
-                }
-            }
+            outputBuffer = await sharpInstance.toBuffer();
+            finalMetadata = await sharp(outputBuffer).metadata();
         } finally {
             if (sharpInstance) {
                 sharpInstance.destroy();
@@ -179,16 +172,27 @@ async function uploadImage(
         }
     }
 
+    const contentHash = sha256Hex(outputBuffer);
+    const existing = await findByContentHash(contentHash);
+    if (existing) {
+        return existing;
+    }
+
+    const filename = generateSEOFriendlyFilename(originalName, extension);
+    const filePath = path.join(IMAGE_DIR, filename);
+    await fs.writeFile(filePath, outputBuffer);
+
     const systemConfig = await getSystemConfig();
     const imageInfo: ImageMetaInfo = {
         filename,
         originalName,
         fullUrl: `${systemConfig?.siteInfo?.baseUrl}/images/${filename}`,
-        size: outputInfo.size,
+        size: outputBuffer.length,
         width: finalMetadata.width || 0,
         height: finalMetadata.height || 0,
         mimeType: `image/${outputFormat}`,
         uploadedAt: new Date().toISOString(),
+        contentHash,
     };
     await saveMetadata(imageInfo);
     return imageInfo;
@@ -222,7 +226,7 @@ async function loadImageMetadata(
 }
 
 /**
- * 动态处理图片（用于访问时的实时处理）
+ * Process an image on the fly (used when serving with transform options).
  */
 async function processImage(
     filename: string,
@@ -232,7 +236,7 @@ async function processImage(
     try {
         await fs.access(filePath);
     } catch {
-        throw new Error("图片文件不存在");
+        throw new Error("Image file not found");
     }
 
     const {
@@ -247,7 +251,6 @@ async function processImage(
     try {
         sharpInstance = sharp(filePath);
 
-        // 调整大小
         if (width || height) {
             sharpInstance = sharpInstance.resize(width, height, {
                 fit,
@@ -255,7 +258,6 @@ async function processImage(
             });
         }
 
-        // 设置输出格式
         switch (format) {
             case "webp":
                 sharpInstance = sharpInstance.webp({ quality });
@@ -282,30 +284,28 @@ async function deleteImage(filename: string): Promise<void> {
     const filePath = path.join(IMAGE_DIR, filename);
 
     try {
-        // 首先检查文件是否存在
         try {
             await fs.access(filePath);
         } catch {
-            // 文件不存在，只删除元数据
+            // File missing — still clear metadata.
             await deleteMetadata(filename);
             return;
         }
 
-        // 先删除元数据，即使文件删除失败也不影响元数据清理
+        // Remove metadata first so a failed unlink does not leave stale entries.
         await deleteMetadata(filename);
 
-        // 尝试删除文件，带重试机制
         await deleteFileWithRetry(filePath, filename);
     } catch (error) {
-        console.error(`删除图片失败: ${filename} `, error);
+        console.error(`Failed to delete image: ${filename}`, error);
         throw new Error(
-            `删除图片失败: ${error instanceof Error ? error.message : "未知错误"} `
+            `Failed to delete image: ${error instanceof Error ? error.message : "unknown error"}`
         );
     }
 }
 
 /**
- * 带重试机制的文件删除
+ * Unlink a file with retries (handles transient EBUSY).
  */
 async function deleteFileWithRetry(
     filePath: string,
@@ -313,7 +313,6 @@ async function deleteFileWithRetry(
     maxRetries: number = 5,
     delayMs: number = 200
 ): Promise<void> {
-    // 尝试强制垃圾回收释放资源
     if (global.gc) {
         global.gc();
     }
@@ -321,54 +320,52 @@ async function deleteFileWithRetry(
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             await fs.unlink(filePath);
-            console.log(`图片删除成功: ${filename} `);
+            console.log(`Image deleted successfully: ${filename}`);
             return;
         } catch (error: unknown) {
             if (error && typeof error === "object" && "code" in error) {
                 const fsError = error as { code: string; message: string };
 
                 if (fsError.code === "ENOENT") {
-                    // 文件不存在，认为删除成功
-                    console.log(`图片文件不存在，视为删除成功: ${filename} `);
+                    console.log(
+                        `Image file already missing, treating as deleted: ${filename}`
+                    );
                     return;
                 }
 
                 if (fsError.code === "EBUSY" && attempt < maxRetries) {
                     console.warn(
-                        `文件被占用，第 ${attempt} 次重试删除: ${filename} `
+                        `File busy, retry ${attempt}/${maxRetries} deleting: ${filename}`
                     );
 
-                    // 尝试强制垃圾回收
                     if (global.gc) {
                         global.gc();
                     }
 
-                    // 使用指数退避策略
                     const delay = delayMs * 1.5 ** (attempt - 1);
                     await new Promise((resolve) => setTimeout(resolve, delay));
                     continue;
                 }
 
-                // 最后一次尝试失败，或者是其他类型的错误
                 if (attempt === maxRetries) {
                     if (fsError.code === "EBUSY") {
-                        // 作为最后的尝试，尝试重命名文件
                         await markFileForDeletion(filePath, filename);
                         return;
                     } else {
-                        throw new Error(`删除文件失败: ${fsError.message} `);
+                        throw new Error(
+                            `Failed to delete file: ${fsError.message}`
+                        );
                     }
                 }
             } else {
-                // 未知错误类型
-                throw new Error(`删除文件失败: ${error} `);
+                throw new Error(`Failed to delete file: ${error}`);
             }
         }
     }
 }
 
 /**
- * 将文件标记为待删除（重命名为 .deleted 扩展名）
+ * Mark a locked file for later deletion by renaming to *.deleted.
  */
 async function markFileForDeletion(
     filePath: string,
@@ -377,32 +374,41 @@ async function markFileForDeletion(
     try {
         const deletedPath = `${filePath}.deleted`;
         await fs.rename(filePath, deletedPath);
-        console.log(`文件已标记为待删除: ${filename} -> ${filename}.deleted`);
+        console.log(
+            `File marked for deletion: ${filename} -> ${filename}.deleted`
+        );
 
-        // 异步尝试删除重命名后的文件
         setTimeout(async () => {
             try {
                 await fs.unlink(deletedPath);
-                console.log(`延迟删除成功: ${filename}.deleted`);
+                console.log(`Deferred delete succeeded: ${filename}.deleted`);
             } catch (error) {
-                console.warn(`延迟删除失败: ${filename}.deleted`, error);
+                console.warn(
+                    `Deferred delete failed: ${filename}.deleted`,
+                    error
+                );
             }
-        }, 5000); // 5秒后尝试删除
+        }, 5000);
     } catch (error) {
-        console.error(`标记文件为待删除失败: ${filename} `, error);
-        throw new Error(`无法删除文件，请手动删除: ${filename} `);
+        console.error(
+            `Failed to mark file for deletion: ${filename}`,
+            error
+        );
+        throw new Error(
+            `Unable to delete file; please remove manually: ${filename}`
+        );
     }
 }
 
 /**
- * 获取图片信息
+ * Get metadata for a single image.
  */
 async function getImageInfo(filename: string): Promise<ImageMetaInfo | null> {
     return await loadImageMetadata(filename);
 }
 
 /**
- * 获取图片列表
+ * List images with paging, sorting, and optional search.
  */
 async function getImageList(
     options: ImageListOptions
@@ -428,7 +434,6 @@ async function getImageList(
         const aValue = a[sortBy as keyof ImageMetaInfo];
         const bValue = b[sortBy as keyof ImageMetaInfo];
 
-        // Handle undefined values
         if (aValue === undefined && bValue === undefined) return 0;
         if (aValue === undefined) return sortOrder === "asc" ? -1 : 1;
         if (bValue === undefined) return sortOrder === "asc" ? 1 : -1;

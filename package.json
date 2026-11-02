@@ -39,7 +39,7 @@
         "better-sqlite3": "^13.0.3",
         "clsx": "^2.1.1",
         "dompurify": "^3.4.14",
-        "hi-base32": "^0.5.1",
+        "hi-base32": "^0.6.0",
         "katex": "^0.18.10",
         "lru-cache": "^11.5.2",
         "mermaid": "^11.16.1",

@@ -1,5 +1,6 @@
 import { algoliasearch, type SearchClient } from "algoliasearch";
 import type { LocalBlock } from "@/block-note/schema";
+import { latexFromPlainContent } from "@/lib/latex-utils";
 import { extractTextFromContent } from "@/lib/toc-utils";
 import type { Article } from "@/types/article";
 import { systemConfigService } from "./system-config-service";
@@ -18,6 +19,12 @@ function blockProps(block: LocalBlock): Record<string, unknown> | undefined {
 }
 
 function extractBlockTextContent(block: LocalBlock): string {
+    if ((block.type as string) === "mathBlock") {
+        return latexFromPlainContent(
+            (block as { content?: unknown }).content
+        );
+    }
+
     if (block.content && Array.isArray(block.content)) {
         return extractTextFromContent(block.content);
     }
@@ -177,6 +184,15 @@ export function convertBlocksToAlgoliaMarkdown(blocks: LocalBlock[]): string {
                 lines.push("[SVG]");
                 lines.push("");
                 break;
+
+            case "mathBlock": {
+                const latex = content.trim();
+                if (latex) {
+                    lines.push(`$$${latex}$$`);
+                    lines.push("");
+                }
+                break;
+            }
 
             default:
                 if (content) {

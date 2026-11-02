@@ -1,5 +1,7 @@
 "use client";
-import type { BlockNoteEditor, BlockSchemaFromSpecs } from "@blocknote/core";
+import type { BlockNoteEditor } from "@blocknote/core";
+import { combineByGroup } from "@blocknote/core";
+import { getMathSlashMenuItems } from "@blocknote/math-block";
 import {
     type DefaultReactSuggestionItem,
     getDefaultReactSlashMenuItems,
@@ -26,7 +28,6 @@ import {
     getMermaidSlashMenuItem,
     getSvgSlashMenuItem,
 } from "@/block-note/block";
-import type { schema } from "@/block-note/schema";
 
 // Extended DefaultReactSuggestionItem interface including group and other fields
 interface ExtendedSuggestionItem extends DefaultReactSuggestionItem {
@@ -94,17 +95,20 @@ const groupItems = (items: ExtendedSuggestionItem[]) => {
     return { groups, groupOrder };
 };
 
-export const getSlashMenuItems = (
-    editor: BlockNoteEditor<BlockSchemaFromSpecs<typeof schema.blockSpecs>>
-) => {
-    const slashMenuItems = getDefaultReactSlashMenuItems(editor);
-    slashMenuItems.push(getEnhancedAudioSlashMenuItem(editor));
-    slashMenuItems.push(getEnhancedImageSlashMenuItem(editor));
-    slashMenuItems.push(getEnhancedVideoSlashMenuItem(editor));
-    slashMenuItems.push(getEnhancedFileSlashMenuItem(editor));
-    slashMenuItems.push(getMermaidSlashMenuItem(editor));
-    slashMenuItems.push(getSvgSlashMenuItem(editor));
-    return slashMenuItems;
+export const getSlashMenuItems = (editor: BlockNoteEditor<any, any, any>) => {
+    const customItems = [
+        getEnhancedAudioSlashMenuItem(editor),
+        getEnhancedImageSlashMenuItem(editor),
+        getEnhancedVideoSlashMenuItem(editor),
+        getEnhancedFileSlashMenuItem(editor),
+        getMermaidSlashMenuItem(editor),
+        getSvgSlashMenuItem(editor),
+    ];
+    return combineByGroup(
+        getDefaultReactSlashMenuItems(editor),
+        getMathSlashMenuItems(editor),
+        customItems
+    );
 };
 
 const EnhancedSlashMenu = (

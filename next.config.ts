@@ -12,6 +12,7 @@ let nextConfig: NextConfig = {
         "@blocknote/core",
         "@blocknote/react",
         "@blocknote/server-util",
+        "@blocknote/math-block",
     ],
     // Dev: allow non-localhost hosts (LAN IP / hostname) to load HMR and /_next assets.
     // Bind address is set in package.json: next dev|start --hostname 0.0.0.0

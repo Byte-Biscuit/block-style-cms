@@ -1,3 +1,4 @@
+/** @vitest-environment node */
 import { describe, expect, it } from "vitest";
 import {
     markdownToBlocks,
@@ -113,5 +114,31 @@ describe("markdownToBlocks", () => {
         })) as LooseBlock[];
         expect(blocks[0]?.type).toBe("paragraph");
         expect(blocks.some((b) => b.type === "heading")).toBe(false);
+    });
+
+    it("drops first H1 when title matches after math / unicode normalize", async () => {
+        const md = "# 质能关系：$E=mc^2$ 入门（修订）\n\nBody.";
+        const blocks = (await markdownToBlocks(md, {
+            title: "质能关系：E=mc² 入门(修订)",
+        })) as LooseBlock[];
+        expect(blocks[0]?.type).toBe("paragraph");
+        expect(blocks.some((b) => b.type === "heading")).toBe(false);
+    });
+
+    it("parses block $$ and inline $ math", async () => {
+        const md = [
+            "Has $a+b$ inline.",
+            "",
+            "$$",
+            "E=mc^2",
+            "$$",
+        ].join("\n");
+        const blocks = (await markdownToBlocks(md)) as LooseBlock[];
+        expect(blocks.some((b) => b.type === "mathBlock")).toBe(true);
+        const paragraph = blocks.find((b) => b.type === "paragraph");
+        const hasInline = (
+            paragraph?.content as Array<{ type: string }> | undefined
+        )?.some((c) => c.type === "math");
+        expect(hasInline).toBe(true);
     });
 });

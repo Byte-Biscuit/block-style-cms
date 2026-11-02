@@ -1,16 +1,22 @@
 import type {
-    DefaultInlineContentSchema,
     DefaultStyleSchema,
     InlineContent,
     Link as LinkType,
     StyledText,
 } from "@blocknote/core";
 import type React from "react";
+import type { schema } from "@/block-note/schema";
 import LinkContent from "./link-content";
+import MathContent, { type MathInlineItem } from "./math-content";
 import TextContent from "./text-content";
 
+type SchemaInline = InlineContent<
+    typeof schema.inlineContentSchema,
+    typeof schema.styleSchema
+>;
+
 const Content: React.FC<{
-    items?: InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[];
+    items?: SchemaInline[];
 }> = ({ items = [] }) => {
     return (
         <>
@@ -29,6 +35,14 @@ const Content: React.FC<{
                         <LinkContent
                             key={key}
                             item={item as LinkType<DefaultStyleSchema>}
+                        />
+                    );
+                }
+                if (item?.type === "math") {
+                    return (
+                        <MathContent
+                            key={key}
+                            item={item as unknown as MathInlineItem}
                         />
                     );
                 }

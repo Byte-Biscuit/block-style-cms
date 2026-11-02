@@ -134,4 +134,27 @@ describe("blocksToMarkdown", () => {
         );
         expect(md).toContain("https://cdn.example.com/a.png");
     });
+
+    it("round-trips block and inline math via $$ / $", async () => {
+        const md = [
+            "Einstein wrote $E=mc^2$ in a paragraph.",
+            "",
+            "$$",
+            "a^2 + b^2 = c^2",
+            "$$",
+        ].join("\n");
+
+        const blocks = await markdownToBlocks(md);
+        expect(blocks.some((b) => b.type === "mathBlock")).toBe(true);
+        const paragraph = blocks.find((b) => b.type === "paragraph");
+        expect(paragraph).toBeTruthy();
+        const inline = (
+            paragraph as { content?: Array<{ type: string }> }
+        ).content?.some((c) => c.type === "math");
+        expect(inline).toBe(true);
+
+        const exported = await blocksToMarkdown(blocks, { baseUrl: BASE });
+        expect(exported).toMatch(/\$E=mc\^2\$/);
+        expect(exported).toMatch(/\$\$[\s\S]*a\^2 \+ b\^2 = c\^2[\s\S]*\$\$/);
+    });
 });

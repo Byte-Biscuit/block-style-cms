@@ -2,7 +2,12 @@ import {
     BlockNoteSchema,
     createCodeBlockSpec,
     defaultBlockSpecs,
+    defaultInlineContentSpecs,
 } from "@blocknote/core";
+import {
+    createReactInlineMathSpec,
+    createReactMathBlockSpec,
+} from "@blocknote/math-block";
 import {
     ENHANCED_AUDIO_BLOCK_TYPE,
     ENHANCED_FILE_BLOCK_TYPE,
@@ -52,6 +57,11 @@ export const schema = BlockNoteSchema.create({
         [ENHANCED_IMAGE_BLOCK_TYPE]: EnhancedImageBlockSpec,
         [MERMAID_BLOCK_TYPE]: MermaidBlockSpec,
         [SVG_BLOCK_TYPE]: SvgBlockSpec,
+        mathBlock: createReactMathBlockSpec(),
+    },
+    inlineContentSpecs: {
+        ...defaultInlineContentSpecs,
+        math: createReactInlineMathSpec(),
     },
 });
 

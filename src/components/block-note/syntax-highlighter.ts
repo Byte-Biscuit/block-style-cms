@@ -18,6 +18,8 @@ const bundledLanguages = {
     javascript: () => import("@shikijs/langs-precompiled/javascript"),
     js: () => import("@shikijs/langs-precompiled/javascript"),
     json: () => import("@shikijs/langs-precompiled/json"),
+    // mathBlock / inline math ask Shiki for "latex" via meta.highlight
+    latex: () => import("@shikijs/langs-precompiled/latex"),
     powershell: () => import("@shikijs/langs-precompiled/powershell"),
     ps: () => import("@shikijs/langs-precompiled/powershell"),
     pwsh: () => import("@shikijs/langs-precompiled/powershell"),

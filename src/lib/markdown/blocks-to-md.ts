@@ -1,6 +1,11 @@
 import { ServerBlockNoteEditor } from "@blocknote/server-util";
 import { v4 as uuidv4 } from "uuid";
 import type { LocalBlock } from "@/block-note/schema";
+import {
+    fromMathBlock,
+    postprocessMathMarkdown,
+    remapInlineMathToText,
+} from "@/lib/markdown/math-md";
 import { systemConfigService } from "@/lib/services/system-config-service";
 
 type LooseBlock = {
@@ -103,9 +108,13 @@ export function remapToExportBlocks(
         if (block.type === "svg") {
             return fromSvg(block);
         }
+        if (block.type === "mathBlock") {
+            return fromMathBlock(block);
+        }
         return {
             ...block,
             id: block.id ?? uuidv4(),
+            content: remapInlineMathToText(block.content),
             children: block.children?.length
                 ? remapToExportBlocks(block.children, options)
                 : block.children,
@@ -133,6 +142,7 @@ async function resolveSiteBaseUrl(explicit?: string): Promise<string> {
 /**
  * Export CMS LocalBlock JSON to markdown (lossy via BlockNote).
  * Embedded / uploaded images use absolute http(s) URLs when possible.
+ * Math: mathBlock / inline math → $$ / $ via fence remap (default schema has no math).
  */
 export async function blocksToMarkdown(
     blocks: LocalBlock[] | LooseBlock[],
@@ -143,9 +153,10 @@ export async function blocksToMarkdown(
     const exportBlocks = remapToExportBlocks(blocks as LooseBlock[], {
         baseUrl,
     });
-    return editor.blocksToMarkdownLossy(
+    const md = await editor.blocksToMarkdownLossy(
         exportBlocks as Parameters<
             typeof editor.blocksToMarkdownLossy
         >[0]
     );
+    return postprocessMathMarkdown(md);
 }

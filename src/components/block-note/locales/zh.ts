@@ -1,7 +1,9 @@
 import { zh as base } from "@blocknote/core/locales";
+import { locales as mathLocales } from "@blocknote/math-block";
 
 export const zh = {
     ...base,
+    math: mathLocales.zh,
     enhanced_slash_menu: {
         enhanced_image: {
             title: "图片",

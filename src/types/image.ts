@@ -81,6 +81,8 @@ export interface ImageMetaInfo {
     /** 替代文本 */
     altText?: string;
     fullUrl?: string;
+    /** SHA-256 of processed file bytes; used to dedupe re-uploads */
+    contentHash?: string;
 }
 
 export interface ImageServeOptions {

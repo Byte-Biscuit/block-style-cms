@@ -20,19 +20,31 @@ const localeCodes = Object.values(localeMap).map((l) => l.code) as [
     ...string[],
 ];
 
+const fromMarkdownFields = {
+    title: z.string().min(1),
+    slug: z.string().min(1),
+    summary: z.string().optional().default(""),
+    tags: z.array(z.string()).optional().default([]),
+    keywords: z.array(z.string()).optional().default([]),
+    language: z.enum(localeCodes),
+    mdContent: z.string().optional(),
+    "md-content": z.string().optional(),
+    cover: z.string().optional().default(""),
+    published: z.boolean().optional().default(false),
+    [LOCALE_PARAM_NAME]: z.string().optional(),
+};
+
 const fromMarkdownBodySchema = z
+    .object(fromMarkdownFields)
+    .refine((data) => Boolean(data.mdContent || data["md-content"]), {
+        message: "mdContent is required",
+        path: ["mdContent"],
+    });
+
+const updateFromMarkdownBodySchema = z
     .object({
-        title: z.string().min(1),
-        slug: z.string().min(1),
-        summary: z.string().optional().default(""),
-        tags: z.array(z.string()).optional().default([]),
-        keywords: z.array(z.string()).optional().default([]),
-        language: z.enum(localeCodes),
-        mdContent: z.string().optional(),
-        "md-content": z.string().optional(),
-        cover: z.string().optional().default(""),
-        published: z.boolean().optional().default(false),
-        [LOCALE_PARAM_NAME]: z.string().optional(),
+        ...fromMarkdownFields,
+        id: z.uuid(),
     })
     .refine((data) => Boolean(data.mdContent || data["md-content"]), {
         message: "mdContent is required",
@@ -81,6 +93,77 @@ async function normalizeCoverUrl(cover: string): Promise<string> {
     return cover;
 }
 
+type FromMarkdownData = z.infer<typeof fromMarkdownBodySchema>;
+type BuiltArticle = {
+    slug: string;
+    title: string;
+    summary: string;
+    tags: string[];
+    keywords: string[];
+    locale: string;
+    image: string;
+    content: Article["content"];
+    published?: boolean;
+};
+
+async function buildArticlePayloadFromMarkdown(
+    data: FromMarkdownData
+): Promise<
+    | { ok: true; articleData: BuiltArticle }
+    | { ok: false; response: ReturnType<typeof badRequest> }
+> {
+    const mdContent = data.mdContent ?? data["md-content"] ?? "";
+    const uiLocale =
+        (data[LOCALE_PARAM_NAME] as string | undefined) || defaultLocale;
+    const t = await getTranslations({ locale: uiLocale });
+
+    let content: Article["content"];
+    try {
+        content = await markdownToBlocks(mdContent, {
+            title: data.title,
+        });
+    } catch (error) {
+        if (error instanceof UnresolvedImagePathsError) {
+            return {
+                ok: false,
+                response: badRequest(error.message, {
+                    paths: error.paths,
+                }),
+            };
+        }
+        throw error;
+    }
+
+    await enrichEnhancedImageDimensions(content as LooseBlock[]);
+
+    const cover = await normalizeCoverUrl(data.cover ?? "");
+    const articlePayload = {
+        slug: data.slug,
+        title: data.title,
+        summary: data.summary ?? "",
+        tags: data.tags ?? [],
+        keywords: data.keywords ?? [],
+        locale: data.language,
+        image: cover,
+        content,
+        published: data.published ?? false,
+    };
+
+    const { articleSchema, draftArticleSchema } = createArticleSchemas(t);
+    const schema = articlePayload.published
+        ? articleSchema
+        : draftArticleSchema;
+    const validation = schema.safeParse(articlePayload);
+    if (!validation.success) {
+        return {
+            ok: false,
+            response: failure("Data validation failed.", validation.error),
+        };
+    }
+
+    return { ok: true, articleData: validation.data as BuiltArticle };
+}
+
 /**
  * Create an article from markdown body content.
  * Images in md must already be /images/{filename} or http(s) URLs.
@@ -96,49 +179,12 @@ export const POST = withTiming(async (request) => {
             );
         }
 
-        const data = parsedBody.data;
-        const mdContent = data.mdContent ?? data["md-content"] ?? "";
-        const uiLocale =
-            (data[LOCALE_PARAM_NAME] as string | undefined) || defaultLocale;
-        const t = await getTranslations({ locale: uiLocale });
-
-        let content: Article["content"];
-        try {
-            content = await markdownToBlocks(mdContent, {
-                title: data.title,
-            });
-        } catch (error) {
-            if (error instanceof UnresolvedImagePathsError) {
-                return badRequest(error.message, { paths: error.paths });
-            }
-            throw error;
+        const built = await buildArticlePayloadFromMarkdown(parsedBody.data);
+        if (!built.ok) {
+            return built.response;
         }
+        const { articleData } = built;
 
-        await enrichEnhancedImageDimensions(content as LooseBlock[]);
-
-        const cover = await normalizeCoverUrl(data.cover ?? "");
-        const articlePayload = {
-            slug: data.slug,
-            title: data.title,
-            summary: data.summary ?? "",
-            tags: data.tags ?? [],
-            keywords: data.keywords ?? [],
-            locale: data.language,
-            image: cover,
-            content,
-            published: data.published ?? false,
-        };
-
-        const { articleSchema, draftArticleSchema } = createArticleSchemas(t);
-        const schema = articlePayload.published
-            ? articleSchema
-            : draftArticleSchema;
-        const validation = schema.safeParse(articlePayload);
-        if (!validation.success) {
-            return failure("Data validation failed.", validation.error);
-        }
-
-        const articleData = validation.data;
         const now = new Date();
         const article = {
             id: uuidv4(),
@@ -164,6 +210,62 @@ export const POST = withTiming(async (request) => {
     } catch (error) {
         const errorMessage =
             "Failed to create article from markdown: " +
+            (error instanceof Error ? error.message : String(error));
+        console.error(errorMessage);
+        return failure(errorMessage);
+    }
+});
+
+/**
+ * Update an existing article from markdown. Requires id; does not create.
+ */
+export const PUT = withTiming(async (request) => {
+    try {
+        const requestBody = await request.json();
+        const parsedBody = updateFromMarkdownBodySchema.safeParse(requestBody);
+        if (!parsedBody.success) {
+            return badRequest(
+                "Request body validation failed",
+                parsedBody.error
+            );
+        }
+
+        const data = parsedBody.data;
+        const existing = await articleService.getArticle(data.id);
+        if (!existing) {
+            return failure("Article not found");
+        }
+        if (existing.slug !== data.slug) {
+            return failure("Article identifier does not match");
+        }
+
+        const built = await buildArticlePayloadFromMarkdown(data);
+        if (!built.ok) {
+            return built.response;
+        }
+        const { articleData } = built;
+
+        await articleService.updateArticle({
+            id: data.id,
+            slug: articleData.slug,
+            title: articleData.title,
+            content: articleData.content,
+            tags: articleData.tags,
+            keywords: articleData.keywords,
+            summary: articleData.summary,
+            locale: articleData.locale,
+            image: articleData.image,
+            published: articleData.published,
+        });
+        revalidatePath("/[locale]/m", "layout");
+        return success("Article updated from markdown successfully", {
+            id: data.id,
+            slug: articleData.slug,
+            locale: articleData.locale,
+        });
+    } catch (error) {
+        const errorMessage =
+            "Failed to update article from markdown: " +
             (error instanceof Error ? error.message : String(error));
         console.error(errorMessage);
         return failure(errorMessage);

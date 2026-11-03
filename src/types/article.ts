@@ -139,16 +139,18 @@ export function createArticleSchemas(t: TranslationFunction) {
             .optional(),
     });
     const articleSchema = withKeywordsFromTags(articleObjectSchema);
-    // Must include id when updating
+    // Must include id when updating; content optional (omit = keep existing)
     const updateArticleSchema = withKeywordsFromTags(
         baseArticleSchema.extend({
             id: articleIdSchema,
+            content: contentSchema.optional(),
         })
     );
     // Draft update: id required but other fields are loose
     const draftUpdateArticleSchema = withKeywordsFromTags(
         draftArticleSchema.extend({
             id: articleIdSchema,
+            content: z.array(z.any()).optional(),
         })
     );
     // Omit content when only metadata is needed

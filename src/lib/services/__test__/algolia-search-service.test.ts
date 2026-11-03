@@ -79,4 +79,23 @@ describe("convertBlocksToAlgoliaMarkdown", () => {
         expect(markdown).toContain("```javascript");
         expect(markdown).toContain("console.log('hi')");
     });
+
+    it("indexes mathBlock LaTeX source", () => {
+        const markdown = convertBlocksToAlgoliaMarkdown([
+            {
+                type: "mathBlock",
+                content: "E=mc^2",
+            },
+            {
+                type: "paragraph",
+                content: [
+                    { type: "text", text: "see ", styles: {} },
+                    { type: "math", content: "a+b" },
+                ],
+            },
+        ] as LocalBlock[]);
+
+        expect(markdown).toContain("$$E=mc^2$$");
+        expect(markdown).toContain("a+b");
+    });
 });

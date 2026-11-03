@@ -24,6 +24,7 @@ import EnhancedFormattingToolbar from "@/block-note/toolbar/enhanced-formatting-
 import EditorActionToolbar from "./editor-action-toolbar";
 import "@blocknote/core/style.css";
 import "@blocknote/mantine/style.css";
+import "katex/dist/katex.min.css";
 import "@/admin/m/components/block-note-editor.css";
 
 interface BlockNoteEditorProps {

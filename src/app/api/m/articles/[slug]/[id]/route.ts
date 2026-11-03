@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import type { NextRequest } from "next/server";
 import { getTranslations } from "next-intl/server";
+import { blocksToMarkdown } from "@/lib/markdown/blocks-to-md";
 import { failure, success } from "@/lib/response";
 import { articleService } from "@/lib/services/article-service";
 import { withTiming } from "@/lib/with-timing";
@@ -41,7 +42,20 @@ export const GET = withTiming(
                 return failure("Article identifier does not match");
             }
 
-            return success("Article retrieved successfully", article);
+            // Default: original article (BlockNote content). MD only when asked —
+            // other admin/clients rely on blocks for update, not markdown.
+            const includeMd =
+                request.nextUrl.searchParams.get("includeMdContent") === "1" ||
+                request.nextUrl.searchParams.get("includeMdContent") === "true";
+            if (!includeMd) {
+                return success("Article retrieved successfully", article);
+            }
+
+            const mdContent = await blocksToMarkdown(article.content ?? []);
+            return success("Article retrieved successfully", {
+                ...article,
+                mdContent,
+            });
         } catch (error) {
             console.error("Failed to retrieve article:", error);
             return failure("Failed to retrieve article");

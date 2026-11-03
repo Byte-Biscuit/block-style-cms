@@ -81,6 +81,16 @@ export function extractTextFromContent(content: SchemaInlineContent[]): string {
             if (isStyledTextContent(item)) {
                 return item.text;
             }
+            if (
+                item &&
+                typeof item === "object" &&
+                "type" in item &&
+                item.type === "math" &&
+                "content" in item
+            ) {
+                const latex = (item as { content?: unknown }).content;
+                return typeof latex === "string" ? latex : "";
+            }
             return "";
         })
         .join("")

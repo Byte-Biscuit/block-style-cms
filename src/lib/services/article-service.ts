@@ -1,5 +1,5 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { algoliaSearchService } from "@/lib/services/algolia-search-service";
 import { ARTICLE_DIR, META_DIR } from "@/settings";
 import {
@@ -7,6 +7,16 @@ import {
     type ArticleMetadata,
     keywordsFromTags,
 } from "@/types/article";
+
+export type ResolveArticleBySlugLocaleError =
+    | "Article not found"
+    | "Article not found for locale"
+    | "Ambiguous article: multiple entries for slug+locale"
+    | "Article id missing";
+
+export type ResolveArticleBySlugLocaleResult =
+    | { ok: true; article: Article }
+    | { ok: false; error: ResolveArticleBySlugLocaleError };
 
 class ArticleService {
     getArticleFile(id: string): string {
@@ -36,7 +46,9 @@ class ArticleService {
      * Update an existing article.
      * @param article
      */
-    async updateArticle(article: Article): Promise<void> {
+    async updateArticle(
+        article: Article & { content?: Article["content"] }
+    ): Promise<void> {
         if (!article.id) {
             throw new Error("Article ID is required");
         }
@@ -44,9 +56,15 @@ class ArticleService {
         try {
             const existingContent = await fs.readFile(articleFile, "utf-8");
             const existingArticle: Article = JSON.parse(existingContent);
+            const { content: nextContent, ...rest } = article;
             const updatedArticle: Article = {
                 ...existingArticle,
-                ...article,
+                ...rest,
+                // Omit content in request → keep stored blocks (metadata-only / publish toggle).
+                content:
+                    nextContent === undefined
+                        ? existingArticle.content
+                        : nextContent,
                 updatedAt: new Date(),
             };
             updatedArticle.keywords = keywordsFromTags(
@@ -268,7 +286,7 @@ class ArticleService {
     ): Promise<ArticleMetadata[] | null> {
         const metadataMap = await this.getMetadataMap();
         let articles = metadataMap[slug];
-        // 如果不包含未发布文章,则只返回已发布的
+        // If unpublished are excluded, keep only published entries.
         if (!includeUnpublished) {
             articles = articles?.filter((article) => article.published) || null;
         }
@@ -276,6 +294,43 @@ class ArticleService {
             return null;
         }
         return articles;
+    }
+
+    /**
+     * Resolve a single full article by slug + locale.
+     * Includes drafts when includeUnpublished is true (admin / preview).
+     */
+    async resolveArticleBySlugLocale(
+        slug: string,
+        locale: string,
+        includeUnpublished: boolean = true
+    ): Promise<ResolveArticleBySlugLocaleResult> {
+        const variants = await this.getArticlesBySlug(
+            slug,
+            includeUnpublished
+        );
+        if (!variants?.length) {
+            return { ok: false, error: "Article not found" };
+        }
+        const matches = variants.filter((v) => v.locale === locale);
+        if (matches.length === 0) {
+            return { ok: false, error: "Article not found for locale" };
+        }
+        if (matches.length > 1) {
+            return {
+                ok: false,
+                error: "Ambiguous article: multiple entries for slug+locale",
+            };
+        }
+        const meta = matches[0];
+        if (!meta.id) {
+            return { ok: false, error: "Article id missing" };
+        }
+        const article = await this.getArticle(meta.id);
+        if (!article) {
+            return { ok: false, error: "Article not found" };
+        }
+        return { ok: true, article };
     }
     /**
      * Get latest articles by locale

@@ -5,6 +5,12 @@ import {
     CODE_LANGUAGE_ALIASES,
 } from "@/block-note/code-block-languages";
 import type { LocalBlock } from "@/block-note/schema";
+import {
+    isMathFenceLanguage,
+    preprocessMathMarkdown,
+    splitInlineMathFromText,
+    toMathBlock,
+} from "@/lib/markdown/math-md";
 
 export class UnresolvedImagePathsError extends Error {
     readonly paths: string[];
@@ -93,6 +99,9 @@ function plainTextFromContent(content: unknown): string {
             };
             if (node.type === "text") return node.text ?? "";
             if (node.type === "link") return plainTextFromContent(node.content);
+            if (node.type === "math") {
+                return typeof node.content === "string" ? node.content : "";
+            }
             return "";
         })
         .join("");
@@ -153,6 +162,9 @@ function toSvg(block: LooseBlock): LocalBlock {
 
 function remapCodeBlock(block: LooseBlock): LocalBlock {
     const language = String(block.props?.language ?? "");
+    if (isMathFenceLanguage(language)) {
+        return toLocalBlock(toMathBlock(block) as LooseBlock & { id: string });
+    }
     if (isMermaidLanguage(language)) {
         return toMermaid(block);
     }
@@ -180,6 +192,7 @@ function remapBlock(block: LooseBlock): LocalBlock {
     return toLocalBlock({
         ...block,
         id: block.id ?? uuidv4(),
+        content: splitInlineMathFromText(block.content),
         children: (block.children ?? []).map(remapBlock),
     });
 }
@@ -200,6 +213,19 @@ function collectUnresolvedImagePaths(
     return out;
 }
 
+/** Normalize titles so `$E=mc^2$` / `E=mc²` / fullwidth punct still match. */
+function normalizeTitleForCompare(s: string): string {
+    // Superscripts before NFKC — NFKC would otherwise turn ² into plain "2".
+    return s
+        .replace(/²/g, "^2")
+        .replace(/³/g, "^3")
+        .normalize("NFKC")
+        .replace(/[\s\u3000]+/g, "")
+        .replace(/[（]/g, "(")
+        .replace(/[）)]/g, ")")
+        .toLowerCase();
+}
+
 function dropMatchingTitleHeading(
     blocks: LocalBlock[],
     title: string
@@ -209,7 +235,11 @@ function dropMatchingTitleHeading(
     if (first.type !== "heading") return blocks;
     const level = Number(first.props?.level ?? 0);
     if (level !== 1) return blocks;
-    if (plainTextFromContent(first.content).trim() !== title.trim()) {
+    const headingText = plainTextFromContent(first.content);
+    if (
+        normalizeTitleForCompare(headingText) !==
+        normalizeTitleForCompare(title)
+    ) {
         return blocks;
     }
     return blocks.slice(1);
@@ -220,7 +250,7 @@ let editorSingleton: ServerBlockNoteEditor | null = null;
 function getEditor(): ServerBlockNoteEditor {
     if (!editorSingleton) {
         // Default schema keeps BlockNote's image + codeBlock so markdown images
-        // and fences parse; remapToLocalBlocks maps them to CMS block types.
+        // and fences parse; remap maps them (and $$ / $ math) to CMS block types.
         editorSingleton = ServerBlockNoteEditor.create();
     }
     return editorSingleton;
@@ -228,15 +258,17 @@ function getEditor(): ServerBlockNoteEditor {
 
 /**
  * Parse markdown into CMS LocalBlock JSON via BlockNote's default schema,
- * then remap image → enhancedImage and mermaid/svg fences → custom blocks.
+ * then remap image → enhancedImage, mermaid/svg/math fences → custom blocks,
+ * and `$...$` text → inline math.
  */
 export async function markdownToBlocks(
     md: string,
     options: MarkdownToBlocksOptions = {}
 ): Promise<LocalBlock[]> {
     const editor = getEditor();
+    const prepared = preprocessMathMarkdown(md);
     const parsed = (await editor.tryParseMarkdownToBlocks(
-        md
+        prepared
     )) as unknown as LooseBlock[];
 
     const unresolved = collectUnresolvedImagePaths(parsed);

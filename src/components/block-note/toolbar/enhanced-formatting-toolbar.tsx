@@ -1,12 +1,15 @@
+import { getMathBlockTypeSelectItems } from "@blocknote/math-block";
 import {
     BasicTextStyleButton,
     BlockTypeSelect,
+    blockTypeSelectItems,
     CreateLinkButton,
     FormattingToolbar,
     NestBlockButton,
     TableCellMergeButton,
     TextAlignButton,
     UnnestBlockButton,
+    useBlockNoteEditor,
 } from "@blocknote/react";
 import BackgroundColorButton from "@/block-note/toolbar/background-color-button";
 import SmartToolbarChildren from "@/block-note/toolbar/smart-toolbar-children";
@@ -14,11 +17,20 @@ import TextColorButton from "@/block-note/toolbar/text-color-button";
 import ToolbarSeparator from "@/block-note/toolbar/toolbar-separator";
 
 const EnhancedFormattingToolbar = () => {
+    const editor = useBlockNoteEditor();
+    const typeSelectItems = [
+        ...blockTypeSelectItems(editor),
+        ...getMathBlockTypeSelectItems(editor),
+    ];
+
     // Normal editing mode: full toolbar with smart separator filtering
     return (
         <FormattingToolbar>
             <SmartToolbarChildren>
-                <BlockTypeSelect key="blockTypeSelect" />
+                <BlockTypeSelect
+                    key="blockTypeSelect"
+                    items={typeSelectItems}
+                />
                 <ToolbarSeparator key="sep-1" />
                 <TableCellMergeButton key="tableCellMergeButton" />
                 <ToolbarSeparator key="sep-merge" />

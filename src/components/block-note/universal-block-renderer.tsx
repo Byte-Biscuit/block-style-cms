@@ -19,6 +19,7 @@ import EnhancedVideo, {
     type EnhancedVideoBlockData,
 } from "./renderer/enhanced-video";
 import Heading from "./renderer/heading";
+import MathBlock, { type MathBlockData } from "./renderer/math-block";
 import Mermaid, { type MermaidBlockData } from "./renderer/mermaid";
 import NumberedListItem, {
     type NumberedListBlock,
@@ -111,6 +112,15 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
     // svg illustration
     if (block.type === "svg") {
         return <SvgFigure data={block as SvgBlockData} />;
+    }
+    // math block
+    if (block.type === "mathBlock") {
+        return (
+            <MathBlock
+                data={block as MathBlockData}
+                className={className || undefined}
+            />
+        );
     }
     // quote
     if (block.type === "quote") {

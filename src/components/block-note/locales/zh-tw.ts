@@ -1,7 +1,9 @@
 import { zhTW as base } from "@blocknote/core/locales";
+import { locales as mathLocales } from "@blocknote/math-block";
 
 export const zhTW = {
     ...base,
+    math: mathLocales.zhTW,
     enhanced_slash_menu: {
         enhanced_image: {
             title: "圖片",

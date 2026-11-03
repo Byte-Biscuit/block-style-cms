@@ -53,3 +53,4 @@ deploy.json
 # python
 .venv/
 __pycache__/
+tmp/

@@ -11,7 +11,7 @@ export default async function Home() {
         return (
             <div className="flex min-h-100 items-center justify-center">
                 <div className="text-center">
-                    <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
+                    <h2 className="mb-2 font-semibold text-gray-900 text-xl dark:text-gray-100">
                         {t("emptyTitle")}
                     </h2>
                     <p className="text-gray-600 dark:text-gray-400">
@@ -29,7 +29,7 @@ export default async function Home() {
         <div className="space-y-12">
             <section>
                 <div className="mb-8">
-                    <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    <h1 className="mb-2 font-bold text-3xl text-gray-900 dark:text-gray-100">
                         {t("title")}
                     </h1>
                     <div className="h-1 w-20 rounded-full bg-linear-to-r from-blue-500 to-purple-600"></div>
@@ -49,10 +49,10 @@ export default async function Home() {
             {otherArticles.length > 0 && (
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+                        <div className="w-full border-gray-200 border-t dark:border-gray-700"></div>
                     </div>
                     <div className="relative flex justify-center">
-                        <span className="bg-white px-4 text-sm text-gray-500 dark:bg-gray-950 dark:text-gray-400">
+                        <span className="bg-white px-4 text-gray-500 text-sm dark:bg-gray-950 dark:text-gray-400">
                             {t("more")}
                         </span>
                     </div>

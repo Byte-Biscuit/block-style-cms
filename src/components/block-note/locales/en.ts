@@ -1,7 +1,9 @@
 import { en as base } from "@blocknote/core/locales";
+import { locales as mathLocales } from "@blocknote/math-block";
 
 export const en = {
     ...base,
+    math: mathLocales.en,
     enhanced_slash_menu: {
         enhanced_image: {
             title: "Image",

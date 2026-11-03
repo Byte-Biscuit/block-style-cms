@@ -4,6 +4,7 @@ import FloatingActionButtons from "@/components/floating-action-buttons";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { container } from "@/lib/style-classes";
+import "katex/dist/katex.min.css";
 
 export default function LocaleLayout({
     children,

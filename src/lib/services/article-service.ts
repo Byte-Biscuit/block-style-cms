@@ -47,7 +47,7 @@ class ArticleService {
      * @param article
      */
     async updateArticle(
-        article: Article & { content?: Article["content"] }
+        article: Omit<Article, "content"> & { content?: Article["content"] }
     ): Promise<void> {
         if (!article.id) {
             throw new Error("Article ID is required");

@@ -14,7 +14,7 @@ export const formatDateI18n = (
     options?: Intl.DateTimeFormatOptions
 ): string => {
     const dateObj = typeof date === "string" ? new Date(date) : date;
-    if (isNaN(dateObj.getTime())) {
+    if (Number.isNaN(dateObj.getTime())) {
         return "";
     }
 
@@ -26,12 +26,11 @@ export const formatDateI18n = (
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        // 美国使用12小时制
-        hour12: normalizedLocale.startsWith("en") ? true : false,
-        second: "2-digit",
+        // 12-hour clock for English locales
+        hour12: normalizedLocale.startsWith("en"),
     };
 
-    // 合并用户自定义选项
+    // Prefer caller-provided options when present
     const formatOptions = options || defaultOptions;
 
     try {

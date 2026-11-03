@@ -1,28 +1,25 @@
-import type {
-    DefaultInlineContentSchema,
-    DefaultStyleSchema,
-    InlineContent,
-    TableCell,
-    TableCellProps,
-} from "@blocknote/core";
+import type { InlineContent, TableCell, TableCellProps } from "@blocknote/core";
 import type React from "react";
-import type { LocalBlock as Block } from "@/block-note/schema";
+import type { LocalBlock as Block, schema } from "@/block-note/schema";
 import { getBlockClasses } from "@/lib/style-classes";
 import Content from "./item/content";
 
 export type TableBlock = Extract<Block, { type: "table" }>;
 export type TableContent = TableBlock["content"];
 export type TableRow = TableBlock["content"]["rows"][number];
+export type TableCellData = TableRow["cells"][number];
 
-// Cell can be either InlineContent[] or TableCell
-type CellData =
-    | InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[]
-    | TableCell<DefaultInlineContentSchema, DefaultStyleSchema>;
+type SchemaInline = InlineContent<
+    typeof schema.inlineContentSchema,
+    typeof schema.styleSchema
+>;
+type SchemaTableCell = TableCell<
+    typeof schema.inlineContentSchema,
+    typeof schema.styleSchema
+>;
 
 // Type guard: check if cell is a TableCell object
-const isTableCell = (
-    cell: CellData
-): cell is TableCell<DefaultInlineContentSchema, DefaultStyleSchema> => {
+const isTableCell = (cell: TableCellData): cell is SchemaTableCell => {
     return (
         typeof cell === "object" &&
         cell !== null &&
@@ -34,16 +31,11 @@ const isTableCell = (
 
 // TableCell component
 const TableCellRender: React.FC<{
-    cell:
-        | TableCell<DefaultInlineContentSchema, DefaultStyleSchema>
-        | InlineContent<DefaultInlineContentSchema, DefaultStyleSchema>[];
+    cell: TableCellData;
     isHeader?: boolean;
 }> = ({ cell, isHeader = false }) => {
     // Parse cell data: can be either a TableCell object or InlineContent[] array
-    let content: InlineContent<
-        DefaultInlineContentSchema,
-        DefaultStyleSchema
-    >[] = [];
+    let content: SchemaInline[] = [];
     let props: Partial<TableCellProps> = {};
 
     if (isTableCell(cell)) {
@@ -108,6 +100,10 @@ export const TableRender: React.FC<{
     const { props, content } = block;
     if (!content) return null;
     const { columnWidths, rows } = content;
+    // Columns/cells have no stable ids; position under this block is the identity.
+    const colKey = (i: number) => `${block.id}-col-${i}`;
+    const rowKey = (i: number) => `${block.id}-row-${i}`;
+    const cellKey = (row: number, col: number) => `${block.id}-r${row}-c${col}`;
     const classes = getBlockClasses(
         props,
         "min-w-full",
@@ -123,16 +119,16 @@ export const TableRender: React.FC<{
     const colElements = (() => {
         if (!hasAnySpecified) {
             // no explicit widths at all — leave to browser (even distribution)
-            return columnWidths.map((_, index) => <col key={index} />);
+            return columnWidths.map((_, index) => <col key={colKey(index)} />);
         }
 
         if (hasAnyNull) {
             // Mixed: some specified, some null -> apply px for specified, leave others unstyled
             return columnWidths.map((width, index) =>
                 width !== null ? (
-                    <col key={index} style={{ width: `${width}px` }} />
+                    <col key={colKey(index)} style={{ width: `${width}px` }} />
                 ) : (
-                    <col key={index} />
+                    <col key={colKey(index)} />
                 )
             );
         }
@@ -154,14 +150,14 @@ export const TableRender: React.FC<{
             );
         }
         return rounded.map((p, index) => (
-            <col key={index} style={{ width: `${p}%` }} />
+            <col key={colKey(index)} style={{ width: `${p}%` }} />
         ));
     })();
 
     return (
         // Outer card to mimic MUI Paper: rounded, border, subtle shadow, supports dark mode
         <div className="my-4">
-            <div className="overflow-hidden rounded-lg border-t border-l border-b border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <div className="overflow-hidden rounded-lg border-gray-200 border-t border-b border-l bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 <div className="overflow-x-auto">
                     <table className={classes}>
                         {columnWidths.some((width) => width !== null) && (
@@ -172,7 +168,7 @@ export const TableRender: React.FC<{
                                 <tr>
                                     {rows[0].cells.map((cell, cellIndex) => (
                                         <TableCellRender
-                                            key={cellIndex}
+                                            key={cellKey(0, cellIndex)}
                                             cell={cell}
                                             isHeader={true}
                                         />
@@ -183,12 +179,15 @@ export const TableRender: React.FC<{
                         <tbody>
                             {rows.slice(1).map((row, rowIndex) => (
                                 <tr
-                                    key={rowIndex}
+                                    key={rowKey(rowIndex + 1)}
                                     className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-900/50"
                                 >
                                     {row.cells.map((cell, cellIndex) => (
                                         <TableCellRender
-                                            key={cellIndex}
+                                            key={cellKey(
+                                                rowIndex + 1,
+                                                cellIndex
+                                            )}
                                             cell={cell}
                                             isHeader={false}
                                         />

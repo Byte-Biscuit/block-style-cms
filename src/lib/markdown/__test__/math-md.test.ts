@@ -21,6 +21,27 @@ describe("math-md", () => {
         expect(exported).toBe("$$\na^2\n$$");
     });
 
+    it("does not rewrite $$ inside fenced or inline code", () => {
+        const md =
+            "docs:\n\n```markdown\n$$\na^2\n$$\n```\n\nuse `$$` + space\n\n$$\nb^2\n$$\n";
+        const prepared = preprocessMathMarkdown(md);
+        expect(prepared).toContain("```markdown\n$$\na^2\n$$\n```");
+        expect(prepared).toContain("use `$$` + space");
+        expect(prepared).toContain("```math\nb^2\n```");
+    });
+
+    it("does not split $...$ inside inline code styles", () => {
+        const split = splitInlineMathFromText([
+            { type: "text", text: "$a+b$", styles: { code: true } },
+            { type: "text", text: " and $c$", styles: {} },
+        ]);
+        expect(split).toEqual([
+            { type: "text", text: "$a+b$", styles: { code: true } },
+            { type: "text", text: " and ", styles: {} },
+            { type: "math", props: {}, content: "c" },
+        ]);
+    });
+
     it("round-trips mathBlock via codeBlock bridge", () => {
         const fence = fromMathBlock({
             id: "1",

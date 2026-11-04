@@ -7,6 +7,7 @@ import {
 import {
     createReactInlineMathSpec,
     createReactMathBlockSpec,
+    MathInlineInputRulesExtension,
 } from "@blocknote/math-block";
 import {
     ENHANCED_AUDIO_BLOCK_TYPE,
@@ -38,7 +39,11 @@ const {
     ...restDefaultBlockSpecs
 } = defaultBlockSpecs;
 
-export const extensions = [syntaxHighlighter];
+// ponytail: BlockNote ExtensionManager only mounts blockSpecs[].extensions,
+// not inlineContentSpecs[].extensions — so $...$ / \(...\) from
+// createReactInlineMathSpec never register. Wire them at editor level until
+// upstream collects inline-content extensions too.
+export const extensions = [syntaxHighlighter, MathInlineInputRulesExtension];
 
 export const schema = BlockNoteSchema.create({
     blockSpecs: {

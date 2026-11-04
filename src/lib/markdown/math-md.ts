@@ -81,6 +81,7 @@ export function remapInlineMathToText(content: unknown): unknown {
 /**
  * Split plain-text `$...$` (not `$$`) into text + math + text nodes.
  * ponytail: same delimiter convention as BlockNote; currency false positives accepted.
+ * Skip inline `code` text — tutorials document `$` / `$$` inside backticks.
  */
 export function splitInlineMathFromText(content: unknown): unknown {
     if (!Array.isArray(content)) return content;
@@ -96,6 +97,10 @@ export function splitInlineMathFromText(content: unknown): unknown {
             continue;
         }
         if (item?.type !== "text" || typeof item.text !== "string") {
+            out.push(item);
+            continue;
+        }
+        if ((item as { styles?: { code?: boolean } }).styles?.code) {
             out.push(item);
             continue;
         }
@@ -128,11 +133,27 @@ export function splitInlineMathFromText(content: unknown): unknown {
 /**
  * Before default-schema parse: turn `$$...$$` display math into ```math fences.
  * Inline `$...$` stays as text and is split after parse.
+ * Skip fenced + inline code so tutorials can document `$$` / `$` literally.
  */
 export function preprocessMathMarkdown(md: string): string {
-    return md.replace(/\$\$([\s\S]+?)\$\$/g, (_full, body: string) => {
-        const latex = body.replace(/^\n+|\n+$/g, "");
-        return `\n\`\`\`${MATH_FENCE_LANGUAGE}\n${latex}\n\`\`\`\n`;
+    const saved: string[] = [];
+    const shield = (chunk: string) => {
+        saved.push(chunk);
+        return `\0CODE${saved.length - 1}\0`;
+    };
+    // Fences first, then inline `code` (non-greedy, no newlines).
+    const shielded = md
+        .replace(/```[\s\S]*?```/g, shield)
+        .replace(/`[^`\n]+`/g, shield);
+    const converted = shielded.replace(
+        /\$\$([\s\S]+?)\$\$/g,
+        (_full, body: string) => {
+            const latex = body.replace(/^\n+|\n+$/g, "");
+            return `\n\`\`\`${MATH_FENCE_LANGUAGE}\n${latex}\n\`\`\`\n`;
+        }
+    );
+    return converted.replace(/\0CODE(\d+)\0/g, (_full, index: string) => {
+        return saved[Number(index)] ?? "";
     });
 }
 

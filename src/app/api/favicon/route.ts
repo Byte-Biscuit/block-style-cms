@@ -1,6 +1,6 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 import { NextResponse } from "next/server";
-import path from "path";
 import { CMS_DATA_PATH } from "@/settings";
 
 export async function GET() {

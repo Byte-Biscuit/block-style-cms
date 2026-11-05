@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import type { LocalBlock as Block } from "@/components/block-note/schema";
 import { BlockListRenderer } from "@/components/block-note/universal-block-renderer";
 import CommentSection from "@/components/comment/comment-section";
@@ -33,19 +33,8 @@ const isPreviewMode = (preview?: string | string[]): boolean => {
     const value = Array.isArray(preview) ? preview[0] : preview;
     return ["1", "true", "yes"].includes(value.toLowerCase());
 };
-export const revalidate = 3600;
-//export const dynamic = "force-static";
-
-export async function generateStaticParams() {
-    const metadataMap = await articleService.getMetadataMap();
-    const articles = Object.values(metadataMap).flat();
-    const publishedArticles = articles.filter((a) => a.published);
-
-    return publishedArticles.map((article) => ({
-        locale: article.locale,
-        slug: article.slug,
-    }));
-}
+// Root layout uses headers(); preview uses searchParams — must be dynamic SSR.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
     params,
@@ -55,7 +44,6 @@ export async function generateMetadata({
     const { preview } = (await searchParams) || {};
     const includeUnpublished = isPreviewMode(preview);
 
-    setRequestLocale(locale);
     const t = await getTranslations();
     const articles = await articleService.getArticlesBySlug(
         slug,
@@ -94,7 +82,6 @@ export default async function ArticleDetailPage({
     const includeUnpublished = isPreviewMode(preview);
     const systemConfig = await systemConfigService.readConfig();
 
-    setRequestLocale(locale);
     const t = await getTranslations();
     const articles = await articleService.getArticlesBySlug(
         slug,

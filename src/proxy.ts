@@ -17,6 +17,17 @@ export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     let response: NextResponse;
 
+    // Browser default icon probe; reuse /api/favicon (CMS data or public/logo).
+    if (pathname === "/favicon.ico") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/api/favicon";
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set(X_PATH_HEADER_KEY, pathname);
+        return NextResponse.rewrite(url, {
+            request: { headers: requestHeaders },
+        });
+    }
+
     // /api/m: session cookie OR API token (Route Handlers only)
     if (pathname.startsWith("/api/m")) {
         const apiAuth = await authorizeApiM(request);
@@ -89,7 +100,7 @@ function unauthorizedJson(
 }
 
 function injectHeader(response: NextResponse, params: { pathname: string }) {
-    // Set a custom header for the Layout to read
+    // Readable via headers() in Server Components / getRequestConfig.
     const { pathname } = params;
     response.headers.set(X_PATH_HEADER_KEY, pathname);
     return response;
@@ -98,11 +109,13 @@ function injectHeader(response: NextResponse, params: { pathname: string }) {
 /*
  * Match all paths, but exclude the following:
  * 1. _next/ (Next.js system files)
- * 2. favicon.ico
- * 3. Common static asset file extensions (these should not trigger the middleware even if in public)
+ * 2. Common static asset file extensions (these should not trigger the middleware even if in public)
+ * favicon.ico is matched explicitly so we can rewrite to /api/favicon.
+ * /.well-known is handled by app/.well-known (outside [locale]), not here.
  */
 export const config = {
     matcher: [
-        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico|bmp|tiff|mp4|webm|ogg|mp3|wav|flac|aac|pdf|doc|docx|xls|xlsx|ppt|pptx|csv|rtf|txt|css|js|map|woff|woff2|ttf|eot|otf|json|xml|yml|yaml|toml)).*)",
+        "/favicon.ico",
+        "/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico|bmp|tiff|mp4|webm|ogg|mp3|wav|flac|aac|pdf|doc|docx|xls|xlsx|ppt|pptx|csv|rtf|txt|css|js|map|woff|woff2|ttf|eot|otf|json|xml|yml|yaml|toml)).*)",
     ],
 };

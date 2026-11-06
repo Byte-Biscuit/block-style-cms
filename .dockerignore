@@ -1,0 +1,33 @@
+# dependencies & build
+node_modules
+.next
+out
+build
+coverage
+
+# git & IDE
+.git
+.gitignore
+.cursor
+.vscode
+.idea
+
+# env & local data
+.env
+.env.*
+data
+tmp
+.venv
+__pycache__
+
+# docs / misc (not needed in image)
+*.md
+AGENTS.md
+pm2
+.github
+sonar-project.properties
+deploy.json
+**/*.test.ts
+**/*.test.tsx
+**/__test__
+**/__tests__

@@ -42,7 +42,7 @@
         "hi-base32": "^0.5.1",
         "katex": "^0.18.10",
         "lru-cache": "^11.5.2",
-        "mermaid": "^11.16.1",
+        "mermaid": "^12.2.0",
         "monaco-editor": "^0.55.1",
         "nanoid": "^6.0.1",
         "next": "^16.4.3",

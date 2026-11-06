@@ -11,7 +11,7 @@ export async function register() {
             process.exit(1);
         }
 
-        // 捕获未处理的错误
+        // Catch unhandled errors
         process.on("unhandledRejection", (reason, promise) => {
             console.error("🔴 Unhandled Rejection at:", promise);
             console.error("🔴 Reason:", reason);
@@ -21,8 +21,8 @@ export async function register() {
             console.error("🔴 Uncaught Exception:", error);
         });
 
-        // 动态导入 fs 模块，只在服务端环境中使用
-        const fs = await import("fs/promises");
+        // Dynamically import fs module, only used in server-side environment
+        const fs = await import("node:fs/promises");
         const {
             ARTICLE_DIR,
             META_DIR,
@@ -32,6 +32,7 @@ export async function register() {
             AUDIO_DIR,
             FILE_DIR,
             COMMENT_DIR,
+            SUGGESTION_DIR,
         } = await import("@/settings");
 
         await fs.mkdir(ARTICLE_DIR, { recursive: true });
@@ -42,6 +43,7 @@ export async function register() {
         await fs.mkdir(AUDIO_DIR, { recursive: true });
         await fs.mkdir(FILE_DIR, { recursive: true });
         await fs.mkdir(COMMENT_DIR, { recursive: true });
+        await fs.mkdir(SUGGESTION_DIR, { recursive: true });
         console.log("✅ Directories initialized");
     }
 }

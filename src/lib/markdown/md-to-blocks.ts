@@ -11,6 +11,7 @@ import {
     splitInlineMathFromText,
     toMathBlock,
 } from "@/lib/markdown/math-md";
+import { serverBlockNoteDocument } from "@/lib/markdown/server-document";
 
 export class UnresolvedImagePathsError extends Error {
     readonly paths: string[];
@@ -251,7 +252,10 @@ function getEditor(): ServerBlockNoteEditor {
     if (!editorSingleton) {
         // Default schema keeps BlockNote's image + codeBlock so markdown images
         // and fences parse; remap maps them (and $$ / $ math) to CMS block types.
-        editorSingleton = ServerBlockNoteEditor.create();
+        editorSingleton = ServerBlockNoteEditor.create(
+            {},
+            serverBlockNoteDocument()
+        );
     }
     return editorSingleton;
 }

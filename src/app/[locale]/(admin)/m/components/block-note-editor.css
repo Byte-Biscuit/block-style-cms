@@ -140,9 +140,9 @@
 }
 
 /* Official codeBlock language <select> is replaced by CodeLanguagePickerOverlay. */
-.bn-block-content[data-content-type="codeBlock"] > div > select {
+/* .bn-block-content[data-content-type="codeBlock"] > div > select {
     display: none;
-}
+} */
 
 .bn-code-language-picker-trigger {
     position: absolute;

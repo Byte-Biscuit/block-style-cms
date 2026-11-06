@@ -1,6 +1,10 @@
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { headers } from "next/headers";
+import * as rootParams from "next/root-params";
+import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
-import { join } from "path";
+import { X_PATH_HEADER_KEY } from "@/constants";
 import { mergeDeep } from "@/lib/utils";
 import { CMS_DATA_PATH } from "@/settings";
 import { routing } from "./routing";
@@ -30,28 +34,63 @@ export function getMessagesCacheStatus() {
     };
 }
 
-export default getRequestConfig(async ({ requestLocale }) => {
-    let locale = await requestLocale;
-    if (
-        !locale ||
-        !routing.locales.includes(locale as (typeof routing.locales)[number])
-    ) {
-        console.warn(
-            `[i18n] Invalid locale "${locale}", falling back to default: ${routing.defaultLocale}`
+/** Best-effort request path for i18n debug logs. */
+async function getRequestPathForLog(): Promise<string> {
+    try {
+        const h = await headers();
+        return (
+            h.get(X_PATH_HEADER_KEY) ||
+            h.get("x-middleware-rewrite") ||
+            h.get("next-url") ||
+            h.get("x-url") ||
+            "(no-path)"
         );
-        locale = routing.defaultLocale;
+    } catch {
+        return "(no-headers)";
     }
+}
+
+async function resolveLocale(explicit?: string): Promise<string> {
+    // Call-site override (Server Actions / Route Handlers — root-params unsupported there).
+    if (explicit && hasLocale(routing.locales, explicit)) {
+        return explicit;
+    }
+
+    try {
+        const paramValue = await rootParams.locale();
+        if (hasLocale(routing.locales, paramValue)) {
+            return paramValue;
+        }
+        // undefined/invalid outside a matching [locale] segment — fall back quietly.
+        if (paramValue != null && paramValue !== "") {
+            const path = await getRequestPathForLog();
+            console.warn(
+                `[i18n] Invalid locale "${String(paramValue)}" path=${path}, falling back to default: ${routing.defaultLocale}`
+            );
+        }
+    } catch {
+        // Outside [locale] tree or Route Handler — root-params unsupported; use default.
+    }
+
+    return routing.defaultLocale;
+}
+
+export default getRequestConfig(async ({ locale: localeOverride }) => {
+    const locale = await resolveLocale(localeOverride);
+    const path = await getRequestPathForLog();
 
     // Check cache first
     if (messagesCache.has(locale)) {
-        console.log(`[i18n] Using cached messages for locale: ${locale}`);
+        console.log(
+            `[i18n] Using cached messages for locale: ${locale} path=${path}`
+        );
         return {
             locale,
             messages: messagesCache.get(locale),
         };
     }
 
-    console.log(`[i18n] Loading messages for locale: ${locale}`);
+    console.log(`[i18n] Loading messages for locale: ${locale} path=${path}`);
 
     // Load default messages from src/i18n/locales
     const defaultMessages = (await import(`./locales/${locale}.json`)).default;
@@ -92,7 +131,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
     // Cache the final merged messages
     messagesCache.set(locale, finalMessages);
-    console.log(`[i18n] Cached messages for locale: ${locale}`);
+    console.log(`[i18n] Cached messages for locale: ${locale} path=${path}`);
 
     return {
         locale,

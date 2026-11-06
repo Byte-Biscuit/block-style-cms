@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 let nextConfig: NextConfig = {
-    //output: 'standalone',
+    output: "standalone",
     // BlockNoter's React Strict Mode causes issues with certain 3rd party libs
     reactStrictMode: false,
     // Keep BlockNote out of the RSC server bundle so ServerBlockNoteEditor
@@ -26,6 +26,8 @@ let nextConfig: NextConfig = {
         serverActions: {
             bodySizeLimit: "50mb",
         },
+        // Required for app/global-not-found.tsx with [locale] as root layout.
+        globalNotFound: true,
     },
     images: {
         // Temporarily disable the optimization feature of the Image component.

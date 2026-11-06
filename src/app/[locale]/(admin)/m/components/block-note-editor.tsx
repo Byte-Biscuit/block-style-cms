@@ -174,7 +174,7 @@ const EnhancedBlockNoteEditor: React.FC<BlockNoteEditorProps> = ({
                 }}
                 formattingToolbar={false}
             >
-                <CodeLanguagePickerOverlay />
+                {/* <CodeLanguagePickerOverlay /> */}
                 <FormattingToolbarController
                     formattingToolbar={() => <EnhancedFormattingToolbar />}
                 />

@@ -1,0 +1,17 @@
+services:
+  cms:
+    # Override for Hub pull-only: DOCKER_IMAGE=youruser/block-style-cms:latest
+    image: ${DOCKER_IMAGE:-block-style-cms:local}
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      CMS_DATA_PATH: /data
+      # Optional public site URL (sitemap / robots / SEO)
+      # NEXT_PUBLIC_BASE_URL: https://your.domain
+    volumes:
+      - cms-data:/data
+    restart: unless-stopped
+
+volumes:
+  cms-data:

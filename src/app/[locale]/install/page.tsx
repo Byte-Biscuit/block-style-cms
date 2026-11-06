@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import InstallPageClient from "./components/install-page-client";
 
 type Props = {
@@ -28,11 +28,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * This page is only accessible when the system has not been initialized.
  * Handles metadata and initializes the client-side installation wizard.
  */
-export default async function InstallPage({ params }: Props) {
-    const { locale } = await params;
-
-    // Enable static rendering support for this locale
-    setRequestLocale(locale);
-
+export default async function InstallPage(_props: Props) {
     return <InstallPageClient />;
 }

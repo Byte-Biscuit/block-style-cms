@@ -33,7 +33,7 @@
         "@monaco-editor/react": "^4.7.0",
         "@mui/icons-material": "^7.3.2",
         "@mui/material": "^7.3.2",
-        "@mui/material-nextjs": "^7.3.2",
+        "@mui/material-nextjs": "^9.5.0",
         "algoliasearch": "^5.57.0",
         "better-auth": "^1.7.3",
         "better-sqlite3": "^13.0.3",

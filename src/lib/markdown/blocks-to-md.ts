@@ -6,6 +6,7 @@ import {
     postprocessMathMarkdown,
     remapInlineMathToText,
 } from "@/lib/markdown/math-md";
+import { serverBlockNoteDocument } from "@/lib/markdown/server-document";
 import { systemConfigService } from "@/lib/services/system-config-service";
 
 type LooseBlock = {
@@ -126,7 +127,10 @@ let editorSingleton: ServerBlockNoteEditor | null = null;
 
 function getEditor(): ServerBlockNoteEditor {
     if (!editorSingleton) {
-        editorSingleton = ServerBlockNoteEditor.create();
+        editorSingleton = ServerBlockNoteEditor.create(
+            {},
+            serverBlockNoteDocument()
+        );
     }
     return editorSingleton;
 }

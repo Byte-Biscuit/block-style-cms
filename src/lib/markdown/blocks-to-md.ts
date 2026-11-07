@@ -44,7 +44,9 @@ export function normalizeImageSrcForMarkdown(
     return s;
 }
 
-function textContent(text: string): Array<{ type: "text"; text: string; styles: Record<string, never> }> {
+function textContent(
+    text: string
+): Array<{ type: "text"; text: string; styles: Record<string, never> }> {
     return [{ type: "text", text, styles: {} }];
 }
 
@@ -53,10 +55,7 @@ function fromEnhancedImage(
     options: NormalizeImageSrcOptions
 ): LooseBlock {
     const props = block.props ?? {};
-    const src = normalizeImageSrcForMarkdown(
-        String(props.src ?? ""),
-        options
-    );
+    const src = normalizeImageSrcForMarkdown(String(props.src ?? ""), options);
     const caption = String(props.caption ?? props.alt ?? "").trim();
     return {
         id: block.id ?? uuidv4(),
@@ -158,9 +157,7 @@ export async function blocksToMarkdown(
         baseUrl,
     });
     const md = await editor.blocksToMarkdownLossy(
-        exportBlocks as Parameters<
-            typeof editor.blocksToMarkdownLossy
-        >[0]
+        exportBlocks as Parameters<typeof editor.blocksToMarkdownLossy>[0]
     );
     return postprocessMathMarkdown(md);
 }

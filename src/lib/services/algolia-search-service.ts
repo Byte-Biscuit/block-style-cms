@@ -20,9 +20,7 @@ function blockProps(block: LocalBlock): Record<string, unknown> | undefined {
 
 function extractBlockTextContent(block: LocalBlock): string {
     if ((block.type as string) === "mathBlock") {
-        return latexFromPlainContent(
-            (block as { content?: unknown }).content
-        );
+        return latexFromPlainContent((block as { content?: unknown }).content);
     }
 
     if (block.content && Array.isArray(block.content)) {

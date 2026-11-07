@@ -71,9 +71,7 @@ describe("blocksToMarkdown", () => {
         expect(exported).toContain("A paragraph.");
         expect(exported).toContain("item one");
         expect(exported).toMatch(/```typescript[\s\S]*const x = 1/);
-        expect(exported).toContain(
-            "https://cms.example.com/images/demo.webp"
-        );
+        expect(exported).toContain("https://cms.example.com/images/demo.webp");
         expect(exported).toMatch(/```mermaid[\s\S]*flowchart TD/);
     });
 

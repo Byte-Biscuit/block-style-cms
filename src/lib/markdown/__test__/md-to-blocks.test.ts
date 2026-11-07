@@ -126,13 +126,7 @@ describe("markdownToBlocks", () => {
     });
 
     it("parses block $$ and inline $ math", async () => {
-        const md = [
-            "Has $a+b$ inline.",
-            "",
-            "$$",
-            "E=mc^2",
-            "$$",
-        ].join("\n");
+        const md = ["Has $a+b$ inline.", "", "$$", "E=mc^2", "$$"].join("\n");
         const blocks = (await markdownToBlocks(md)) as LooseBlock[];
         expect(blocks.some((b) => b.type === "mathBlock")).toBe(true);
         const paragraph = blocks.find((b) => b.type === "paragraph");

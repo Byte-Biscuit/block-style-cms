@@ -390,10 +390,7 @@ async function markFileForDeletion(
             }
         }, 5000);
     } catch (error) {
-        console.error(
-            `Failed to mark file for deletion: ${filename}`,
-            error
-        );
+        console.error(`Failed to mark file for deletion: ${filename}`, error);
         throw new Error(
             `Unable to delete file; please remove manually: ${filename}`
         );

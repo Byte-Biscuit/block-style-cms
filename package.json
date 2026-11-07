@@ -33,22 +33,22 @@
         "@monaco-editor/react": "^4.7.0",
         "@mui/icons-material": "^7.3.2",
         "@mui/material": "^7.3.2",
-        "@mui/material-nextjs": "^7.3.2",
+        "@mui/material-nextjs": "^9.5.0",
         "algoliasearch": "^5.57.0",
         "better-auth": "^1.7.3",
         "better-sqlite3": "^13.0.3",
         "clsx": "^2.1.1",
-        "dompurify": "^3.4.14",
-        "hi-base32": "^0.5.1",
+        "dompurify": "^3.4.17",
+        "hi-base32": "^0.6.0",
         "katex": "^0.18.10",
         "lru-cache": "^11.5.2",
-        "mermaid": "^11.16.1",
-        "monaco-editor": "^0.55.1",
+        "mermaid": "^12.2.0",
+        "monaco-editor": "^0.57.0",
         "nanoid": "^6.0.1",
         "next": "^16.4.3",
         "next-intl": "^4.13.7",
         "next-themes": "^0.4.6",
-        "node-html-parser": "^7.0.1",
+        "node-html-parser": "^9.0.6",
         "qrcode": "^1.5.4",
         "react": "19.2.8",
         "react-dom": "19.2.8",
@@ -65,7 +65,8 @@
         "zod": "^4.4.3"
     },
     "overrides": {
-        "better-sqlite3": "$better-sqlite3"
+        "better-sqlite3": "$better-sqlite3",
+        "dompurify": "$dompurify"
     },
     "devDependencies": {
         "@biomejs/biome": "2.5.12",

@@ -305,10 +305,7 @@ class ArticleService {
         locale: string,
         includeUnpublished: boolean = true
     ): Promise<ResolveArticleBySlugLocaleResult> {
-        const variants = await this.getArticlesBySlug(
-            slug,
-            includeUnpublished
-        );
+        const variants = await this.getArticlesBySlug(slug, includeUnpublished);
         if (!variants?.length) {
             return { ok: false, error: "Article not found" };
         }

@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/Byte-Biscuit/block-style-cms">
+    <img src="./public/logo.png" width="120" height="120" alt="Block Style CMS Logo" />
+  </a>
+</p>
+
 # Block Style CMS (BlockCMS)
 
 > 基于 [BlockNote](https://github.com/TypeCellOS/BlockNote) 构建的轻量级、零外部数据库依赖开源块式内容管理系统（简称 **BlockCMS**）。

@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/Byte-Biscuit/block-style-cms">
+    <img src="./public/logo.png" width="120" height="120" alt="Block Style CMS Logo" />
+  </a>
+</p>
+
 # Block Style CMS (BlockCMS)
 
 > A lightweight, zero-external-database, open-source block-style content management system built on [BlockNote](https://github.com/TypeCellOS/BlockNote) (abbreviated as **BlockCMS**).

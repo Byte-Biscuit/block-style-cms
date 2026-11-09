@@ -1,190 +1,163 @@
-# block-style-cms
+# Block Style CMS (BlockCMS)
 
-[English](./README.md) | [简体中文](README.zh-CN.md)
+> 基於 [BlockNote](https://github.com/TypeCellOS/BlockNote) 構建的輕量級、零外部資料庫依賴開源區塊式內容管理系統（簡稱 **BlockCMS**）。
 
-🚧 一個快速演進中的 _模組化（Block 風格）開源 CMS_，面向個人部落格與中小企業網站，聚焦 **內容結構化 + 富媒體 + 多語系 + 輕量部署 + AI 協助創作**。
-
-## ✨ 專案簡介
-
-`block-style-cms` 致力於提供比傳統富文字更靈活、又比純 Headless 架構更親民的內容創作體驗：以積木式內容區塊（Block）組合文章 / 頁面 / 模組化片段，支援文字、媒體、程式碼、嵌入、圖表等類型，未來將邁向視覺化排版、動態布局與可插拔擴充。
-
-> 📘 若你使用過 **Notion**，會很快適應此專案的 Block 式內容模式。理念相近：一切皆為可組合的內容單元，但本專案更強調開放原始碼、自架與開發擴充彈性。
-
-## 🔧 技術堆疊
-
-| 領域   | 技術                     | 說明                                                          |
-| ------ | ------------------------ | ------------------------------------------------------------- |
-| 框架   | Next.js (App Router)     | SSR / RSC / 動態路由 / 中介層                                 |
-| 編輯器 | BlockNote                | 區塊式內容編輯（可擴充）                                      |
-| UI     | MUI + Tailwind CSS       | 設計系統 + 原子化樣式並存                                     |
-| 認證   | better-auth              | GitHub / Google OAuth 與 SQLite 儲存                          |
-| 儲存   | better-sqlite3           | 輕量本機資料庫（目前僅供 better-auth 使用；後續將抽象化適配） |
-| 多語   | next-intl                | 多語系與動態翻譯                                              |
-| 驗證   | zod                      | Schema 驅動驗證與型別                                         |
-| 測試   | Vitest + Testing Library | 單元 / 元件測試                                               |
-| 程式碼規範 | Biome                | Lint + Format（取代 ESLint / Prettier）                       |
-| 部署   | PM2 / Nginx（選用）      | 行程守護 + 反向代理                                           |
-| 其他   | Mermaid / 媒體處理       | 圖表、影音、檔案管理                                          |
-
-## ✅ 目前功能
-
-- 🚀 Next.js App Router 架構（清晰的 Server / Client 分層）
-- 🧩 BlockNote 基礎內容區塊：段落、標題、列表、程式碼、引用、圖片、影片、檔案、音訊、Mermaid 圖表
-- 🖼 媒體資源分類管理：`/data/*`
-- 🌐 多語系（zh-CN / zh-TW / en-US）與抽象化翻譯層
-- 🔐 第三方登入（GitHub / Google）+ SQLite 儲存
-- 🧪 測試腳手架（Vitest）
-- 📦 部署支援（PM2 流程、增量更新）
-- 🕒 地區化時間格式（Intl）
-- 🛡 Schema 驅動輸入與 API 驗證（Zod Factory）
-- 🤖 AI 協助：Slug / 摘要 / 關鍵詞 / 優化建議 / 批量輸出（OpenAI、Gemini，可擴充）
-
-## 🗺️ Roadmap（節錄）
-
-- [ ] 更多內建 Blocks：分隔線、欄位布局、提示框、拖曳排序
-- [ ] 進階分類 / 標籤（階層 / SEO Meta）
-- [ ] 評論系統（自架或外部服務）
-- [ ] 內容全文檢索與索引
-- [ ] 主題 / 佈景切換與前端渲染層替換
-- [ ] Docker 映像與一鍵部署
-
-歡迎透過 Issue / PR 提出想法 🙌
-
-## 📂 專案結構（簡化）
-
-```
-block-style-cms/
-├─ src/
-│  ├─ app/                 # Next.js App Router 入口
-│  ├─ components/          # UI 與 Block 元件
-│  ├─ lib/                 # 商業邏輯、服務、auth、工具
-│  ├─ i18n/                # 多語設定與訊息來源
-│  ├─ types/               # 型別與 Zod Schemas
-│  └─ middleware.ts        # 中介功能（語系等）
-├─ data/                   # 媒體與 SQLite DB（better-auth.db）
-├─ public/                 # 靜態資源
-├─ ecosystem.config.js     # PM2 設定
-├─ package.json
-└─ README.md
-```
-
-## ⚙️ 環境變數
-
-| 變數                               | 必填                | 描述                     |
-| ---------------------------------- | ------------------- | ------------------------ |
-| `APPLICATION_DATA_PATH`            | 否（預設 `./data`） | 資料與 DB 根目錄         |
-| `BETTER_AUTH_GITHUB_CLIENT_ID`     | 選填                | GitHub OAuth Client ID   |
-| `BETTER_AUTH_GITHUB_CLIENT_SECRET` | 選填                | GitHub OAuth Secret      |
-| `BETTER_AUTH_GOOGLE_CLIENT_ID`     | 選填                | Google OAuth Client ID   |
-| `BETTER_AUTH_GOOGLE_CLIENT_SECRET` | 選填                | Google OAuth Secret      |
-| `BETTER_AUTH_SECRET`               | 建議                | 簽章金鑰                 |
-| `OPENAI_API_KEY`                   | 選填（使用 OpenAI） | OpenAI API Key           |
-| `OPENAI_BASE_URL`                  | 選填                | 自訂 OpenAI 相容 Gateway |
-| `OPENAI_MODEL`                     | 選填                | 預設 `gpt-3.5-turbo`     |
-| `GEMINI_API_KEY`                   | 選填（使用 Gemini） | Gemini API Key           |
-| `GEMINI_MODEL`                     | 選填                | 預設 `gemini-2.0-flash`  |
-
-> 正式環境請確保 `APPLICATION_DATA_PATH` 可寫並已建立。更多範例見 `.env.example`。
-
-## 🛠 本地開發
-
-```bash
-git clone https://github.com/your-org/block-style-cms.git
-cd block-style-cms
-npm install   # 或 pnpm install / yarn
-
-npm run dev
-# 開啟 http://localhost:3000
-```
-
-## ✅ 指令
-
-| 指令            | 說明                      |
-| --------------- | ------------------------- |
-| `npm run dev`   | 開發（熱重載）            |
-| `npm run build` | 建立正式版本              |
-| `npm start`     | 正式啟動（非 standalone） |
-| `npm test`      | 執行測試                  |
-| `npm run lint`  | Biome 檢查（lint + 格式） |
-| `npm run format` | 使用 Biome 格式化        |
-
-## 🚀 部署（PM2 範例）
-
-```bash
-npm ci
-npm run build
-pm2 start ecosystem.config.js --env production
-pm2 save
-```
-
-更新部署：
-
-```bash
-git pull
-npm ci
-npm run build
-pm2 reload ecosystem.config.js --env production
-```
-
-> 若使用 `output: 'standalone'`，請改執行 `.next/standalone/server.js` 並複製 `public` 與 `.next/static`。
-
-## 🗃 資料與儲存
-
-- 預設 SQLite DB：`data/better-auth.db`
-- 媒體目錄：`data/images`, `data/videos`, `data/files`, `data/audios`
-- 可用 `APPLICATION_DATA_PATH` 覆寫根目錄
-
-## 🔐 認證
-
-內建 GitHub / Google OAuth；規劃新增：本地帳號、更多第三方供應商。
-
-## 🧱 BlockNote 區塊（部分）
-
-| 區塊               | 用途                      |
-| ------------------ | ------------------------- |
-| 段落 / 標題        | 基礎文字結構              |
-| 列表（有序/無序）  | 內容組織                  |
-| 程式碼區塊         | 語法高亮（可擴充）        |
-| 圖片 / 影片 / 音訊 | 富媒體展示                |
-| 檔案               | 附件下載                  |
-| Mermaid            | 圖表（流程 / 序列 / UML） |
-| 引用               | 排版強化                  |
-
-> 即將加入：分隔線、欄位佈局、可收折、提示框、自訂插件。
-
-## 🤖 AI 能力（精簡）
-
-位於 `src/lib/ai.ts`：
-
-- 生成：Slug / 摘要 / 關鍵詞 / 改善建議 / 批次結果
-- 支援：OpenAI（預設）、Gemini（可擴充其他）
-- 錯誤回傳空值，不中斷流程
-- 透過環境變數控制模型與端點
-
-## 🧪 測試
-
-```bash
-npm test
-vitest --watch
-```
-
-## 🤝 貢獻
-
-1. 分支命名：`feat/xxx`、`fix/xxx`
-2. PR 前：`npm run lint && npm test`
-3. 描述內容：動機 / 變更 / 兼容性 / 截圖（可選）
-4. Issue：請附復現或使用場景
-
-## 📬 回饋
-
-歡迎 Issue / PR，若專案對你有幫助，歡迎點個 ⭐ 支持！
+<p align="center">
+  <a href="./README.md">English</a> •
+  <a href="./README.zh-CN.md">简体中文</a> •
+  <a href="https://hub.docker.com/r/biscuit6/block-style-cms">Docker Hub 映像檔</a> •
+  <a href="https://studio.xiyue.space/en-US/channel/cms">📖 使用經驗與專欄</a>
+</p>
 
 ---
 
-> 初衷：讓內容創作 **結構化、組合化、可擴充**，並保持部署簡單與開發友善。
+## 🌟 核心特色
 
-## 🧾 License
+### 1. 積木式區塊創作 (Block-First Editing)
+本專案深度基於現代開源富文字專案 [BlockNote](https://github.com/TypeCellOS/BlockNote)（[官方網站](https://www.blocknotejs.org/)）構建，所有內容均採用積木式的 **Block（區塊）** 形式進行組織與管理，提供媲美 Notion 的直觀創作體驗：
+* **豐富的排版區塊**：段落、多層級標題（H1/H2/H3）、編號/項目符號清單、引言、分隔線、表格等；
+* **全方位多媒體支援**：圖片、影片與音訊播放、檔案附件下載，並支援影片封面圖自動產生；
+* **數學公式排版**：內建 LaTeX 數學公式引擎（基於 KaTeX），完整支援行內公式（`$...$`、`\(...\)`）與獨立公式區塊；
+* **技術圖表與程式碼**：內建語法高亮程式碼區塊、Mermaid 流程圖/循序圖視覺化渲染以及 SVG 向量圖表展示。
 
-MIT 授權，詳見 `LICENSE`。
+### 2. 靈活多元的應用場景
+* **個人技術部落格 / 創作者空間**：輕巧靈活無負擔，專注於純粹寫作與多媒體知識分享；
+* **企業官網 / 團隊知識庫 / 產品說明文件中心**：模組化頁面搭建、統一品牌展示與低維護門檻內容運維。
 
-祝開發順利 ✨
+### 3. 純本機檔案系統落地，零資料庫維護負擔
+* **徹底告別資料庫維運**：無需安裝、設定或維護 MySQL、PostgreSQL、MongoDB 或 Redis 等任何外部資料庫服務；
+* **無需雲端物件儲存**：不依賴外部雲端物件儲存（如 AWS S3、Google Cloud Storage 等），所有文章內容、媒體資源、系統設定與留言均持久化保存在本機檔案系統中；
+* **極簡備份與移轉**：全站所有資產均存放在同一個目錄下，資料移轉與備份只需複製該資料夾即可，真正做到資料自主可控。
+
+### 4. 單一核心參數驅動：`CMS_DATA_PATH`
+系統採用極致簡化的設定理念，核心僅依賴一個環境變數：
+* **`CMS_DATA_PATH`**：指定本機資料持久化根路徑。
+* 系統首次啟動時會自動在此路徑下初始化全部分類目錄（文章 `articles`、圖片 `images`、影片 `videos`、音訊 `audios`、附件 `files`、留言 `comments` 以及站台設定 `settings.json` 等）。
+
+### 5. 開箱即用的 AI 創作輔助
+內建輕量級 AI 輔助生成模組，支援接入 **OpenAI**（及任何相容其 API 規範的模型端點）與 **Google Gemini**：
+* **智慧生成**：一鍵生成文章英文網址代稱（Slug）、內容摘要（Summary）與 SEO 關鍵字擷取；
+* **多語言適配**：支援根據目標語系直接輸出對應語言的摘要與關鍵字。
+
+### 6. 豐富的外部服務整合
+* **Pexels 免版權圖庫**：無縫整合 Pexels 官方 API，寫作時可直接線上檢索海量高畫質免版權圖片，一鍵插入正文或作為文章封面；
+* **Umami 流量統計**：開箱即用支援整合輕量、注重隱私保護的 Umami 網站流量統計分析；
+* **Algolia 全文搜尋**：可選接入 Algolia 搜尋引擎，文章發布時自動增量同步索引，支援海量內容毫秒級檢索。
+
+### 7. 原生多語言國際化 (i18n)
+* 內建完整支援 **繁體中文（`zh-TW`）**、**簡體中文（`zh-CN`）** 與 **英文（`en-US`）**；
+* 基於標準 URL 路徑前綴路由，支援多語言自動協商與即時語系切換；
+* 支援本機文案自訂覆蓋：可在 `CMS_DATA_PATH/locales/` 目錄下放置同名 JSON 檔案，依需求覆寫或擴充系統翻譯文案。
+
+---
+
+## 🚀 如何使用與部署
+
+> ⚠️ **關於部署平台的特別說明**：  
+> 很遺憾，雖然本專案採用 Next.js 技術構建，但由於所有內容和資料均直接保存在本機檔案系統中，因此**不支援**在 Vercel 等 Serverless 平台環境中一鍵部署。請使用 VPS、獨立伺服器、家用伺服器 / NAS 或本機主機，透過 **Docker** 或 **PM2** 進行部署。
+
+本專案提供兩種主要運作方式：**Docker 容器化部署（開箱即用，強烈推薦）** 與 **本機環境 Node.js + PM2 常駐程序部署**。無論採用哪種方式，核心都只需要提供一個可寫入的資料目錄 `CMS_DATA_PATH`。
+
+### 方式一：Docker 部署（推薦，開箱即用）
+
+本專案正式環境映像檔已建置並發布至 Docker Hub：[`biscuit6/block-style-cms`](https://hub.docker.com/r/biscuit6/block-style-cms)。
+
+#### 1. Docker CLI 單一指令快速啟動
+```bash
+# 1. 建立主機端資料持久化目錄
+mkdir -p /opt/cms-data
+
+# 2. 啟動容器：掛載主機端目錄至容器內 /data，並指定 CMS_DATA_PATH
+docker run -d \
+  --name block-style-cms \
+  -p 3000:3000 \
+  -e CMS_DATA_PATH=/data \
+  -v /opt/cms-data:/data \
+  --restart unless-stopped \
+  biscuit6/block-style-cms:latest
+```
+
+#### 2. Docker Compose 編排啟動
+建立 `docker-compose.yml` 檔案：
+```yaml
+services:
+  cms:
+    image: biscuit6/block-style-cms:latest
+    ports:
+      - "3000:3000"
+    environment:
+      CMS_DATA_PATH: /data
+    volumes:
+      - ./cms-data:/data
+    restart: unless-stopped
+```
+
+在同層目錄下執行啟動指令：
+```bash
+docker compose up -d
+```
+
+---
+
+### 方式二：本機執行與 PM2 常駐程序部署
+
+適用於具備 Node.js 執行環境的實體伺服器、虛擬機或本機開發測試。
+
+#### 1. 環境準備與相依套件安裝
+```bash
+# 複製程式碼儲存庫
+git clone https://github.com/Byte-Biscuit/block-style-cms.git
+cd block-style-cms
+
+# 建議使用 Node.js >= 24（與正式環境 Docker 基礎映像檔環境保持一致）
+npm install
+```
+
+#### 2. 設定環境變數
+在專案根目錄下建立 `.env.local` 檔案，設定資料儲存路徑：
+```env
+CMS_DATA_PATH=/your/custom/data/path
+```
+
+#### 3. 編譯建置
+```bash
+npm run build
+```
+
+#### 4. 使用 PM2 常駐守護行程運作
+在正式環境下，推薦使用 PM2 確保程序的可用性與自動重啟修復：
+```bash
+# 方式 A：直接透過 npm 腳本啟動
+pm2 start npm --name "block-style-cms" -- start
+
+# 方式 B：使用專案內建的 PM2 設定檔啟動
+pm2 start pm2/ecosystem.config.js --env production
+
+# 儲存目前程序清單以啟用開機自啟動
+pm2 save
+```
+> 💡 若僅需在本機進行功能除錯開發，設定好 `.env.local` 後直接執行 `npm run dev` 即可。
+
+---
+
+### 首次初始化安裝精靈 (Install Wizard)
+
+無論採用 Docker 還是 PM2 啟動服務，容器或程序就緒後，使用瀏覽器造訪：
+
+👉 **`http://localhost:3000/zh-TW/install`** （或您的伺服器 IP / 網域名稱）
+
+依照圖形化安裝精靈引導，設定管理員帳號與站台基本資訊，即可完成初始化並開始內容創作！
+
+---
+
+## 📖 使用經驗與最佳實踐
+
+關於本 CMS 的詳細使用技巧、進階玩法與生產部署實戰經驗，請參閱作者長期維護的經驗專欄：
+
+👉 **[Block Style CMS 使用經驗與專欄文章](https://studio.xiyue.space/en-US/channel/cms)**
+
+---
+
+## 📄 開源授權協議
+
+本專案採用 [MIT License](./LICENSE) 開源授權協議，歡迎廣大開發者與創作者自由使用、進行商業應用或參與社群共建。

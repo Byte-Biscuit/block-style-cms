@@ -1,201 +1,163 @@
-# block-style-cms
+# Block Style CMS (BlockCMS)
 
-[English](./README.md) | [繁体中文](README.zh-TW.md)
+> 基于 [BlockNote](https://github.com/TypeCellOS/BlockNote) 构建的轻量级、零外部数据库依赖开源块式内容管理系统（简称 **BlockCMS**）。
 
-## ✨ 项目简介
-
-`block-style-cms` 旨在提供一种比传统富文本更灵活、比纯 Headless 更易用的内容管理体验：通过积木式内容块（Block）组合出文章 / 页面 / 内容段落，同时支持图片、音视频、文件、嵌入、代码、高级展示等多类型组件，并逐步向可视化排版、按需布局与可插拔扩展演进。
-
-> 📘 如果你熟悉 **Notion**，那么你会很快适应本 CMS 的块式内容组织方式。理念相似：一切皆可重组，但这里更强调开源、自托管与面向开发者的可扩展能力。
-
-## 🔧 技术栈
-
-| 领域     | 采用技术                 | 说明                                                       |
-| -------- | ------------------------ | ---------------------------------------------------------- |
-| 前端框架 | Next.js (App Router)     | SSR / RSC / 动态路由 / 中间件                              |
-| 编辑器   | BlockNote                | Block 风格富内容编辑（支持扩展）                           |
-| UI 组件  | MUI + Tailwind CSS       | 设计体系 + 原子化样式并存                                  |
-| 认证     | better-auth              | 支持 GitHub / Google OAuth & SQLite 存储                   |
-| 数据存储 | better-sqlite3           | 轻量本地数据库（当前仅用于 better-auth；后续会抽象适配层） |
-| 国际化   | next-intl                | 多语言 + 动态翻译                                          |
-| 校验     | zod                      | Schema 驱动的类型与后端请求验证                            |
-| 测试     | Vitest + Testing Library | 单元 / 组件测试                                            |
-| 代码规范 | Biome                    | Lint + Format（替代 ESLint / Prettier）                    |
-| 部署     | PM2 / Nginx (可选)       | 进程守护 + 反向代理                                        |
-| 其他     | Mermaid / 媒体处理       | 图表、音视频、文件、图片管理                               |
-
-## ✅ 已实现功能（Current）
-
-- 🚀 Next.js App Router 架构，服务端/客户端合理分层
-- 🧩 BlockNote 基础富内容块：段落、标题、列表、代码、引用、图片、视频、文件、音频、Mermaid 图表等
-- 🖼 媒体管理：图片 / 视频 / 音频 / 文件分类存储（`/data/*`）
-- 🌐 多语言支持（简体中文 / 繁体中文 / 英文）+ 翻译抽象
-- 🔐 用户认证（GitHub / Google）基于 better-auth + SQLite 存储
-- 🧪 基础测试脚手架（Vitest）
-- 📦 部署支持：PM2 + 构建脚本（支持增量部署）
-- 🕒 统一时间格式与本地化展示（Intl）
-- 🛡 基础输入校验与后端请求校验（Zod schema factory）
-- 🤖 AI 辅助生成：文章 slug / 摘要 / 关键词 / 优化建议 / 批量生成（支持 OpenAI 与 Gemini，可拓展）
-
-## 🗺️ 规划路线（Roadmap）
-
-- [ ] 更多内置 Block：分割线、分栏布局、提示/警告框、拖拽排序
-- [ ] 标签 / 分类体系增强（层级 / SEO Meta）
-- [ ] 评论系统（可选自托管 / 外部适配）
-- [ ] 内容搜索（全文 / 索引优化）
-- [ ] 多主题与可替换前端呈现层
-- [ ] Docker 镜像 & 一键部署脚本
-
-欢迎通过 Issue / PR 补充你的需求 🙌
-
-## 📂 目录结构（简化示例）
-
-```
-block-style-cms/
-├─ src/
-│  ├─ app/                 # Next.js App Router 入口
-│  ├─ components/          # UI 与 Block 相关组件
-│  ├─ lib/                 # 业务逻辑、服务、工具、auth
-│  ├─ i18n/                # 国际化配置与文案
-│  ├─ types/               # 类型与 Zod Schema
-│  └─ middleware.ts        # 中间件（多语言等）
-├─ data/                   # 媒体与数据库（better-auth.db）
-├─ public/                 # 公共静态资源
-├─ ecosystem.config.js     # PM2 配置
-├─ package.json
-└─ README.md
-```
-
-## ⚙️ 环境变量（Environment Variables）
-
-| 变量                               | 必需                | 示例 / 说明                                              |
-| ---------------------------------- | ------------------- | -------------------------------------------------------- |
-| `APPLICATION_DATA_PATH`            | 否（默认 `./data`） | `/root/data/block-style-cms/app/data` 数据与 DB 存放路径 |
-| `BETTER_AUTH_GITHUB_CLIENT_ID`     | 可选                | GitHub OAuth Client ID                                   |
-| `BETTER_AUTH_GITHUB_CLIENT_SECRET` | 可选                | GitHub OAuth Secret                                      |
-| `BETTER_AUTH_GOOGLE_CLIENT_ID`     | 可选                | Google OAuth Client ID                                   |
-| `BETTER_AUTH_GOOGLE_CLIENT_SECRET` | 可选                | Google OAuth Secret                                      |
-| `BETTER_AUTH_SECRET`               | 建议                | Auth 签名密钥（未设可能回退不安全随机）                  |
-| `OPENAI_API_KEY`                   | 可选 (使用 OpenAI)  | OpenAI API Key                                           |
-| `OPENAI_BASE_URL`                  | 可选                | 自定义 OpenAI 兼容网关（如代理服务）                     |
-| `OPENAI_MODEL`                     | 可选                | 默认 `gpt-3.5-turbo` 或自定义模型                        |
-| `GEMINI_API_KEY`                   | 可选 (使用 Gemini)  | Google Gemini API Key                                    |
-| `GEMINI_MODEL`                     | 可选                | 默认 `gemini-2.0-flash`                                  |
-
-> 生产环境请显式设置 `APPLICATION_DATA_PATH` 并确保目录可写。详细的配置参数请参考.env.example.
-
-## 🛠 安装与本地开发
-
-```bash
-git clone https://github.com/your-org/block-style-cms.git
-cd block-style-cms
-npm install   # 或 pnpm install / yarn
-
-# 启动开发
-npm run dev
-
-# 打开浏览器
-http://localhost:3000
-```
-
-## ✅ 运行脚本
-
-| 命令            | 说明                                       |
-| --------------- | ------------------------------------------ |
-| `npm run dev`   | 本地开发（热更新）                         |
-| `npm run build` | 生成生产构建                               |
-| `npm start`     | 使用 Next.js 内建生产启动（非 standalone） |
-| `npm test`      | 运行 Vitest 测试                           |
-| `npm run lint`  | Biome 检查（lint + 格式）                  |
-| `npm run format` | 使用 Biome 格式化                         |
-
-## 🚀 生产部署（示例：PM2）
-
-1. 安装依赖并构建：
-
-```bash
-npm ci
-npm run build
-```
-
-2. 使用 PM2（标准模式）：
-
-```bash
-pm2 start ecosystem.config.js --env production
-pm2 save
-```
-
-3. 更新部署（简易）：
-
-```bash
-git pull
-npm ci
-npm run build
-pm2 reload ecosystem.config.js --env production
-```
-
-> 如果使用 `output: 'standalone'`，需改为运行 `.next/standalone/server.js` 并复制 `public` 与 `.next/static` 资源；默认推荐标准模式降低复杂度。
-
-## 🗃 数据 & 存储
-
-- 默认使用 **SQLite (better-sqlite3)**，数据库文件：`data/better-auth.db`
-- 媒体文件按类型分类：`data/images`, `data/videos`, `data/files`, `data/audios`
-- 可通过 `APPLICATION_DATA_PATH` 自定义根目录
-
-## 🔐 认证说明
-
-当前接入 GitHub / Google OAuth；更多提供商可通过 better-auth 配置扩展。后续会：
-
-- [ ] 支持本地邮箱 / 密码注册登录
-- [ ] 支持微信登录
-
-## 🧱 BlockNote 体系（部分）
-
-| 类型               | 说明                |
-| ------------------ | ------------------- |
-| 段落 / 标题        | 基本文字结构        |
-| 列表（有序/无序）  | 内容组织            |
-| 代码块             | 语法高亮（可扩展）  |
-| 图片 / 视频 / 音频 | 富媒体展示          |
-| 文件上传/下载      | 附件分发            |
-| Mermaid 图         | UML / 流程 / 序列图 |
-| 引用               | 排版增强            |
-
-> 未来将加入：表格 /分割线/ 分栏布局 / 可折叠区域 / 提示框 / 自定义插件注册。
-
-## 🤖 AI 生成能力说明
-
-内置轻量 AI 辅助创作能力（位于 `src/lib/ai.ts`）：
-
-- 支持生成：Slug / 摘要 / 关键词 / 优化建议 / 批量组合结果
-- 支持模型：OpenAI（默认）与 Gemini，可扩展适配更多 LLM
-- 失败自动降级：出错返回空结果，不中断主流程
-- 可通过环境变量切换 API Key、模型与代理网关
-
-## 🧪 测试
-
-```bash
-npm test           # 运行全部测试
-vitest --watch    # 持续监听
-```
-
-## 🤝 贡献指南
-
-1. Fork & 新建分支：`feat/xxx` / `fix/xxx`
-2. 提交前执行：`npm run lint && npm test`
-3. PR 描述请包含：动机 / 变更点 / 兼容性 / 截图（可选）
-4. Issue 模板：**需求 / Bug / 优化建议** 尽量复现清晰
-
-## 📬 联系 & 反馈
-
-欢迎提交 Issue / PR，或通过讨论区分享你的使用场景。如果你对这个方向感兴趣，也可以 star ⭐ 支持一下！
+<p align="center">
+  <a href="./README.md">English</a> •
+  <a href="./README.zh-TW.md">繁體中文</a> •
+  <a href="https://hub.docker.com/r/biscuit6/block-style-cms">Docker Hub 镜像</a> •
+  <a href="https://studio.xiyue.space/en-US/channel/cms">📖 使用经验与专栏</a>
+</p>
 
 ---
 
-> 初衷：让内容创作 **结构化、组合化、可扩展**，同时保留部署简单与足够的可黑客性。希望它能成为你的下一套博客 / 官网 / 知识库底座。
+## 🌟 核心特性
 
-## 🧾 License
+### 1. 积木式块级创作 (Block-First Editing)
+本项目深度基于现代开源富文本项目 [BlockNote](https://github.com/TypeCellOS/BlockNote)（[官网](https://www.blocknotejs.org/)）构建，所有内容均采用积木式的 **Block（块）** 形式进行组织与管理，提供媲美 Notion 的直观创作体验：
+* **丰富的排版块**：段落、多级标题（H1/H2/H3）、有序/无序列表、引用、分割线、表格等；
+* **全能多媒体支持**：图片、音视频播放与文件附件下载，并支持视频封面图生成；
+* **数学公式排版**：内置 LaTeX 数学公式引擎（基于 KaTeX），完整支持行内公式（`$...$`、`\(...\)`）与独立公式块；
+* **技术图表与代码**：内置语法高亮代码块、Mermaid 流程图/时序图可视化渲染以及 SVG 矢量图表展示。
 
-本项目采用 MIT License，详见 `LICENSE` 文件。
+### 2. 灵活多元的应用场景
+* **个人技术博客 / 创作者空间**：轻量灵动无负担，专注于纯粹写作与多媒体知识分享；
+* **企业官网 / 团队知识库 / 产品文档中心**：模块化页面搭建、统一品牌展示与低门槛内容运维。
 
-祝使用愉快 🙌
+### 3. 纯本地文件系统落地，零数据库维护负担
+* **彻底告别数据库运维**：无需安装、配置或维护 MySQL、PostgreSQL、MongoDB 或 Redis 等任何外部数据库服务；
+* **无需云对象存储**：不依赖外部云端对象存储（如 AWS S3、阿里云 OSS 等），所有文章内容、媒体资源、系统设置与评论均持久化保存在本地文件系统中；
+* **极简备份与迁移**：全站所有资产都存放在同一个目录下，数据迁移与备份只需复制该文件夹即可，真正做到数据自主可控。
+
+### 4. 单核心参数驱动：`CMS_DATA_PATH`
+系统采用极其简化的配置理念，核心仅依赖一个环境变量：
+* **`CMS_DATA_PATH`**：指定本地数据持久化根路径。
+* 系统首次启动时会自动在此路径下初始化全部分类目录（文章 `articles`、图片 `images`、音视频 `videos`/`audios`、附件 `files`、评论 `comments` 以及站点配置 `settings.json` 等）。
+
+### 5. 开箱即用的 AI 创作辅助
+内置轻量级 AI 辅助生成模块，支持接入 **OpenAI**（及任何兼容其 API 规范的模型端点）与 **Google Gemini**：
+* **智能生成**：一键生成文章英文 URL 别名（Slug）、内容摘要（Summary）与 SEO 关键词提取；
+* **多语言适配**：支持基于目标语种直接输出对应语言的摘要与关键词。
+
+### 6. 丰富的外部服务集成
+* **Pexels 免版权图库**：无缝打通 Pexels 官方 API，写作时可直接在线检索海量高清无版权图片，一键插入正文或作为文章封面；
+* **Umami 访问统计**：开箱即用支持集成轻量、注重隐私保护的 Umami 网站统计分析；
+* **Algolia 全文搜索**：可选接入 Algolia 搜索引擎，文章发布时自动增量同步索引，支持海量内容毫秒级检索。
+
+### 7. 原生多语言国际化 (i18n)
+* 内置完整支持 **简体中文（`zh-CN`）**、**繁体中文（`zh-TW`）** 与 **英文（`en-US`）**；
+* 基于标准 URL 路径前缀路由，支持多语言自动协商与实时语言切换；
+* 支持本地文案覆盖：可在 `CMS_DATA_PATH/locales/` 目录下放置同名 JSON 文件，按需重载或扩展系统翻译文案。
+
+---
+
+## 🚀 如何使用与部署
+
+> ⚠️ **关于部署平台的特别说明**：  
+> 很遗憾，虽然本项目采用 Next.js 技术构建，但由于所有内容和数据均直接保存在本地文件系统中，因此**不支持**在 Vercel 等 Serverless 平台环境中一键部署。请使用 VPS、独立服务器、家用服务器 / NAS 或本地主机，通过 **Docker** 或 **PM2** 进行部署。
+
+本项目提供两种主要运行方式：**Docker 容器化部署（开箱即用，强烈推荐）** 与 **本地环境 Node.js + PM2 守护进程部署**。无论采用哪种方式，核心都只需要提供一个可写的数据目录 `CMS_DATA_PATH`。
+
+### 方式一：Docker 部署（推荐，开箱即用）
+
+本项目生产镜像已构建并推送至 Docker Hub：[`biscuit6/block-style-cms`](https://hub.docker.com/r/biscuit6/block-style-cms)。
+
+#### 1. Docker CLI 单命令快速启动
+```bash
+# 1. 创建宿主机数据持久化目录
+mkdir -p /opt/cms-data
+
+# 2. 启动容器：挂载宿主机目录至容器内 /data，并指定 CMS_DATA_PATH
+docker run -d \
+  --name block-style-cms \
+  -p 3000:3000 \
+  -e CMS_DATA_PATH=/data \
+  -v /opt/cms-data:/data \
+  --restart unless-stopped \
+  biscuit6/block-style-cms:latest
+```
+
+#### 2. Docker Compose 编排启动
+创建 `docker-compose.yml` 文件：
+```yaml
+services:
+  cms:
+    image: biscuit6/block-style-cms:latest
+    ports:
+      - "3000:3000"
+    environment:
+      CMS_DATA_PATH: /data
+    volumes:
+      - ./cms-data:/data
+    restart: unless-stopped
+```
+
+在同级目录下执行启动命令：
+```bash
+docker compose up -d
+```
+
+---
+
+### 方式二：本地运行与 PM2 守护进程部署
+
+适用于具备 Node.js 运行环境的物理机、虚拟机或本地开发测试。
+
+#### 1. 环境准备与依赖安装
+```bash
+# 克隆代码仓库
+git clone https://github.com/Byte-Biscuit/block-style-cms.git
+cd block-style-cms
+
+# 建议使用 Node.js >= 24（与生产 Docker 基础镜像环境保持一致）
+npm install
+```
+
+#### 2. 配置环境变量
+在项目根目录下创建 `.env.local` 文件，配置数据存储路径：
+```env
+CMS_DATA_PATH=/your/custom/data/path
+```
+
+#### 3. 编译构建
+```bash
+npm run build
+```
+
+#### 4. 使用 PM2 常驻守护运行
+在生产环境下，推荐使用 PM2 保证进程的高可用与异常自愈：
+```bash
+# 方式 A：直接通过 npm 脚本启动
+pm2 start npm --name "block-style-cms" -- start
+
+# 方式 B：使用项目自带的 PM2 配置文件启动
+pm2 start pm2/ecosystem.config.js --env production
+
+# 保存当前进程列表以实现开机自启
+pm2 save
+```
+> 💡 若仅需在本地进行功能调试开发，配置好 `.env.local` 后直接执行 `npm run dev` 即可。
+
+---
+
+### 首次初始化向导 (Install Wizard)
+
+无论采用 Docker 还是 PM2 启动服务，容器或进程就绪后，使用浏览器访问：
+
+👉 **`http://localhost:3000/zh-CN/install`** （或您的服务器 IP / 域名）
+
+根据图形化安装向导提示，设置管理员账户与站点基本信息，即可完成初始化并开始内容创作！
+
+---
+
+## 📖 使用经验与最佳实践
+
+关于本 CMS 的详细使用技巧、功能玩法与生产部署实战经验，请参阅作者长期维护的经验专栏：
+
+👉 **[Block Style CMS 使用经验与专栏文章](https://studio.xiyue.space/en-US/channel/cms)**
+
+---
+
+## 📄 开源协议
+
+本项目采用 [MIT License](./LICENSE) 开源协议，欢迎广大开发者与创作者自由使用、进行商业应用或参与社区共建。

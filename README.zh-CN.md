@@ -17,6 +17,12 @@
 
 ---
 
+## 概览
+
+https://github.com/user-attachments/assets/5603b21f-d9de-4429-bd4a-4d3cb4e045ce
+
+---
+
 ## 🌟 核心特性
 
 ### 1. 积木式块级创作 (Block-First Editing)

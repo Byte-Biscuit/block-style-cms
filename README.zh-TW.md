@@ -17,6 +17,12 @@
 
 ---
 
+## 概覽
+
+https://github.com/user-attachments/assets/f0288ab3-8f1f-4c4c-bc8d-568ca822f352
+
+---
+
 ## 🌟 核心特色
 
 ### 1. 積木式區塊創作 (Block-First Editing)

@@ -17,6 +17,18 @@
 
 ---
 
+## Demo
+
+<video
+  src="https://github.com/user-attachments/assets/04e9f2e5-5738-44ae-b01f-7d624d3a8bb0"
+  poster="./docs/media/preview-en.png"
+  controls
+  title="blockcms promo"
+  aria-label="blockcms promo"
+></video>
+
+---
+
 ## 🌟 Key Features
 
 ### 1. Block-First Content Creation

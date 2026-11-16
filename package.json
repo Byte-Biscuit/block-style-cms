@@ -40,7 +40,7 @@
         "clsx": "^2.1.1",
         "dompurify": "^3.4.17",
         "hi-base32": "^0.6.0",
-        "katex": "^0.18.10",
+        "katex": "^0.19.1",
         "lru-cache": "^11.5.2",
         "mermaid": "^12.2.0",
         "monaco-editor": "^0.57.0",

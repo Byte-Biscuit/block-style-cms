@@ -31,7 +31,7 @@
         "@mantine/core": "^9.7.5",
         "@mantine/hooks": "^9.7.4",
         "@monaco-editor/react": "^4.7.0",
-        "@mui/icons-material": "^7.3.2",
+        "@mui/icons-material": "^9.5.0",
         "@mui/material": "^9.5.0",
         "@mui/material-nextjs": "^9.5.0",
         "algoliasearch": "^5.57.0",

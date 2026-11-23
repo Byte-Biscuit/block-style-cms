@@ -71,7 +71,7 @@
     },
     "devDependencies": {
         "@biomejs/biome": "2.5.12",
-        "@next/bundle-analyzer": "^16.4.3",
+        "@next/bundle-analyzer": "^16.4.6",
         "@svgr/webpack": "^8.1.0",
         "@tailwindcss/postcss": "^4",
         "@testing-library/dom": "^10.4.1",

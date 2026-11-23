@@ -548,7 +548,9 @@ export default function PostListPage() {
                                             >
                                                 <Typography
                                                     variant="body1"
-                                                    color="text.secondary"
+                                                    sx={{
+                                                        color: "text.secondary"
+                                                    }}
                                                 >
                                                     {t("table.noData")}
                                                 </Typography>
@@ -598,15 +600,16 @@ export default function PostListPage() {
                                                         </Tooltip>
                                                         <Typography
                                                             variant="body2"
-                                                            color="text.secondary"
                                                             noWrap
                                                             sx={{
+                                                                color: "text.secondary",
+
                                                                 overflow:
                                                                     "hidden",
+
                                                                 textOverflow:
-                                                                    "ellipsis",
-                                                            }}
-                                                        >
+                                                                    "ellipsis"
+                                                            }}>
                                                             {article.slug}
                                                         </Typography>
                                                     </Box>
@@ -840,9 +843,10 @@ export default function PostListPage() {
                             >
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
-                                    sx={{ order: { xs: 2, sm: 1 } }}
-                                >
+                                    sx={{
+                                        color: "text.secondary",
+                                        order: { xs: 2, sm: 1 }
+                                    }}>
                                     {t("pagination.totalWithPage", {
                                         total,
                                         current: pageIndex,
@@ -872,7 +876,9 @@ export default function PostListPage() {
                             >
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {t("pagination.total", { total })}
                                 </Typography>

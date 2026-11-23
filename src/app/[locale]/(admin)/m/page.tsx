@@ -184,7 +184,9 @@ export default async function AdminDashboard() {
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                color="text.secondary"
+                                                sx={{
+                                                    color: "text.secondary"
+                                                }}
                                             >
                                                 {action.description}
                                             </Typography>

@@ -118,12 +118,16 @@ function LoadProgressBar({
                     mb: 0.5,
                 }}
             >
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {label}
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     {showDetails && (
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                        }}>
                             {showDetails}
                         </Typography>
                     )}
@@ -165,7 +169,9 @@ function MemoryInfo({
         <Box sx={{ mb: 2 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
                 {icon}
-                <Typography variant="subtitle2" color="text.primary">
+                <Typography variant="subtitle2" sx={{
+                    color: "text.primary"
+                }}>
                     {title}
                 </Typography>
             </Box>
@@ -225,7 +231,9 @@ export default async function SystemLoadCard() {
                         }}
                     >
                         <Speed color="action" />
-                        <Typography variant="subtitle1" color="text.primary">
+                        <Typography variant="subtitle1" sx={{
+                            color: "text.primary"
+                        }}>
                             {t("cpu.title")}
                         </Typography>
                     </Box>
@@ -272,9 +280,11 @@ export default async function SystemLoadCard() {
                 <Box sx={{ mt: 2, p: 2, bgcolor: "grey.50", borderRadius: 1 }}>
                     <Typography
                         variant="caption"
-                        color="text.secondary"
-                        sx={{ display: "block", mb: 1 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            display: "block",
+                            mb: 1
+                        }}>
                         {t("processDetails.title")}
                     </Typography>
                     <Box
@@ -284,12 +294,16 @@ export default async function SystemLoadCard() {
                             gap: 1,
                         }}
                     >
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("processDetails.rss", {
                                 value: formatBytes(loadData.nodeProcess.rss),
                             })}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("processDetails.external", {
                                 value: formatBytes(
                                     loadData.nodeProcess.external
@@ -303,7 +317,9 @@ export default async function SystemLoadCard() {
                 <Box
                     sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: "divider" }}
                 >
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" sx={{
+                        color: "text.secondary"
+                    }}>
                         {t("status.lastUpdated", {
                             time: new Date().toLocaleTimeString(),
                         })}

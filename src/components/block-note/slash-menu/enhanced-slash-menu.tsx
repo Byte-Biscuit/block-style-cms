@@ -7,7 +7,7 @@ import {
     getDefaultReactSlashMenuItems,
     type SuggestionMenuProps,
 } from "@blocknote/react";
-import { AddCircleOutline as DefaultIcon } from "@mui/icons-material";
+import { AddCircleOutlined as DefaultIcon } from "@mui/icons-material";
 import {
     Box,
     Chip,

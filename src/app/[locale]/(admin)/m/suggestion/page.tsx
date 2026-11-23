@@ -230,9 +230,10 @@ export default function SuggestionManagementPage() {
 
                     <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ minWidth: 120 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            minWidth: 120
+                        }}>
                         {t("stats.total")}: {filteredSuggestions.length}
                     </Typography>
                 </Box>
@@ -264,7 +265,9 @@ export default function SuggestionManagementPage() {
                                 >
                                     <Typography
                                         variant="body2"
-                                        color="text.secondary"
+                                        sx={{
+                                            color: "text.secondary"
+                                        }}
                                     >
                                         {t("messages.noData")}
                                     </Typography>
@@ -310,7 +313,9 @@ export default function SuggestionManagementPage() {
                                     <TableCell>
                                         <Typography
                                             variant="body2"
-                                            color="text.secondary"
+                                            sx={{
+                                                color: "text.secondary"
+                                            }}
                                         >
                                             {suggestion.metadata?.ip || "-"}
                                         </Typography>
@@ -318,7 +323,9 @@ export default function SuggestionManagementPage() {
                                     <TableCell>
                                         <Typography
                                             variant="body2"
-                                            color="text.secondary"
+                                            sx={{
+                                                color: "text.secondary"
+                                            }}
                                         >
                                             {formatDateI18n(
                                                 suggestion.createdAt,

@@ -156,7 +156,9 @@ export default function TwoFactorDialog({
 
                                 <DialogContentText
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {t("twoFactorDialog.step1.manualEntry")}
                                 </DialogContentText>

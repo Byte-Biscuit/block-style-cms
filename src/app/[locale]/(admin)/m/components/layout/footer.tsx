@@ -27,7 +27,9 @@ export default async function Footer() {
                         gap: 2,
                     }}
                 >
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {t("copyright")}
                     </Typography>
                     <Box
@@ -37,13 +39,19 @@ export default async function Footer() {
                             gap: 2,
                         }}
                     >
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("version", { version: VERSION })}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             |
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("poweredBy")}
                         </Typography>
                     </Box>

@@ -196,9 +196,10 @@ const ArticleFormTags: React.FC<ArticleFormTagsProps> = ({
             {tags.length === 0 && (
                 <Typography
                     variant="body2"
-                    color="text.secondary"
-                    sx={{ py: 1 }}
-                >
+                    sx={{
+                        color: "text.secondary",
+                        py: 1
+                    }}>
                     {t("helper.noTags")}
                 </Typography>
             )}

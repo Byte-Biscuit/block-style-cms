@@ -33,7 +33,9 @@ export default async function SettingsPage() {
                     <Typography variant="h5" color="error" gutterBottom>
                         {t("error.title")}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary">
+                    <Typography variant="body1" sx={{
+                        color: "text.secondary"
+                    }}>
                         {t("error.description")}
                     </Typography>
                 </Paper>
@@ -47,10 +49,14 @@ export default async function SettingsPage() {
             <Box sx={{ mb: 4, display: "flex", alignItems: "center", gap: 2 }}>
                 <SettingsIcon sx={{ fontSize: 40, color: "primary.main" }} />
                 <Box>
-                    <Typography variant="h4" component="h1" fontWeight="bold">
+                    <Typography variant="h4" component="h1" sx={{
+                        fontWeight: "bold"
+                    }}>
                         {t("title")}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {t("description")}
                     </Typography>
                 </Box>

@@ -75,18 +75,19 @@ function SvgPreview({
     if (!code.trim()) {
         return (
             <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                p={4}
                 sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    p: 4,
                     border: "2px dashed",
                     borderColor: "divider",
                     borderRadius: 1,
-                    bgcolor: "grey.50",
-                }}
-            >
-                <Typography variant="body2" color="text.secondary">
+                    bgcolor: "grey.50"
+                }}>
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {dict?.renderer?.emptyPlaceholder ||
                         "Enter SVG markup to preview"}
                 </Typography>
@@ -380,9 +381,10 @@ function SvgEditDialog({
                 {dict?.placeholder?.supportText && (
                     <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1.5 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            mb: 1.5
+                        }}>
                         {dict.placeholder.supportText}
                     </Typography>
                 )}
@@ -445,7 +447,9 @@ export const SvgBlockRender = ({ block }: { block: any }) => {
                     <Box sx={{ display: "flex", color: "text.secondary" }}>
                         <SvgIcon size={22} />
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {dict?.placeholder?.clickToAdd ||
                             "Add SVG illustration"}
                     </Typography>

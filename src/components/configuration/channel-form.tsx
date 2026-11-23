@@ -255,7 +255,9 @@ export default function ChannelForm({
                 <Typography variant="h6" gutterBottom>
                     {t("title")}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {t("subtitle")}
                 </Typography>
             </Box>

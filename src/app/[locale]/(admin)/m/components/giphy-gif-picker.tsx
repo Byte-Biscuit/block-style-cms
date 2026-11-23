@@ -410,9 +410,11 @@ const GiphyGifPicker: React.FC<GiphyGifPickerProps> = ({
                     </Box>
                     <Typography
                         variant="caption"
-                        color="text.secondary"
-                        sx={{ display: "block", mt: 1 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            display: "block",
+                            mt: 1
+                        }}>
                         {t("attribution")}
                     </Typography>
                 </Box>
@@ -437,10 +439,14 @@ const GiphyGifPicker: React.FC<GiphyGifPickerProps> = ({
 
                 {!loading && hasLoaded && images.length === 0 && !error && (
                     <Box sx={{ textAlign: "center", py: 6 }}>
-                        <Typography variant="h6" color="text.secondary">
+                        <Typography variant="h6" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("states.noResults")}
                         </Typography>
-                        <Typography variant="body2" color="text.disabled">
+                        <Typography variant="body2" sx={{
+                            color: "text.disabled"
+                        }}>
                             {t("states.noResultsHint")}
                         </Typography>
                     </Box>

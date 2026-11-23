@@ -24,7 +24,12 @@ export default function OtherPanel({ value, onChange }: OtherPanelProps) {
             <Typography variant="h6" gutterBottom>
                 {t("exportMark.title")}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography
+                variant="body2"
+                sx={{
+                    color: "text.secondary",
+                    mb: 3
+                }}>
                 {t("exportMark.description")}
             </Typography>
 

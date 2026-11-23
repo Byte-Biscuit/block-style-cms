@@ -6,7 +6,6 @@ import {
     Box,
     Card,
     Chip,
-    CircularProgress,
     TextField,
     Typography,
 } from "@mui/material";
@@ -148,22 +147,6 @@ const ArticleFormTags: React.FC<ArticleFormTagsProps> = ({
                             tags.length === 0 ? t("placeholders.tag") : ""
                         }
                         size="small"
-                        slotProps={{
-                            input: {
-                                ...params.InputProps,
-                                endAdornment: (
-                                    <>
-                                        {loading ? (
-                                            <CircularProgress
-                                                color="inherit"
-                                                size={20}
-                                            />
-                                        ) : null}
-                                        {params.InputProps.endAdornment}
-                                    </>
-                                ),
-                            },
-                        }}
                     />
                 )}
                 slotProps={{
@@ -196,8 +179,10 @@ const ArticleFormTags: React.FC<ArticleFormTagsProps> = ({
             {tags.length === 0 && (
                 <Typography
                     variant="body2"
-                    color="text.secondary"
-                    sx={{ py: 1 }}
+                    sx={{
+                        color: "text.secondary",
+                        py: 1,
+                    }}
                 >
                     {t("helper.noTags")}
                 </Typography>

@@ -32,12 +32,16 @@ const StorageUsageCard = async () => {
                             <Typography variant="h4" component="div">
                                 {storageData.usedPercent}%
                             </Typography>
-                            <Typography color="text.secondary" variant="body2">
+                            <Typography variant="body2" sx={{
+                                color: "text.secondary"
+                            }}>
                                 {t("title")}
                             </Typography>
                         </Box>
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {`${formatBytes(storageData.used)}/${formatBytes(storageData.total)}`}
                     </Typography>
                     <LinearProgress

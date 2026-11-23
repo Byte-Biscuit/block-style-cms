@@ -29,7 +29,12 @@ export default function SuggestionPanel({
             <Typography variant="h6" gutterBottom>
                 {t("title")}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography
+                variant="body2"
+                sx={{
+                    color: "text.secondary",
+                    mb: 3
+                }}>
                 {t("description")}
             </Typography>
 

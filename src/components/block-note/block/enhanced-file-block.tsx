@@ -220,10 +220,11 @@ function FileSelectionDialog({
         >
             <DialogTitle>
                 <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
                     <Typography variant="h6">
                         {isEditMode
                             ? dict?.dialog?.editFile || "Edit File"
@@ -347,7 +348,9 @@ function FileSelectionDialog({
                                         </Typography>
                                         <Typography
                                             variant="body2"
-                                            color="text.secondary"
+                                            sx={{
+                                                color: "text.secondary"
+                                            }}
                                         >
                                             {dict?.upload?.supportedFormats ||
                                                 "Supports Office documents, PDF, archives and other formats"}
@@ -369,9 +372,10 @@ function FileSelectionDialog({
                     >
                         <Typography
                             variant="body2"
-                            color="text.primary"
-                            sx={{ minWidth: "fit-content" }}
-                        >
+                            sx={{
+                                color: "text.primary",
+                                minWidth: "fit-content"
+                            }}>
                             {dict?.form?.alignment || "Alignment"}:
                         </Typography>
                         <FormControl size="small" sx={{ minWidth: 120 }}>
@@ -451,7 +455,9 @@ export const EnhancedFileBlockRender = ({ block }: { block: any }) => {
                     <AttachFileIcon
                         sx={{ fontSize: 22, color: "text.secondary" }}
                     />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {dict?.placeholder?.clickToAdd || "Add file"}
                     </Typography>
                 </Box>

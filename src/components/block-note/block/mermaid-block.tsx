@@ -193,11 +193,12 @@ function MermaidRenderer({
     if (loading) {
         return (
             <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                p={4}
-            >
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    p: 4
+                }}>
                 <CircularProgress size={24} />
                 <Typography variant="body2" sx={{ ml: 2 }}>
                     {dict?.renderer?.rendering || "Rendering chart..."}
@@ -217,18 +218,19 @@ function MermaidRenderer({
     if (!svg) {
         return (
             <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                p={4}
                 sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    p: 4,
                     border: "2px dashed",
                     borderColor: "divider",
                     borderRadius: 1,
-                    bgcolor: "grey.50",
-                }}
-            >
-                <Typography variant="body2" color="text.secondary">
+                    bgcolor: "grey.50"
+                }}>
+                <Typography variant="body2" sx={{
+                    color: "text.secondary"
+                }}>
                     {dict?.renderer?.emptyPlaceholder ||
                         "Please enter Mermaid code to generate chart"}
                 </Typography>
@@ -412,12 +414,13 @@ function MermaidEditor({
                 }}
             >
                 <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    gap={2}
-                    flexWrap="wrap"
-                >
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 2,
+                        flexWrap: "wrap"
+                    }}>
                     <Box
                         sx={{
                             display: "flex",
@@ -498,7 +501,12 @@ function MermaidEditor({
                         </Box>
                     </Box>
 
-                    <Box display="flex" alignItems="center" gap={1.5}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5
+                        }}>
                         <FormControl size="small" sx={{ minWidth: 140 }}>
                             <InputLabel sx={{ fontSize: "12px" }}>
                                 {dict?.editor?.theme || "Theme"}
@@ -626,13 +634,12 @@ function MermaidEditor({
                                             </Typography>
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
                                                 sx={{
+                                                    color: "text.secondary",
                                                     display: "block",
                                                     fontSize: "10px",
-                                                    lineHeight: 1.2,
-                                                }}
-                                            >
+                                                    lineHeight: 1.2
+                                                }}>
                                                 {tmpl.description}
                                             </Typography>
                                         </Box>
@@ -727,9 +734,10 @@ function MermaidEditDialog({
                 {dict?.placeholder?.supportText && (
                     <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1.5 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            mb: 1.5
+                        }}>
                         {dict.placeholder.supportText}
                     </Typography>
                 )}
@@ -796,7 +804,9 @@ export const MermaidBlockRender = ({ block }: { block: any }) => {
                     <Box sx={{ display: "flex", color: "text.secondary" }}>
                         <MermaidIcon size={22} />
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {dict?.placeholder?.clickToAdd || "Add Mermaid diagram"}
                     </Typography>
                 </Box>

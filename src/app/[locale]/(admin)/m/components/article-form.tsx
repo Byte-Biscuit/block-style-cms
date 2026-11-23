@@ -512,9 +512,12 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                             </Typography>
                             <Typography
                                 variant="caption"
-                                color="text.secondary"
-                                sx={{ display: "block", mt: 0.5, ml: 4 }}
-                            >
+                                sx={{
+                                    color: "text.secondary",
+                                    display: "block",
+                                    mt: 0.5,
+                                    ml: 4
+                                }}>
                                 {t("helper.contentTip")}
                             </Typography>
                         </Box>
@@ -793,9 +796,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                                         ) : (
                                             <Typography
                                                 variant="body2"
-                                                color="text.secondary"
-                                                sx={{ py: 1 }}
-                                            >
+                                                sx={{
+                                                    color: "text.secondary",
+                                                    py: 1
+                                                }}>
                                                 {t("helper.noKeywords")}
                                             </Typography>
                                         )}
@@ -844,13 +848,17 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                                         <Box>
                                             <Typography
                                                 variant="body1"
-                                                fontWeight={500}
+                                                sx={{
+                                                    fontWeight: 500
+                                                }}
                                             >
                                                 {t("labels.publishNow")}
                                             </Typography>
                                             <Typography
                                                 variant="caption"
-                                                color="text.secondary"
+                                                sx={{
+                                                    color: "text.secondary"
+                                                }}
                                             >
                                                 {formData.published
                                                     ? t(

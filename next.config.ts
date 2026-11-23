@@ -13,6 +13,9 @@ let nextConfig: NextConfig = {
         "@blocknote/react",
         "@blocknote/server-util",
         "@blocknote/math-block",
+        // Medium export: Node mermaid + jsdom rasterize (not for RSC bundle).
+        "mermaid",
+        "jsdom",
     ],
     // Dev: allow non-localhost hosts (LAN IP / hostname) to load HMR and /_next assets.
     // Bind address is set in package.json: next dev|start --hostname 0.0.0.0

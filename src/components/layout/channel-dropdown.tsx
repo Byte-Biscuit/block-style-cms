@@ -1,9 +1,9 @@
 "use client";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { IconButton } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "@/components/link";
 import type { ChannelItem } from "@/types/system-config";
 
@@ -11,44 +11,25 @@ interface ChannelDropdownProps {
     channels: ChannelItem[];
 }
 
+const itemCls =
+    "hover:bg-primary-600 block text-gray-900 hover:text-white dark:bg-gray-800 dark:text-white";
+
 export default function ChannelDropdown({ channels }: ChannelDropdownProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const t = useTranslations("web");
     const locale = useLocale();
 
-    // 点击外部关闭
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                dropdownRef.current &&
-                !dropdownRef.current.contains(event.target as Node)
-            ) {
-                setIsOpen(false);
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isOpen]);
-
     const getChannelHref = (channel: ChannelItem): string => {
-        if (channel.type === "page") {
-            return channel.href!;
+        if (channel.type === "page" && channel.href) {
+            return `/${locale}${channel.href}`;
         }
-        // type === 'tag' - use channel route
         return `/${locale}/channel/${channel.id}`;
     };
 
     return (
-        <div className="relative" ref={dropdownRef}>
+        <>
             <IconButton
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={(e) => setAnchorEl(e.currentTarget)}
                 size="small"
                 aria-label="More channels"
                 className="text-gray-900 dark:text-gray-100"
@@ -56,20 +37,29 @@ export default function ChannelDropdown({ channels }: ChannelDropdownProps) {
                 <MoreHorizIcon />
             </IconButton>
 
-            {isOpen && (
-                <div className="absolute top-full right-0 z-50 mt-2 w-48 rounded-lg border border-gray-200 bg-white py-0 shadow-lg dark:border-gray-700 dark:bg-gray-800">
-                    {channels.map((channel, index) => (
-                        <Link
-                            key={`dropdown-${channel.id}`}
-                            href={getChannelHref(channel)}
-                            className={`hover:bg-primary-600 block px-4 py-2 text-sm hover:text-white dark:bg-gray-800 dark:text-white ${index === 0 ? "rounded-t-md" : ""} ${index === channels.length - 1 ? "rounded-b-md" : ""}`}
-                            onClick={() => setIsOpen(false)}
-                        >
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                slotProps={{
+                    paper: { sx: { py: 0 } },
+                    list: { sx: { py: 0 } },
+                }}
+            >
+                {channels.map((channel) => (
+                    <Link
+                        key={`dropdown-${channel.id}`}
+                        href={getChannelHref(channel)}
+                        className={itemCls}
+                    >
+                        <MenuItem onClick={() => setAnchorEl(null)}>
                             {t(`channel.${channel.id}.title`)}
-                        </Link>
-                    ))}
-                </div>
-            )}
-        </div>
+                        </MenuItem>
+                    </Link>
+                ))}
+            </Menu>
+        </>
     );
 }

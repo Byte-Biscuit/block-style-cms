@@ -40,12 +40,16 @@ const CommentSummaryCard = async () => {
                                     {commentCount.total}
                                 </Typography>
                             </Link>
-                            <Typography color="text.secondary" variant="body2">
+                            <Typography variant="body2" sx={{
+                                color: "text.secondary"
+                            }}>
                                 {t("title")}
                             </Typography>
                         </Box>
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {t("statusBreakdown", {
                             pending: commentCount.pending,
                             approved: commentCount.approved,

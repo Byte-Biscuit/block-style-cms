@@ -209,9 +209,10 @@ const VirtualizedMasonry: React.FC<VirtualizedMasonryProps> = ({
                     <CircularProgress size={24} />
                     <Typography
                         variant="body2"
-                        color="text.secondary"
-                        sx={{ ml: 1 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            ml: 1
+                        }}>
                         Loading more images...
                     </Typography>
                 </Box>
@@ -234,7 +235,9 @@ const VirtualizedMasonry: React.FC<VirtualizedMasonryProps> = ({
                         borderColor: "divider",
                     }}
                 >
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         All images loaded
                     </Typography>
                 </Box>

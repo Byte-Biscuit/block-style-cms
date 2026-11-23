@@ -445,7 +445,9 @@ export default function CommentManagementPage() {
                                             >
                                                 <Typography
                                                     variant="body1"
-                                                    color="text.secondary"
+                                                    sx={{
+                                                        color: "text.secondary"
+                                                    }}
                                                 >
                                                     {filteredComments.length ===
                                                         0 && comments.length > 0
@@ -501,8 +503,10 @@ export default function CommentManagementPage() {
                                                             </Typography>
                                                             <Typography
                                                                 variant="caption"
-                                                                color="text.secondary"
                                                                 noWrap
+                                                                sx={{
+                                                                    color: "text.secondary"
+                                                                }}
                                                             >
                                                                 {
                                                                     comment
@@ -750,9 +754,10 @@ export default function CommentManagementPage() {
                             >
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
-                                    sx={{ order: { xs: 2, sm: 1 } }}
-                                >
+                                    sx={{
+                                        color: "text.secondary",
+                                        order: { xs: 2, sm: 1 }
+                                    }}>
                                     {t("pagination.totalWithPage", {
                                         total: filteredComments.length,
                                         current: pageIndex,
@@ -782,7 +787,9 @@ export default function CommentManagementPage() {
                             >
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {t("pagination.total", {
                                         total: filteredComments.length,
@@ -810,8 +817,10 @@ export default function CommentManagementPage() {
                         >
                             <Typography
                                 variant="body2"
-                                color="text.secondary"
                                 gutterBottom
+                                sx={{
+                                    color: "text.secondary"
+                                }}
                             >
                                 {t("delete.author", {
                                     name: deleteTarget.author.name,

@@ -190,10 +190,11 @@ function AudioSelectionDialog({
         >
             <DialogTitle>
                 <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
                     <Typography variant="h6">
                         {dict?.dialog?.title || "Select Audio"}
                     </Typography>
@@ -353,9 +354,10 @@ function AudioSelectionDialog({
                     >
                         <Typography
                             variant="body2"
-                            color="text.secondary"
-                            sx={{ mb: 0.5 }}
-                        >
+                            sx={{
+                                color: "text.secondary",
+                                mb: 0.5
+                            }}>
                             {dict?.dialog?.selectSource ||
                                 "Select Audio Source"}
                         </Typography>
@@ -374,7 +376,9 @@ function AudioSelectionDialog({
                                 </Typography>
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {dict?.upload?.subtitle ||
                                         "Select Audio File"}
@@ -395,7 +399,9 @@ function AudioSelectionDialog({
                                 </Typography>
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {dict?.embed?.subtitle || "Audio URL"}
                                 </Typography>
@@ -483,7 +489,9 @@ function AudioSelectionDialog({
                                                     </Typography>
                                                     <Typography
                                                         variant="body2"
-                                                        color="text.secondary"
+                                                        sx={{
+                                                            color: "text.secondary"
+                                                        }}
                                                     >
                                                         {dict?.upload
                                                             ?.supportedFormats ||
@@ -552,7 +560,9 @@ export const EnhancedAudioBlockRender = ({ block }: { block: any }) => {
             <>
                 <Box sx={placeholderBarSx} onClick={() => setDialogOpen(true)}>
                     <AudioIcon sx={{ fontSize: 22, color: "text.secondary" }} />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {dict?.placeholder?.clickToAdd || "Add audio"}
                     </Typography>
                 </Box>

@@ -777,7 +777,8 @@
                 "summary": "文章简介",
                 "addKeyword": "添加关键词",
                 "addTag": "添加标签",
-                "publishNow": "立即发布"
+                "publishNow": "立即发布",
+                "mediumExportUrl": "Medium 导出链接"
             },
             "placeholders": {
                 "title": "请输入文章标题",
@@ -794,7 +795,8 @@
                 "publish": {
                     "published": "文章将立即对外公开",
                     "draft": "文章将保存为草稿"
-                }
+                },
+                "mediumExport": "将此链接粘贴到 Medium → Import a story。草稿也可导入，无需先在本站公开发布。"
             },
             "buttons": {
                 "generateSlug": "AI 生成 Slug",
@@ -807,7 +809,9 @@
                 "saveChanges": "保存修改",
                 "publishArticle": "发布文章",
                 "creating": "创建中...",
-                "cancel": "取消"
+                "cancel": "取消",
+                "copyMediumUrl": "复制",
+                "mediumUrlCopied": "已复制"
             },
             "messages": {
                 "submitError": "提交表单时出错：",
@@ -1042,6 +1046,7 @@
                 "delete": "删除"
             },
             "messages": {
+                "noData": "暂无建议",
                 "fetchError": "获取建议失败",
                 "deleteSuccess": "建议已删除",
                 "deleteError": "删除失败"
@@ -1081,7 +1086,10 @@
         "article": {
             "summary": "摘要",
             "copy": "复制",
-            "copied": "已复制!"
+            "copied": "已复制!",
+            "mediumExport": "Medium 导出",
+            "mediumExportOpen": "在新标签打开 Medium 导出页",
+            "mediumExportCopy": "复制 Medium 导出链接"
         },
         "auth": {
             "title": "认证错误",

@@ -186,10 +186,11 @@ function VideoSelectionDialog({
         >
             <DialogTitle>
                 <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
                     <Typography variant="h6">
                         {dict?.dialog?.title || "Select Video"}
                     </Typography>
@@ -366,9 +367,10 @@ function VideoSelectionDialog({
                     >
                         <Typography
                             variant="body2"
-                            color="text.secondary"
-                            sx={{ mb: 0.5 }}
-                        >
+                            sx={{
+                                color: "text.secondary",
+                                mb: 0.5
+                            }}>
                             {dict?.dialog?.selectSource ||
                                 "Select video source"}
                         </Typography>
@@ -384,7 +386,9 @@ function VideoSelectionDialog({
                                 </Typography>
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {dict?.upload?.subtitle ||
                                         "Select video file"}
@@ -405,7 +409,9 @@ function VideoSelectionDialog({
                                 </Typography>
                                 <Typography
                                     variant="body2"
-                                    color="text.secondary"
+                                    sx={{
+                                        color: "text.secondary"
+                                    }}
                                 >
                                     {dict?.embed?.subtitle || "iframe code"}
                                 </Typography>
@@ -490,7 +496,9 @@ function VideoSelectionDialog({
                                                     </Typography>
                                                     <Typography
                                                         variant="body2"
-                                                        color="text.secondary"
+                                                        sx={{
+                                                            color: "text.secondary"
+                                                        }}
                                                     >
                                                         {dict?.upload
                                                             ?.supportedFormats ||
@@ -557,7 +565,9 @@ export const EnhancedVideoBlockRender = ({ block }: { block: any }) => {
             <>
                 <Box sx={placeholderBarSx} onClick={() => setDialogOpen(true)}>
                     <VideoIcon sx={{ fontSize: 22, color: "text.secondary" }} />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {dict?.placeholder?.clickToAdd || "Add video"}
                     </Typography>
                 </Box>

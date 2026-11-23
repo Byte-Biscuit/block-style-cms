@@ -331,15 +331,14 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                 >
                     <Typography
                         variant="body2"
-                        color="success.main"
                         sx={{
+                            color: "success.main",
                             mb: 1.5,
                             fontWeight: 500,
                             display: "flex",
                             alignItems: "center",
-                            gap: 1,
-                        }}
-                    >
+                            gap: 1
+                        }}>
                         <VisibilityIcon fontSize="small" />
                         {t("notes.preview")}
                     </Typography>
@@ -395,9 +394,11 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                     {/* URL display */}
                     <Typography
                         variant="caption"
-                        color="text.secondary"
-                        sx={{ display: "block", mb: 0.5 }}
-                    >
+                        sx={{
+                            color: "text.secondary",
+                            display: "block",
+                            mb: 0.5
+                        }}>
                         {t("notes.imageUrlLabel")}
                     </Typography>
                     <Box
@@ -461,12 +462,16 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                 >
                     <CloudUploadIcon sx={{ mr: 2, color: "primary.main" }} />
                     <Box>
-                        <Typography variant="body2" fontWeight={500}>
+                        <Typography variant="body2" sx={{
+                            fontWeight: 500
+                        }}>
                             {uploading
                                 ? t("buttons.uploading") + "..."
                                 : t("buttons.uploadLocal")}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("notes.supportedTypes")}
                         </Typography>
                     </Box>
@@ -480,10 +485,14 @@ const CoverImageSelector: React.FC<CoverImageSelectorProps> = ({
                 >
                     <PhotoLibraryIcon sx={{ mr: 2, color: "secondary.main" }} />
                     <Box>
-                        <Typography variant="body2" fontWeight={500}>
+                        <Typography variant="body2" sx={{
+                            fontWeight: 500
+                        }}>
                             {t("buttons.fromPexels")}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("notes.supportedTypes")}
                         </Typography>
                     </Box>

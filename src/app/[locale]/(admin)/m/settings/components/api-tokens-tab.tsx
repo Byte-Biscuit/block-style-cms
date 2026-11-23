@@ -183,7 +183,9 @@ export default function ApiTokensTab() {
             >
                 <Box>
                     <Typography variant="h6">{t("page.title")}</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" sx={{
+                        color: "text.secondary"
+                    }}>
                         {t("page.subtitle")}
                     </Typography>
                 </Box>

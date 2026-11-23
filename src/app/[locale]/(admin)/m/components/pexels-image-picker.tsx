@@ -401,12 +401,15 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                         />
                         <Typography
                             variant="h6"
-                            color="text.secondary"
-                            sx={{ mb: 1 }}
-                        >
+                            sx={{
+                                color: "text.secondary",
+                                mb: 1
+                            }}>
                             {t("states.noResults")}
                         </Typography>
-                        <Typography variant="body2" color="text.disabled">
+                        <Typography variant="body2" sx={{
+                            color: "text.disabled"
+                        }}>
                             {t("states.noResultsHint")}
                         </Typography>
                     </Box>
@@ -432,12 +435,15 @@ const PexelsImagePicker: React.FC<PexelsImagePickerProps> = ({
                         />
                         <Typography
                             variant="h6"
-                            color="text.primary"
-                            sx={{ mb: 1 }}
-                        >
+                            sx={{
+                                color: "text.primary",
+                                mb: 1
+                            }}>
                             {t("states.welcome")}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{
+                            color: "text.secondary"
+                        }}>
                             {t("states.welcomeHint")}
                         </Typography>
                     </Box>

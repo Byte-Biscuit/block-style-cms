@@ -7,7 +7,6 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    Tooltip,
 } from "@mui/material";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -68,22 +67,22 @@ export function LanguageToggle({ className = "" }: LanguageToggleProps) {
 
     return (
         <>
-            <Tooltip title={t("language")}>
-                <IconButton
-                    onClick={handleClick}
-                    color="inherit"
-                    className={`${className} ${button.icon} `}
-                >
-                    {mounted ? (
-                        <span className="min-w-6 text-center text-base leading-none font-medium">
-                            {localeMap[locale as keyof typeof localeMap]
-                                ?.flag || "EN"}
-                        </span>
-                    ) : (
-                        <LanguageIcon />
-                    )}
-                </IconButton>
-            </Tooltip>
+            <IconButton
+                onClick={handleClick}
+                color="inherit"
+                title={t("language")}
+                aria-label={t("language")}
+                className={`${className} ${button.icon} `}
+            >
+                {mounted ? (
+                    <span className="min-w-6 text-center font-medium text-base leading-none">
+                        {localeMap[locale as keyof typeof localeMap]?.flag ||
+                            "EN"}
+                    </span>
+                ) : (
+                    <LanguageIcon />
+                )}
+            </IconButton>
 
             <Menu
                 anchorEl={anchorEl}
@@ -115,7 +114,7 @@ export function LanguageToggle({ className = "" }: LanguageToggleProps) {
                             key={langInfo.code}
                             onClick={() => handleLanguageChange(langInfo.code)}
                             className={
-                                "group hover:bg-primary-600 bg-white px-4 py-2 text-gray-900 hover:text-white dark:bg-gray-800 dark:text-white"
+                                "group bg-white px-4 py-2 text-gray-900 hover:bg-primary-600 hover:text-white dark:bg-gray-800 dark:text-white"
                             }
                         >
                             <ListItemIcon
@@ -123,7 +122,7 @@ export function LanguageToggle({ className = "" }: LanguageToggleProps) {
                                     "group-hover:text-white dark:text-gray-300"
                                 }
                             >
-                                <span className="block h-full min-w-5 text-center align-middle text-base leading-6 font-medium">
+                                <span className="block h-full min-w-5 text-center align-middle font-medium text-base leading-6">
                                     {langInfo.flag}
                                 </span>
                             </ListItemIcon>

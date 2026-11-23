@@ -1046,6 +1046,7 @@
                 "delete": "刪除"
             },
             "messages": {
+                "noData": "暫無建議",
                 "fetchError": "獲取建議失敗",
                 "deleteSuccess": "建議已刪除",
                 "deleteError": "刪除失敗"

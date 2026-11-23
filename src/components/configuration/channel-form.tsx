@@ -13,13 +13,11 @@ import {
     Box,
     Button,
     Card,
-    CircularProgress,
     Divider,
     FormControl,
     FormControlLabel,
     FormLabel,
     IconButton,
-    Paper,
     Radio,
     RadioGroup,
     TextField,
@@ -35,6 +33,20 @@ import type { ChannelItem } from "@/types/system-config";
  * Channel Form Data Structure
  */
 export type ChannelFormData = ChannelItem[];
+
+/** Client-only row key for React lists; stripped on submit. */
+type ChannelRow = ChannelItem & { _key: string };
+
+/** SSR-stable key: prefer id; fall back to index. UUID only for client-side adds. */
+const newChannelRow = (item?: Partial<ChannelItem>, index = 0): ChannelRow => ({
+    id: "",
+    type: "tag",
+    href: "",
+    tag: "",
+    icon: "",
+    ...item,
+    _key: item?.id || `channel-row-${index}`,
+});
 
 interface ChannelFormProps {
     /** Initial form data */
@@ -75,18 +87,10 @@ export default function ChannelForm({
     submitLabel = "Save",
 }: ChannelFormProps) {
     const t = useTranslations("configuration.channel");
-    const [channels, setChannels] = useState<ChannelItem[]>(
+    const [channels, setChannels] = useState<ChannelRow[]>(() =>
         initialData.length > 0
-            ? initialData
-            : [
-                  {
-                      id: "",
-                      type: "tag",
-                      href: "",
-                      tag: "",
-                      icon: "",
-                  },
-              ]
+            ? initialData.map((item, i) => newChannelRow(item, i))
+            : [newChannelRow()]
     );
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -118,14 +122,12 @@ export default function ChannelForm({
      * Add a new channel item
      */
     const handleAddChannel = () => {
+        // Client-only add: UUID is fine (no SSR pass for this row).
         setChannels([
             ...channels,
             {
-                id: "",
-                type: "tag",
-                href: "",
-                tag: "",
-                icon: "",
+                ...newChannelRow(undefined, channels.length),
+                _key: crypto.randomUUID(),
             },
         ]);
     };
@@ -224,7 +226,7 @@ export default function ChannelForm({
         e.preventDefault();
 
         if (validateForm()) {
-            onSubmit(channels);
+            onSubmit(channels.map(({ _key, ...item }) => item));
         }
     };
 
@@ -255,9 +257,12 @@ export default function ChannelForm({
                 <Typography variant="h6" gutterBottom>
                     {t("title")}
                 </Typography>
-                <Typography variant="body2" sx={{
-                    color: "text.secondary"
-                }}>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: "text.secondary",
+                    }}
+                >
                     {t("subtitle")}
                 </Typography>
             </Box>
@@ -276,7 +281,7 @@ export default function ChannelForm({
             <Box sx={{ mb: 3 }}>
                 {channels.map((channel, index) => (
                     <Card
-                        key={index}
+                        key={channel._key}
                         sx={{
                             mb: 2,
                             p: 2,
@@ -441,7 +446,7 @@ export default function ChannelForm({
                                             renderInput={(params) => (
                                                 <TextField
                                                     {...params}
-                                                    label={t("form.tag") + " *"}
+                                                    label={`${t("form.tag")} *`}
                                                     error={
                                                         !!errors[`${index}-tag`]
                                                     }
@@ -451,28 +456,6 @@ export default function ChannelForm({
                                                         ] || t("form.tagHelper")
                                                     }
                                                     size="small"
-                                                    slotProps={{
-                                                        input: {
-                                                            ...params.InputProps,
-                                                            endAdornment: (
-                                                                <>
-                                                                    {loadingTags ? (
-                                                                        <CircularProgress
-                                                                            color="inherit"
-                                                                            size={
-                                                                                20
-                                                                            }
-                                                                        />
-                                                                    ) : null}
-                                                                    {
-                                                                        params
-                                                                            .InputProps
-                                                                            .endAdornment
-                                                                    }
-                                                                </>
-                                                            ),
-                                                        },
-                                                    }}
                                                 />
                                             )}
                                         />

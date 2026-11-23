@@ -3,7 +3,6 @@ import {
     Comment as CommentIcon,
     Dashboard as DashboardIcon,
     Feedback as FeedbackIcon,
-    Image as ImageIcon,
     List as ListIcon,
     Settings as SettingsIcon,
     Visibility as VisibilityIcon,
@@ -20,7 +19,6 @@ import {
     Typography,
 } from "@mui/material";
 import { getTranslations } from "next-intl/server";
-import Link from "@/components/link";
 import ArticleSummaryCard from "./components/dashboard-cards/article-summary-card";
 import CommentSummaryCard from "./components/dashboard-cards/comment-summary-card";
 import StorageUsageCard from "./components/dashboard-cards/storage-usage-card";
@@ -138,9 +136,9 @@ export default async function AdminDashboard() {
                         <Divider sx={{ mb: 3 }} />
 
                         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-                            {quickActions.map((action, index) => (
+                            {quickActions.map((action) => (
                                 <Box
-                                    key={index}
+                                    key={action.href}
                                     sx={{
                                         flex: "1 1 200px",
                                         minWidth: "180px",
@@ -185,7 +183,7 @@ export default async function AdminDashboard() {
                                             <Typography
                                                 variant="body2"
                                                 sx={{
-                                                    color: "text.secondary"
+                                                    color: "text.secondary",
                                                 }}
                                             >
                                                 {action.description}
@@ -197,27 +195,21 @@ export default async function AdminDashboard() {
                                                 pb: 2,
                                             }}
                                         >
-                                            <Link
+                                            <Button
                                                 href={action.href}
-                                                style={{
-                                                    textDecoration: "none",
-                                                }}
+                                                variant="contained"
+                                                color={
+                                                    action.color as
+                                                        | "primary"
+                                                        | "secondary"
+                                                        | "info"
+                                                        | "warning"
+                                                        | "success"
+                                                }
+                                                size="small"
                                             >
-                                                <Button
-                                                    variant="contained"
-                                                    color={
-                                                        action.color as
-                                                            | "primary"
-                                                            | "secondary"
-                                                            | "info"
-                                                            | "warning"
-                                                            | "success"
-                                                    }
-                                                    size="small"
-                                                >
-                                                    {t("enterButton")}
-                                                </Button>
-                                            </Link>
+                                                {t("enterButton")}
+                                            </Button>
                                         </CardActions>
                                     </Card>
                                 </Box>

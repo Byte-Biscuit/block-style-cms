@@ -107,8 +107,10 @@ export const EnhancedImage: React.FC<EnhancedImageProps> = ({
                 open={open}
                 onClose={handleClose}
                 maxWidth={false}
-                PaperProps={{
-                    sx: { bgcolor: "transparent", boxShadow: "none" },
+                slotProps={{
+                    paper: {
+                        sx: { bgcolor: "transparent", boxShadow: "none" },
+                    },
                 }}
             >
                 <Box

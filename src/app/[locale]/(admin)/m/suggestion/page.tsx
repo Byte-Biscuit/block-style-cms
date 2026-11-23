@@ -73,8 +73,7 @@ export default function SuggestionManagementPage() {
                 return;
             }
 
-            const { suggestions: fetchedSuggestions } = result?.payload;
-            setSuggestions(fetchedSuggestions || []);
+            setSuggestions(result?.payload?.suggestions || []);
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : t("messages.fetchError")
@@ -161,11 +160,6 @@ export default function SuggestionManagementPage() {
         setPageIndex(1);
     };
 
-    // Reset page when search changes
-    useEffect(() => {
-        setPageIndex(1);
-    }, [debouncedSearchTerm]);
-
     if (loading) {
         return (
             <Container
@@ -209,21 +203,26 @@ export default function SuggestionManagementPage() {
                         variant="outlined"
                         size="small"
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <SearchIcon
-                                    sx={{ mr: 1, color: "action.active" }}
-                                />
-                            ),
-                            endAdornment: searchTerm && (
-                                <IconButton
-                                    size="small"
-                                    onClick={handleClearSearch}
-                                >
-                                    <ClearIcon fontSize="small" />
-                                </IconButton>
-                            ),
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setPageIndex(1);
+                        }}
+                        slotProps={{
+                            input: {
+                                startAdornment: (
+                                    <SearchIcon
+                                        sx={{ mr: 1, color: "action.active" }}
+                                    />
+                                ),
+                                endAdornment: searchTerm && (
+                                    <IconButton
+                                        size="small"
+                                        onClick={handleClearSearch}
+                                    >
+                                        <ClearIcon fontSize="small" />
+                                    </IconButton>
+                                ),
+                            },
                         }}
                         sx={{ flex: 1 }}
                     />
@@ -232,8 +231,9 @@ export default function SuggestionManagementPage() {
                         variant="body2"
                         sx={{
                             color: "text.secondary",
-                            minWidth: 120
-                        }}>
+                            minWidth: 120,
+                        }}
+                    >
                         {t("stats.total")}: {filteredSuggestions.length}
                     </Typography>
                 </Box>
@@ -266,7 +266,7 @@ export default function SuggestionManagementPage() {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: "text.secondary"
+                                            color: "text.secondary",
                                         }}
                                     >
                                         {t("messages.noData")}
@@ -314,7 +314,7 @@ export default function SuggestionManagementPage() {
                                         <Typography
                                             variant="body2"
                                             sx={{
-                                                color: "text.secondary"
+                                                color: "text.secondary",
                                             }}
                                         >
                                             {suggestion.metadata?.ip || "-"}
@@ -324,7 +324,7 @@ export default function SuggestionManagementPage() {
                                         <Typography
                                             variant="body2"
                                             sx={{
-                                                color: "text.secondary"
+                                                color: "text.secondary",
                                             }}
                                         >
                                             {formatDateI18n(

@@ -1,12 +1,5 @@
 import { Dashboard as DashboardIcon } from "@mui/icons-material";
-import {
-    AppBar,
-    Box,
-    IconButton,
-    Toolbar,
-    Tooltip,
-    Typography,
-} from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -44,8 +37,7 @@ export default async function AdminLayout({
                 <Toolbar sx={{ justifyContent: "space-between" }}>
                     <Link
                         href="/m"
-                        color="inherit"
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 text-inherit"
                     >
                         <Image
                             src="/api/logo"
@@ -66,13 +58,14 @@ export default async function AdminLayout({
                     <Box
                         sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
                     >
-                        <Tooltip title={t("admin.dashboard.title")}>
-                            <Link href="/m">
-                                <IconButton color="inherit" size="small">
-                                    <DashboardIcon />
-                                </IconButton>
-                            </Link>
-                        </Tooltip>
+                        <Link
+                            href="/m"
+                            aria-label={t("admin.dashboard.title")}
+                            title={t("admin.dashboard.title")}
+                            className="inline-flex size-8 items-center justify-center rounded-full text-inherit hover:bg-white/10"
+                        >
+                            <DashboardIcon fontSize="small" />
+                        </Link>
                         <LanguageToggle className="h-8 w-8 rounded-full text-white hover:bg-white/10" />
                         <SignOutButton />
                     </Box>

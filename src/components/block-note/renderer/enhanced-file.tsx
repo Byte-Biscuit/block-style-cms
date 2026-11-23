@@ -74,21 +74,20 @@ export const EnhancedFile: React.FC<EnhancedFileProps> = ({
                 </div>
 
                 <div className="ml-3 shrink-0">
-                    <Link
+                    <IconButton
+                        component={Link}
                         href={`/files/${filename}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Download"
+                        aria-label="Download"
+                        className={
+                            "text-gray-800 transition-colors hover:bg-gray-400 hover:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                        }
+                        color="inherit"
                     >
-                        <IconButton
-                            className={
-                                "text-gray-800 transition-colors hover:bg-gray-400 hover:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
-                            }
-                            color="inherit"
-                        >
-                            <DownloadIcon fontSize="small" />
-                        </IconButton>
-                    </Link>
+                        <DownloadIcon fontSize="small" />
+                    </IconButton>
                 </div>
             </div>
             {controls && (

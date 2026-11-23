@@ -1,4 +1,3 @@
-import { IconButton, Tooltip } from "@mui/material";
 import MediumIcon from "@/components/icons/medium";
 import Link from "@/components/link";
 import { systemConfigService } from "@/lib/services/system-config-service";
@@ -11,13 +10,14 @@ const MediumIconButton = async () => {
     if (!mediumUrl) return null;
 
     return (
-        <Tooltip title="Medium">
-            <Link href={mediumUrl}>
-                <IconButton color="inherit" className={button.icon}>
-                    <MediumIcon />
-                </IconButton>
-            </Link>
-        </Tooltip>
+        <Link
+            href={mediumUrl}
+            aria-label="Medium"
+            title="Medium"
+            className={button.icon}
+        >
+            <MediumIcon />
+        </Link>
     );
 };
 

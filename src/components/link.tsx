@@ -1,3 +1,5 @@
+"use client";
+
 // from:https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/components/Link.tsx
 
 import type { LinkProps } from "next/link";
@@ -8,8 +10,8 @@ const CustomLink = ({
     href,
     ...rest
 }: LinkProps & AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    const isInternalLink = href && href.startsWith("/");
-    const isAnchorLink = href && href.startsWith("#");
+    const isInternalLink = typeof href === "string" && href.startsWith("/");
+    const isAnchorLink = typeof href === "string" && href.startsWith("#");
 
     if (isInternalLink) {
         return <Link className="wrap-break-word" href={href} {...rest} />;
@@ -24,7 +26,7 @@ const CustomLink = ({
             className="wrap-break-word"
             target="_blank"
             rel="noopener noreferrer"
-            href={href}
+            href={href as string}
             {...rest}
         />
     );

@@ -1,5 +1,4 @@
 import { GitHub } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
 import Link from "@/components/link";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { button } from "@/lib/style-classes";
@@ -7,15 +6,14 @@ import { button } from "@/lib/style-classes";
 const GitHubIconButton = async () => {
     const systemConfig = await systemConfigService.readConfig();
     return (
-        <Tooltip title="GitHub">
-            <Link
-                href={`${systemConfig?.siteInfo.contact.github || "https://github.com/Byte-Biscuit/block-style-cms"}`}
-            >
-                <IconButton color="inherit" className={button.icon}>
-                    <GitHub />
-                </IconButton>
-            </Link>
-        </Tooltip>
+        <Link
+            href={`${systemConfig?.siteInfo.contact.github || "https://github.com/Byte-Biscuit/block-style-cms"}`}
+            aria-label="GitHub"
+            title="GitHub"
+            className={button.icon}
+        >
+            <GitHub />
+        </Link>
     );
 };
 

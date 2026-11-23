@@ -1045,6 +1045,7 @@
                 "delete": "Delete"
             },
             "messages": {
+                "noData": "No suggestions",
                 "fetchError": "Failed to fetch suggestions",
                 "deleteSuccess": "Suggestion deleted",
                 "deleteError": "Failed to delete suggestion"

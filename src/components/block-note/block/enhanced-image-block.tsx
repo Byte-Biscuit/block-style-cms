@@ -223,8 +223,9 @@ function ImageSelectionDialog({
                     sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center"
-                    }}>
+                        alignItems: "center",
+                    }}
+                >
                     <Typography variant="h6">
                         {dict?.dialog?.title || "Select Image"}
                     </Typography>
@@ -562,8 +563,9 @@ function ImageSelectionDialog({
                                 variant="body2"
                                 sx={{
                                     color: "text.secondary",
-                                    mb: 0.5
-                                }}>
+                                    mb: 0.5,
+                                }}
+                            >
                                 {dict?.dialog?.selectSource ||
                                     "Select image source"}
                             </Typography>
@@ -580,7 +582,7 @@ function ImageSelectionDialog({
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: "text.secondary"
+                                            color: "text.secondary",
                                         }}
                                     >
                                         {dict?.upload?.subtitle ||
@@ -601,7 +603,7 @@ function ImageSelectionDialog({
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: "text.secondary"
+                                            color: "text.secondary",
                                         }}
                                     >
                                         {dict?.embed?.subtitle ||
@@ -625,7 +627,7 @@ function ImageSelectionDialog({
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: "text.secondary"
+                                            color: "text.secondary",
                                         }}
                                     >
                                         {dict?.pexels?.subtitle ||
@@ -646,7 +648,7 @@ function ImageSelectionDialog({
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: "text.secondary"
+                                            color: "text.secondary",
                                         }}
                                     >
                                         {dict?.giphy?.subtitle ||
@@ -690,7 +692,10 @@ function ImageSelectionDialog({
                             label={dict?.embed?.imageUrl || "Image URL"}
                             value={urlInput}
                             onChange={(e) => setUrlInput(e.target.value)}
-                            placeholder="https://example.com/image.jpg"
+                            placeholder={
+                                dict?.embed?.imageUrlPlaceholder ||
+                                "https://example.com/image.jpg"
+                            }
                             variant="outlined"
                             autoFocus
                             sx={{ mb: 2 }}
@@ -813,7 +818,7 @@ function ImageSelectionDialog({
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: "text.secondary"
+                                            color: "text.secondary",
                                         }}
                                     >
                                         {dict?.upload?.supportedFormats ||
@@ -913,9 +918,12 @@ export const EnhancedImageBlockRender = ({ block }: { block: any }) => {
                     onClick={() => setDialogOpen(true)}
                 >
                     <ImageIcon sx={{ fontSize: 22, color: "text.secondary" }} />
-                    <Typography variant="body2" sx={{
-                        color: "text.secondary"
-                    }}>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            color: "text.secondary",
+                        }}
+                    >
                         {dict?.placeholder?.clickToAdd || "Add image"}
                     </Typography>
                 </Box>

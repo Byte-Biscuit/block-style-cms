@@ -1,6 +1,6 @@
 {
     "name": "block-style-cms",
-    "version": "0.6.2",
+    "version": "0.6.3",
     "private": true,
     "scripts": {
         "dev": "next dev --hostname 0.0.0.0",
@@ -40,6 +40,7 @@
         "clsx": "^2.1.1",
         "dompurify": "^3.4.17",
         "hi-base32": "^0.6.0",
+        "jsdom": "^30.0.1",
         "katex": "^0.18.10",
         "lru-cache": "^11.5.2",
         "mermaid": "^12.2.0",
@@ -84,7 +85,6 @@
         "@types/react-syntax-highlighter": "^15.5.13",
         "@vitejs/plugin-react": "^5.0.4",
         "cross-env": "^10.1.0",
-        "jsdom": "^30.0.1",
         "tailwindcss": "^4",
         "typescript": "^7",
         "vite-tsconfig-paths": "^6.1.1",

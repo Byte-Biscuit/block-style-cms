@@ -777,7 +777,8 @@
                 "summary": "文章簡介",
                 "addKeyword": "新增關鍵字",
                 "addTag": "新增標籤",
-                "publishNow": "立即發布"
+                "publishNow": "立即發布",
+                "mediumExportUrl": "Medium 匯出連結"
             },
             "placeholders": {
                 "title": "請輸入文章標題",
@@ -794,7 +795,8 @@
                 "publish": {
                     "published": "文章將立即對外公開",
                     "draft": "文章將儲存為草稿"
-                }
+                },
+                "mediumExport": "將此連結貼到 Medium → Import a story。草稿也可匯入，無需先在本站公開發佈。"
             },
             "buttons": {
                 "generateSlug": "AI 生成 Slug",
@@ -807,7 +809,9 @@
                 "saveChanges": "儲存變更",
                 "publishArticle": "發佈文章",
                 "creating": "建立中...",
-                "cancel": "取消"
+                "cancel": "取消",
+                "copyMediumUrl": "複製",
+                "mediumUrlCopied": "已複製"
             },
             "messages": {
                 "submitError": "提交表單時發生錯誤：",
@@ -1081,7 +1085,10 @@
         "article": {
             "summary": "摘要",
             "copy": "複製",
-            "copied": "已複製!"
+            "copied": "已複製!",
+            "mediumExport": "Medium 匯出",
+            "mediumExportOpen": "在新分頁開啟 Medium 匯出頁",
+            "mediumExportCopy": "複製 Medium 匯出連結"
         },
         "auth": {
             "title": "驗證錯誤",

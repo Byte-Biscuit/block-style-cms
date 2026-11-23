@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
+import MediumExportLink from "@/components/article/medium-export-link";
 import type { LocalBlock as Block } from "@/components/block-note/schema";
 import { BlockListRenderer } from "@/components/block-note/universal-block-renderer";
 import CommentSection from "@/components/comment/comment-section";
 import I18NLocaleTime from "@/components/i18n-time";
 import TableOfContents from "@/components/toc/table-of-contents";
 import TableOfContentsMobile from "@/components/toc/table-of-contents-mobile";
+import { resolveExportBaseUrl } from "@/lib/export-html";
 import { articleService } from "@/lib/services/article-service";
 import { systemConfigService } from "@/lib/services/system-config-service";
 import { getDefaultHeadingClasses } from "@/lib/style-classes";
@@ -119,6 +121,7 @@ export default async function ArticleDetailPage({
     const toc = Array.isArray(article.content)
         ? extractToc(article.content as Block[])
         : [];
+    const exportBaseUrl = await resolveExportBaseUrl();
 
     return (
         <>
@@ -143,11 +146,20 @@ export default async function ArticleDetailPage({
                         >
                             {article.title}
                         </h1>
-                        <I18NLocaleTime
-                            date={article.updatedAt || article.createdAt!}
-                            locale={locale}
-                            className="text-base leading-6 font-medium"
-                        />
+                        <div className="flex items-center justify-between gap-3">
+                            <I18NLocaleTime
+                                date={article.updatedAt || article.createdAt!}
+                                locale={locale}
+                                className="text-base leading-6 font-medium"
+                            />
+                            {exportBaseUrl ? (
+                                <MediumExportLink
+                                    locale={article.locale}
+                                    slug={article.slug}
+                                    baseUrl={exportBaseUrl}
+                                />
+                            ) : null}
+                        </div>
                     </header>
                     {article.image && (
                         <section className="mb-6 flex justify-center md:mb-8">

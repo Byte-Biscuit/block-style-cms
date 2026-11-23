@@ -777,7 +777,8 @@
                 "summary": "Summary",
                 "addKeyword": "Add keyword",
                 "addTag": "Add tag",
-                "publishNow": "Publish now"
+                "publishNow": "Publish now",
+                "mediumExportUrl": "Medium export URL"
             },
             "placeholders": {
                 "title": "Enter article title",
@@ -794,7 +795,8 @@
                 "publish": {
                     "published": "The article will be publicly available immediately",
                     "draft": "The article will be saved as a draft"
-                }
+                },
+                "mediumExport": "Paste this URL into Medium → Import a story. Works for drafts too (no need to publish here first)."
             },
             "buttons": {
                 "generateSlug": "AI generate slug",
@@ -807,7 +809,9 @@
                 "saveChanges": "Save changes",
                 "publishArticle": "Publish article",
                 "creating": "Creating...",
-                "cancel": "Cancel"
+                "cancel": "Cancel",
+                "copyMediumUrl": "Copy",
+                "mediumUrlCopied": "Copied"
             },
             "messages": {
                 "submitError": "Error submitting form:",
@@ -1080,7 +1084,10 @@
         "article": {
             "summary": "Summary",
             "copy": "Copy",
-            "copied": "Copied!"
+            "copied": "Copied!",
+            "mediumExport": "Medium export",
+            "mediumExportOpen": "Open Medium export in new tab",
+            "mediumExportCopy": "Copy Medium export URL"
         },
         "auth": {
             "title": "Authentication Error",

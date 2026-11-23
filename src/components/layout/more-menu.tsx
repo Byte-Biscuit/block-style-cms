@@ -8,22 +8,8 @@ import {
     MenuItem,
 } from "@mui/material";
 import React from "react";
+import MediumIcon from "@/components/icons/medium";
 import Link from "@/components/link";
-
-const MediumIcon = () => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1044 593"
-        width="1em"
-        height="1em"
-        fill="currentColor"
-        aria-hidden="true"
-    >
-        <ellipse cx="294.5" cy="296.5" rx="294.5" ry="296.5" />
-        <ellipse cx="764.5" cy="296.5" rx="147.5" ry="279" />
-        <ellipse cx="992" cy="296.5" rx="52" ry="250" />
-    </svg>
-);
 
 interface MoreMenuProps {
     githubUrl?: string;

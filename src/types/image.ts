@@ -2,83 +2,83 @@
  * Image related type definitions
  */
 export interface ImageOptions {
-    /** 原始文件名（用于生成SEO友好的文件名） */
+    /** Original filename (used to generate SEO-friendly filenames) */
     originalName?: string;
-    /** 最大宽度 */
+    /** Maximum width */
     maxWidth?: number | string;
-    /** 最大高度 */
+    /** Maximum height */
     maxHeight?: number | string;
-    /** 是否启用WebP格式 */
+    /** Whether to enable WebP format */
     enableWebP?: boolean;
-    /** 宽度 */
+    /** Width */
     width?: number | string;
-    /** 高度 */
+    /** Height */
     height?: number | string;
-    /** 图片质量 (1-100) */
+    /** Image quality (1-100) */
     quality?: number | string;
-    /**文件类型 */
+    /** File type */
     format?: "jpeg" | "png" | "webp" | "avif" | "gif";
-    /** 是否启用自动压缩 */
+    /** Whether to enable auto compression */
     autoCompress?: boolean;
-    /** 颜色空间 */
+    /** Color space */
     colorSpace?: "srgb" | "tinysrgb";
-    /** 是否保持宽高比 */
+    /** How to fit within dimensions while preserving aspect ratio */
     fit?: "cover" | "contain" | "fill" | "inside" | "outside" | "crop";
 }
 
 /**
- * 图片上传相关类型定义
+ * Image upload related type definitions
  */
 export interface ImageUploadOptions {
-    /** 原始文件名（用于生成SEO友好的文件名） */
+    /** Original filename (used to generate SEO-friendly filenames) */
     originalName?: string;
-    /** 图片质量 (1-100) */
+    /** Image quality (1-100) */
     quality?: number;
-    /** 最大宽度 */
+    /** Maximum width */
     maxWidth?: number;
-    /** 最大高度 */
+    /** Maximum height */
     maxHeight?: number;
-    /** 是否启用WebP格式 */
+    /** Whether to enable WebP format */
     enableWebP?: boolean;
 }
 
 export interface ImageProcessOptions {
-    /** 宽度 */
+    /** Width */
     width?: number;
-    /** 高度 */
+    /** Height */
     height?: number;
-    /** 图片质量 (1-100) */
+    /** Image quality (1-100) */
     quality?: number;
-    /** 输出格式 */
+    /** Output format */
     format?: "jpeg" | "png" | "webp" | "avif";
-    /** 是否保持宽高比 */
+    /** How to fit within dimensions while preserving aspect ratio */
     fit?: "cover" | "contain" | "fill" | "inside" | "outside";
     /** Accept header for format negotiation */
     acceptHeader?: string;
 }
 
 export interface ImageMetaInfo {
-    /** 文件名 */
+    /** Filename */
     filename: string;
-    /** 原始文件名 */
+    /** Original filename */
     originalName: string;
-    /** 文件大小（字节） */
+    /** File size in bytes */
     size: number;
-    /** 图片宽度 */
+    /** Image width */
     width: number;
-    /** 图片高度 */
+    /** Image height */
     height: number;
-    /** MIME类型 */
+    /** MIME type */
     mimeType: string;
-    /** 上传时间 */
+    /** Upload time */
     uploadedAt: string;
-    /** 图片标题 */
+    /** Image title */
     title?: string;
-    /** 图片描述 */
+    /** Image description */
     description?: string;
-    /** 图片标签 */
+    /** Image tags */
     tags?: string[];
-    /** 替代文本 */
+    /** Alternative text */
     altText?: string;
     fullUrl?: string;
     /** SHA-256 of processed file bytes; used to dedupe re-uploads */
@@ -86,28 +86,28 @@ export interface ImageMetaInfo {
 }
 
 export interface ImageServeOptions {
-    /** 宽度 */
+    /** Width */
     w?: number;
-    /** 高度 */
+    /** Height */
     h?: number;
-    /** 图片质量 */
+    /** Image quality */
     q?: number;
-    /** 输出格式 */
+    /** Output format */
     f?: "jpeg" | "png" | "webp" | "avif";
-    /** 适应方式 */
+    /** Fit mode */
     fit?: "cover" | "contain" | "fill" | "inside" | "outside";
 }
 
-/** 图片列表查询选项 */
+/** Image list query options */
 export interface ImageListOptions {
-    /** 页码 */
+    /** Page number */
     page: number;
-    /** 每页数量 */
+    /** Items per page */
     limit: number;
-    /** 排序字段 */
+    /** Sort field */
     sortBy: "uploadedAt" | "size" | "filename";
-    /** 排序方向 */
+    /** Sort direction */
     sortOrder: "asc" | "desc";
-    /** 搜索关键词 */
+    /** Search keyword */
     searchTerm?: string | null;
 }

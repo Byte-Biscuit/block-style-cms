@@ -8,7 +8,12 @@ export type MediumBlock = ExportBlock;
 
 export type BlocksToMediumHtmlOptions = Omit<
     BlocksToHtmlOptions,
-    "demoteHeadingsForShell" | "flattenNestedLists"
+    | "demoteHeadingsForShell"
+    | "flattenNestedLists"
+    | "stripDividers"
+    | "stripCodeInHeadingsAndQuotes"
+    | "rasterizeTables"
+    | "preferStandardRasterImages"
 >;
 
 /**
@@ -22,5 +27,9 @@ export async function blocksToMediumHtml(
         ...opts,
         demoteHeadingsForShell: true,
         flattenNestedLists: true,
+        stripDividers: true,
+        stripCodeInHeadingsAndQuotes: true,
+        rasterizeTables: true,
+        preferStandardRasterImages: true,
     });
 }

@@ -25,6 +25,11 @@ ENV CMS_DATA_PATH=/data
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
+# Fonts for table/mermaid SVG→PNG via sharp (Latin + CJK).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends fonts-dejavu-core fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 --ingroup nodejs nextjs \
     && mkdir -p /data

@@ -1,6 +1,7 @@
 import { articleService } from "@/lib/services/article-service";
 import { mermaidCodeToPngBuffer, svgMarkupToPngBuffer } from "./diagram-to-png";
 import { absolutizeUrl } from "./resolve-base-url";
+import { tableBlockToPngBuffer } from "./table-to-png";
 
 const ID_RE = /^[A-Za-z0-9_-]{1,80}$/;
 
@@ -13,6 +14,7 @@ type LooseBlock = {
     id?: string;
     type?: string;
     props?: Record<string, unknown>;
+    content?: unknown;
     children?: LooseBlock[];
 };
 
@@ -55,7 +57,7 @@ function codeFromBlock(block: LooseBlock): string {
 }
 
 /**
- * Load article + block server-side, rasterize mermaid/svg in memory.
+ * Load article + block server-side, rasterize mermaid/svg/table in memory.
  * Rejects unknown ids / non-diagram blocks (no client-supplied source).
  */
 export async function renderDiagramBlockPng(
@@ -76,6 +78,10 @@ export async function renderDiagramBlockPng(
         cleanBlockId
     );
     if (!block) throw new Error("Block not found");
+
+    if (block.type === "table") {
+        return tableBlockToPngBuffer(block.content);
+    }
 
     const code = codeFromBlock(block).trim();
     if (!code) throw new Error("Empty diagram code");

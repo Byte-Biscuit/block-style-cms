@@ -2,6 +2,7 @@ export {
     type BlocksToHtmlOptions,
     blocksToHtml,
     type ExportBlock,
+    preferJpegImageUrl,
 } from "./blocks-to-html";
 export {
     diagramBlockToPngUrl,
@@ -17,3 +18,4 @@ export { escapeAttr, escapeHtml } from "./html-escape";
 export { type InlineItem, inlineToHtml } from "./inline-to-html";
 export { absolutizeUrl, resolveExportBaseUrl } from "./resolve-base-url";
 export { stripSvgForRaster } from "./strip-svg";
+export { tableBlockToPngBuffer } from "./table-to-png";

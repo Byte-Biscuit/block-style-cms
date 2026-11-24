@@ -15,6 +15,14 @@ const pngCache = new LRUCache<string, Buffer>({
     ttl: 1000 * 60 * 10,
 });
 
+export function getPngCache(key: string): Buffer | undefined {
+    return pngCache.get(key);
+}
+
+export function setPngCache(key: string, buf: Buffer): void {
+    pngCache.set(key, buf);
+}
+
 let mermaidReady: Promise<typeof import("mermaid")> | null = null;
 let renderSeq = 0;
 

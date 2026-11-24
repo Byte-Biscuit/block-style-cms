@@ -14,7 +14,7 @@ export type ExportBlock = {
 
 export type BlocksToHtmlOptions = {
     baseUrl: string;
-    /** Required for mermaid/svg → `/export/diagram/{articleId}/{blockId}.png`. */
+    /** Required for mermaid/svg/table → `/export/diagram/{articleId}/{blockId}.png`. */
     articleId?: string;
     /**
      * When true: drop body H1; map H2→h3, H3+→h4
@@ -26,6 +26,23 @@ export type BlocksToHtmlOptions = {
      * (for importers that break on nested ol/ul). Default false.
      */
     flattenNestedLists?: boolean;
+    /** When true: omit `<hr />` for divider blocks. Default false. */
+    stripDividers?: boolean;
+    /**
+     * When true: headings and quotes render inline code as plain text
+     * (no `<code>` tags). Default false.
+     */
+    stripCodeInHeadingsAndQuotes?: boolean;
+    /**
+     * When true: tables become PNG figures via `/export/diagram/...`,
+     * or a structured `<ul>` when articleId/block.id is missing. Default false.
+     */
+    rasterizeTables?: boolean;
+    /**
+     * When true: rewrite site-hosted `/images/*.webp|*.avif` to
+     * `.webp.jpg` / `.avif.jpg` aliases. Default false.
+     */
+    preferStandardRasterImages?: boolean;
     /** Override diagram URL builder (tests). */
     diagramBlockUrl?: (
         articleId: string,
@@ -40,6 +57,35 @@ function isStaticRasterUrl(src: string): boolean {
     if (src.startsWith("/images/")) return true;
     if (/\.(png|jpe?g|webp|gif)(\?|#|$)/i.test(src)) return true;
     return /^https?:\/\//i.test(src);
+}
+
+/** Site `/images/...webp|avif` → `.webp.jpg` / `.avif.jpg` for crawlers. */
+export function preferJpegImageUrl(src: string): string {
+    const trimmed = src.trim();
+    if (!trimmed) return trimmed;
+    try {
+        const hasScheme = /^https?:\/\//i.test(trimmed);
+        const u = hasScheme
+            ? new URL(trimmed)
+            : new URL(trimmed, "https://example.invalid");
+        if (!/\/images\//i.test(u.pathname)) return trimmed;
+        if (/\.(webp|avif)\.(jpe?g|png)$/i.test(u.pathname)) return trimmed;
+        if (!/\.(webp|avif)$/i.test(u.pathname)) return trimmed;
+        u.pathname = `${u.pathname}.jpg`;
+        if (!hasScheme) {
+            return `${u.pathname}${u.search}${u.hash}`;
+        }
+        return u.toString();
+    } catch {
+        if (
+            /\/images\//i.test(trimmed) &&
+            /\.(webp|avif)$/i.test(trimmed.split(/[?#]/)[0] ?? "")
+        ) {
+            const [pathPart, ...rest] = trimmed.split(/([?#].*)/);
+            return `${pathPart}.jpg${rest.join("")}`;
+        }
+        return trimmed;
+    }
 }
 
 function figureHtml(src: string, alt: string, caption?: string): string {
@@ -98,7 +144,20 @@ function codeFromBlock(block: ExportBlock): string {
         .join("");
 }
 
-async function renderTable(block: ExportBlock): Promise<string> {
+function cellInline(cell: unknown): InlineItem[] {
+    if (
+        cell &&
+        typeof cell === "object" &&
+        !Array.isArray(cell) &&
+        (cell as { type?: string }).type === "tableCell"
+    ) {
+        return contentAsInline((cell as { content?: unknown }).content);
+    }
+    if (Array.isArray(cell)) return contentAsInline(cell);
+    return [];
+}
+
+async function renderTableNative(block: ExportBlock): Promise<string> {
     const content = block.content as
         | { type?: string; rows?: Array<{ cells?: unknown[] }> }
         | undefined;
@@ -111,19 +170,7 @@ async function renderTable(block: ExportBlock): Promise<string> {
             const cellTag = rowIndex === 0 ? "th" : "td";
             const cellsHtml = cells
                 .map((cell) => {
-                    let inline: InlineItem[] = [];
-                    if (
-                        cell &&
-                        typeof cell === "object" &&
-                        !Array.isArray(cell) &&
-                        (cell as { type?: string }).type === "tableCell"
-                    ) {
-                        inline = contentAsInline(
-                            (cell as { content?: unknown }).content
-                        );
-                    } else if (Array.isArray(cell)) {
-                        inline = contentAsInline(cell);
-                    }
+                    const inline = cellInline(cell);
                     return `<${cellTag}>${inlineToHtml(inline) || "&nbsp;"}</${cellTag}>`;
                 })
                 .join("");
@@ -132,6 +179,51 @@ async function renderTable(block: ExportBlock): Promise<string> {
         .join("");
 
     return `<table>${rowHtml}</table>`;
+}
+
+function renderTableAsList(block: ExportBlock): string {
+    const content = block.content as
+        | {
+              type?: string;
+              rows?: Array<{ cells?: unknown[] }>;
+              headerRows?: number;
+          }
+        | undefined;
+    const rows = content?.rows;
+    if (!rows?.length) return "";
+
+    const headerRows = Math.max(0, Number(content?.headerRows ?? 1) || 0);
+    const headers =
+        headerRows > 0
+            ? (rows[0]?.cells ?? []).map(
+                  (cell) => inlineToHtml(cellInline(cell)) || "Column"
+              )
+            : [];
+    const dataRows = headerRows > 0 ? rows.slice(headerRows) : rows;
+    if (!dataRows.length) return "";
+
+    const items = dataRows.map((row) => {
+        const cells = row.cells ?? [];
+        const parts = cells.map((cell, i) => {
+            const label = headers[i] || `Column ${i + 1}`;
+            const value = inlineToHtml(cellInline(cell)) || "";
+            return `<strong>${label}:</strong> ${value}`;
+        });
+        return `<li>${parts.join(" — ")}</li>`;
+    });
+    return `<ul>${items.join("")}</ul>`;
+}
+
+async function renderTable(
+    block: ExportBlock,
+    opts: BlocksToHtmlOptions
+): Promise<string> {
+    if (opts.rasterizeTables === true) {
+        const url = diagramFigureUrl(block, opts);
+        if (url) return figureHtml(url, "Table");
+        return renderTableAsList(block);
+    }
+    return renderTableNative(block);
 }
 
 async function renderListGroup(
@@ -249,6 +341,7 @@ async function renderBlock(
     opts: BlocksToHtmlOptions
 ): Promise<string> {
     const demote = opts.demoteHeadingsForShell === true;
+    const stripCode = opts.stripCodeInHeadingsAndQuotes === true;
 
     switch (block.type) {
         case "paragraph": {
@@ -259,26 +352,33 @@ async function renderBlock(
         case "heading": {
             const level = Number(block.props?.level ?? 1);
             const tag = headingTagForLevel(level, demote);
-            const inner = inlineToHtml(contentAsInline(block.content));
+            const inner = inlineToHtml(contentAsInline(block.content), {
+                stripCode,
+            });
             const kids = await blocksToHtml(block.children ?? [], opts);
             if (!tag) return kids;
             if (!inner) return kids;
             return `<${tag}>${inner}</${tag}>${kids}`;
         }
         case "quote": {
-            const inner = inlineToHtml(contentAsInline(block.content));
+            const inner = inlineToHtml(contentAsInline(block.content), {
+                stripCode,
+            });
             const kids = await blocksToHtml(block.children ?? [], opts);
             return `<blockquote>${inner}${kids}</blockquote>`;
         }
         case "divider":
-            return "<hr />";
+            return opts.stripDividers === true ? "" : "<hr />";
         case "codeBlock":
             return codeBlockHtml(codeFromBlock(block));
         case "enhancedImage": {
             const src = String(block.props?.url ?? block.props?.src ?? "");
             if (!src || !isStaticRasterUrl(src)) return "";
-            const abs = absolutizeUrl(src, opts.baseUrl);
+            let abs = absolutizeUrl(src, opts.baseUrl);
             if (/\.svg(\?|#|$)/i.test(abs) || /^data:/i.test(abs)) return "";
+            if (opts.preferStandardRasterImages === true) {
+                abs = preferJpegImageUrl(abs);
+            }
             const alt = String(
                 block.props?.alt ?? block.props?.caption ?? "Article image"
             );
@@ -296,7 +396,7 @@ async function renderBlock(
             return latex ? codeBlockHtml(latex) : "";
         }
         case "table":
-            return renderTable(block);
+            return renderTable(block, opts);
         case "enhancedVideo":
         case "enhancedAudio":
         case "enhancedFile": {

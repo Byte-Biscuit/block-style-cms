@@ -435,6 +435,51 @@ describe("blocksToHtml", () => {
 });
 
 describe("tableBlockToPngBuffer", () => {
+    it("renders CJK text without crashing (needs Noto Sans CJK SC on host)", async () => {
+        const png = await tableBlockToPngBuffer({
+            type: "tableContent",
+            headerRows: 1,
+            rows: [
+                {
+                    cells: [
+                        {
+                            type: "tableCell",
+                            content: [{ type: "text", text: "场景 / 问题" }],
+                        },
+                        {
+                            type: "tableCell",
+                            content: [{ type: "text", text: "正确做法" }],
+                        },
+                    ],
+                },
+                {
+                    cells: [
+                        {
+                            type: "tableCell",
+                            content: [
+                                {
+                                    type: "text",
+                                    text: "站点级根动态段（[locale]、[tenant]）",
+                                },
+                            ],
+                        },
+                        {
+                            type: "tableCell",
+                            content: [
+                                {
+                                    type: "text",
+                                    text: '使用 import { locale } from "next/root-params"',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(png.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
+        expect(png.length).toBeGreaterThan(800);
+    });
+
     it("renders a 2-column table to a non-trivial png", async () => {
         const png = await tableBlockToPngBuffer({
             type: "tableContent",

@@ -30,14 +30,6 @@ export type BuildMediumExportHtmlOptions = Omit<
     author?: string;
 };
 
-function hostFromBaseUrl(baseUrl: string): string {
-    try {
-        return new URL(baseUrl).host || baseUrl;
-    } catch {
-        return baseUrl.replace(/^https?:\/\//i, "").replace(/\/+$/, "");
-    }
-}
-
 function coverFigure(
     image: string | undefined,
     baseUrl: string,
@@ -61,11 +53,9 @@ export async function buildMediumExportHtml(
     opts: BuildMediumExportHtmlOptions
 ): Promise<string> {
     const { baseUrl, author = "Nan Zhou" } = opts;
-    const canonical = `${baseUrl}/${article.locale}/articles/${article.slug}`;
     const title = article.title || "Untitled";
     const subtitle = article.summary?.trim() || "";
     const lang = article.locale.startsWith("zh") ? article.locale : "en";
-    const host = hostFromBaseUrl(baseUrl);
 
     const bodyHtml = await blocksToMediumHtml(article.content, {
         ...opts,
@@ -83,7 +73,8 @@ export async function buildMediumExportHtml(
 
     // ponytail: no <link rel="canonical"> here — Medium Import follows it and
     // scrapes /articles/[slug] (React SSR) instead of this clean export page.
-    // After import, set Canonical Link in Medium Story Settings to `canonical`.
+    // After import, set Canonical Link in Medium Story Settings to
+    // `${baseUrl}/${locale}/articles/${slug}`.
     return `<!DOCTYPE html>
 <html lang="${escapeAttr(lang)}">
 <head>
@@ -103,7 +94,6 @@ export async function buildMediumExportHtml(
     ${subtitleHtml}
     ${cover}
     ${bodyHtml}
-    <p><em>Originally published at <a href="${escapeAttr(canonical)}">${escapeHtml(host)}</a>.</em></p>
   </article>
 </body>
 </html>

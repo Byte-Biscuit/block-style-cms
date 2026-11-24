@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildMediumExportHtml } from "../build-export-html";
 
 describe("buildMediumExportHtml", () => {
-    it("builds shell with noindex, attribution, and no external canonical", async () => {
+    it("builds shell with noindex and no external canonical", async () => {
         const html = await buildMediumExportHtml(
             {
                 id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
@@ -95,9 +95,7 @@ describe("buildMediumExportHtml", () => {
         );
         expect(html).toContain('name="robots" content="noindex, nofollow"');
         expect(html).not.toContain('<link rel="canonical"');
-        expect(html).toContain(
-            'Originally published at <a href="https://studio.xiyue.space/en-US/articles/hello-world-article">studio.xiyue.space</a>'
-        );
+        expect(html).not.toContain("Originally published at");
         expect(html).toContain("<h1>Hello</h1>");
         expect(html).toContain("<h2>Sub</h2>");
         expect(html).toContain("<p>Body</p>");

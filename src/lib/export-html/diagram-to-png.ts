@@ -1,6 +1,7 @@
 import { LRUCache } from "lru-cache";
 import sharp, { type Sharp } from "sharp";
 import { sha256Hex } from "@/lib/hash";
+import { EXPORT_SVG_FONT } from "./export-font";
 import { stripSvgForRaster } from "./strip-svg";
 
 const MAX_EDGE = 1600;
@@ -163,6 +164,8 @@ async function ensureMermaid(): Promise<
                 startOnLoad: false,
                 securityLevel: "strict",
                 theme: "neutral",
+                fontFamily: EXPORT_SVG_FONT,
+                themeVariables: { fontFamily: EXPORT_SVG_FONT },
                 flowchart: { htmlLabels: false, useMaxWidth: false },
                 sequence: { useMaxWidth: false },
             });

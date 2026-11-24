@@ -14,6 +14,7 @@ export {
     mermaidCodeToPngBuffer,
     svgMarkupToPngBuffer,
 } from "./diagram-to-png";
+export { EXPORT_SVG_FONT } from "./export-font";
 export { escapeAttr, escapeHtml } from "./html-escape";
 export { type InlineItem, inlineToHtml } from "./inline-to-html";
 export { absolutizeUrl, resolveExportBaseUrl } from "./resolve-base-url";

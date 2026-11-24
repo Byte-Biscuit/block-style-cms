@@ -1,5 +1,6 @@
 import { sha256Hex } from "@/lib/hash";
 import { getPngCache, setPngCache, svgToPngBuffer } from "./diagram-to-png";
+import { EXPORT_SVG_FONT } from "./export-font";
 import { escapeHtml } from "./html-escape";
 
 const TARGET_WIDTH = 1200;
@@ -10,7 +11,6 @@ const LINE_HEIGHT = 20;
 const BORDER = "#d0d7de";
 const HEADER_BG = "#f6f8fa";
 const TEXT = "#24292f";
-const FONT = "DejaVu Sans, Noto Sans CJK SC, Noto Sans SC, sans-serif";
 
 type InlineLike = {
     type?: string;
@@ -257,7 +257,7 @@ function buildTableSvg(content: unknown): string {
             const weight = isHeader ? "700" : "400";
             for (const line of lines) {
                 parts.push(
-                    `<text x="${x + PAD_X}" y="${ty}" font-family="${FONT}" font-size="${FONT_SIZE}" font-weight="${weight}" fill="${TEXT}">${escapeHtml(line)}</text>`
+                    `<text x="${x + PAD_X}" y="${ty}" font-family="${EXPORT_SVG_FONT}" font-size="${FONT_SIZE}" font-weight="${weight}" fill="${TEXT}">${escapeHtml(line)}</text>`
                 );
                 ty += LINE_HEIGHT;
             }
